@@ -1,15 +1,12 @@
 package com.battleship.view
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.battleship.model.GameObject
 
 abstract class View {
 
-    protected var batch: SpriteBatch
+    var batch: SpriteBatch = SpriteBatch()
 
-    init {
-        batch = SpriteBatch()
-    }
-
-    internal abstract fun render()
+    abstract fun render(gameObject: GameObject)
 
 }
