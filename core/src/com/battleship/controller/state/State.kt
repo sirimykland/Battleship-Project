@@ -1,7 +1,6 @@
 package com.battleship.controller.state
 
 import com.battleship.controller.firebase.FirebaseController
-import com.battleship.model.GameObject
 import com.battleship.view.View
 
 abstract class State() {
