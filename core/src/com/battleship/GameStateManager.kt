@@ -5,11 +5,8 @@ import java.util.Stack
 
 object GameStateManager {
 
-    private val states: Stack<State>
+    private val states: Stack<State> = Stack()
 
-    init {
-        states = Stack<State>()
-    }
     fun push(state: State) {
         states.push(state)
         create()
