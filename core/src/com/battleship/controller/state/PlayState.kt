@@ -8,13 +8,12 @@ import com.battleship.model.Player
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-class PlayState() : State() {
+class PlayState : State() {
 
     override var view: View = PlayView()
-        get() = this.view
 
     override var firebaseController: FirebaseController = UpdatePlayData()
-        get() = this.firebaseController //TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+    //TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     var player:Player = Player()
 

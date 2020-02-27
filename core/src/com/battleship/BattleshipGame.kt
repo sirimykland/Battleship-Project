@@ -13,4 +13,9 @@ class BattleshipGame : Game() {
     override fun dispose() {
 
     }
+
+    override fun render() {
+        super.render()
+        GameStateManager.render()
+    }
 }
