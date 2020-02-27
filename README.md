@@ -1,4 +1,6 @@
 # Battleship-Project
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ### Version Control: Git
 You'll need to familiarie yourself with the basics in order to work with, and contribute to this project.
 
