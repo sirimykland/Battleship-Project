@@ -57,11 +57,11 @@ Once successfully merged into `master`, you can safely delete the feature branch
 Deleted branch feature-headerbar (was 05e9557).
 ```
 
-#### Hotfix Branches: `hotfix-*`
+#### Hotfix Branches: `hotfix_*`
 
 Hotfix branches arise from the necessity to act immediately upon an undesired state of a live production version. When a critical bug in a production version must be resolved immediately, a `hotfix` branch must be branched from the current `master`.
 
-- Naming convention: `hotfix-*`
+- Naming convention: `hotfix_*`
 - Branches from: `master`
 - Must merge back into: first `master`
 
