@@ -5,9 +5,8 @@ import com.battleship.view.View
 
 abstract class State() {
 
-    abstract var view:View
+    abstract var view: View
     abstract var firebaseController: FirebaseController
-
 
     abstract fun create()
 
