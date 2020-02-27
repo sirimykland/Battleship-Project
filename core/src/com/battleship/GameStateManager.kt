@@ -5,9 +5,9 @@ import java.util.Stack
 
 object GameStateManager {
 
-    private val states:Stack<State>
+    private val states: Stack<State>
 
-    init{
+    init {
         states = Stack<State>()
     }
     fun push(state: State) {
@@ -25,7 +25,7 @@ object GameStateManager {
     fun create() {
         states.peek().create()
     }
-    fun update(dt:Float) {
+    fun update(dt: Float) {
         states.peek().update(dt)
     }
     fun render() {
