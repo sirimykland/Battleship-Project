@@ -21,8 +21,7 @@ abstract class Ship : GameObject() {
     }
     */
 
-
-    fun takeDamage(damage : Int){
+    fun takeDamage(damage: Int) {
         health -= damage
     }
 
@@ -30,7 +29,7 @@ abstract class Ship : GameObject() {
         return health == 0
     }
 
-    fun rotateShip(){
+    fun rotateShip() {
         val temp = dimension.x
         dimension.x = dimension.y
         dimension.y = temp

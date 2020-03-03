@@ -16,8 +16,8 @@ class PlayState : State() {
     var player: Player = Player(boardSize)
 
     override fun create() {
-        player.board.addSmallShip(2,2)
-        player.board.addMediumShip(4,4)
+        player.board.addSmallShip(2, 2)
+        player.board.addMediumShip(4, 4)
     }
 
     override fun render() {
@@ -35,21 +35,24 @@ class PlayState : State() {
 
     fun handleInput() {
         if (Gdx.input.justTouched()) {
-            val touchPos = Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
-            var boardWidth = Gdx.graphics.width.toFloat()*0.9f
-            val boardPos = Vector2(Gdx.graphics.width.toFloat()*0.05f, Gdx.graphics.height/2f - boardWidth/2f)
+            val touchPos =
+                Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
+            var boardWidth = Gdx.graphics.width.toFloat() * 0.9f
+            val boardPos = Vector2(
+                Gdx.graphics.width.toFloat() * 0.05f,
+                Gdx.graphics.height / 2f - boardWidth / 2f
+            )
             var rect = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
-            if(rect.contains(touchPos)){
+            if (rect.contains(touchPos)) {
                 player.board.updateTile(convertCoordinate(touchPos, boardPos, boardWidth))
             }
-
         }
     }
 
-    fun convertCoordinate(touch: Vector2, boardPos: Vector2, boardWidth: Float): Vector2{
-        var tileSize = boardWidth/boardSize
-        var tileX = (touch.x - boardPos.x)/tileSize
-        var tileY = (touch.y - boardPos.y)/tileSize
+    fun convertCoordinate(touch: Vector2, boardPos: Vector2, boardWidth: Float): Vector2 {
+        var tileSize = boardWidth / boardSize
+        var tileX = (touch.x - boardPos.x) / tileSize
+        var tileY = (touch.y - boardPos.y) / tileSize
 
         println("(" + tileX.toInt() + ", " + tileY.toInt() + ")")
         return Vector2(tileY, tileX)
