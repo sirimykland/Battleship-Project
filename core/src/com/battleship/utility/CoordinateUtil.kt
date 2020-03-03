@@ -13,7 +13,4 @@ object CoordinateUtil {
         var tileY = (this.y - boardPos.y) / tileSize
         return Vector2(tileY, tileX)
     }
-
 }
-
-

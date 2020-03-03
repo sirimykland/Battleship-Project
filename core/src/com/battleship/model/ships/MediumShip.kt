@@ -10,7 +10,6 @@ class MediumShip(position: Vector2) : Ship(position) {
     override var name: String = "MediumShip"
     override var health: Int = 3
 
-
     override fun draw(batch: SpriteBatch, boardPos: Vector2, tileSize: Float) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
         shapeRenderer.setColor(Color.WHITE)
