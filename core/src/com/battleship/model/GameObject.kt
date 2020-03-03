@@ -4,11 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 
 abstract class GameObject {
-    var position: Vector2
+    open fun draw(batch: SpriteBatch){}
+    open fun draw(batch: SpriteBatch, position: Vector2, boardWidth: Float){}
 
-    init {
-        this.position = Vector2()
-    }
-
-    abstract fun draw(batch: SpriteBatch)
 }
