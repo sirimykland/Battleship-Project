@@ -1,13 +1,15 @@
 package com.battleship.model.ships
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 
-abstract class Ship : GameObject() {
+abstract class Ship(val position: Vector2) : GameObject() {
     abstract var dimension: Vector2
     abstract var name: String
     abstract var health: Int
-    abstract var position: Vector2
+    var shapeRenderer: ShapeRenderer = ShapeRenderer()
+    var padding: Int = 2
 
     // TODO reimplement
     /*

@@ -6,6 +6,9 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.firebase.UpdatePlayData
 import com.battleship.model.Player
+import com.battleship.utility.CoordinateUtil.toCoordinate
+import com.battleship.utility.GdxGraphicsUtil.boardPosition
+import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
@@ -30,31 +33,23 @@ class PlayState : State() {
     }
 
     override fun dispose() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        // TODO("not implemented")
     }
 
+    /*
+     * uses com.battleship.utility.CoordinateUtil.*
+     *  and com.battleship.utility.GdxGraphicsUtil.*
+     */
     fun handleInput() {
         if (Gdx.input.justTouched()) {
-            val touchPos =
-                Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
-            var boardWidth = Gdx.graphics.width.toFloat() * 0.9f
-            val boardPos = Vector2(
-                Gdx.graphics.width.toFloat() * 0.05f,
-                Gdx.graphics.height / 2f - boardWidth / 2f
-            )
+            val touchPos = Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
+            var boardWidth = Gdx.graphics.boardWidth()
+            val boardPos = Gdx.graphics.boardPosition()
+
             var rect = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
             if (rect.contains(touchPos)) {
-                player.board.updateTile(convertCoordinate(touchPos, boardPos, boardWidth))
+                player.board.updateTile(touchPos.toCoordinate(boardPos, boardWidth, boardSize))
             }
         }
-    }
-
-    fun convertCoordinate(touch: Vector2, boardPos: Vector2, boardWidth: Float): Vector2 {
-        var tileSize = boardWidth / boardSize
-        var tileX = (touch.x - boardPos.x) / tileSize
-        var tileY = (touch.y - boardPos.y) / tileSize
-
-        println("(" + tileX.toInt() + ", " + tileY.toInt() + ")")
-        return Vector2(tileY, tileX)
     }
 }

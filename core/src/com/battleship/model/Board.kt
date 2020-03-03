@@ -8,13 +8,11 @@ import com.battleship.model.ships.MediumShip
 import com.battleship.model.ships.Ship
 import com.battleship.model.ships.SmallShip
 
-class Board(size: Int) : GameObject() {
+class Board(val size: Int) : GameObject() {
     var ships: ArrayList<Ship> = ArrayList()
     var board = Array(size) { Array(size) { Tile.UNGUESSED } }
     val tileRenderer: ShapeRenderer = ShapeRenderer()
-    var tileSize: Int = 20
     var padding: Int = 1
-    var size = size
 
     fun addSmallShip(x: Int, y: Int) {
         // TODO add check
@@ -31,7 +29,7 @@ class Board(size: Int) : GameObject() {
     override fun draw(batch: SpriteBatch, position: Vector2, boardWidth: Float) {
         var x = position.x
         var y = position.y
-        var tileSize = boardWidth / size
+        val tileSize = boardWidth / size
         for (array in board) {
             for (value in array) {
                 tileRenderer.begin(ShapeRenderer.ShapeType.Filled)
@@ -51,9 +49,6 @@ class Board(size: Int) : GameObject() {
             x = position.x
         }
 
-        batch.begin()
-        // batch.draw(img, position.x, position.y)
-        batch.end()
         for (ship in ships) {
             ship.draw(batch, position, tileSize)
             // println(ship.name + ": " + ship.hit(Vector2(220f, 240f)))
