@@ -9,7 +9,7 @@ class PlayView() : View() {
 
     override fun render(gameObject: GameObject) {
         var height = Gdx.graphics.height
-        var boardWith = Gdx.graphics.width.toFloat()*0.9f
+        var boardWith = Gdx.graphics.width.toFloat() * 0.9f
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         gameObject.draw(batch,

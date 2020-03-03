@@ -3,7 +3,6 @@ package com.battleship.model
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.ships.MediumShip
 import com.battleship.model.ships.Ship
@@ -38,10 +37,10 @@ class Board(size: Int) : GameObject() {
                 tileRenderer.begin(ShapeRenderer.ShapeType.Filled)
 
                 when (value) {
-                    Tile.HIT -> tileRenderer.setColor(Color.GREEN)
-                    Tile.UNGUESSED -> tileRenderer.setColor(Color.BLUE)
-                    Tile.MISS -> tileRenderer.setColor(Color.RED)
-                    Tile.NEAR -> tileRenderer.setColor(Color.YELLOW)
+                    Tile.HIT -> tileRenderer.color = Color.GREEN
+                    Tile.UNGUESSED -> tileRenderer.color = Color.BLUE
+                    Tile.MISS -> tileRenderer.color = Color.RED
+                    Tile.NEAR -> tileRenderer.color = Color.YELLOW
                 }
 
                 tileRenderer.rect(x, y, tileSize, tileSize)
@@ -53,11 +52,11 @@ class Board(size: Int) : GameObject() {
         }
 
         batch.begin()
-        //batch.draw(img, position.x, position.y)
+        // batch.draw(img, position.x, position.y)
         batch.end()
         for (ship in ships) {
             ship.draw(batch, position, tileSize)
-            //println(ship.name + ": " + ship.hit(Vector2(220f, 240f)))
+            // println(ship.name + ": " + ship.hit(Vector2(220f, 240f)))
         }
     }
 
@@ -67,7 +66,7 @@ class Board(size: Int) : GameObject() {
 
     /*
     fun updateTile(pos: Vector2) {
-        //Check if hit
+        // Check if hit
         var hit = Tile.MISS
         var hittedShip: Ship? = null
         for (ship in ships){
