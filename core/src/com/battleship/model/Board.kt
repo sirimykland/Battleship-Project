@@ -26,10 +26,10 @@ class Board(val size: Int) : GameObject() {
         ships.add(ship)
     }
 
-    override fun draw(batch: SpriteBatch, position: Vector2, boardWidth: Float) {
+    override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
         var x = position.x
         var y = position.y
-        val tileSize = boardWidth / size
+        val tileSize = dimension.x / size
         for (array in board) {
             for (value in array) {
                 tileRenderer.begin(ShapeRenderer.ShapeType.Filled)
@@ -50,7 +50,7 @@ class Board(val size: Int) : GameObject() {
         }
 
         for (ship in ships) {
-            ship.draw(batch, position, tileSize)
+            ship.draw(batch, position, Vector2(tileSize, tileSize))
             // println(ship.name + ": " + ship.hit(Vector2(220f, 240f)))
         }
     }
@@ -75,55 +75,6 @@ class Board(val size: Int) : GameObject() {
         board[pos.x.toInt()][pos.y.toInt()] = hit
         return hit == Tile.HIT
     }
-
-    /*
-    fun updateTile(pos: Vector2) {
-        // Check if hit
-        var hit = Tile.MISS
-        var hittedShip: Ship? = null
-        for (ship in ships){
-            if(ship.hit(pos)){
-                hit = Tile.HIT
-                hittedShip = ship
-            }
-        }
-
-        var x = position.x
-        var y = position.y
-
-        // Iterate and update right tile
-        for(i in 0 until board.size){
-            for(j in 0 until board[i].size){
-                val rect = Rectangle(x, y, tileSize.toFloat(), tileSize.toFloat())
-                if(rect.contains(pos)){
-                    if(board[i][j] != Tile.HIT && board[i][j] != Tile.MISS){
-                        board[i][j] = hit
-                        hittedShip?.takeDamage(1)
-
-                    }else{
-                        println("Already guessed, pick another tile")
-                        return
-                    }
-
-                }
-                x += tileSize + padding
-            }
-
-            y += tileSize + padding
-            x = position.x
-        }
-        println(hit)
-        if(hittedShip != null){
-            if(hittedShip!!.sunk()){
-                println(hittedShip.name + " Sunk")
-                ships.remove(hittedShip)
-
-            }
-        }
-
-    }
-
-     */
 
     enum class Tile {
         HIT, MISS, UNGUESSED, NEAR
