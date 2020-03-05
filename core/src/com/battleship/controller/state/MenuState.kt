@@ -10,7 +10,7 @@ import com.battleship.view.View
 class MenuState : State() {
 
     override var view: View = MenuView()
-    
+
 
     override var firebaseController: FirebaseController = UpdatePlayData()
     // TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
