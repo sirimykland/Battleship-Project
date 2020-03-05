@@ -25,10 +25,10 @@ class PlayView() : View() {
 
      */
 
-    override fun render(vararg gameObject: GameObject) {
+    override fun render(vararg gameObjects: GameObject) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        for (obj in gameObject) {
+        for (obj in gameObjects) {
             when (obj) {
                 is Board -> obj.draw(
                     batch,

@@ -3,9 +3,11 @@ package com.battleship.view
 import com.battleship.model.GameObject
 
 class MatchmakingView : View() {
-    override fun render(gameObject: GameObject) {
+    override fun render(vararg gameObjects: GameObject) {
         batch.begin()
-        gameObject.draw(batch)
+        gameObjects.forEach {
+            it.draw(batch)
+        }
         batch.end()
     }
 }

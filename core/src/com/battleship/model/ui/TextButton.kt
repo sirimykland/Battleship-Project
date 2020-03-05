@@ -5,11 +5,11 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Align
 import com.battleship.utility.Font
 
-class TextButton(position: Vector2, size: Vector2, onClick: () -> Unit, val text: String) :
+class TextButton(position: Vector2, size: Vector2, val text: String, onClick: () -> Unit) :
     Button(position, size, onClick) {
 
-    constructor(posx: Float, posy: Float, sizex: Float, sizey: Float, onClick: () -> Unit, text: String) :
-        this(Vector2(posx, posy), Vector2(sizex, sizey), onClick, text)
+    constructor(posx: Float, posy: Float, sizex: Float, sizey: Float, text: String, onClick: () -> Unit) :
+        this(Vector2(posx, posy), Vector2(sizex, sizey), text, onClick)
 
     override fun draw(batch: SpriteBatch) {
         super.draw(batch)
