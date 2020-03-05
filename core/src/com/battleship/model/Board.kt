@@ -58,14 +58,14 @@ class Board(val size: Int) : GameObject() {
     fun updateTile(pos: Vector2): Boolean {
         var shipPos = Vector2(pos.y, pos.x)
 
-        if(board[pos.x.toInt()][pos.y.toInt()] == Tile.MISS || board[pos.x.toInt()][pos.y.toInt()] == Tile.HIT){
+        if (board[pos.x.toInt()][pos.y.toInt()] == Tile.MISS || board[pos.x.toInt()][pos.y.toInt()] == Tile.HIT) {
             println("Guessed, pick new")
             return false
         }
 
         var hit = Tile.MISS
-        for (ship in ships){
-            if(ship.hit(shipPos)){
+        for (ship in ships) {
+            if (ship.hit(shipPos)) {
                 hit = Tile.HIT
                 ship.takeDamage(1)
             }
