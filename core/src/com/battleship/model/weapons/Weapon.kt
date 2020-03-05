@@ -11,11 +11,16 @@ abstract class Weapon : GameObject() {
     abstract var radius: Int
     abstract var ammunition: Int
     abstract var name: String
+    abstract var active: Boolean
     var shapeRenderer: ShapeRenderer = ShapeRenderer()
 
     override fun draw(batch: SpriteBatch, drawPos: Vector2, dimension: Vector2) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
-        shapeRenderer.color = Color.CYAN
+        if (active) {
+            shapeRenderer.color = Color.GOLD
+        } else {
+            shapeRenderer.color = Color.CYAN
+        }
         shapeRenderer.rect(drawPos.x, drawPos.y, dimension.x, dimension.y)
         shapeRenderer.end()
     }

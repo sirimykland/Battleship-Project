@@ -50,7 +50,12 @@ abstract class Ship(val position: Vector2) : GameObject() {
 
         val newX = boardPos.x + dimension.x * position.x + position.x * padding
         val newY = boardPos.y + dimension.y * position.y + position.y * padding
-        shapeRenderer.rect(newX, newY, this.dimension.x * dimension.x, this.dimension.y * dimension.y)
+        shapeRenderer.rect(
+            newX,
+            newY,
+            this.dimension.x * dimension.x,
+            this.dimension.y * dimension.y
+        )
         shapeRenderer.end()
     }
 

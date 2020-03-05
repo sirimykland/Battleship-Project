@@ -15,6 +15,7 @@ class WeaponSet : GameObject() {
 
         for (weapon in weapons) {
             weapon.draw(batch, Vector2(x, y), Vector2(tileSize, dimension.y))
+            // Padding?
             x += tileSize + 1
         }
     }

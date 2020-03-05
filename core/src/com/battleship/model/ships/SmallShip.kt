@@ -1,6 +1,5 @@
 package com.battleship.model.ships
 
-
 import com.badlogic.gdx.math.Vector2
 
 class SmallShip(position: Vector2) : Ship(position) {

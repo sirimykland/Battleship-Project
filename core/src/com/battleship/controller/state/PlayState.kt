@@ -25,6 +25,8 @@ class PlayState : State() {
         player.board.ships.first().rotateShip()
         player.weaponSet.weapons.add(SmallWeapon())
         player.weaponSet.weapons.add(SmallWeapon())
+        player.weaponSet.weapons.add(SmallWeapon())
+        player.weaponSet.weapons.first().active = true
     }
 
     override fun render() {
@@ -52,7 +54,6 @@ class PlayState : State() {
 
             var boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
             if (boardBounds.contains(touchPos)) {
-                ""
                 player.board.updateTile(touchPos.toCoordinate(boardPos, boardWidth, boardSize))
             }
         }

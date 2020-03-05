@@ -5,4 +5,5 @@ class SmallWeapon : Weapon() {
     override var radius: Int = 1
     override var ammunition: Int = 10
     override var name: String = "Small Weapon"
+    override var active: Boolean = false
 }
