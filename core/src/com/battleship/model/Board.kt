@@ -26,10 +26,10 @@ class Board(val size: Int) : GameObject() {
         ships.add(ship)
     }
 
-    override fun draw(batch: SpriteBatch, position: Vector2, boardWidth: Float) {
+    override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
         var x = position.x
         var y = position.y
-        val tileSize = boardWidth / size
+        val tileSize = dimension.x / size
         for (array in board) {
             for (value in array) {
                 tileRenderer.begin(ShapeRenderer.ShapeType.Filled)
@@ -50,7 +50,7 @@ class Board(val size: Int) : GameObject() {
         }
 
         for (ship in ships) {
-            ship.draw(batch, position, tileSize)
+            ship.draw(batch, position, Vector2(tileSize, tileSize))
             // println(ship.name + ": " + ship.hit(Vector2(220f, 240f)))
         }
     }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.firebase.UpdatePlayData
 import com.battleship.model.Player
+import com.battleship.model.weapons.SmallWeapon
 import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
@@ -22,10 +23,12 @@ class PlayState : State() {
         player.board.addSmallShip(3, 2)
         player.board.addMediumShip(4, 4)
         player.board.ships.first().rotateShip()
+        player.weaponSet.weapons.add(SmallWeapon())
+        player.weaponSet.weapons.add(SmallWeapon())
     }
 
     override fun render() {
-        this.view.render(player.board)
+        this.view.render(player.board, player.weaponSet)
     }
 
     override fun update(dt: Float) {

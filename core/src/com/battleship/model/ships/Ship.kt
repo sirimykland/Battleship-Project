@@ -1,5 +1,7 @@
 package com.battleship.model.ships
 
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
@@ -11,18 +13,7 @@ abstract class Ship(val position: Vector2) : GameObject() {
     var shapeRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
 
-    // TODO reimplement
-
     fun hit(coordinates: Vector2): Boolean {
-        /*
-        val rect = Rectangle(position.x, position.y, position.x + dimension.x - 1, position.y + dimension.y - 1)
-        println(coordinates)
-        println(rect)
-        if (rect.contains(coordinates.x, coordinates.y)){
-            return true
-        }
-        return false
-        */
         println("Touch: " + coordinates)
         for (i in 1 until dimension.x.toInt() + 1) {
             val x = position.x + i - 1
@@ -51,6 +42,16 @@ abstract class Ship(val position: Vector2) : GameObject() {
         val temp = dimension.x
         dimension.x = dimension.y
         dimension.y = temp
+    }
+
+    override fun draw(batch: SpriteBatch, boardPos: Vector2, dimension: Vector2) {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+        shapeRenderer.color = Color.WHITE
+
+        val newX = boardPos.x + dimension.x * position.x + position.x * padding
+        val newY = boardPos.y + dimension.y * position.y + position.y * padding
+        shapeRenderer.rect(newX, newY, this.dimension.x * dimension.x, this.dimension.y * dimension.y)
+        shapeRenderer.end()
     }
 
     // abstract fun hit(coordinates: Vector2): Boolean

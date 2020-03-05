@@ -3,6 +3,7 @@ package com.battleship.utility
 import com.badlogic.gdx.Graphics
 import com.badlogic.gdx.math.Vector2
 
+
 object GdxGraphicsUtil {
     /*
      * this function extends Gdx.graphics
@@ -19,5 +20,13 @@ object GdxGraphicsUtil {
      */
     fun Graphics.boardWidth(): Float {
         return this.width.toFloat() * 0.9f
+    }
+
+    fun Graphics.weaponsetSize() : Vector2{
+        return Vector2(this.boardWidth(),this.boardPosition().y/2)
+    }
+
+    fun Graphics.weaponsetPosition() : Vector2{
+        return Vector2(this.boardPosition().x, this.boardPosition().y - this.weaponsetSize().y * 1.5f)
     }
 }
