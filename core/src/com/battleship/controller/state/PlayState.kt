@@ -19,8 +19,9 @@ class PlayState : State() {
     var player: Player = Player(boardSize)
 
     override fun create() {
-        player.board.addSmallShip(2, 2)
-        // player.board.addMediumShip(4, 4)
+        player.board.addSmallShip(3, 2)
+        player.board.addMediumShip(4, 4)
+        player.board.ships.first().rotateShip()
     }
 
     override fun render() {
@@ -41,12 +42,14 @@ class PlayState : State() {
      */
     fun handleInput() {
         if (Gdx.input.justTouched()) {
-            val touchPos = Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
+            val touchPos =
+                Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
             var boardWidth = Gdx.graphics.boardWidth()
             val boardPos = Gdx.graphics.boardPosition()
 
             var boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
-            if (boardBounds.contains(touchPos)) { ""
+            if (boardBounds.contains(touchPos)) {
+                ""
                 player.board.updateTile(touchPos.toCoordinate(boardPos, boardWidth, boardSize))
             }
         }
