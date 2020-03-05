@@ -8,8 +8,8 @@ import com.battleship.utility.Font
 class TextButton(position: Vector2, size: Vector2, val text: String, onClick: () -> Unit) :
     Button(position, size, onClick) {
 
-    constructor(posx: Float, posy: Float, sizex: Float, sizey: Float, text: String, onClick: () -> Unit) :
-        this(Vector2(posx, posy), Vector2(sizex, sizey), text, onClick)
+    constructor(posX: Float, posY: Float, sizeX: Float, sizeY: Float, text: String, onClick: () -> Unit) :
+        this(Vector2(posX, posY), Vector2(sizeX, sizeY), text, onClick)
 
     override fun draw(batch: SpriteBatch) {
         super.draw(batch)
