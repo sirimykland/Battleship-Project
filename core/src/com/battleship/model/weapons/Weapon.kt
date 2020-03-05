@@ -7,10 +7,10 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 
 abstract class Weapon : GameObject() {
-    abstract var damage : Int
-    abstract var radius : Int
-    abstract var ammunition : Int
-    abstract var name : String
+    abstract var damage: Int
+    abstract var radius: Int
+    abstract var ammunition: Int
+    abstract var name: String
     var shapeRenderer: ShapeRenderer = ShapeRenderer()
 
     override fun draw(batch: SpriteBatch, drawPos: Vector2, dimension: Vector2) {

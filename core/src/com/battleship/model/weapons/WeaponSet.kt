@@ -9,11 +9,11 @@ class WeaponSet : GameObject() {
 
     override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
         var amount = weapons.size
-        var tileSize = dimension.x/amount
+        var tileSize = dimension.x / amount
         var x = position.x
         var y = position.y
 
-        for(weapon in weapons){
+        for (weapon in weapons) {
             weapon.draw(batch, Vector2(x, y), Vector2(tileSize, dimension.y))
             x += tileSize + 1
         }
