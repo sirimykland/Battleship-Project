@@ -2,7 +2,6 @@ package com.battleship
 
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.OrthographicCamera
 import com.battleship.controller.state.PlayState
 
 class BattleshipGame : Game() {
