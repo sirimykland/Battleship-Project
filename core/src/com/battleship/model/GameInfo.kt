@@ -14,5 +14,4 @@ class GameInfo(var player: Player) : GameObject() {
         shapeRenderer.rect(position.x, position.y, dimension.x, dimension.y)
         shapeRenderer.end()
     }
-
 }
