@@ -1,5 +1,6 @@
 package com.battleship
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.battleship.controller.state.State
 import java.util.Stack
 
@@ -25,7 +26,7 @@ object GameStateManager {
     fun update(dt: Float) {
         states.peek().update(dt)
     }
-    fun render() {
-        states.peek().render()
+    fun render(sb: SpriteBatch) {
+        states.peek().render(sb)
     }
 }
