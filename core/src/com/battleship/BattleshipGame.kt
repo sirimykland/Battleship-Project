@@ -2,7 +2,7 @@ package com.battleship
 
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
-import com.battleship.controller.state.MenuState
+import com.battleship.controller.state.MainMenuState
 
 class BattleshipGame : Game() {
 
@@ -11,7 +11,7 @@ class BattleshipGame : Game() {
         val HEIGHT = 800
     }
     override fun create() {
-        GameStateManager.push(MenuState())
+        GameStateManager.push(MainMenuState())
     }
 
     override fun dispose() {

@@ -3,7 +3,7 @@ package com.battleship.view
 import com.badlogic.gdx.graphics.Texture
 import com.battleship.BattleshipGame
 
-class MenuView() : View() {
+class MainMenuView() : View() {
 
     var playBtn: Texture = Texture("menu_button.png")
     var background: Texture = Texture("menu_background.png")

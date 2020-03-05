@@ -2,14 +2,14 @@ package com.battleship.controller.state
 
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.firebase.UpdatePlayData
-import com.battleship.view.MenuView
+import com.battleship.view.MainMenuView
 import com.battleship.view.View
 //import android.R.attr.button
 
 
-class MenuState : State() {
+class MainMenuState : State() {
 
-    override var view: View = MenuView()
+    override var view: View = MainMenuView()
 
 
     override var firebaseController: FirebaseController = UpdatePlayData()
