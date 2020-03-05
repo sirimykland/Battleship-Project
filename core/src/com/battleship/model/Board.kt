@@ -55,8 +55,15 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
-    fun updateTile(pos: Vector2) {
-        board[pos.x.toInt()][pos.y.toInt()] = Tile.HIT
+    fun updateTile(pos: Vector2): Boolean {
+        var hit = Tile.MISS
+        for (ship in ships){
+            if(ship.hit(pos)){
+                hit = Tile.HIT
+            }
+        }
+        board[pos.x.toInt()][pos.y.toInt()] = hit
+        return true
     }
 
     /*

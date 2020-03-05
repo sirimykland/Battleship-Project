@@ -8,6 +8,7 @@ class BattleshipGame : Game() {
 
     override fun create() {
         GameStateManager.push(PlayState())
+
     }
 
     override fun dispose() {

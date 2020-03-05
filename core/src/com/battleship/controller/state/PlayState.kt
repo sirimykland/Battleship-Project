@@ -20,12 +20,11 @@ class PlayState : State() {
 
     override fun create() {
         player.board.addSmallShip(2, 2)
-        player.board.addMediumShip(4, 4)
+        // player.board.addMediumShip(4, 4)
     }
 
     override fun render() {
         this.view.render(player.board)
-        handleInput()
     }
 
     override fun update(dt: Float) {
@@ -46,8 +45,8 @@ class PlayState : State() {
             var boardWidth = Gdx.graphics.boardWidth()
             val boardPos = Gdx.graphics.boardPosition()
 
-            var rect = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
-            if (rect.contains(touchPos)) {
+            var boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
+            if (boardBounds.contains(touchPos)) { ""
                 player.board.updateTile(touchPos.toCoordinate(boardPos, boardWidth, boardSize))
             }
         }

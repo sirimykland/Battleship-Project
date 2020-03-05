@@ -11,6 +11,6 @@ object CoordinateUtil {
         var tileSize = boardWidth / boardSize
         var tileX = (this.x - boardPos.x) / tileSize
         var tileY = (this.y - boardPos.y) / tileSize
-        return Vector2(tileY, tileX)
+        return Vector2(kotlin.math.floor(tileY), kotlin.math.floor(tileX))
     }
 }
