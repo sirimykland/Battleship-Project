@@ -8,8 +8,10 @@ abstract class FirebaseController {
     fun setup() {
         // TODO
     }
+
     fun fetch() {
     }
+
     fun send() {
     }
 }
