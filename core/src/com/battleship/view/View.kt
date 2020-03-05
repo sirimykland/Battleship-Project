@@ -1,6 +1,7 @@
 package com.battleship.view
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.battleship.model.GameObject
 
 abstract class View {
 
