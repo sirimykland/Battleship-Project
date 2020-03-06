@@ -15,7 +15,8 @@ object DesktopLauncher {
         val testGame = "MBoFsW2zk0BzyYcFuSpR"
         val testUser = "mPADOxLSsFj3BEwgbXPQ"
 
-        gameController.addGameListener(testGame,testUser)
+        //gameController.addGameListener(testGame,testUser)
+        println(gameController.getPendingGames())
 
         val config = LwjglApplicationConfiguration()
         LwjglApplication(BattleshipGame(), config)
