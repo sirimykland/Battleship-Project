@@ -11,24 +11,19 @@ class PlayState : State() {
     override var view: View = PlayView()
 
     override var firebaseController: FirebaseController = GameController()
-    // TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
     var player: Player = Player()
 
     override fun create() {
-        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun render() {
-        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         this.view.render(player.board)
     }
 
     override fun update(dt: Float) {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun dispose() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 }

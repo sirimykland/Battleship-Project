@@ -18,18 +18,24 @@ abstract class FirebaseController {
 
     //Set up database connection
     init{
-        //Read the account details from file
-        val serviceAccount = FileInputStream("./core/src/com/battleship/controller/firebase/adminsdk.json")
-        //Get the credentials from the account details
-        val credentials = GoogleCredentials.fromStream(serviceAccount)
-        //Set options for connection
-        val options = FirebaseOptions.Builder()
-                .setCredentials(credentials)
-                .setDatabaseUrl(firebaseUrl)
-                .build()
-        FirebaseApp.initializeApp(options)
+        //Get the firebase apps running
+        val firebaseApps = FirebaseApp.getApps()
 
-        //Initialize database connection
-        db = FirestoreClient.getFirestore()
+            //If no firebase apps is running, set it up
+            if(firebaseApps.size == 0){
+                //Read the account details from file
+                val serviceAccount = FileInputStream("./core/src/com/battleship/controller/firebase/adminsdk.json")
+                //Get the credentials from the account details
+                val credentials = GoogleCredentials.fromStream(serviceAccount)
+                //Set options for connection
+                val options = FirebaseOptions.Builder()
+                        .setCredentials(credentials)
+                        .setDatabaseUrl(firebaseUrl)
+                        .build()
+                FirebaseApp.initializeApp(options)
+            }
+
+            //Initialize database connection using the firebase app
+            db = FirestoreClient.getFirestore()
     }
 }
