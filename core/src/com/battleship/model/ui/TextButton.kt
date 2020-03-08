@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Align
 import com.battleship.utility.Font
 
-class TextButton(position: Vector2, size: Vector2, val text: String, onClick: () -> Unit) :
+open class TextButton(position: Vector2, size: Vector2, var text: String, var onClick: () -> Unit) :
     Button(position, size, onClick) {
 
     constructor(posX: Float, posY: Float, sizeX: Float, sizeY: Float, text: String, onClick: () -> Unit) :

@@ -10,4 +10,8 @@ abstract class MenuState : State() {
     override fun create() {
         Gdx.input.inputProcessor = InputMultiplexer(*buttons.map { it.listener }.toTypedArray())
     }
+
+    override fun dispose() {
+        Gdx.input.inputProcessor = null
+    }
 }
