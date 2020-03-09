@@ -2,7 +2,7 @@ package com.battleship.view
 
 import com.battleship.model.GameObject
 
-class SettingsView() : View() {
+class SettingsView : View() {
 
     override fun render(vararg gameObjects: GameObject) {
         batch.begin()
