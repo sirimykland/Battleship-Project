@@ -8,4 +8,9 @@ abstract class View {
     var batch: SpriteBatch = SpriteBatch()
 
     abstract fun render(vararg gameObjects: GameObject)
+
+    open fun dispose() {
+        batch.dispose()
+        println("dispose ${this.javaClass}")
+    }
 }

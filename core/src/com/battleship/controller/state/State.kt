@@ -14,5 +14,7 @@ abstract class State {
 
     abstract fun render()
 
-    abstract fun dispose()
+    open fun dispose() {
+        view.dispose()
+    }
 }

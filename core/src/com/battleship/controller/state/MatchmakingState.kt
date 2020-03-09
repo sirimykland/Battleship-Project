@@ -7,17 +7,20 @@ import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.Button
 import com.battleship.model.ui.TextBox
 import com.battleship.model.ui.TextButton
-import com.battleship.view.MatchmakingView
+import com.battleship.view.BasicView
 import com.battleship.view.View
 
 class MatchmakingState : MenuState() {
-    override var view: View = MatchmakingView()
+    override var view: View = BasicView()
     override var firebaseController: FirebaseController = FindPlayer()
 
     val playerButtons: Array<TextButton> = arrayOf(*(0..4).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
     override val buttons: List<Button> = listOf(
-        TextButton(20f, Gdx.graphics.height - 110f, 200f, 90f, "Back") { GameStateManager.pop() },
+        TextButton(20f, Gdx.graphics.height - 110f, 200f, 90f, "Back") {
+            println("as")
+            GameStateManager.set(TestMenuState())
+        },
         *playerButtons
     )
 
