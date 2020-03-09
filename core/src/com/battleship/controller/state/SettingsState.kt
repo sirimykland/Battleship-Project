@@ -26,14 +26,14 @@ class SettingsState : MenuState() {
     private var settingsList = emptyList<String>()
 
     private val uiElements = arrayOf(
-        *buttons.toTypedArray(),
-        Header(20f, Gdx.graphics.height - 220f, Gdx.graphics.width - 40f, 90f, "Settings")
+        Header(20f, Gdx.graphics.height - 120f, Gdx.graphics.width - 40f, 90f, "Settings"),
+        *buttons.toTypedArray()
     )
 
     override fun create() {
         super.create()
         settings = mapOf(
-            Pair("Sound", "a73ab"),
+            Pair("Sound on", "a73ab"),
             Pair("Your profile", "6b293"),
             Pair("About the app", "9c99d")
         )
