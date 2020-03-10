@@ -9,8 +9,8 @@ object GdxGraphicsUtil {
      */
     fun Graphics.boardPosition(): Vector2 {
         return Vector2(
-            this.width.toFloat() * 0.05f,
-            this.height / 2f - this.boardWidth() / 2f
+                this.width.toFloat() * 0.05f,
+                this.height / 2f - this.boardWidth() / 2f
         )
     }
 
@@ -27,8 +27,19 @@ object GdxGraphicsUtil {
 
     fun Graphics.weaponsetPosition(): Vector2 {
         return Vector2(
-            this.boardPosition().x,
-            this.boardPosition().y - this.weaponsetSize().y * 1.5f
+                this.boardPosition().x,
+                this.boardPosition().y - this.weaponsetSize().y * 1.5f
+        )
+    }
+
+    fun Graphics.gameInfoSize(): Vector2 {
+        return Vector2(this.width.toFloat(), this.boardPosition().y / 2)
+    }
+
+    fun Graphics.gameInfoPosition(): Vector2 {
+        return Vector2(
+                0f,
+                this.height - this.gameInfoSize().y
         )
     }
 }
