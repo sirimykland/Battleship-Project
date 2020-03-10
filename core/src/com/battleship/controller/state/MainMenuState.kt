@@ -12,7 +12,7 @@ import com.battleship.view.View
 
 class MainMenuState : MenuState() {
 
-    val testButton = TextButton(BattleshipGame.WIDTH/10, BattleshipGame.HEIGHT/10, 300f, 150f, "TestMenu") { GameStateManager.set(TestMenuState()) }
+    val testButton = TextButton(BattleshipGame.WIDTH/10, BattleshipGame.HEIGHT/10, 300f, 150f, "TestMenu") { GameStateManager.set(MatchmakingState()) }
     val settingsButton = TextButton(BattleshipGame.WIDTH/10, BattleshipGame.HEIGHT/2, 300f, 150f, "Settings") { GameStateManager.set(PlayState()) }
 
     override val buttons: List<Button> = listOf(testButton, settingsButton)
