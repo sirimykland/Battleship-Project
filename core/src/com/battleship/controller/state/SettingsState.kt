@@ -18,7 +18,7 @@ class SettingsState : MenuState() {
     private val settingsButtons: Array<TextButton> = arrayOf(*(0..2).map { a: Int -> goToSetting(a) }.toTypedArray())
 
     override val buttons: List<Button> = listOf(
-        TextButton(20f, Gdx.graphics.height - 110f, 100f, 90f, "<-") { GameStateManager.pop() },
+        TextButton(20f, Gdx.graphics.height - 110f, 100f, 90f, "<-") { GameStateManager.set(MainMenuState()) },
         *settingsButtons
     )
 

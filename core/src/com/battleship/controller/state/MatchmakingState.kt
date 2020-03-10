@@ -18,7 +18,7 @@ class MatchmakingState : MenuState() {
 
     override val buttons: List<Button> = listOf(
         TextButton(20f, Gdx.graphics.height - 110f, 200f, 90f, "Back") {
-            GameStateManager.set(TestMenuState())
+            GameStateManager.set(MainMenuState())
         },
         *playerButtons
     )

@@ -2,17 +2,12 @@ package com.battleship
 
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
-import com.battleship.controller.state.SettingsState
+import com.battleship.controller.state.MainMenuState
 import com.battleship.utility.Font
 
 class BattleshipGame : Game() {
-
-    companion object {
-        val WIDTH = 480f
-        val HEIGHT = 800f
-    }
     override fun create() {
-        GameStateManager.push(SettingsState())
+        GameStateManager.push(MainMenuState())
     }
 
     override fun dispose() {
