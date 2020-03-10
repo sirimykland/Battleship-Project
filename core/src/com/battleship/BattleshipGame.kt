@@ -7,6 +7,10 @@ import com.battleship.utility.Font
 
 class BattleshipGame : Game() {
 
+    companion object {
+        val WIDTH = 480f
+        val HEIGHT = 800f
+    }
     override fun create() {
         GameStateManager.push(SettingsState())
     }
