@@ -12,6 +12,6 @@ class Header(position: Vector2, size: Vector2, val text: String) : MenuHeader(po
 
     override fun draw(batch: SpriteBatch) {
         super.draw(batch)
-        Font.BASIC.draw(batch, text, position.x + 20f, position.y + size.y / 2, size.x - 40, Align.center, true)
+        Font.MEDIUM_WHITE.draw(batch, text, position.x + 20f, position.y + size.y / 2, size.x - 40, Align.center, true)
     }
 }
