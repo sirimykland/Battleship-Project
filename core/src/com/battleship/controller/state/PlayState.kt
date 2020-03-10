@@ -39,10 +39,6 @@ class PlayState : State() {
         handleInput()
     }
 
-    override fun dispose() {
-        // TODO("not implemented")
-    }
-
     /*
      * uses com.battleship.utility.CoordinateUtil.*
      *  and com.battleship.utility.GdxGraphicsUtil.*
