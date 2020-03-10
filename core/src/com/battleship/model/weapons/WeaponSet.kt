@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle
@@ -31,9 +30,8 @@ class WeaponSet : GameObject() {
             // Padding?
             x += tileSize + 1
         }
-
-         */
-        build(batch, position, dimension)
+        */
+        buildWeaponMenu(position, dimension)
         stage.act()
         stage.draw()
     }
@@ -45,7 +43,7 @@ class WeaponSet : GameObject() {
         println(this.weapon?.name + " satt aktiv")
     }
 
-    fun build(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
+    fun buildWeaponMenu(position: Vector2, dimension: Vector2) {
         val menuTable = Table()
         menuTable.setPosition(position.x, position.y)
         menuTable.setSize(dimension.x, dimension.y)
@@ -58,11 +56,6 @@ class WeaponSet : GameObject() {
 
         for (weapon in weapons) {
             val button: TextButton = TextButton(weapon.name, style)
-            if(weapon.active){
-                style.fontColor = Color.GREEN
-            }else{
-
-            }
             button.addListener(object : ClickListener() {
                 override fun clicked(
                     event: com.badlogic.gdx.scenes.scene2d.InputEvent?,
