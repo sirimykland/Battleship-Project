@@ -1,38 +1,33 @@
 package com.battleship.controller.state
 
+import com.battleship.BattleshipGame
+import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FirebaseController
-import com.battleship.controller.firebase.UpdatePlayData
+import com.battleship.model.ui.Button
+import com.battleship.model.ui.TextButton
 import com.battleship.view.MainMenuView
 import com.battleship.view.View
-//import android.R.attr.button
 
 
-class MainMenuState : State() {
 
+class MainMenuState : MenuState() {
+
+    val testButton = TextButton(BattleshipGame.WIDTH/10, BattleshipGame.HEIGHT/10, 300f, 150f, "TestMenu") { GameStateManager.set(TestMenuState()) }
+    val settingsButton = TextButton(BattleshipGame.WIDTH/10, BattleshipGame.HEIGHT/2, 300f, 150f, "Settings") { GameStateManager.set(PlayState()) }
+
+    override val buttons: List<Button> = listOf(testButton, settingsButton)
     override var view: View = MainMenuView()
+    override var firebaseController: FirebaseController
+        get() = TODO("not implemented") // To change initializer of created properties use File | Settings | File Templates.
+        set(value) {}
 
-
-    override var firebaseController: FirebaseController = UpdatePlayData()
-    // TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-
-
-
-    override fun create() {
-        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-
+    override fun update(dt: Float) {
     }
 
     override fun render() {
-        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        this.view.render()
-    }
-
-    override fun update(dt: Float) {
-        // TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
-
+        view.render(*buttons.toTypedArray())
     }
 
     override fun dispose() {
-        // TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 }

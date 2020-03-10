@@ -3,17 +3,17 @@ package com.battleship
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.battleship.controller.state.MainMenuState
-import com.battleship.controller.state.TestMenuState
 
 
 class BattleshipGame : Game() {
 
     companion object {
-        val WIDTH = 480
-        val HEIGHT = 800
+        val WIDTH = 480f
+        val HEIGHT = 800f
     }
     override fun create() {
-        GameStateManager.push(TestMenuState())
+        //GameStateManager.push(TestMenuState())
+        GameStateManager.push(MainMenuState())
 
     }
 
