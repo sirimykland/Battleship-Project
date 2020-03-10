@@ -48,7 +48,7 @@ class Board(val size: Int) : GameObject() {
         for (ship in ships) {
             do {
                 ship.position.set(Random.nextInt(0, size).toFloat(), Random.nextInt(0, size).toFloat())
-                //println("ship position: (" + ship.position.x + ", " + ship.position.y + ")")
+                // println("ship position: (" + ship.position.x + ", " + ship.position.y + ")")
             } while (!validateShipPosition(ship))
             ships.add(ship)
         }
