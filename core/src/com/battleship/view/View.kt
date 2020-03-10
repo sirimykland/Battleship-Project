@@ -11,6 +11,5 @@ abstract class View {
 
     open fun dispose() {
         batch.dispose()
-        println("dispose ${this.javaClass}")
     }
 }
