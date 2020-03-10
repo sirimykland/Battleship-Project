@@ -5,6 +5,6 @@ import com.badlogic.gdx.math.Vector2
 class BlankButton(position: Vector2, size: Vector2, onClick: () -> Unit) :
     Button(position, size, onClick) {
 
-    constructor(posx: Float, posy: Float, sizex: Float, sizey: Float, onClick: () -> Unit) :
-        this(Vector2(posx, posy), Vector2(sizex, sizey), onClick)
+    constructor(posX: Float, posY: Float, sizeX: Float, sizeY: Float, onClick: () -> Unit) :
+        this(Vector2(posX, posY), Vector2(sizeX, sizeY), onClick)
 }
