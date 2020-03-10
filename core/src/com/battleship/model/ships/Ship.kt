@@ -14,13 +14,12 @@ abstract class Ship(val position: Vector2) : GameObject() {
     var padding: Int = 1
 
     fun hit(coordinates: Vector2): Boolean {
-        println("Touch: " + coordinates)
         for (i in 1 until dimension.x.toInt() + 1) {
             val x = position.x + i - 1
             for (j in 1 until dimension.y.toInt() + 1) {
                 val y = position.y + j - 1
 
-                println("Ship: (" + x + "," + y + ")")
+                // println("Ship: (" + x + "," + y + ")")
                 if (coordinates.epsilonEquals(x, y)) {
                     return true
                 }
