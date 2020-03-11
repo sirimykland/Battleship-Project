@@ -5,7 +5,6 @@ import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FindPlayer
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.Button
-import com.battleship.model.ui.Header
 import com.battleship.model.ui.TextButton
 import com.battleship.view.BasicView
 import com.battleship.view.View
@@ -13,48 +12,20 @@ import com.battleship.view.View
 class SettingsState : MenuState() {
 
     override var view: View = BasicView()
+    // TODO: Remove firebaseController here when it is not included in State anymore
     override var firebaseController: FirebaseController = FindPlayer()
 
-    private val settingsButtons: Array<TextButton> = arrayOf(*(0..2).map { a: Int -> goToSetting(a) }.toTypedArray())
-
     override val buttons: List<Button> = listOf(
-        TextButton(20f, Gdx.graphics.height - 110f, 100f, 90f, "<-") { GameStateManager.set(MainMenuState()) },
-        *settingsButtons
+        TextButton(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 200f, 300f, 150f, "Back") { GameStateManager.set(MainMenuState()) },
+        TextButton(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 200f, 300f, 150f, "Back") { GameStateManager.set(MainMenuState()) },
+        TextButton(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 200f, 300f, 150f, "Sound on") { println("Turn on/off sound") },
+        TextButton(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 400f, 300f, 150f, "Help") { GameStateManager.set(HelpState()) }
     )
-
-    private var settings = emptyMap<String, String>()
-    private var settingsList = emptyList<String>()
-
-    private val uiElements = arrayOf(
-        Header(20f, Gdx.graphics.height - 120f, Gdx.graphics.width - 40f, 90f, "Settings"),
-        *buttons.toTypedArray()
-    )
-
-    override fun create() {
-        super.create()
-        settings = mapOf(
-            Pair("Sound on", "a73ab"),
-            Pair("Your profile", "6b293"),
-            Pair("About the app", "9c99d")
-        )
-        settingsList = settings.toList().map { a -> a.first }
-        settingsButtons.forEachIndexed { i, button ->
-            button.text = settingsList[i]
-        }
-    }
-
-    fun goToSetting(index: Int): TextButton {
-        return TextButton(
-            50f, Gdx.graphics.height - 330f - index * 110f,
-            Gdx.graphics.width - 80f, 90f, "Loading") {
-            println(settingsList[index])
-        }
-    }
 
     override fun update(dt: Float) {
     }
 
     override fun render() {
-        this.view.render(*uiElements)
+        this.view.render(*buttons.toTypedArray())
     }
 }
