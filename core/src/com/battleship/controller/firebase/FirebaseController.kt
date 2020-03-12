@@ -25,7 +25,7 @@ abstract class FirebaseController {
             // If no firebase apps is running, set it up
             if (firebaseApps.size == 0) {
                 // Read the account details from file
-                val serviceAccount = FileInputStream("./core/src/com/battleship/controller/firebase/adminsdk.json")
+                val serviceAccount = FileInputStream("adminsdk.json")
                 // Get the credentials from the account details
                 val credentials = GoogleCredentials.fromStream(serviceAccount)
                 // Set options for connection

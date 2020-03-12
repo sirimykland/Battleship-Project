@@ -2,8 +2,6 @@ package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
 import com.battleship.GameStateManager
-import com.battleship.controller.firebase.FindPlayer
-import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.Button
 import com.battleship.model.ui.Header
 import com.battleship.model.ui.TextButton
@@ -13,7 +11,6 @@ import com.battleship.view.View
 class SettingsState : MenuState() {
 
     override var view: View = BasicView()
-    override var firebaseController: FirebaseController = FindPlayer()
 
     private val settingsButtons: Array<TextButton> = arrayOf(*(0..2).map { a: Int -> goToSetting(a) }.toTypedArray())
 

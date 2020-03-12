@@ -2,8 +2,7 @@ package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
 import com.battleship.GameStateManager
-import com.battleship.controller.firebase.FindPlayer
-import com.battleship.controller.firebase.FirebaseController
+import com.battleship.controller.firebase.GameController
 import com.battleship.model.ui.Button
 import com.battleship.model.ui.TextBox
 import com.battleship.model.ui.TextButton
@@ -12,7 +11,8 @@ import com.battleship.view.View
 
 class MatchmakingState : MenuState() {
     override var view: View = BasicView()
-    override var firebaseController: FirebaseController = FindPlayer()
+
+    private val gameController = GameController()
 
     val playerButtons: Array<TextButton> = arrayOf(*(0..4).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
@@ -34,16 +34,14 @@ class MatchmakingState : MenuState() {
 
     override fun create() {
         super.create()
-        users = mapOf(
-            Pair("jonas", "a73ab"),
-            Pair("bendik", "6b293"),
-            Pair("ingrid", "9c99d"),
-            Pair("vivian", "ab434"),
-            Pair("berek", "8be20")
-        )
-        userList = users.toList().map { a -> a.first }
-        playerButtons.forEachIndexed { i, button ->
-            button.text = userList[i]
+        users = gameController.getPendingGames()
+        userList = users.toList().map { a -> a.second }
+        updateButtons(0)
+    }
+
+    fun updateButtons(index: Int) {
+        userList.subList(index, if (index + 5> userList.size) userList.size else index).forEachIndexed { i, user ->
+            playerButtons[i % 5].text = user
         }
     }
 

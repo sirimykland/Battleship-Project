@@ -45,9 +45,10 @@ class GameController : FirebaseController() {
             // Find the username of the player in the game to display
             val playerQuery = playerId?.let { db.collection("users").document(playerId).get() }
             val playerQuerySnapshot = playerQuery?.get()
-            val playerName = playerQuerySnapshot?.getString("username") as String
-
-            games[id] = playerName
+            val playerName = playerQuerySnapshot?.getString("username")
+            if (playerName != null) {
+                games[id] = playerName
+            }
         }
         return games
     }

@@ -1,6 +1,5 @@
 package com.battleship.controller.state
 
-import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.Button
 import com.battleship.model.ui.TextBox
 import com.battleship.model.ui.TextButton
@@ -19,9 +18,6 @@ class TestMenuState : MenuState() {
 
     override val buttons: List<Button> = listOf(button)
     override var view: View = BasicView()
-    override var firebaseController: FirebaseController
-        get() = TODO("not implemented") // To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
 
     override fun update(dt: Float) {
     }
