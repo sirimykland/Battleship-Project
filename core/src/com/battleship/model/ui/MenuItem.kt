@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 
+@Deprecated("Use GuiFactory instead")
 abstract class MenuItem(
     val position: Vector2,
     val size: Vector2,

@@ -5,8 +5,10 @@ import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FindPlayer
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.Button
-import com.battleship.model.ui.Header
 import com.battleship.model.ui.TextButton
+import com.battleship.model.ui.TextHeader
+import com.battleship.utility.Font
+import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
@@ -26,7 +28,8 @@ class SettingsState : MenuState() {
     private var settingsList = emptyList<String>()
 
     private val uiElements = arrayOf(
-        Header(20f, Gdx.graphics.height - 120f, Gdx.graphics.width - 40f, 90f, "Settings"),
+        TextHeader(20f, Gdx.graphics.height - 120f, Gdx.graphics.width - 40f, 90f,
+            "Settings", font = Font.TINY_WHITE, color = Palette.BLACK),
         *buttons.toTypedArray()
     )
 

@@ -17,7 +17,7 @@ class MatchmakingState : MenuState() {
     val playerButtons: Array<TextButton> = arrayOf(*(0..4).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
     override val buttons: List<Button> = listOf(
-        TextButton(20f, Gdx.graphics.height - 110f, 200f, 90f, "Back") {
+        TextButton(20f, Gdx.graphics.height - 110f, 200f, 90f, "<-") {
             GameStateManager.set(MainMenuState())
         },
         *playerButtons
