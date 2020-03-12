@@ -6,6 +6,7 @@ import com.battleship.controller.firebase.FindPlayer
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.Button
 import com.battleship.model.ui.Header
+import com.battleship.model.ui.TextBox
 import com.battleship.model.ui.TextButton
 import com.battleship.view.BasicView
 import com.battleship.view.View
@@ -22,11 +23,10 @@ class SettingsState : MenuState() {
         TextButton(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 500f, 300f, 150f, "Help") { GameStateManager.set(HelpState()) }
     )
 
-    // TODO: Add about the app description
-
     private val uiElements = arrayOf(
         Header(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 130f, 300f, 150f, "Settings"),
-        *buttons.toTypedArray()
+        *buttons.toTypedArray(),
+        TextBox(20f, 20f, Gdx.graphics.width - 40f, 220f, "Write stuff about the app here")
     )
 
     override fun update(dt: Float) {

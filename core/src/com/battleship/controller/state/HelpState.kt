@@ -20,12 +20,15 @@ class HelpState : MenuState() {
 
     private var currentPageIndex = 0
     private val numberOfPages = 4 // Need to be equal to size of images/descriptions lists
+
+    // TODO: Update this with real screenshots from the game when it is more completed
     private val images: List<Image> = listOf(
         Image(200f, Gdx.graphics.height / 2 - 100f, "badlogic.jpg"),
         Image(200f, Gdx.graphics.height / 2 - 100f, "badlogic.jpg"),
         Image(200f, Gdx.graphics.height / 2 - 100f, "badlogic.jpg"),
         Image(200f, Gdx.graphics.height / 2 - 100f, "badlogic.jpg")
     )
+    // TODO: Update this with real description when game is more completed
     private val descriptions: List<TextBox> = listOf(
         TextBox(20f, 150f, Gdx.graphics.width - 40f, 90f, "First page"),
         TextBox(20f, 150f, Gdx.graphics.width - 40f, 90f, "Second page"),
@@ -41,7 +44,7 @@ class HelpState : MenuState() {
             if(currentPageIndex > 0) currentPageIndex -= 1
         },
         TextButton(Gdx.graphics.width - 170f, 20f, 150f, 90f, "-->") {
-            if (currentPageIndex < numberOfPages) currentPageIndex += 1
+            if (currentPageIndex < numberOfPages - 1) currentPageIndex += 1
         }
     )
 
