@@ -71,7 +71,7 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
-    // TODO need cleanup
+    // TODO needs cleanup
     fun updateTile(pos: Vector2, weapon: Weapon): Boolean {
         var shipPos = Vector2(pos.y, pos.x)
 
@@ -96,6 +96,15 @@ class Board(val size: Int) : GameObject() {
         println(hit)
         board[pos.x.toInt()][pos.y.toInt()] = hit
         return hit == Tile.HIT
+    }
+
+    fun cordHasShip(pos: Vector2): Boolean {
+        for (ship in ships) {
+            if (ship.hit(pos)) {
+                return true
+            }
+        }
+        return false
     }
 
     enum class Tile {
