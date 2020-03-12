@@ -22,6 +22,8 @@ class SettingsState : MenuState() {
         TextButton(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 500f, 300f, 150f, "Help") { GameStateManager.set(HelpState()) }
     )
 
+    // TODO: Add about the app description
+
     private val uiElements = arrayOf(
         Header(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 130f, 300f, 150f, "Settings"),
         *buttons.toTypedArray()
