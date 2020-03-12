@@ -8,6 +8,9 @@ hs_err_pid*
 ## Robovm
 /ios/robovm-build/
 
+##Ignore admin SDK file
+adminsdk.json
+
 ## GWT
 /html/war/
 /html/gwt-unitCache/
