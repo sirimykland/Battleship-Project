@@ -34,6 +34,10 @@ class PlayState : State() {
 
     override fun render() {
         this.view.render(player.board, player.weaponSet, gameInfo)
+        player.updateHealth()
+        if (player.health == 0) {
+            println("You won!")
+        }
     }
 
     override fun update(dt: Float) {

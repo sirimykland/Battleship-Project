@@ -75,17 +75,24 @@ class Board(val size: Int) : GameObject() {
     fun updateTile(pos: Vector2, weapon: Weapon): Boolean {
         var shipPos = Vector2(pos.y, pos.x)
 
-        if (board[pos.x.toInt()][pos.y.toInt()] == Tile.MISS || board[pos.x.toInt()][pos.y.toInt()] == Tile.HIT) {
+        val boardTile = getTile(pos)
+        if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
             println("Guessed, pick new")
             return false
         }
 
         var hit = Tile.MISS
-        for (ship in ships) {
-            if (ship.hit(shipPos)) {
-                hit = Tile.HIT
-                ship.takeDamage(weapon.damage)
+        var hittedShip = getShipByCord(shipPos)
+        if (hittedShip != null) {
+            println("Hitted")
+            hit = Tile.HIT
+            hittedShip?.takeDamage(weapon.damage)
+            if (hittedShip!!.sunk()) {
+                println(hittedShip?.name + " Sunk")
+                ships.remove(hittedShip)
             }
+        } else {
+            println("Missed")
         }
 
         // TODO implement
@@ -93,18 +100,29 @@ class Board(val size: Int) : GameObject() {
             hit = Tile.NEAR
         }
 
-        println(hit)
         board[pos.x.toInt()][pos.y.toInt()] = hit
         return hit == Tile.HIT
     }
 
-    fun cordHasShip(pos: Vector2): Boolean {
+    fun getTile(pos: Vector2): Board.Tile {
+        return board[pos.x.toInt()][pos.y.toInt()]
+    }
+
+    fun getShipByCord(pos: Vector2): Ship? {
         for (ship in ships) {
             if (ship.hit(pos)) {
-                return true
+                return ship
             }
         }
-        return false
+        return null
+    }
+
+    fun getAllShipHealth(): Int {
+        var health = 0
+        for (ship in ships) {
+            health += ship.health
+        }
+        return health
     }
 
     enum class Tile {
