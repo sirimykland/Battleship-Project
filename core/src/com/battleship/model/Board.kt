@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.model.ships.MediumShip
 import com.battleship.model.ships.Ship
 import com.battleship.model.ships.SmallShip
+import com.battleship.model.weapons.RadarWeapon
+import com.battleship.model.weapons.Weapon
 
 class Board(val size: Int) : GameObject() {
     var ships: ArrayList<Ship> = ArrayList()
@@ -55,7 +57,21 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
-    fun updateTile(pos: Vector2): Boolean {
+    fun shootTiles(boardTouchPos: Vector2, weapon: Weapon) {
+        var x = boardTouchPos.x.toInt()
+        var y = boardTouchPos.y.toInt()
+        // Loops through the weapons radius
+        for (x in x - weapon.radius until x + weapon.radius + 1 step 1) {
+            for (y in y - weapon.radius until y + weapon.radius + 1 step 1) {
+                // Checks if inside board
+                if (x >= 0 && x < size && y >= 0 && y < size) {
+                    updateTile(Vector2(x.toFloat(), y.toFloat()), weapon)
+                }
+            }
+        }
+    }
+
+    fun updateTile(pos: Vector2, weapon: Weapon): Boolean {
         var shipPos = Vector2(pos.y, pos.x)
 
         if (board[pos.x.toInt()][pos.y.toInt()] == Tile.MISS || board[pos.x.toInt()][pos.y.toInt()] == Tile.HIT) {
@@ -67,8 +83,13 @@ class Board(val size: Int) : GameObject() {
         for (ship in ships) {
             if (ship.hit(shipPos)) {
                 hit = Tile.HIT
-                ship.takeDamage(1)
+                ship.takeDamage(weapon.damage)
             }
+        }
+
+        // TODO implement
+        if(weapon is RadarWeapon){
+            hit = Tile.NEAR
         }
 
         println(hit)

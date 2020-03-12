@@ -25,4 +25,12 @@ abstract class Weapon : GameObject() {
         shapeRenderer.rect(drawPos.x, drawPos.y, dimension.x, dimension.y)
         shapeRenderer.end()
     }
+
+    fun hasAmmunition(): Boolean{
+        return ammunition > 0
+    }
+
+    fun shoot(){
+        ammunition--
+    }
 }

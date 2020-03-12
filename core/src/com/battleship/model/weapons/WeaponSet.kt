@@ -32,7 +32,7 @@ class WeaponSet : GameObject() {
         }
         */
         buildWeaponMenu(position, dimension)
-        stage.act()
+        // stage.act()
         stage.draw()
     }
 

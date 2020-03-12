@@ -8,6 +8,7 @@ import com.battleship.controller.firebase.UpdatePlayData
 import com.battleship.model.GameInfo
 import com.battleship.model.Player
 import com.battleship.model.weapons.BigWeapon
+import com.battleship.model.weapons.RadarWeapon
 import com.battleship.model.weapons.SmallWeapon
 import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
@@ -27,7 +28,8 @@ class PlayState : State() {
         player.board.addMediumShip(4, 4)
         player.weaponSet.weapons.add(SmallWeapon())
         player.weaponSet.weapons.add(BigWeapon())
-        player.weaponSet.setActiveWeapon(player.weaponSet.weapons.last())
+        player.weaponSet.weapons.add(RadarWeapon())
+        player.weaponSet.setActiveWeapon(player.weaponSet.weapons.first())
     }
 
     override fun render() {
@@ -50,7 +52,13 @@ class PlayState : State() {
             val boardPos = Gdx.graphics.boardPosition()
             val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
             if (boardBounds.contains(touchPos)) {
-                player.board.updateTile(touchPos.toCoordinate(boardPos, boardWidth, boardSize))
+                val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
+                if(player.weaponSet.weapon!!.hasAmmunition()){
+                    player.board.shootTiles(boardTouchPos, player.weaponSet.weapon!!)
+                    player.weaponSet.weapon!!.shoot()
+                }else{
+                    println(player.weaponSet.weapon!!.name + "Has no ammo")
+                }
             }
         }
     }
