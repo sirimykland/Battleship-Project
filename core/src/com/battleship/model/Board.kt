@@ -11,9 +11,9 @@ import com.battleship.model.weapons.RadarWeapon
 import com.battleship.model.weapons.Weapon
 
 class Board(val size: Int) : GameObject() {
-    var ships: ArrayList<Ship> = ArrayList()
-    var board = Array(size) { Array(size) { Tile.UNGUESSED } }
-    val tileRenderer: ShapeRenderer = ShapeRenderer()
+    private var ships: ArrayList<Ship> = ArrayList()
+    private var board = Array(size) { Array(size) { Tile.UNGUESSED } }
+    private val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
 
     fun addSmallShip(x: Int, y: Int) {
