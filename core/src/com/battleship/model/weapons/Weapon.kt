@@ -26,11 +26,11 @@ abstract class Weapon : GameObject() {
         shapeRenderer.end()
     }
 
-    fun hasAmmunition(): Boolean{
+    fun hasAmmunition(): Boolean {
         return ammunition > 0
     }
 
-    fun shoot(){
+    fun shoot() {
         ammunition--
     }
 }

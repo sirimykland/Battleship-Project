@@ -88,7 +88,7 @@ class Board(val size: Int) : GameObject() {
         }
 
         // TODO implement
-        if(weapon is RadarWeapon){
+        if (weapon is RadarWeapon) {
             hit = Tile.NEAR
         }
 
