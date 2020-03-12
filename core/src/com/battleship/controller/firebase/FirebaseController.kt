@@ -7,6 +7,14 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import java.io.FileInputStream
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+
 /**
  * Class used to setup the database connection
  */
@@ -15,6 +23,8 @@ abstract class FirebaseController {
     private val firebaseUrl = "https://battleshipz.firebaseio.com"
     //Protected variable used by the other controllers to access database
     protected val db: Firestore;
+    //The Api key used for identifying the firebase project during authentication
+    protected val API_KEY = "AIzaSyCyEdKGVFy96OPy_Kgxyb6-5_WB55K24M0"
 
     //Set up database connection
     init{
@@ -35,7 +45,7 @@ abstract class FirebaseController {
                 FirebaseApp.initializeApp(options)
             }
 
-            //Initialize database connection using the firebase app
-            db = FirestoreClient.getFirestore()
+        //Initialize database connection using the firebase app
+        db = FirestoreClient.getFirestore()
     }
 }

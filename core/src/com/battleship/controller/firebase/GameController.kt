@@ -32,11 +32,11 @@ class GameController : FirebaseController(){
     /**
      * Function getting all games where there is currently only one player
      */
-    fun getPendingGames() : Map<String, Any?>{
+    fun getPendingGames() : Map<String, String>{
         val gameQuery = db.collection("games").whereEqualTo("player2", "").get()
         val gameQuerySnapshot = gameQuery.get()
         val gameDocuments = gameQuerySnapshot.documents
-        val games = mutableMapOf<String, Any?>()
+        val games = mutableMapOf<String, String>()
 
         //For each game fitting the criteria, get the id and username of opponent
         for (document in gameDocuments) {
@@ -46,11 +46,10 @@ class GameController : FirebaseController(){
             //Find the username of the player in the game to display
             val playerQuery = playerId?.let { db.collection("users").document(playerId).get() }
             val playerQuerySnapshot = playerQuery?.get()
-            val playerName = playerQuerySnapshot?.get("username")
+            val playerName = playerQuerySnapshot?.getString("username") as String
 
             games[id] = playerName
         }
-
         return games
     }
 
