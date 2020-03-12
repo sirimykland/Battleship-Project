@@ -82,7 +82,7 @@ class Board(val size: Int) : GameObject() {
         }
 
         var hit = Tile.MISS
-        var hittedShip = getShipByCord(shipPos)
+        var hittedShip = getShipByPosition(shipPos)
         if (hittedShip != null) {
             println("Hitted")
             hit = Tile.HIT
@@ -108,7 +108,7 @@ class Board(val size: Int) : GameObject() {
         return board[pos.x.toInt()][pos.y.toInt()]
     }
 
-    fun getShipByCord(pos: Vector2): Ship? {
+    fun getShipByPosition(pos: Vector2): Ship? {
         for (ship in ships) {
             if (ship.hit(pos)) {
                 return ship
