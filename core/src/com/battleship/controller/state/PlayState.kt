@@ -53,10 +53,10 @@ class PlayState : State() {
             val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
             if (boardBounds.contains(touchPos)) {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
-                if(player.weaponSet.weapon!!.hasAmmunition()){
+                if (player.weaponSet.weapon!!.hasAmmunition()) {
                     player.board.shootTiles(boardTouchPos, player.weaponSet.weapon!!)
                     player.weaponSet.weapon!!.shoot()
-                }else{
+                } else {
                     println(player.weaponSet.weapon!!.name + "Has no ammo")
                 }
             }

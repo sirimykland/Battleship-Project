@@ -71,6 +71,7 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
+    // TODO need cleanup
     fun updateTile(pos: Vector2, weapon: Weapon): Boolean {
         var shipPos = Vector2(pos.y, pos.x)
 
