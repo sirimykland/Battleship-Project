@@ -72,13 +72,13 @@ class Board(val size: Int) : GameObject() {
     }
 
     // TODO needs cleanup
-    fun updateTile(pos: Vector2, weapon: Weapon): Boolean {
+    fun updateTile(pos: Vector2, weapon: Weapon) {
         var shipPos = Vector2(pos.y, pos.x)
 
         val boardTile = getTile(pos)
         if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
             println("Guessed, pick new")
-            return false
+            return
         }
 
         var hit = Tile.MISS
@@ -101,7 +101,6 @@ class Board(val size: Int) : GameObject() {
         }
 
         board[pos.x.toInt()][pos.y.toInt()] = hit
-        return hit == Tile.HIT
     }
 
     fun getTile(pos: Vector2): Board.Tile {

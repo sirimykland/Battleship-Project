@@ -69,6 +69,6 @@ class WeaponSet : GameObject() {
         }
 
         stage.addActor(menuTable)
-        Gdx.input.setInputProcessor(stage)
+        Gdx.input.inputProcessor = stage
     }
 }
