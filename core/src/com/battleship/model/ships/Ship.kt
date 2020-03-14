@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 
 abstract class Ship(var position: Vector2) : GameObject() {
-
     abstract var dimension: Vector2
     abstract var name: String
     abstract var health: Int
@@ -53,18 +52,20 @@ abstract class Ship(var position: Vector2) : GameObject() {
         val newX = boardPos.x + dimension.x * position.x + position.x * padding
         val newY = boardPos.y + dimension.y * position.y + position.y * padding
         shapeRenderer.rect(
-                newX,
-                newY,
-                this.dimension.x * dimension.x,
-                this.dimension.y * dimension.y
+            newX,
+            newY,
+            this.dimension.x * dimension.x,
+            this.dimension.y * dimension.y
         )
         shapeRenderer.end()
         batch.begin()
-        batch.draw(sprite.texture,
-                newX,
-                newY,
-                this.dimension.x * dimension.x,
-                this.dimension.y * dimension.y)
+        batch.draw(
+            sprite.texture,
+            newX,
+            newY,
+            this.dimension.x * dimension.x,
+            this.dimension.y * dimension.y
+        )
         batch.end()
     }
 

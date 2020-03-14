@@ -125,9 +125,9 @@ class Board(val size: Int) : GameObject() {
         if (hittedShip != null) {
             println("Hitted")
             hit = Tile.HIT
-            hittedShip?.takeDamage(weapon.damage)
-            if (hittedShip!!.sunk()) {
-                println(hittedShip?.name + " Sunk")
+            hittedShip.takeDamage(weapon.damage)
+            if (hittedShip.sunk()) {
+                println(hittedShip.name + " Sunk")
                 ships.remove(hittedShip)
             }
         } else {
