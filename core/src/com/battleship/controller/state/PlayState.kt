@@ -26,6 +26,9 @@ class PlayState : State() {
     override fun create() {
         player.board.addSmallShip(3, 2)
         player.board.addMediumShip(4, 4)
+        player.board.randomPlacement(4)
+        player.board.ships.first().rotateShip()
+        player.weaponSet.weapons.add(SmallWeapon())
         player.weaponSet.weapons.add(SmallWeapon())
         player.weaponSet.weapons.add(BigWeapon())
         player.weaponSet.weapons.add(RadarWeapon())
