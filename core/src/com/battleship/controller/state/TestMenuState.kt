@@ -36,7 +36,7 @@ class TestMenuState : GuiState() {
     private val testText = GUI.text(100f, 400f, 200f, 100f, "Just text")
 
     override val guiObjects: List<GuiObject> = listOf(
-        greenBox, blueButton, boxButton, testText
+        greenBox, blueButton, boxButton, testText, GUI.backButton
     )
 
     override var view: View = BasicView()

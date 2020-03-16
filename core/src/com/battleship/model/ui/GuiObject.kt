@@ -14,6 +14,17 @@ class GuiObject(
     private val parts: MutableList<GuiElement> = mutableListOf()
     var listener: ButtonHandler = ButtonHandler(position, size) { }
     var isClickable: Boolean = false
+    var hidden: Boolean = false
+
+    fun hide(): GuiObject {
+        hidden = true
+        return this
+    }
+
+    fun show(): GuiObject {
+        hidden = false
+        return this
+    }
 
     fun with(element: GuiElement): GuiObject {
         parts.forEachIndexed { index, guiElement ->
@@ -26,15 +37,39 @@ class GuiObject(
         return this
     }
 
+    fun set(element: GuiElement): GuiObject {
+        parts.forEachIndexed { index, guiElement ->
+            if (guiElement.javaClass == element.javaClass) {
+                parts.removeAt(index)
+                parts.add(index, element)
+                return this
+            }
+        }
+        parts.forEachIndexed { index, guiElement ->
+            if (guiElement.zIndex > element.zIndex) {
+                parts.add(index, element)
+                return this
+            }
+        }
+        parts.add(element)
+        return this
+    }
+
     fun onClick(onClick: () -> Unit): GuiObject {
-        listener = ButtonHandler(position, size, onClick)
+        listener = ButtonHandler(position, size) {
+            if (!hidden) {
+                onClick()
+            }
+        }
         isClickable = true
         return this
     }
 
     override fun draw(batch: SpriteBatch) {
-        parts.forEach {
-            it.draw(batch, position, size)
+        if (!hidden) {
+            parts.forEach {
+                it.draw(batch, position, size)
+            }
         }
     }
 }

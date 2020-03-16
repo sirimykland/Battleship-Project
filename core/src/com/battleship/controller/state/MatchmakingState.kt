@@ -1,69 +1,106 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.battleship.GameStateManager
 import com.battleship.controller.firebase.GameController
-import com.battleship.controller.state.deprecated.MenuState
-import com.battleship.model.ui.deprecated.Button
-import com.battleship.model.ui.deprecated.TextBox
-import com.battleship.model.ui.deprecated.TextButton
+import com.battleship.model.ui.GuiObject
+import com.battleship.model.ui.Text
+import com.battleship.utility.Font
+import com.battleship.utility.GUI
+import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
-class MatchmakingState : MenuState() {
+class MatchmakingState : GuiState() {
     override var view: View = BasicView()
 
     private val gameController = GameController()
 
-    val playerButtons: Array<TextButton> = arrayOf(*(0..4).map { a: Int -> joinUserButton(a) }.toTypedArray())
+    private val playerButtons: Array<GuiObject> = arrayOf(*(0..4).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
-    override val buttons: List<Button> = listOf(
-        TextButton(
+    private var page: Int = 0
+
+    private val nextPageButton = GUI.textButton(
+        Gdx.graphics.width - 150f,
+        30f,
+        100f,
+        90f,
+        "->"
+    ) {
+        page++
+        updateButtons()
+    }
+
+    private val previousPageButton = GUI.textButton(
+        30f,
+        30f,
+        100f,
+        70f,
+        "<-"
+    ) {
+        page--
+        updateButtons()
+    }.hide()
+
+    override val guiObjects: List<GuiObject> = listOf(
+        GUI.text(
             20f,
-            Gdx.graphics.height - 110f,
-            200f,
+            Gdx.graphics.height - 220f,
+            Gdx.graphics.width - 40f,
             90f,
-            "<-"
-        ) {
-            GameStateManager.set(MainMenuState())
-        },
-        *playerButtons
+            "Matchmaking",
+            Font.LARGE_WHITE
+        ),
+        nextPageButton,
+        previousPageButton,
+        *playerButtons,
+        GUI.backButton
     )
 
     var users = emptyMap<String, String>()
 
     var userList = emptyList<String>()
 
-    private val uiElements = arrayOf(
-        *buttons.toTypedArray(),
-        TextBox(
-            20f,
-            Gdx.graphics.height - 220f,
-            Gdx.graphics.width - 40f,
-            90f,
-            "Matchmaking"
-        )
-    )
-
     override fun create() {
         super.create()
         users = gameController.getPendingGames()
         userList = users.toList().map { a -> a.second }
-        updateButtons(0)
+        updateButtons()
     }
 
-    fun updateButtons(index: Int) {
-        userList.subList(index, if (index + 5> userList.size) userList.size else index).forEachIndexed { i, user ->
-            playerButtons[i % 5].text = user
+    private fun updateButtons() {
+        val index = page * 5
+        playerButtons.forEachIndexed { i, guiObject ->
+            val j = index + i
+            val button = playerButtons[i]
+            if (j <userList.size) {
+                button.set(Text(userList[j]))
+                button.show()
+            } else {
+                button.hide()
+            }
         }
+        if (index + 5 < userList.size)
+            nextPageButton.show()
+        else
+            nextPageButton.hide()
+
+        if (index> 0)
+            previousPageButton.show()
+        else
+            previousPageButton.hide()
     }
 
-    fun joinUserButton(index: Int): TextButton {
-        return TextButton(
-            50f, Gdx.graphics.height - 330f - index * 110f,
-            Gdx.graphics.width - 100f, 90f, "Loading"
+    private fun joinUserButton(index: Int): GuiObject {
+        return GUI.textButton(
+            50f,
+            Gdx.graphics.height - 300f - index * 75f,
+            Gdx.graphics.width - 100f,
+            55f,
+            "Loading",
+            font = Font.TINY_WHITE,
+            borderColor = Palette.RED
         ) {
-            println(userList[index])
+            println(userList[(page * 5) + index])
         }
     }
 
@@ -71,6 +108,6 @@ class MatchmakingState : MenuState() {
     }
 
     override fun render() {
-        this.view.render(*uiElements)
+        this.view.render(*guiObjects.toTypedArray())
     }
 }
