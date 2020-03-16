@@ -1,9 +1,11 @@
-package com.battleship.controller.state
+package com.battleship.controller.state.deprecated
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
-import com.battleship.model.ui.Button
+import com.battleship.controller.state.State
+import com.battleship.model.ui.deprecated.Button
 
+@Deprecated("Use GuiState instead")
 abstract class MenuState : State() {
     abstract val buttons: List<Button>
 

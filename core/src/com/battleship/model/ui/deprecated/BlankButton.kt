@@ -1,9 +1,10 @@
-package com.battleship.model.ui
+package com.battleship.model.ui.deprecated
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.battleship.utility.Palette
 
+@Deprecated("Use GuiObject instead")
 class BlankButton(
     position: Vector2,
     size: Vector2,

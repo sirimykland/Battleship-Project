@@ -2,11 +2,10 @@ package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
 import com.battleship.GameStateManager
-import com.battleship.controller.firebase.FindPlayer
-import com.battleship.controller.firebase.FirebaseController
-import com.battleship.model.ui.Button
-import com.battleship.model.ui.TextButton
-import com.battleship.model.ui.TextHeader
+import com.battleship.controller.state.deprecated.MenuState
+import com.battleship.model.ui.deprecated.Button
+import com.battleship.model.ui.deprecated.TextButton
+import com.battleship.model.ui.deprecated.TextHeader
 import com.battleship.utility.Font
 import com.battleship.utility.Palette
 import com.battleship.view.BasicView
@@ -15,12 +14,17 @@ import com.battleship.view.View
 class SettingsState : MenuState() {
 
     override var view: View = BasicView()
-    override var firebaseController: FirebaseController = FindPlayer()
 
     private val settingsButtons: Array<TextButton> = arrayOf(*(0..2).map { a: Int -> goToSetting(a) }.toTypedArray())
 
     override val buttons: List<Button> = listOf(
-        TextButton(20f, Gdx.graphics.height - 110f, 100f, 90f, "<-") { GameStateManager.set(MainMenuState()) },
+        TextButton(
+            20f,
+            Gdx.graphics.height - 110f,
+            100f,
+            90f,
+            "<-"
+        ) { GameStateManager.set(MainMenuState()) },
         *settingsButtons
     )
 
@@ -28,8 +32,10 @@ class SettingsState : MenuState() {
     private var settingsList = emptyList<String>()
 
     private val uiElements = arrayOf(
-        TextHeader(20f, Gdx.graphics.height - 120f, Gdx.graphics.width - 40f, 90f,
-            "Settings", font = Font.TINY_WHITE, color = Palette.BLACK),
+        TextHeader(
+            20f, Gdx.graphics.height - 120f, Gdx.graphics.width - 40f, 90f,
+            "Settings", font = Font.TINY_WHITE, color = Palette.BLACK
+        ),
         *buttons.toTypedArray()
     )
 
@@ -49,7 +55,8 @@ class SettingsState : MenuState() {
     fun goToSetting(index: Int): TextButton {
         return TextButton(
             50f, Gdx.graphics.height - 330f - index * 110f,
-            Gdx.graphics.width - 80f, 90f, "Loading") {
+            Gdx.graphics.width - 80f, 90f, "Loading"
+        ) {
             println(settingsList[index])
         }
     }

@@ -2,22 +2,26 @@ package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
 import com.battleship.GameStateManager
-import com.battleship.controller.firebase.FindPlayer
-import com.battleship.controller.firebase.FirebaseController
-import com.battleship.model.ui.Button
-import com.battleship.model.ui.TextBox
-import com.battleship.model.ui.TextButton
+import com.battleship.controller.state.deprecated.MenuState
+import com.battleship.model.ui.deprecated.Button
+import com.battleship.model.ui.deprecated.TextBox
+import com.battleship.model.ui.deprecated.TextButton
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
 class MatchmakingState : MenuState() {
     override var view: View = BasicView()
-    override var firebaseController: FirebaseController = FindPlayer()
 
     val playerButtons: Array<TextButton> = arrayOf(*(0..4).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
     override val buttons: List<Button> = listOf(
-        TextButton(20f, Gdx.graphics.height - 110f, 200f, 90f, "<-") {
+        TextButton(
+            20f,
+            Gdx.graphics.height - 110f,
+            200f,
+            90f,
+            "<-"
+        ) {
             GameStateManager.set(MainMenuState())
         },
         *playerButtons
@@ -29,7 +33,13 @@ class MatchmakingState : MenuState() {
 
     private val uiElements = arrayOf(
         *buttons.toTypedArray(),
-        TextBox(20f, Gdx.graphics.height - 220f, Gdx.graphics.width - 40f, 90f, "Matchmaking")
+        TextBox(
+            20f,
+            Gdx.graphics.height - 220f,
+            Gdx.graphics.width - 40f,
+            90f,
+            "Matchmaking"
+        )
     )
 
     override fun create() {
@@ -50,8 +60,9 @@ class MatchmakingState : MenuState() {
     fun joinUserButton(index: Int): TextButton {
         return TextButton(
             50f, Gdx.graphics.height - 330f - index * 110f,
-            Gdx.graphics.width - 100f, 90f, "Loading") {
-                println(userList[index])
+            Gdx.graphics.width - 100f, 90f, "Loading"
+        ) {
+            println(userList[index])
         }
     }
 
