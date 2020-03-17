@@ -1,8 +1,6 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.InputAdapter
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.firebase.UpdatePlayData
@@ -10,13 +8,13 @@ import com.battleship.model.GameInfo
 import com.battleship.model.Player
 import com.battleship.model.weapons.SmallWeapon
 import com.battleship.utility.CoordinateUtil.toCoordinate
-import com.battleship.utility.GdxGraphicsUtil.boardPosition
-import com.battleship.utility.GdxGraphicsUtil.boardWidth
+import com.battleship.utility.GdxGraphicsUtil.boardRectangle
+import com.battleship.utility.GdxGraphicsUtil.size
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
 
-class PlayState : State() {
+class PreGameState : State() {
     override var view: View = PlayView()
     override var firebaseController: FirebaseController = UpdatePlayData()
     var boardSize = 10
@@ -45,16 +43,19 @@ class PlayState : State() {
      *  and com.battleship.utility.GdxGraphicsUtil.*
      */
     fun handleInput() {
+        //drag ship / set position relative to global
         if (Gdx.input.justTouched()) {
+            println("touch ")
             val touchPos =
                     Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
-            val boardWidth = Gdx.graphics.boardWidth()
-            val boardPos = Gdx.graphics.boardPosition()
-
-            val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
-            if (boardBounds.contains(touchPos)) {
-                player.board.updateTile(touchPos.toCoordinate(boardPos, boardWidth, boardSize))
+            val screenSize = Gdx.graphics.size()
+            // if input on board
+            if (Gdx.graphics.boardRectangle().contains(touchPos)) {
+                // if input on ship
+                println("   on board")
+                //if(player.board.validateShipPosition(touchPos.toCoordinate(boardPos, Gdx.graphics.boardWidth(), boardSize)))
             }
         }
+        //if (Gdx.input.)
     }
 }

@@ -14,6 +14,8 @@ class Board(val size: Int) : GameObject() {
     var board = Array(size) { Array(size) { Tile.UNGUESSED } }
     val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
+    // var shipHandler:ShipHandler = ShipHandler(position, size, onClick)
+
 
     fun addSmallShip(x: Int, y: Int) {
         // TODO add check
@@ -35,10 +37,14 @@ class Board(val size: Int) : GameObject() {
         for (i in 0..shipNumber) {
             do {
                 ship = MediumShip(Vector2(Random.nextInt(0, size).toFloat(), Random.nextInt(0, size).toFloat()), Random.nextBoolean())
-                println("shipposition: (" + ship.position.x + ", " + ship.position.y + ")")
+                // println("shipposition: (" + ship.position.x + ", " + ship.position.y + ")")
             } while (!validateShipPosition(ship))
             ships.add(ship)
         }
+    }
+
+    fun moveShip(){
+        println("test move ship()")
     }
 
     /*

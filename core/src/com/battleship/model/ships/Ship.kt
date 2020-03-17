@@ -15,6 +15,7 @@ abstract class Ship(var position: Vector2) : GameObject() {
     abstract var sprite: Sprite
     var shapeRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
+    var reveiled:Boolean = false
 
     fun hit(coordinates: Vector2): Boolean {
         println("Touch: " + coordinates)
@@ -29,7 +30,6 @@ abstract class Ship(var position: Vector2) : GameObject() {
                 }
             }
         }
-
         return false
     }
 
@@ -60,13 +60,15 @@ abstract class Ship(var position: Vector2) : GameObject() {
                 this.dimension.y * dimension.y
         )
         shapeRenderer.end()
-        batch.begin()
-        batch.draw(sprite.texture,
-                newX,
-                newY,
-                this.dimension.x * dimension.x,
-                this.dimension.y * dimension.y)
-        batch.end()
+        if(health == 0){
+            batch.begin()
+            batch.draw(sprite.texture,
+                    newX,
+                    newY,
+                    this.dimension.x * dimension.x,
+                    this.dimension.y * dimension.y)
+            batch.end()
+        }
     }
 
     fun getTiles(): ArrayList<Vector2> {

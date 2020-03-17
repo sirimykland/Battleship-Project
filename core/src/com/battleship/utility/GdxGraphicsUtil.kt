@@ -1,9 +1,17 @@
 package com.battleship.utility
 
 import com.badlogic.gdx.Graphics
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 
 object GdxGraphicsUtil {
+    fun Graphics.size(): Vector2 {
+        return Vector2(
+                this.width.toFloat(),
+                this.height.toFloat()
+        )
+    }
+
     /*
      * this function extends Gdx.graphics
      */
@@ -19,6 +27,15 @@ object GdxGraphicsUtil {
      */
     fun Graphics.boardWidth(): Float {
         return this.width.toFloat() * 0.9f
+    }
+    fun Graphics.boardRectangle(): Rectangle {
+        val pos = this.boardPosition()
+        return Rectangle(
+                pos.x,
+                pos.y,
+                this.boardWidth(),
+                this.boardWidth()
+        )
     }
 
     fun Graphics.weaponsetSize(): Vector2 {
