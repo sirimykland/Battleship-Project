@@ -2,29 +2,42 @@ package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
 import com.battleship.GameStateManager
-import com.battleship.controller.firebase.FirebaseController
-import com.battleship.model.ui.Button
-import com.battleship.model.ui.TextButton
+import com.battleship.model.ui.GuiObject
+import com.battleship.utility.Font
+import com.battleship.utility.GUI
+import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
-class MainMenuState : MenuState() {
+class MainMenuState : GuiState() {
 
-    val mathchmakingButton = TextButton(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 200f, 300f, 150f, "Matchmaking") { GameStateManager.set(MatchmakingState()) }
-    val settingsButton = TextButton(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 400f, 300f, 150f, "Settings") { GameStateManager.set(SettingsState()) }
-    val playButton = TextButton(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 600f, 300f, 150f, "Play") { GameStateManager.set(PlayState()) }
-    val testButton = TextButton(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 800f, 300f, 150f, "Testmenu") { GameStateManager.set(TestMenuState()) }
+    private val menuList = listOf(
+        Pair("Matchmaking") { GameStateManager.set(MatchmakingState()) },
+        Pair("Settings") { GameStateManager.set(SettingsState()) },
+        Pair("Play") { GameStateManager.set(PlayState()) },
+        Pair("Testmenu") { GameStateManager.set(TestMenuState()) }
+    )
 
-    override val buttons: List<Button> = listOf(mathchmakingButton, testButton, settingsButton, playButton)
+    override val guiObjects: List<GuiObject> = menuList
+        .mapIndexed { i, (name, func) ->
+            GUI.textButton(
+                Gdx.graphics.width / 2 - 170f,
+                Gdx.graphics.height - (200f + 180f * i),
+                340f,
+                140f,
+                name,
+                font = Font.MEDIUM_BLACK,
+                color = Palette.GREY,
+                borderColor = Palette.LIGHT_GREY,
+                onClick = func
+            )
+        }
+
     override var view: View = BasicView()
-    override var firebaseController: FirebaseController
-        get() = TODO("not implemented") // To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
 
-    override fun update(dt: Float) {
-    }
+    override fun update(dt: Float) {}
 
     override fun render() {
-        view.render(*buttons.toTypedArray())
+        view.render(*guiObjects.toTypedArray())
     }
 }
