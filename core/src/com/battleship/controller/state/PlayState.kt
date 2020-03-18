@@ -3,8 +3,6 @@ package com.battleship.controller.state
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
-import com.battleship.controller.firebase.FirebaseController
-import com.battleship.controller.firebase.UpdatePlayData
 import com.battleship.model.GameInfo
 import com.battleship.model.Player
 import com.battleship.model.weapons.BigWeapon
@@ -18,7 +16,6 @@ import com.battleship.view.View
 
 class PlayState : State() {
     override var view: View = PlayView()
-    override var firebaseController: FirebaseController = UpdatePlayData()
     var boardSize = 10
     var player: Player = Player(boardSize)
     var gameInfo = GameInfo(player)

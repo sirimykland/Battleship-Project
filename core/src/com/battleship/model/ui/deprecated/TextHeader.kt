@@ -1,4 +1,4 @@
-package com.battleship.model.ui
+package com.battleship.model.ui.deprecated
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -8,15 +8,15 @@ import com.badlogic.gdx.utils.Align
 import com.battleship.utility.Font
 import com.battleship.utility.Palette
 
-class TextBox(
+@Deprecated("Use GuiObject instead")
+class TextHeader(
     position: Vector2,
     size: Vector2,
-    private val text: String,
-    private val font: BitmapFont = Font.MEDIUM_BLACK,
-    borderColor: TextureRegion = Palette.WHITE,
-    color: TextureRegion = Palette.LIGHT_BLUE
+    val text: String,
+    val font: BitmapFont = Font.MEDIUM_WHITE,
+    color: TextureRegion = Palette.GREY
 ) :
-    MenuItem(position, size, borderColor, color) {
+    Header(position, size, color) {
 
     constructor(
         posX: Float,
@@ -24,11 +24,10 @@ class TextBox(
         sizeX: Float,
         sizeY: Float,
         text: String,
-        font: BitmapFont = Font.MEDIUM_BLACK,
-        borderColor: TextureRegion = Palette.WHITE,
-        color: TextureRegion = Palette.LIGHT_BLUE
+        font: BitmapFont = Font.MEDIUM_WHITE,
+        color: TextureRegion = Palette.GREY
     ) :
-        this(Vector2(posX, posY), Vector2(sizeX, sizeY), text, font, borderColor, color)
+        this(Vector2(posX, posY), Vector2(sizeX, sizeY), text, font, color)
 
     override fun draw(batch: SpriteBatch) {
         super.draw(batch)
