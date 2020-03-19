@@ -39,6 +39,14 @@ class SettingsState : GuiState() {
             "Settings",
             Font.LARGE_WHITE
         ),
+        GUI.text(
+            20f,
+            220f,
+            Gdx.graphics.width - 40f,
+            90f,
+            "Write stuff about the app here",
+            Font.LARGE_WHITE
+        ),
         GUI.backButton
     )
 
