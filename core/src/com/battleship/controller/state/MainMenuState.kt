@@ -14,7 +14,7 @@ class MainMenuState : GuiState() {
     private val menuList = listOf(
         Pair("Matchmaking") { GameStateManager.set(MatchmakingState()) },
         Pair("Settings") { GameStateManager.set(SettingsState()) },
-        Pair("Play") { GameStateManager.set(PlayState()) },
+        Pair("Play") { GameStateManager.set(PreGameState()) },
         Pair("Testmenu") { GameStateManager.set(TestMenuState()) }
     )
 
