@@ -1,4 +1,4 @@
-package com.battleship.model.ui
+package com.battleship.model.ui.deprecated
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Align
 import com.battleship.utility.Font
 import com.battleship.utility.Palette
 
+@Deprecated("Use GuiObject instead")
 open class TextButton(
     position: Vector2,
     size: Vector2,

@@ -1,10 +1,11 @@
-package com.battleship.model.ui
+package com.battleship.model.ui.deprecated
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 
+@Deprecated("Use GuiObject instead")
 abstract class MenuItem(
     val position: Vector2,
     val size: Vector2,
