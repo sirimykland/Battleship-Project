@@ -3,12 +3,7 @@ package com.battleship.desktop
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
 import com.battleship.BattleshipGame
-import com.battleship.controller.firebase.AuthResponse
-import com.battleship.controller.firebase.Authentication
 import com.battleship.controller.firebase.GameController
-import com.battleship.controller.firebase.PlayerController
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 
 object DesktopLauncher {
     @JvmStatic
@@ -31,7 +26,7 @@ object DesktopLauncher {
         ship2["y"] = 33
         testShips.add(ship1)
         testShips.add(ship2)
-        gameController.addGameListener(testGame2,testUser2)
+        gameController.addGameListener(testGame2, testUser2)
 
         // gameController.addGameListener(testGame,testUser)
         println(gameController.getPendingGames())

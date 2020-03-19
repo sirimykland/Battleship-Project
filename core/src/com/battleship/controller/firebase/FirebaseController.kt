@@ -14,7 +14,7 @@ abstract class FirebaseController {
     // The URL of the firebase project
     private val firebaseUrl = "https://battleshipz.firebaseio.com"
     // Protected variable used by the other controllers to access database
-    protected val db: Firestore;
+    protected val db: Firestore
 
     // Set up database connection
     init {
