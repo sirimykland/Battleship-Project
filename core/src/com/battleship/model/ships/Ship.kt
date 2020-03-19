@@ -14,8 +14,8 @@ abstract class Ship(var position: Vector2) : GameObject() {
     abstract var health: Int
     abstract var sprite: Sprite
     var shapeRenderer: ShapeRenderer = ShapeRenderer()
-    var padding : Int = 1
-    var reveiled : Boolean = false
+    var padding = 1
+    var reveiled = false
 
     fun hit(coordinates: Vector2): Boolean {
         for (i in 1 until dimension.x.toInt() + 1) {
