@@ -13,25 +13,33 @@ class HelpState : GuiState() {
     override var view: View = BasicView()
     private var pageIndex: Int = 0
 
-    // TODO: Replace descriptions and imagepaths with common object
-
     // TODO: Update this with real description when game is more completed
-    private val descriptions: List<String> = listOf("First page", "Second page", "Third page")
+    private val descriptions: List<String> = listOf(
+        "First page, bla bla bla",
+        "Second page, bla bla bla",
+        "Third page, bla bla bla",
+        "Fourth page, bla bla bla"
+    )
 
     // TODO: Update this with real screenshots from the game when it is more completed
-    private val imagePaths: List<String> = listOf("helpGuide/page1.png", "helpGuide/page2.png", "helpGuide/page3.png")
+    private val imagePaths: List<String> = listOf(
+        "helpGuide/page1.png",
+        "helpGuide/page2.png",
+        "helpGuide/page3.png",
+        "helpGuide/page4.png"
+    )
 
     private var currentDescription: GuiObject = GUI.text(
         20f,
-        220f,
+        170f,
         Gdx.graphics.width - 40f,
         90f,
         descriptions[0],
         Font.MEDIUM_WHITE
     )
     private var currentImage: GuiObject = GUI.image(
-        200f,
-        200f,
+        120f,
+        260f,
         500f,
         500f,
         "badlogic.jpg"
@@ -90,9 +98,6 @@ class HelpState : GuiState() {
             previousPageButton.show()
         else
             previousPageButton.hide()
-
-        // TODO: Remove print
-        print("Pageindex: $pageIndex")
 
         currentDescription.set(Text(descriptions[pageIndex]))
         currentImage.set(Image(imagePaths[pageIndex]))
