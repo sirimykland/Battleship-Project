@@ -9,6 +9,9 @@ import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
+/**
+ * State handling all logic related to the help menu
+ */
 class HelpState : GuiState() {
     override var view: View = BasicView()
     private var pageIndex: Int = 0

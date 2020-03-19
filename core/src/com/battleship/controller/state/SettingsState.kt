@@ -11,6 +11,9 @@ import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
+/**
+ * State handling all logic related to the settings menu
+ */
 class SettingsState : GuiState() {
     override var view: View = BasicView()
 
@@ -70,20 +73,16 @@ class SettingsState : GuiState() {
         GUI.backButton
     )
 
-    private fun updateButtons() {
-        if(BattleshipGame.music?.isPlaying == true) {
-            // TODO: Not set text if text is equal
-            soundButton.set(Text("Sound off"))
-        } else if (BattleshipGame.music?.isPlaying == false){
-            soundButton.set(Text("Sound on"))
-        } else {
-            soundButton.set(Text("No sound"))
-        }
-
-    }
     override fun create() {
         super.create()
         updateButtons()
+    }
+
+    private fun updateButtons() {
+        if(BattleshipGame.music?.isPlaying == true)
+            soundButton.set(Text("Sound off"))
+         else
+            soundButton.set(Text("Sound on"))
     }
 
     override fun update(dt: Float) {
