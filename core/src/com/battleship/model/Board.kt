@@ -102,9 +102,10 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
+    // her er det to sett med x og y variabler ?
     fun shootTiles(boardTouchPos: Vector2, weapon: Weapon) {
-        var x = boardTouchPos.x.toInt()
-        var y = boardTouchPos.y.toInt()
+        val x = boardTouchPos.x.toInt()
+        val y = boardTouchPos.y.toInt()
         // Loops through the weapons radius
         for (x in x - weapon.radius until x + weapon.radius + 1 step 1) {
             for (y in y - weapon.radius until y + weapon.radius + 1 step 1) {
