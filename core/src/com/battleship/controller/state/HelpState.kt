@@ -98,7 +98,7 @@ class HelpState : GuiState() {
             previousPageButton.show()
         else
             previousPageButton.hide()
-        
+
         currentDescription.set(Text(descriptions[pageIndex]))
         currentImage.set(Image(imagePaths[pageIndex]))
     }
