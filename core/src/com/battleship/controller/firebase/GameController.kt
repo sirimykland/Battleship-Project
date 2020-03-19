@@ -9,7 +9,7 @@ import com.google.firebase.database.annotations.Nullable
  * Controller handling all database activity concerned with game flow
  */
 @Suppress("UNCHECKED_CAST")
-class GameController : FirebaseController(){
+class GameController : FirebaseController() {
 
     /**
      * Start new game
@@ -22,7 +22,7 @@ class GameController : FirebaseController(){
         data["player2"] = ""
         data["winner"] = ""
         data["moves"] = mutableListOf<Map<String, Any>>()
-        data["ships"] = mutableMapOf<String,List<Map<String, Any>>>()
+        data["ships"] = mutableMapOf<String, List<Map<String, Any>>>()
 
         val res = db.collection("games").add(data)
 
@@ -71,16 +71,15 @@ class GameController : FirebaseController(){
      * @param userId the id of the user owning the ships
      * @param ships list containing the ships that should be added, each described using a map
      */
-    fun registerShips(gameId: String, userId: String, ships: List<Map<String, Any>>){
+    fun registerShips(gameId: String, userId: String, ships: List<Map<String, Any>>) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
-        if(game.exists()){
-            val dbShips=  game.get("ships") as MutableMap<String,List<Map<String, Any>>>
-            dbShips[userId]=ships
+        if (game.exists()) {
+            val dbShips = game.get("ships") as MutableMap<String, List<Map<String, Any>>>
+            dbShips[userId] = ships
             db.collection("games").document(gameId).update("ships", dbShips)
-        }
-        else{
-            //Add error handling
+        } else {
+            // Add error handling
             println("Something went wrong when registering ships")
         }
     }
@@ -90,13 +89,12 @@ class GameController : FirebaseController(){
      * @param gameId the id of the game
      * @return a map containing a list of ships per user
      */
-    fun getShips(gameId: String) : MutableMap<String,List<Map<String, Any>>>{
+    fun getShips(gameId: String): MutableMap<String, List<Map<String, Any>>> {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
-        if(game.exists()) {
+        if (game.exists()) {
             return game.get("ships") as MutableMap<String, List<Map<String, Any>>>
-        }
-        else{
+        } else {
             throw error("Something went wrong when fetching ships")
         }
     }
@@ -145,8 +143,8 @@ class GameController : FirebaseController(){
         val docRef = db.collection("games").document(gameId)
         docRef.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
-                @Nullable snapshot: DocumentSnapshot?,
-                @Nullable e: FirestoreException?
+                    @Nullable snapshot: DocumentSnapshot?,
+                    @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
                     System.err.println("Listen failed: $e")
@@ -159,17 +157,17 @@ class GameController : FirebaseController(){
                     if (opponent == "") {
                         println("Opponent not joined yet")
                     }
-                    //If there is an opponent in the game
-                    else{
-                        //Get the field containing the ships in the database
-                        val ships = snapshot.data?.get("ships") as MutableMap<String,List<Map<String, Any>>>
+                    // If there is an opponent in the game
+                    else {
+                        // Get the field containing the ships in the database
+                        val ships = snapshot.data?.get("ships") as MutableMap<String, List<Map<String, Any>>>
 
-                        //If there is not enough ships registered
-                        if(ships.size < 2){
+                        // If there is not enough ships registered
+                        if (ships.size < 2) {
                             println("Ships not registered")
                         }
 
-                        //Get the list of moves
+                        // Get the list of moves
                         val moves = snapshot.data?.get("moves") as MutableList<Map<String, Any>>
 
                         val winner = snapshot.data?.get("winner")
@@ -177,16 +175,15 @@ class GameController : FirebaseController(){
                         if (winner != "") {
                             println("The winner is $winner")
                         }
-                        //If there is no winner, continue game
-                        else{
-                            //If no moves has been made yet
-                            if(moves.size == 0){
+                        // If there is no winner, continue game
+                        else {
+                            // If no moves has been made yet
+                            if (moves.size == 0) {
                                 println("No moves made yet")
-                            }
-                            else {
-                                //Get the last move
+                            } else {
+                                // Get the last move
                                 val lastMove = moves.get(moves.size - 1)
-                                //If the last move is performed by opponent
+                                // If the last move is performed by opponent
                                 if (!lastMove["playerId"]!!.equals(playerId)) {
                                     println("Motstander hadde siste trekk")
                                 } else {

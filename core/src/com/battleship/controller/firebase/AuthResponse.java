@@ -60,7 +60,7 @@ public class AuthResponse {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "AuthResponse {" +
                 "\n\tidToken: " + idToken +
                 "\n\temail: " + email +
