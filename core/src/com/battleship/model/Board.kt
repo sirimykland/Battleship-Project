@@ -8,11 +8,13 @@ import com.battleship.model.ships.MediumShip
 import com.battleship.model.ships.Ship
 import com.battleship.model.ships.SmallShip
 import kotlin.random.Random
+import com.battleship.model.weapons.RadarWeapon
+import com.battleship.model.weapons.Weapon
 
 class Board(val size: Int) : GameObject() {
-    var ships: ArrayList<Ship> = ArrayList()
-    var board = Array(size) { Array(size) { Tile.UNGUESSED } }
-    val tileRenderer: ShapeRenderer = ShapeRenderer()
+    private var ships: ArrayList<Ship> = ArrayList()
+    private var board = Array(size) { Array(size) { Tile.UNGUESSED } }
+    private val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
     // var shipHandler:ShipHandler = ShipHandler(position, size, onClick)
 
@@ -100,25 +102,71 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
-    fun updateTile(pos: Vector2): Boolean {
-        val shipPos = Vector2(pos.y, pos.x)
+    fun shootTiles(boardTouchPos: Vector2, weapon: Weapon) {
+        var x = boardTouchPos.x.toInt()
+        var y = boardTouchPos.y.toInt()
+        // Loops through the weapons radius
+        for (x in x - weapon.radius until x + weapon.radius + 1 step 1) {
+            for (y in y - weapon.radius until y + weapon.radius + 1 step 1) {
+                // Checks if inside board
+                if (x >= 0 && x < size && y >= 0 && y < size) {
+                    updateTile(Vector2(x.toFloat(), y.toFloat()), weapon)
+                }
+            }
+        }
+    }
 
-        if (board[pos.x.toInt()][pos.y.toInt()] == Tile.MISS || board[pos.x.toInt()][pos.y.toInt()] == Tile.HIT) {
+    // TODO needs cleanup
+    fun updateTile(pos: Vector2, weapon: Weapon) {
+        var shipPos = Vector2(pos.y, pos.x)
+
+        val boardTile = getTile(pos)
+        if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
             println("Guessed, pick new")
-            return false
+            return
         }
 
         var hit = Tile.MISS
-        for (ship in ships) {
-            if (ship.hit(shipPos)) {
-                hit = Tile.HIT
-                ship.takeDamage(1)
+        var hittedShip = getShipByPosition(shipPos)
+        if (hittedShip != null) {
+            println("Hitted")
+            hit = Tile.HIT
+            hittedShip.takeDamage(weapon.damage)
+            if (hittedShip.sunk()) {
+                println(hittedShip.name + " Sunk")
+                ships.remove(hittedShip)
             }
+        } else {
+            println("Missed")
         }
 
-        println(hit)
+        // TODO implement
+        if (weapon is RadarWeapon) {
+            hit = Tile.NEAR
+        }
+
         board[pos.x.toInt()][pos.y.toInt()] = hit
-        return hit == Tile.HIT
+    }
+
+    fun getTile(pos: Vector2): Board.Tile {
+        return board[pos.x.toInt()][pos.y.toInt()]
+    }
+
+    fun getShipByPosition(pos: Vector2): Ship? {
+        for (ship in ships) {
+            if (ship.hit(pos)) {
+                return ship
+            }
+        }
+        return null
+    }
+
+    fun getAllShipHealth(): Int {
+        var health = 0
+        for (ship in ships) {
+            health += ship.health
+        }
+        return health
     }
 
     enum class Tile {

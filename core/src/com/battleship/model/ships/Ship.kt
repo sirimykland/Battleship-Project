@@ -18,13 +18,12 @@ abstract class Ship(var position: Vector2) : GameObject() {
     var reveiled:Boolean = false
 
     fun hit(coordinates: Vector2): Boolean {
-        println("Touch: " + coordinates)
         for (i in 1 until dimension.x.toInt() + 1) {
             val x = position.x + i - 1
             for (j in 1 until dimension.y.toInt() + 1) {
                 val y = position.y + j - 1
 
-                println("Ship: (" + x + "," + y + ")")
+                // println("Ship: (" + x + "," + y + ")")
                 if (coordinates.epsilonEquals(x, y)) {
                     return true
                 }
@@ -54,10 +53,10 @@ abstract class Ship(var position: Vector2) : GameObject() {
         val newX = boardPos.x + dimension.x * position.x + position.x * padding
         val newY = boardPos.y + dimension.y * position.y + position.y * padding
         shapeRenderer.rect(
-                newX,
-                newY,
-                this.dimension.x * dimension.x,
-                this.dimension.y * dimension.y
+            newX,
+            newY,
+            this.dimension.x * dimension.x,
+            this.dimension.y * dimension.y
         )
         shapeRenderer.end()
         if(health == 0){
