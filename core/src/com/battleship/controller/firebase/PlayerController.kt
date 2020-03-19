@@ -1,10 +1,9 @@
 package com.battleship.controller.firebase
 
-
 /**
  * Controller handling all database activity concerned with player management
  */
-class PlayerController : FirebaseController(){
+class PlayerController : FirebaseController() {
 
     /**
      * Get all the players registered in the database
@@ -29,12 +28,12 @@ class PlayerController : FirebaseController(){
      * @param username the username wanted
      * @return id of player
      */
-    fun addPlayer(username : String) : String{
-        //Add the data to a Map for pushing to db
+    fun addPlayer(username: String): String {
+        // Add the data to a Map for pushing to db
         val data = mutableMapOf<String, Any>()
-        data["username"] = username;
+        data["username"] = username
 
-        //Push to db
+        // Push to db
         val addRes = db.collection("users").add(data)
 
         return addRes.get().id

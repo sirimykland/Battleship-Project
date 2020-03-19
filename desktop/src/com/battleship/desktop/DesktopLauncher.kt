@@ -10,7 +10,6 @@ import com.battleship.controller.firebase.PlayerController
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 
-
 object DesktopLauncher {
     @JvmStatic
     fun main(arg: Array<String>) {
@@ -34,11 +33,11 @@ object DesktopLauncher {
         testShips.add(ship2)
         gameController.addGameListener(testGame2,testUser2)
 
-        //gameController.createGame(testUser2)
-        //gameController.registerShips(testGame2, testUser2, testShips)
-        //println(gameController.getShips(testGame2))
+        // gameController.addGameListener(testGame,testUser)
+        println(gameController.getPendingGames())
 
         val config = LwjglApplicationConfiguration()
+        config.height = 800
         LwjglApplication(BattleshipGame(), config)
     }
 }
