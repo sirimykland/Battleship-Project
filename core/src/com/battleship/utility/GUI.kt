@@ -8,6 +8,7 @@ import com.battleship.controller.state.MainMenuState
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
+import com.battleship.model.ui.Image
 import com.battleship.model.ui.Text
 
 object GUI {
@@ -81,5 +82,16 @@ object GUI {
             .with(Border(borderColor))
             .with(Text(text, font))
             .onClick(onClick)
+    }
+
+    fun image(
+        posX: Float,
+        posY: Float,
+        sizeX: Float,
+        sizeY: Float,
+        texturePath: String
+    ): GuiObject {
+        return GuiObject(posX, posY, sizeX, sizeY)
+            .with(Image(texturePath))
     }
 }

@@ -1,10 +1,9 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.battleship.GameStateManager
-import com.battleship.model.GameObject
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Image
+import com.battleship.model.ui.Text
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.view.BasicView
@@ -12,24 +11,32 @@ import com.battleship.view.View
 
 class HelpState : GuiState() {
     override var view: View = BasicView()
-
     private var pageIndex: Int = 0
-    private val numberOfPages: Int = 4 // Need to be equal to size of images/descriptions lists
+
+    // TODO: Replace descriptions and imagepaths with common object
+
+    // TODO: Update this with real description when game is more completed
+    private val descriptions: List<String> = listOf("First page", "Second page", "Third page")
 
     // TODO: Update this with real screenshots from the game when it is more completed
-    private val images: List<Image> = listOf(
-        Image(200f, Gdx.graphics.height / 2 - 100f, "badlogic.jpg"),
-        Image(200f, Gdx.graphics.height / 2 - 100f, "badlogic.jpg"),
-        Image(200f, Gdx.graphics.height / 2 - 100f, "badlogic.jpg"),
-        Image(200f, Gdx.graphics.height / 2 - 100f, "badlogic.jpg")
+    private val imagePaths: List<String> = listOf("helpGuide/page1.png", "helpGuide/page2.png", "helpGuide/page3.png")
+
+    private var currentDescription: GuiObject = GUI.text(
+        20f,
+        220f,
+        Gdx.graphics.width - 40f,
+        90f,
+        descriptions[0],
+        Font.MEDIUM_WHITE
     )
-    // TODO: Update this with real description when game is more completed
-    private val descriptions: List<TextBox> = listOf(
-        TextBox(20f, 150f, Gdx.graphics.width - 40f, 90f, "First page"),
-        TextBox(20f, 150f, Gdx.graphics.width - 40f, 90f, "Second page"),
-        TextBox(20f, 150f, Gdx.graphics.width - 40f, 90f, "Third page"),
-        TextBox(20f, 150f, Gdx.graphics.width - 40f, 90f, "Fourth page")
+    private var currentImage: GuiObject = GUI.image(
+        200f,
+        200f,
+        500f,
+        500f,
+        "badlogic.jpg"
     )
+
     private val nextPageButton = GUI.textButton(
         Gdx.graphics.width - 150f,
         30f,
@@ -40,6 +47,7 @@ class HelpState : GuiState() {
         pageIndex++
         updateButtons()
     }
+
     private val previousPageButton = GUI.textButton(
         30f,
         30f,
@@ -57,19 +65,38 @@ class HelpState : GuiState() {
             Gdx.graphics.height - 220f,
             Gdx.graphics.width - 40f,
             90f,
-            "Matchmaking",
+            "Help",
             Font.LARGE_WHITE
         ),
         nextPageButton,
         previousPageButton,
-        *playerButtons,
+        currentDescription,
+        currentImage,
         GUI.backButton
     )
-    private fun updateButtons() {
-        
+
+    override fun create() {
+        super.create()
+        updateButtons()
     }
 
+    private fun updateButtons() {
+        if (pageIndex < imagePaths.size - 1)
+            nextPageButton.show()
+        else
+            nextPageButton.hide()
 
+        if (pageIndex > 0)
+            previousPageButton.show()
+        else
+            previousPageButton.hide()
+
+        // TODO: Remove print
+        print("Pageindex: $pageIndex")
+
+        currentDescription.set(Text(descriptions[pageIndex]))
+        currentImage.set(Image(imagePaths[pageIndex]))
+    }
 
     override fun update(dt: Float) {
     }
@@ -77,50 +104,4 @@ class HelpState : GuiState() {
     override fun render() {
         view.render(*guiObjects.toTypedArray())
     }
-}
-
-    /*
-    private var uiElements: Array<GameObject> = arrayOf()
-    override fun update(dt: Float) {
-        /*uiElements = arrayOf(
-            TextButton(20f, Gdx.graphics.height - 110f, 150f, 90f, "Back") { GameStateManager.set(MainMenuState()) },
-            Header(Gdx.graphics.width / 2 - 150f, Gdx.graphics.height - 130f, 300f, 150f, "Help"),
-            *buttons.toTypedArray()
-        )
-    }
-    override fun render() {
-        /*when (currentPageIndex) {
-            0 -> buttons = listOf(
-                TextButton(Gdx.graphics.width - 170f, 20f, 150f, 90f, "-->") {
-                    currentPageIndex += 1
-                }
-            )
-            (numberOfPages - 1) -> buttons = listOf(
-                TextButton(20f, 20f, 150f, 90f, "<--") {
-                    currentPageIndex -= 1
-                }
-            )
-            in 1..numberOfPages -> buttons = listOf(
-                TextButton(20f, 20f, 150f, 90f, "<--") {
-                    currentPageIndex -= 1
-                },
-                TextButton(Gdx.graphics.width - 170f, 20f, 150f, 90f, "-->") {
-                    currentPageIndex += 1
-                }
-            )
-        }*/
-        view.render(*uiELeements.toTypedArray(), image, description)
-    }
-
-    override var buttons: List<Button> = listOf(
-        TextButton(20f, Gdx.graphics.height - 110f, 150f, 90f, "Back") {
-            GameStateManager.set(MainMenuState())
-        },
-        TextButton(20f, 20f, 150f, 90f, "<--") {
-            if(currentPageIndex > 0) currentPageIndex -= 1
-        },
-        TextButton(Gdx.graphics.width - 170f, 20f, 150f, 90f, "-->") {
-            if (currentPageIndex < numberOfPages - 1) currentPageIndex += 1
-        }
-    )*/
 }

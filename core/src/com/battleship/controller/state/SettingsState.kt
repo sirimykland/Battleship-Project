@@ -1,6 +1,7 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
+import com.battleship.GameStateManager
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
@@ -12,8 +13,7 @@ class SettingsState : GuiState() {
 
     private val settingsList = listOf(
         Pair("Sound on") { println("Sound on") },
-        Pair("Your profile") { println("Your profile") },
-        Pair("About the app") { println("About the app") }
+        Pair("Help") { GameStateManager.set(HelpState()) }
     )
 
     override val guiObjects: List<GuiObject> = listOf(
@@ -41,11 +41,11 @@ class SettingsState : GuiState() {
         ),
         GUI.text(
             20f,
-            220f,
+            20f,
             Gdx.graphics.width - 40f,
             90f,
-            "Write stuff about the app here",
-            Font.LARGE_WHITE
+            "v0.0.1",
+            Font.SMALL_WHITE
         ),
         GUI.backButton
     )

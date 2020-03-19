@@ -69,10 +69,10 @@ class MatchmakingState : GuiState() {
 
     private fun updateButtons() {
         val index = page * 5
-        playerButtons.forEachIndexed { i, guiObject ->
+        playerButtons.forEachIndexed { i, _ ->
             val j = index + i
             val button = playerButtons[i]
-            if (j <userList.size) {
+            if (j < userList.size) {
                 button.set(Text(userList[j]))
                 button.show()
             } else {
