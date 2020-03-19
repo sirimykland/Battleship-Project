@@ -7,14 +7,17 @@ import com.battleship.controller.state.MainMenuState
 import com.battleship.utility.Font
 
 class BattleshipGame : Game() {
-    var music: Music? = null
+    companion object{
+        var music: Music? = null
+    }
 
     override fun create() {
-        val music =
-            Gdx.audio.newMusic(Gdx.files.internal("music.mp3"))
-        music.isLooping = true;
-        music.volume = 0.1f;
-        music.play();
+        if (Gdx.files.internal("music.mp3").exists()) {
+            music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"))
+            music?.isLooping = true;
+            music?.volume = 0.5f;
+            music?.play();
+        }
 
         GameStateManager.push(MainMenuState())
     }
