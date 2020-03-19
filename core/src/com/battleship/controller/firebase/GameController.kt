@@ -142,7 +142,9 @@ class GameController : FirebaseController() {
     fun addGameListener(gameId: String, playerId: String) {
         val docRef = db.collection("games").document(gameId)
         docRef.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
-            override fun onEvent(@Nullable snapshot: DocumentSnapshot?, @Nullable e: FirestoreException?
+            override fun onEvent(
+                @Nullable snapshot: DocumentSnapshot?,
+                @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
                     System.err.println("Listen failed: $e")
@@ -163,8 +165,7 @@ class GameController : FirebaseController() {
                         // If there is not enough ships registered
                         if (ships.size < 2) {
                             println("Ships not registered")
-                        }
-                        else {
+                        } else {
 
                             // Get the list of moves
                             val moves = snapshot.data?.get("moves") as MutableList<Map<String, Any>>
