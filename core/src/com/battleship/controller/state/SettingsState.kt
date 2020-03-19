@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.battleship.BattleshipGame
 import com.battleship.GameStateManager
 import com.battleship.model.ui.GuiObject
+import com.battleship.model.ui.Text
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.utility.Palette
@@ -11,24 +12,26 @@ import com.battleship.view.BasicView
 import com.battleship.view.View
 
 class SettingsState : GuiState() {
+    override var view: View = BasicView()
+
+    private var soundButton: GuiObject = GUI.textButton(
+        Gdx.graphics.width / 2 - 170f,
+        Gdx.graphics.height - 380f,
+        340f,
+        140f,
+        "Sound off",
+        font = Font.MEDIUM_WHITE,
+        color = Palette.BLACK,
+        borderColor = Palette.BLUE,
+        onClick =  {
+            if(BattleshipGame.music?.isPlaying == true)
+                BattleshipGame.music?.pause()
+            else
+                BattleshipGame.music?.play()
+        }
+    )
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.textButton(
-            Gdx.graphics.width / 2 - 170f,
-            Gdx.graphics.height - 380f,
-            340f,
-            140f,
-            "Sound on/off",
-            font = Font.MEDIUM_WHITE,
-            color = Palette.BLACK,
-            borderColor = Palette.BLUE,
-            onClick =  {
-                print("Sound on/off")
-                if(BattleshipGame.music?.isPlaying == true)
-                    BattleshipGame.music?.pause()
-                else
-                    BattleshipGame.music?.play()
-            }
-        ),
+        soundButton,
         GUI.textButton(
             Gdx.graphics.width / 2 - 170f,
             Gdx.graphics.height - 560f,
@@ -67,9 +70,25 @@ class SettingsState : GuiState() {
         GUI.backButton
     )
 
-    override var view: View = BasicView()
+    private fun updateButtons() {
+        if(BattleshipGame.music?.isPlaying == true) {
+            // TODO: Not set text if text is equal
+            soundButton.set(Text("Sound off"))
+        } else if (BattleshipGame.music?.isPlaying == false){
+            soundButton.set(Text("Sound on"))
+        } else {
+            soundButton.set(Text("No sound"))
+        }
 
-    override fun update(dt: Float) {}
+    }
+    override fun create() {
+        super.create()
+        updateButtons()
+    }
+
+    override fun update(dt: Float) {
+        updateButtons()
+    }
 
     override fun render() {
         view.render(*guiObjects.toTypedArray())
