@@ -4,15 +4,29 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
 import com.battleship.BattleshipGame
 import com.battleship.controller.firebase.GameController
-import com.battleship.controller.firebase.PlayerController
 
 object DesktopLauncher {
     @JvmStatic
     fun main(arg: Array<String>) {
-        val playerController = PlayerController()
         val gameController = GameController()
+
         val testGame = "MBoFsW2zk0BzyYcFuSpR"
         val testUser = "mPADOxLSsFj3BEwgbXPQ"
+        val testGame2 = "z0yfbbCxghe4YKz7gnvd"
+        val testUser2 = "Skytern"
+
+        val testShips = mutableListOf<Map<String, Any>>()
+        val ship1 = mutableMapOf<String, Any>()
+        val ship2 = mutableMapOf<String, Any>()
+        ship1["type"] = "Smallboii"
+        ship1["x"] = 4
+        ship1["y"] = 121
+        ship2["type"] = "BigBoi"
+        ship2["x"] = 99
+        ship2["y"] = 33
+        testShips.add(ship1)
+        testShips.add(ship2)
+        gameController.addGameListener(testGame2, testUser2)
 
         // gameController.addGameListener(testGame,testUser)
         println(gameController.getPendingGames())
