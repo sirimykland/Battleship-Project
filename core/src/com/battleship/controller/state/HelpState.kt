@@ -40,9 +40,9 @@ class HelpState : GuiState() {
     private var currentImage: GuiObject = GUI.image(
         120f,
         260f,
-        500f,
-        500f,
-        "badlogic.jpg"
+        400f,
+        400f,
+        imagePaths[0]
     )
 
     private val nextPageButton = GUI.textButton(
@@ -98,7 +98,7 @@ class HelpState : GuiState() {
             previousPageButton.show()
         else
             previousPageButton.hide()
-
+        
         currentDescription.set(Text(descriptions[pageIndex]))
         currentImage.set(Image(imagePaths[pageIndex]))
     }
