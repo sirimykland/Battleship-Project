@@ -23,7 +23,6 @@ class PlayState : State() {
     override fun create() {
         player.board.randomPlacement(4)
         player.weaponSet.weapons.add(SmallWeapon())
-        player.weaponSet.weapons.add(SmallWeapon())
         player.weaponSet.weapons.add(BigWeapon())
         player.weaponSet.weapons.add(RadarWeapon())
         player.weaponSet.setActiveWeapon(player.weaponSet.weapons.first())

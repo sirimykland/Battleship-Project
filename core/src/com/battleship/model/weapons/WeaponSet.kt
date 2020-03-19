@@ -1,39 +1,37 @@
 package com.battleship.model.weapons
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
-import com.badlogic.gdx.utils.Align
 import com.battleship.model.GameObject
+import com.battleship.model.ui.GuiObject
+import com.battleship.utility.Font
+import com.battleship.utility.GUI
+import com.battleship.utility.Palette
 
 class WeaponSet : GameObject() {
     var weapons: ArrayList<Weapon> = ArrayList()
     var weapon: Weapon? = null
-    var stage: Stage = Stage()
+
+    private lateinit var weaponButtons: Array<GuiObject>
 
     override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
-        /*
-        var amount = weapons.size
-        var tileSize = dimension.x / amount
-        var x = position.x
-        var y = position.y
+        weaponButtons = arrayOf(*(0 until weapons.size).map { a: Int ->
+            joinWeaponButton(
+                a,
+                position,
+                dimension
+            )
+        }.toTypedArray())
+        Gdx.input.inputProcessor =
+            InputMultiplexer(*weaponButtons.filter { it.isClickable }.map { it.listener }.toTypedArray())
 
-        for (weapon in weapons) {
-            weapon.draw(batch, Vector2(x, y), Vector2(tileSize, dimension.y))
-            // Padding?
-            x += tileSize + 1
+        batch.begin()
+        weaponButtons.forEach {
+            it.draw(batch)
         }
-        */
-        buildWeaponMenu(position, dimension)
-        // stage.act()
-        stage.draw()
+        batch.end()
     }
 
     fun setActiveWeapon(weapon: Weapon) {
@@ -43,32 +41,25 @@ class WeaponSet : GameObject() {
         println(this.weapon?.name + " satt aktiv")
     }
 
-    fun buildWeaponMenu(position: Vector2, dimension: Vector2) {
-        val menuTable = Table()
-        menuTable.setPosition(position.x, position.y)
-        menuTable.setSize(dimension.x, dimension.y)
-        menuTable.align(Align.center)
-
-        val font = BitmapFont()
-        val style = TextButtonStyle()
-        style.font = font
-        style.fontColor = Color.WHITE
-
-        for (weapon in weapons) {
-            val button: TextButton = TextButton(weapon.name, style)
-            button.addListener(object : ClickListener() {
-                override fun clicked(
-                    event: com.badlogic.gdx.scenes.scene2d.InputEvent?,
-                    x: Float,
-                    y: Float
-                ) {
-                    setActiveWeapon(weapon)
-                }
-            })
-            menuTable.add(button).pad(10f)
+    private fun joinWeaponButton(
+        index: Int,
+        position: Vector2,
+        dimension: Vector2
+    ): GuiObject {
+        var borderColor = Palette.RED
+        if (weapons[index].active) {
+            borderColor = Palette.GREEN
         }
-
-        stage.addActor(menuTable)
-        Gdx.input.inputProcessor = stage
+        return GUI.textButton(
+            position.x + dimension.x / weapons.size * index,
+            position.y,
+            dimension.x / weapons.size,
+            dimension.y,
+            weapons[index].name,
+            font = Font.TINY_WHITE,
+            borderColor = borderColor
+        ) {
+            setActiveWeapon(weapons[index])
+        }
     }
 }
