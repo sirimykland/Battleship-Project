@@ -13,7 +13,6 @@ import com.battleship.utility.Palette
 class WeaponSet : GameObject() {
     var weapons: ArrayList<Weapon> = ArrayList()
     var weapon: Weapon? = null
-
     private lateinit var weaponButtons: Array<GuiObject>
 
     override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
@@ -46,20 +45,24 @@ class WeaponSet : GameObject() {
         position: Vector2,
         dimension: Vector2
     ): GuiObject {
-        var borderColor = Palette.RED
-        if (weapons[index].active) {
+        val weapon = weapons[index]
+
+        var borderColor = Palette.LIGHT_GREY
+        if (weapon.active) {
             borderColor = Palette.GREEN
         }
+
         return GUI.textButton(
-            position.x + dimension.x / weapons.size * index,
+            position.x + dimension.x / weapons.size * index + index * 2,
             position.y,
             dimension.x / weapons.size,
             dimension.y,
-            weapons[index].name,
-            font = Font.TINY_WHITE,
+            weapon.name + " " + weapon.ammunition,
+            font = Font.TINY_BLACK,
+            color = Palette.GREY,
             borderColor = borderColor
         ) {
-            setActiveWeapon(weapons[index])
+            setActiveWeapon(weapon)
         }
     }
 }
