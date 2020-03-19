@@ -15,12 +15,28 @@ object DesktopLauncher {
     @JvmStatic
     fun main(arg: Array<String>) {
         val gameController = GameController()
+
         val testGame = "MBoFsW2zk0BzyYcFuSpR"
         val testUser = "mPADOxLSsFj3BEwgbXPQ"
+        val testGame2 = "z0yfbbCxghe4YKz7gnvd"
+        val testUser2 = "Skytern"
 
-        gameController.addGameListener(testGame,testUser)
+        val testShips = mutableListOf<Map<String, Any>>()
+        val ship1 = mutableMapOf<String, Any>()
+        val ship2 = mutableMapOf<String, Any>()
+        ship1["type"] = "Smallboii"
+        ship1["x"] = 4
+        ship1["y"] = 121
+        ship2["type"] = "BigBoi"
+        ship2["x"] = 99
+        ship2["y"] = 33
+        testShips.add(ship1)
+        testShips.add(ship2)
+        gameController.addGameListener(testGame2,testUser2)
 
-
+        //gameController.createGame(testUser2)
+        //gameController.registerShips(testGame2, testUser2, testShips)
+        //println(gameController.getShips(testGame2))
 
         val config = LwjglApplicationConfiguration()
         LwjglApplication(BattleshipGame(), config)
