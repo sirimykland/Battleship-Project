@@ -164,28 +164,30 @@ class GameController : FirebaseController() {
                         if (ships.size < 2) {
                             println("Ships not registered")
                         }
-
-                        // Get the list of moves
-                        val moves = snapshot.data?.get("moves") as MutableList<Map<String, Any>>
-
-                        val winner = snapshot.data?.get("winner")
-                        // If a winner has been set
-                        if (winner != "") {
-                            println("The winner is $winner")
-                        }
-                        // If there is no winner, continue game
                         else {
-                            // If no moves has been made yet
-                            if (moves.size == 0) {
-                                println("No moves made yet")
-                            } else {
-                                // Get the last move
-                                val lastMove = moves.get(moves.size - 1)
-                                // If the last move is performed by opponent
-                                if (!lastMove["playerId"]!!.equals(playerId)) {
-                                    println("Motstander hadde siste trekk")
+
+                            // Get the list of moves
+                            val moves = snapshot.data?.get("moves") as MutableList<Map<String, Any>>
+
+                            val winner = snapshot.data?.get("winner")
+                            // If a winner has been set
+                            if (winner != "") {
+                                println("The winner is $winner")
+                            }
+                            // If there is no winner, continue game
+                            else {
+                                // If no moves has been made yet
+                                if (moves.size == 0) {
+                                    println("No moves made yet")
                                 } else {
-                                    println("Du hadde siste trekk, vent")
+                                    // Get the last move
+                                    val lastMove = moves.get(moves.size - 1)
+                                    // If the last move is performed by opponent
+                                    if (!lastMove["playerId"]!!.equals(playerId)) {
+                                        println("Motstander hadde siste trekk")
+                                    } else {
+                                        println("Du hadde siste trekk, vent")
+                                    }
                                 }
                             }
                         }
