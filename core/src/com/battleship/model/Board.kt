@@ -7,9 +7,9 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.model.ships.MediumShip
 import com.battleship.model.ships.Ship
 import com.battleship.model.ships.SmallShip
-import kotlin.random.Random
 import com.battleship.model.weapons.RadarWeapon
 import com.battleship.model.weapons.Weapon
+import kotlin.random.Random
 
 class Board(val size: Int) : GameObject() {
     private var ships: ArrayList<Ship> = ArrayList()
@@ -17,7 +17,6 @@ class Board(val size: Int) : GameObject() {
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
     // var shipHandler:ShipHandler = ShipHandler(position, size, onClick)
-
 
     fun addSmallShip(x: Int, y: Int) {
         // TODO add check
@@ -45,7 +44,7 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
-    fun moveShip(){
+    fun moveShip() {
         println("test move ship()")
     }
 

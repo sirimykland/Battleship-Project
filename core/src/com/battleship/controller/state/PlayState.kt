@@ -18,7 +18,6 @@ import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-
 class PlayState : GuiState() {
     override var view: View = PlayView()
     var boardSize = 10

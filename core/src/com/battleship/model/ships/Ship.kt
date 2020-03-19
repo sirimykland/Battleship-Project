@@ -14,8 +14,8 @@ abstract class Ship(var position: Vector2) : GameObject() {
     abstract var health: Int
     abstract var sprite: Sprite
     var shapeRenderer: ShapeRenderer = ShapeRenderer()
-    var padding: Int = 1
-    var reveiled:Boolean = false
+    var padding : Int = 1
+    var reveiled : Boolean = false
 
     fun hit(coordinates: Vector2): Boolean {
         for (i in 1 until dimension.x.toInt() + 1) {
@@ -53,13 +53,13 @@ abstract class Ship(var position: Vector2) : GameObject() {
         val newX = boardPos.x + dimension.x * position.x + position.x * padding
         val newY = boardPos.y + dimension.y * position.y + position.y * padding
         shapeRenderer.rect(
-            newX,
-            newY,
-            this.dimension.x * dimension.x,
-            this.dimension.y * dimension.y
+                newX,
+                newY,
+                this.dimension.x * dimension.x,
+                this.dimension.y * dimension.y
         )
         shapeRenderer.end()
-        if(health == 0){
+        if (health == 0) {
             batch.begin()
             batch.draw(sprite.texture,
                     newX,
