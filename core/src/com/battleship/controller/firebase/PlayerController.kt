@@ -25,7 +25,7 @@ class PlayerController : FirebaseController() {
 
     /**
      * Register new player in the db
-     * @param username: the username wanted
+     * @param username the username wanted
      * @return id of player
      */
     fun addPlayer(username: String): String {

@@ -161,3 +161,21 @@ add ships and weaponry based on a budget is also being considered.
 [Link to draw.io](https://www.draw.io/#G11CwfNnBh6LyNHOcgmTlTsBnQNeapD7c8)
 
 ![Development View ](https://i.imgur.com/ENkQcNF.png)
+
+### Firebase
+The project use Cloud Firestore and structure the data in the following collections: 
+
+#### Users
+This collection will contain one documents for each user, the ID of the document is the same as the ID of the user. Each document created using the application currently contain the following fields: 
+* **username:** the username that will be displayed to other players.
+
+#### Games
+This collection will contain one document for each game with a randomly generated ID. Each document created using the application currently contain the following fields: 
+* **player1:** The ID of player 1.
+* **player2:** The ID of player 2. 
+* **winner:** The winner of the game.
+* **ships:** A map with the userId as key and a list of ships as value.
+* **moves:** A list of maps, where each map contain the following information about the move: 
+    * **playerId:** the ID of player who made the move
+    * **x:** the x-coordinate of the move
+    * **y:** the y-coordinate of the move
