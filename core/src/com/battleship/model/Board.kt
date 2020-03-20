@@ -7,15 +7,16 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.model.ships.MediumShip
 import com.battleship.model.ships.Ship
 import com.battleship.model.ships.SmallShip
-import kotlin.random.Random
 import com.battleship.model.weapons.RadarWeapon
 import com.battleship.model.weapons.Weapon
+import kotlin.random.Random
 
 class Board(val size: Int) : GameObject() {
     private var ships: ArrayList<Ship> = ArrayList()
     private var board = Array(size) { Array(size) { Tile.UNGUESSED } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
+    // var shipHandler:ShipHandler = ShipHandler(position, size, onClick)
 
     fun addSmallShip(x: Int, y: Int) {
         // TODO add check
@@ -37,10 +38,14 @@ class Board(val size: Int) : GameObject() {
         for (i in 0..shipNumber) {
             do {
                 ship = MediumShip(Vector2(Random.nextInt(0, size).toFloat(), Random.nextInt(0, size).toFloat()), Random.nextBoolean())
-                println("shipposition: (" + ship.position.x + ", " + ship.position.y + ")")
+                // println("shipposition: (" + ship.position.x + ", " + ship.position.y + ")")
             } while (!validateShipPosition(ship))
             ships.add(ship)
         }
+    }
+
+    fun moveShip() {
+        println("test move ship()")
     }
 
     /*
@@ -96,9 +101,10 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
+    // her er det to sett med x og y variabler ?
     fun shootTiles(boardTouchPos: Vector2, weapon: Weapon) {
-        var x = boardTouchPos.x.toInt()
-        var y = boardTouchPos.y.toInt()
+        val x = boardTouchPos.x.toInt()
+        val y = boardTouchPos.y.toInt()
         // Loops through the weapons radius
         for (x in x - weapon.radius until x + weapon.radius + 1 step 1) {
             for (y in y - weapon.radius until y + weapon.radius + 1 step 1) {

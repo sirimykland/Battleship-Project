@@ -8,12 +8,14 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 
 abstract class Ship(var position: Vector2) : GameObject() {
+
     abstract var dimension: Vector2
     abstract var name: String
     abstract var health: Int
     abstract var sprite: Sprite
     var shapeRenderer: ShapeRenderer = ShapeRenderer()
-    var padding: Int = 1
+    var padding = 1
+    var reveiled = false
 
     fun hit(coordinates: Vector2): Boolean {
         for (i in 1 until dimension.x.toInt() + 1) {
@@ -27,7 +29,6 @@ abstract class Ship(var position: Vector2) : GameObject() {
                 }
             }
         }
-
         return false
     }
 
@@ -52,21 +53,21 @@ abstract class Ship(var position: Vector2) : GameObject() {
         val newX = boardPos.x + dimension.x * position.x + position.x * padding
         val newY = boardPos.y + dimension.y * position.y + position.y * padding
         shapeRenderer.rect(
-            newX,
-            newY,
-            this.dimension.x * dimension.x,
-            this.dimension.y * dimension.y
+                newX,
+                newY,
+                this.dimension.x * dimension.x,
+                this.dimension.y * dimension.y
         )
         shapeRenderer.end()
-        batch.begin()
-        batch.draw(
-            sprite.texture,
-            newX,
-            newY,
-            this.dimension.x * dimension.x,
-            this.dimension.y * dimension.y
-        )
-        batch.end()
+        if (health == 0) {
+            batch.begin()
+            batch.draw(sprite.texture,
+                    newX,
+                    newY,
+                    this.dimension.x * dimension.x,
+                    this.dimension.y * dimension.y)
+            batch.end()
+        }
     }
 
     fun getTiles(): ArrayList<Vector2> {

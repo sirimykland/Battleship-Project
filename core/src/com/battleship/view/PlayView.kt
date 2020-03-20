@@ -4,8 +4,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.Board
-import com.battleship.model.GameInfo
+import com.battleship.model.ui.GameInfo
 import com.battleship.model.GameObject
+import com.battleship.model.ui.GuiObject
 import com.battleship.model.weapons.WeaponSet
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
@@ -38,6 +39,11 @@ class PlayView() : View() {
                         Gdx.graphics.gameInfoPosition(),
                         Gdx.graphics.gameInfoSize()
                 )
+                is GuiObject -> {
+                    batch.begin()
+                    obj.draw(batch)
+                    batch.end()
+                }
             }
         }
     }
