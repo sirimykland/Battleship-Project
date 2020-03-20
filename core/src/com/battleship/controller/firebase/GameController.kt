@@ -134,7 +134,7 @@ class GameController : FirebaseController() {
 
     /**
      * Function adding listener to a specific game
-     * TODO: Replace println's with functionality connected to the cases
+     * TODO: Replace println with functionality connected to the cases
      * TODO: Add exception handling
      * @param gameId the id of the game document
      * @param playerId the id of the player
