@@ -123,9 +123,7 @@ Go to <kbd>File</kbd> -> <kbd>Settings...</kbd> -> <kbd>Editor</kbd>
   - change `Severity` level of `Unused import directive` and `Redundant semicolon` to `ERROR`.
 
 #### Ktlint command line tool
-Another option is to install (ktlint)[https://ktlint.github.io/] and run
-```ktlint -F```
-from the command line.
+Another option is to install [ktlint](https://ktlint.github.io/) and run ```ktlint -F``` from the command line.
 
 ### Description of the architectural phase
 
