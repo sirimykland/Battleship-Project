@@ -28,6 +28,5 @@ class Text(
             align,
             textWrap)
     }
-
     override val zIndex: Int = 0
 }
