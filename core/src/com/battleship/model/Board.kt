@@ -11,12 +11,11 @@ import com.battleship.model.weapons.RadarWeapon
 import com.battleship.model.weapons.Weapon
 import kotlin.random.Random
 
-class Board(val size: Int) : GameObject() {
+class Board(val size: Int = 10) : GameObject() {
     private var ships: ArrayList<Ship> = ArrayList()
     private var board = Array(size) { Array(size) { Tile.UNGUESSED } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
-    // var shipHandler:ShipHandler = ShipHandler(position, size, onClick)
 
     fun addSmallShip(x: Int, y: Int) {
         // TODO add check
@@ -35,10 +34,9 @@ class Board(val size: Int) : GameObject() {
      */
     fun randomPlacement(shipNumber: Int) {
         var ship: Ship
-        for (i in 0..shipNumber) {
+        for (i in 0..shipNumber - 1) {
             do {
                 ship = MediumShip(Vector2(Random.nextInt(0, size).toFloat(), Random.nextInt(0, size).toFloat()), Random.nextBoolean())
-                // println("shipposition: (" + ship.position.x + ", " + ship.position.y + ")")
             } while (!validateShipPosition(ship))
             ships.add(ship)
         }
@@ -161,12 +159,50 @@ class Board(val size: Int) : GameObject() {
         return null
     }
 
+    /**
+     * converts arraylist of ship to list of map
+     * @return shipsList List<Map<String, Any>>
+     */
+    fun getShipList(): List<Map<String, Any>> {
+        var shipsList = ArrayList<Map<String, Any>>()
+        for (ship in ships) {
+            shipsList.add(ship.toMap())
+        }
+        return shipsList
+    }
+
+    /**
+     * sets ships arraylist from list with map
+     * @param shipsList List<Map<String, Any>>
+     */
+    fun setShipList(shipsList: List<Map<String, Any>>) {
+        ships = ArrayList<Ship>()
+        lateinit var newShip: Ship
+        lateinit var position: Vector2
+        var rotate: Boolean = true
+        for (ship in shipsList) {
+            position = Vector2((ship["x"] as Number).toFloat(), (ship["y"] as Number).toFloat())
+            rotate = if (ship.containsKey("rotate")) ship["rotate"] as Boolean else false
+            when (ship["type"]) {
+                "SmallShip" ->
+                    newShip = SmallShip(position, rotate)
+                "MediumShip" ->
+                    newShip = MediumShip(position, rotate)
+            }
+            ships.add(newShip)
+        }
+    }
+
     fun getAllShipHealth(): Int {
         var health = 0
         for (ship in ships) {
             health += ship.health
         }
         return health
+    }
+
+    override fun toString(): String {
+        return "Board(size=$size, ships=$ships)"
     }
 
     enum class Tile {

@@ -3,7 +3,8 @@ package com.battleship.controller.state
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
-import com.battleship.model.Player
+import com.battleship.controller.firebase.GameController
+import com.battleship.model.Game
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
@@ -21,14 +22,16 @@ import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-class PreGameState : GuiState() {
+class PreGameState() : GuiState() {
     override var view: View = PlayView()
-    val boardSize = 10
-    var player: Player = Player(boardSize)
+    private val gameController = GameController()
+    private var activePlayer = GameStateManager.activeGame.getMe()
+    private var game: Game = GameStateManager.activeGame
 
     override fun create() {
         super.create()
-        player.board.randomPlacement(4)
+        activePlayer = GameStateManager.activeGame.getMe()
+        activePlayer.board.randomPlacement(4)
     }
 
     private val readyButton = GuiObject(Gdx.graphics.weaponsetPosition(),
@@ -37,8 +40,12 @@ class PreGameState : GuiState() {
             .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
             .with(Text("Start Game"))
             .onClick {
-                println("Player are ready")
-                // GameStateManager.gameController.registerShip(player.board.getships()) - dette må lages
+                game = GameStateManager.activeGame
+                gameController.registerShips(
+                        game.gameId,
+                        game.getMe().playerId,
+                        game.getMe().board.getShipList()
+                )
                 GameStateManager.set(PlayState())
             }
     private val testText = GUI.text(
@@ -46,14 +53,14 @@ class PreGameState : GuiState() {
             Gdx.graphics.gameInfoPosition().y,
             Gdx.graphics.gameInfoSize().x,
             Gdx.graphics.gameInfoSize().y,
-            "Place ships")
+            "Hi,${activePlayer.playerName}! Place your ships and press start")
 
     override val guiObjects: List<GuiObject> = listOf(
             readyButton, testText
     )
 
     override fun render() {
-        this.view.render(*guiObjects.toTypedArray(), player.board)
+        this.view.render(*guiObjects.toTypedArray(), activePlayer.board)
     }
 
     override fun update(dt: Float) {

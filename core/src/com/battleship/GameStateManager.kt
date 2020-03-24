@@ -1,10 +1,13 @@
 package com.battleship
 
 import com.battleship.controller.state.State
-import java.util.Stack
+import com.battleship.model.Game
+import java.util.*
 
 object GameStateManager {
-    val userId = "uOESp9kOOk9FK51Q6c47"
+    val userId: String = "uOESp9kOOk9FK51Q6c47" // må ha login/bruker registrering og lagre den her
+    lateinit var activeGame: Game
+
     private val states: Stack<State> = Stack()
 
     fun push(state: State) {

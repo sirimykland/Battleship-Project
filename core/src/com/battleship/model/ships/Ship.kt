@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 
-abstract class Ship(var position: Vector2) : GameObject() {
+abstract class Ship(var position: Vector2, val rotate: Boolean) : GameObject() {
 
     abstract var dimension: Vector2
     abstract var name: String
@@ -30,6 +30,15 @@ abstract class Ship(var position: Vector2) : GameObject() {
             }
         }
         return false
+    }
+
+    fun toMap(): Map<String, Any> {
+        val shipMap = mutableMapOf<String, Any>()
+        shipMap["type"] = name
+        shipMap["x"] = position.x
+        shipMap["y"] = position.y
+        shipMap["rotate"] = rotate
+        return shipMap
     }
 
     fun takeDamage(damage: Int) {
@@ -80,5 +89,9 @@ abstract class Ship(var position: Vector2) : GameObject() {
             }
         }
         return tiles
+    }
+
+    override fun toString(): String {
+        return "Ship(position=$position, rotate=$rotate, name='$name')"
     }
 }

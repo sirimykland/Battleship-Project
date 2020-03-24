@@ -1,6 +1,7 @@
 package com.battleship.controller.firebase
 
-import com.battleship.controller.Game
+import com.battleship.model.Game
+import com.battleship.model.Player
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.EventListener
 import com.google.cloud.firestore.FirestoreException
@@ -38,7 +39,7 @@ class GameController : FirebaseController() {
         val gameQuery = db.collection("games").whereEqualTo("player2", "").get()
         val gameQuerySnapshot = gameQuery.get()
         val gameDocuments = gameQuerySnapshot.documents
-        var games = ArrayList<Game>()
+        val games = ArrayList<Game>()
         // For each game fitting the criteria, get the id and username of opponent
         for (document in gameDocuments) {
             val id = document.id
@@ -54,6 +55,21 @@ class GameController : FirebaseController() {
             }
         }
         return games
+    }
+
+    /**
+     * Gets username from a registered player
+     * @param userId the id of the user that should be added
+     * @return a player object
+     */
+    fun getUser(userId: String): Player {
+        val userQuery = userId.let { db.collection("users").document(userId).get() }
+        val userQuerySnapshot = userQuery?.get()
+        val username = userQuerySnapshot?.getString("username")
+        if (username != null) {
+            return Player(userId, username as String)
+        }
+        return Player(userId, "Unknown")
     }
 
     /**
@@ -86,6 +102,31 @@ class GameController : FirebaseController() {
         } else {
             // Add error handling
             println("Something went wrong when registering ships")
+        }
+    }
+
+    /**
+     * Get the ships in a game
+     * @param gameId the id of the game
+     * @return a Game object containing game and player
+     */
+    fun getGame(gameId: String): Game {
+        val query = db.collection("games").document(gameId).get()
+        val game = query.get()
+
+        if (game.exists()) {
+            val gameObject = Game(gameId)
+            val player1Id: String = game.get("player1") as String
+            val player2Id: String = game.get("player2") as String
+
+            gameObject.player1 = getUser(player1Id)
+            gameObject.player2 = getUser(player2Id)
+            val ships = getShips(gameId)
+            if (player1Id in ships) ships[player1Id]?.let { gameObject.player1.board.setShipList(it) }
+            if (player2Id in ships) ships[player2Id]?.let { gameObject.player2.board.setShipList(it) }
+            return gameObject
+        } else {
+            throw error("Something went wrong when fetching the Game")
         }
     }
 
