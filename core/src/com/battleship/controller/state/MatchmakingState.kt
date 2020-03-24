@@ -1,6 +1,8 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
+import com.battleship.GameStateManager
+import com.battleship.controller.Game
 import com.battleship.controller.firebase.GameController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -20,50 +22,46 @@ class MatchmakingState : GuiState() {
     private var page: Int = 0
 
     private val nextPageButton = GUI.textButton(
-        Gdx.graphics.width - 150f,
-        30f,
-        100f,
-        90f,
-        "->"
+            Gdx.graphics.width - 150f,
+            30f,
+            100f,
+            90f,
+            "->"
     ) {
         page++
         updateButtons()
     }
 
     private val previousPageButton = GUI.textButton(
-        30f,
-        30f,
-        100f,
-        70f,
-        "<-"
+            30f,
+            30f,
+            100f,
+            70f,
+            "<-"
     ) {
         page--
         updateButtons()
     }.hide()
 
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.text(
-            20f,
-            Gdx.graphics.height - 220f,
-            Gdx.graphics.width - 40f,
-            90f,
-            "Matchmaking",
-            Font.LARGE_WHITE
-        ),
-        nextPageButton,
-        previousPageButton,
-        *playerButtons,
-        GUI.backButton
+            GUI.text(
+                    20f,
+                    Gdx.graphics.height - 220f,
+                    Gdx.graphics.width - 40f,
+                    90f,
+                    "Matchmaking",
+                    Font.LARGE_WHITE
+            ),
+            nextPageButton,
+            previousPageButton,
+            *playerButtons,
+            GUI.backButton
     )
-
-    var users = emptyMap<String, String>()
-
-    var userList = emptyList<String>()
+    var games = emptyList<Game>()
 
     override fun create() {
         super.create()
-        users = gameController.getPendingGames()
-        userList = users.toList().map { a -> a.second }
+        games = gameController.getPendingGames()
         updateButtons()
     }
 
@@ -72,19 +70,19 @@ class MatchmakingState : GuiState() {
         playerButtons.forEachIndexed { i, _ ->
             val j = index + i
             val button = playerButtons[i]
-            if (j < userList.size) {
-                button.set(Text(userList[j]))
+            if (j < games.size) {
+                button.set(Text(games.get(j).player1.name))
                 button.show()
             } else {
                 button.hide()
             }
         }
-        if (index + 5 < userList.size)
+        if (index + 5 < games.size)
             nextPageButton.show()
         else
             nextPageButton.hide()
 
-        if (index> 0)
+        if (index > 0)
             previousPageButton.show()
         else
             previousPageButton.hide()
@@ -92,15 +90,18 @@ class MatchmakingState : GuiState() {
 
     private fun joinUserButton(index: Int): GuiObject {
         return GUI.textButton(
-            50f,
-            Gdx.graphics.height - 300f - index * 75f,
-            Gdx.graphics.width - 100f,
-            55f,
-            "Loading",
-            font = Font.TINY_WHITE,
-            borderColor = Palette.RED
+                50f,
+                Gdx.graphics.height - 300f - index * 75f,
+                Gdx.graphics.width - 100f,
+                55f,
+                "Loading",
+                font = Font.TINY_WHITE,
+                borderColor = Palette.RED
         ) {
-            println(userList[(page * 5) + index])
+            val successful = gameController.joinGame(
+                    games.get((page * 5) + index).gameId,
+                    GameStateManager.userId)
+            if (successful) GameStateManager.set(PreGameState())
         }
     }
 

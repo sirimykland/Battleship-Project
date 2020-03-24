@@ -1,5 +1,6 @@
 package com.battleship.controller.firebase
 
+import com.battleship.controller.Game
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.EventListener
 import com.google.cloud.firestore.FirestoreException
@@ -33,12 +34,11 @@ class GameController : FirebaseController() {
     /**
      * Function getting all games where there is currently only one player
      */
-    fun getPendingGames(): Map<String, String> {
+    fun getPendingGames(): List<Game> {
         val gameQuery = db.collection("games").whereEqualTo("player2", "").get()
         val gameQuerySnapshot = gameQuery.get()
         val gameDocuments = gameQuerySnapshot.documents
-        val games = mutableMapOf<String, String>()
-
+        var games = ArrayList<Game>()
         // For each game fitting the criteria, get the id and username of opponent
         for (document in gameDocuments) {
             val id = document.id
@@ -49,7 +49,8 @@ class GameController : FirebaseController() {
             val playerQuerySnapshot = playerQuery?.get()
             val playerName = playerQuerySnapshot?.getString("username")
             if (playerName != null) {
-                games[id] = playerName
+                //games[id] = playerName
+                games.add(Game(id, playerId.toString(), playerName.toString()))
             }
         }
         return games
@@ -60,9 +61,13 @@ class GameController : FirebaseController() {
      * @param gameId the id of the game document
      * @param userId the id of the user that should be added
      */
-    fun joinGame(gameId: String, userId: String) {
+    fun joinGame(gameId: String, userId: String): Boolean {
         // Add the data to the game document
         db.collection("games").document(gameId).update("player2", userId)
+        // TODO sjekke om suksess og returnere true
+        val testVal = db.collection("games").document(gameId).get()
+        if (testVal.get().get("player2") == userId) return true;
+        return false;
     }
 
     /**
@@ -143,8 +148,8 @@ class GameController : FirebaseController() {
         val docRef = db.collection("games").document(gameId)
         docRef.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
-                @Nullable snapshot: DocumentSnapshot?,
-                @Nullable e: FirestoreException?
+                    @Nullable snapshot: DocumentSnapshot?,
+                    @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
                     System.err.println("Listen failed: $e")

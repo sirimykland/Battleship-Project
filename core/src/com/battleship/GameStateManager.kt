@@ -4,7 +4,7 @@ import com.battleship.controller.state.State
 import java.util.Stack
 
 object GameStateManager {
-
+    val userId = "uOESp9kOOk9FK51Q6c47"
     private val states: Stack<State> = Stack()
 
     fun push(state: State) {
