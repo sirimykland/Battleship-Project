@@ -6,7 +6,7 @@ import com.battleship.model.GameObject
 
 class BasicView : View() {
     override fun render(vararg gameObjects: GameObject) {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+        Gdx.gl.glClearColor(50f, 15f, 55f, 19f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         batch.begin()
         gameObjects.forEach {
