@@ -36,7 +36,7 @@ class GameOverState : GuiState() {
             font = Font.MEDIUM_BLACK,
             color = Palette.GREY,
             borderColor = Palette.LIGHT_GREY,
-            onClick = { GameStateManager.set(PreGameState()) }
+            onClick = { GameStateManager.set(MatchmakingState()) }
         ),
         GUI.text(
             20f,
