@@ -3,8 +3,6 @@ package com.battleship.utility
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.battleship.GameStateManager
-import com.battleship.controller.state.MainMenuState
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.BottomBorder
