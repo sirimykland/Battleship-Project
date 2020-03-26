@@ -54,10 +54,7 @@ class HelpState : GuiState() {
         30f,
         180f,
         80f,
-        "Next",
-        Font.SMALL_BLACK,
-        Palette.WHITE,
-        Palette.WHITE
+        "Next"
     ) {
         pageIndex++
         updateButtons()
@@ -68,10 +65,7 @@ class HelpState : GuiState() {
         30f,
         180f,
         80f,
-        "Previous",
-        Font.SMALL_BLACK,
-        Palette.WHITE,
-        Palette.WHITE
+        "Previous"
     ) {
         pageIndex--
         updateButtons()

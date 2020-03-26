@@ -91,18 +91,17 @@ object GUI {
     fun header(
         text: String
     ): GuiObject {
-        return GuiObject(-4f, Gdx.graphics.height.toFloat() - 92f, Gdx.graphics.width.toFloat() + 8f, 96f)
-            .with(Background(Palette.LIGHT_GREY))
-            .with(Border(Palette.BLACK))
-            .with(Text(text, Font.MEDIUM_BLACK))
+        return GuiObject(0f, Gdx.graphics.height.toFloat() - 96f, Gdx.graphics.width.toFloat(), 96f)
+            .with(Background(Palette.DARK_GREY))
+            .with(Text(text, Font.MEDIUM_WHITE))
     }
 
     val backButton = imageButton(
-        0f,
-        Gdx.graphics.height - 96f,
-        96f,
-        96f,
-        "icons/arrow_back_black.png"
+        10f,
+        Gdx.graphics.height - 80f,
+        64f,
+        64f,
+        "icons/arrow_back_white.png"
     ) { GameStateManager.set(MainMenuState()) }
 
     fun image(

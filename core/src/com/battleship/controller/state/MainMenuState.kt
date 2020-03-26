@@ -29,27 +29,27 @@ class MainMenuState : GuiState() {
 
     private val header: GuiObject =  GUI.text(
         Gdx.graphics.width / 2 - 250f,
-        Gdx.graphics.height - 150f,
+        Gdx.graphics.height - 200f,
         500f,
         100f,
         "Treasure hunt",
         font = Font.LARGE_BLACK
 
     )
-    /*private val image: GuiObject =  GUI.image(
+    private val image: GuiObject =  GUI.image(
         Gdx.graphics.width / 2 - 36f,
-        Gdx.graphics.height - 250f,
+        Gdx.graphics.height - 280f,
         72f,
         72f,
-        "images/pirateFlag.png"
+        "images/skull_and_crossbones.png"
 
-    )*/
+    )
 
     override var view: View = BasicView()
 
     override fun update(dt: Float) {}
 
     override fun render() {
-        view.render(header, *guiObjects.toTypedArray())
+        view.render(header, image, *guiObjects.toTypedArray())
     }
 }

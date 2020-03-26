@@ -17,7 +17,7 @@ class SettingsState : GuiState() {
     override var view: View = BasicView()
     private var soundButton: GuiObject = GUI.menuButton(
             Gdx.graphics.width / 2 - 170f,
-            Gdx.graphics.height - 380f,
+            Gdx.graphics.height - 450f,
             "Sound off",
             onClick = {
                 if (BattleshipGame.music?.isPlaying == true)
@@ -30,7 +30,7 @@ class SettingsState : GuiState() {
             soundButton,
             GUI.menuButton(
                     Gdx.graphics.width / 2 - 170f,
-                    Gdx.graphics.height - 560f,
+                    Gdx.graphics.height - 600f,
                     "Usage guide",
                     onClick = { GameStateManager.set(HelpState()) }
             ),
