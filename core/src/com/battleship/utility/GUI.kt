@@ -9,16 +9,18 @@ import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Image
+import com.battleship.model.ui.ImageButtonText
 import com.battleship.model.ui.Text
 
 object GUI {
+
     fun text(
         posX: Float,
         posY: Float,
         sizeX: Float,
         sizeY: Float,
         text: String,
-        font: BitmapFont = Font.SMALL_WHITE
+        font: BitmapFont = Font.SMALL_BLACK
     ): GuiObject {
         return GuiObject(posX, posY, sizeX, sizeY)
             .with(Text(text, font))
@@ -86,27 +88,20 @@ object GUI {
     }
 
     fun header(
-        posX: Float,
-        posY: Float,
         text: String
     ): GuiObject {
-        return GuiObject(posX, posY, 340f, 100f)
+        return GuiObject(0f, Gdx.graphics.height.toFloat() - 96f, Gdx.graphics.width.toFloat(), 96f)
             .with(Background(Palette.LIGHT_GREY))
             .with(Text(text, Font.MEDIUM_BLACK))
     }
 
-    val backButton = textButton(
-        20f,
-        Gdx.graphics.height - 110f,
-        170f,
-        90f,
-        "back",
-        Font.MEDIUM_BLACK,
-        Palette.LIGHT_GREY,
-        Palette.LIGHT_GREY
-    ) {
-        GameStateManager.set(MainMenuState())
-    }
+    val backButton = imageButton(
+        0f,
+        Gdx.graphics.height - 96f,
+        96f,
+        96f,
+        "icons/arrow_back_black.png"
+    ) { GameStateManager.set(MainMenuState()) }
 
     fun image(
         posX: Float,
@@ -117,5 +112,32 @@ object GUI {
     ): GuiObject {
         return GuiObject(posX, posY, sizeX, sizeY)
             .with(Image(texturePath))
+    }
+
+    fun imageButton(
+        posX: Float,
+        posY: Float,
+        sizeX: Float,
+        sizeY: Float,
+        texturePath: String,
+        onClick: () -> Unit
+    ): GuiObject {
+        return GuiObject(posX, posY, sizeX, sizeY)
+            .with(Image(texturePath))
+            .onClick(onClick)
+    }
+    fun imageAndTextButton(
+        posX: Float,
+        posY: Float,
+        sizeX: Float,
+        sizeY: Float,
+        text: String,
+        texturePath: String,
+        onClick: () -> Unit
+    ): GuiObject {
+        return GuiObject(posX, posY, sizeX, sizeY)
+            .with(Image(texturePath))
+            .with(ImageButtonText(text, Font.MEDIUM_BLACK))
+            .onClick(onClick)
     }
 }

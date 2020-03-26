@@ -6,6 +6,7 @@ import com.battleship.model.ui.Image
 import com.battleship.model.ui.Text
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
+import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
@@ -38,7 +39,7 @@ class HelpState : GuiState() {
         Gdx.graphics.width - 40f,
         90f,
         descriptions[0],
-        Font.MEDIUM_WHITE
+        Font.MEDIUM_BLACK
     )
     private var currentImage: GuiObject = GUI.image(
         120f,
@@ -49,11 +50,14 @@ class HelpState : GuiState() {
     )
 
     private val nextPageButton = GUI.textButton(
-        Gdx.graphics.width - 150f,
+        Gdx.graphics.width - 230f,
         30f,
-        100f,
-        90f,
-        "->"
+        180f,
+        80f,
+        "Next",
+        Font.SMALL_BLACK,
+        Palette.WHITE,
+        Palette.WHITE
     ) {
         pageIndex++
         updateButtons()
@@ -62,23 +66,19 @@ class HelpState : GuiState() {
     private val previousPageButton = GUI.textButton(
         30f,
         30f,
-        100f,
-        70f,
-        "<-"
+        180f,
+        80f,
+        "Previous",
+        Font.SMALL_BLACK,
+        Palette.WHITE,
+        Palette.WHITE
     ) {
         pageIndex--
         updateButtons()
     }.hide()
 
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.text(
-            20f,
-            Gdx.graphics.height - 220f,
-            Gdx.graphics.width - 40f,
-            90f,
-            "Help",
-            Font.LARGE_WHITE
-        ),
+        GUI.header("Usage guide"),
         nextPageButton,
         previousPageButton,
         currentDescription,

@@ -7,7 +7,6 @@ import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
-import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
@@ -32,17 +31,10 @@ class SettingsState : GuiState() {
             GUI.menuButton(
                     Gdx.graphics.width / 2 - 170f,
                     Gdx.graphics.height - 560f,
-                    "Help",
+                    "Usage guide",
                     onClick = { GameStateManager.set(HelpState()) }
             ),
-            GUI.text(
-                    20f,
-                    Gdx.graphics.height - 220f,
-                    Gdx.graphics.width - 40f,
-                    90f,
-                    "Settings",
-                    Font.LARGE_BLACK
-            ),
+            GUI.header("Settings"),
             GUI.text(
                     20f,
                     80f,
@@ -68,14 +60,12 @@ class SettingsState : GuiState() {
     }
 
     private fun updateButtons() {
-        if (false == true) {
+        if (false == true) { // TODO: Remove when done
             if (BattleshipGame.music?.isPlaying == true)
                 soundButton.set(Text("Sound off"))
             else
                 soundButton.set(Text("Sound on"))
-
         }
-
     }
 
     override fun update(dt: Float) {
