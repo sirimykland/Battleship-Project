@@ -37,7 +37,8 @@ class PlayState() : GuiState() {
 
     override fun create() {
         super.create()
-        //player.board.randomPlacement(4)
+        // kan kanskje flyttes til GameController init block
+        gameController.addGameListener(GameStateManager.activeGame.gameId, GameStateManager.userId)
 
         activePlayer.weaponSet.weapons.add(SmallWeapon())
         activePlayer.weaponSet.weapons.add(BigWeapon())

@@ -30,6 +30,8 @@ class PreGameState() : GuiState() {
 
     override fun create() {
         super.create()
+        // kan kanskje flyttes til GameController init block
+        gameController.addGameListener(GameStateManager.activeGame.gameId, GameStateManager.userId)
         activePlayer = GameStateManager.activeGame.getMe()
         activePlayer.board.randomPlacement(4)
     }

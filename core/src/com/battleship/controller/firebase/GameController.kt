@@ -82,8 +82,8 @@ class GameController : FirebaseController() {
         db.collection("games").document(gameId).update("player2", userId)
         // TODO sjekke om suksess og returnere true
         val testVal = db.collection("games").document(gameId).get()
-        if (testVal.get().get("player2") == userId) return true;
-        return false;
+        if (testVal.get().get("player2") == userId) return true
+        return false
     }
 
     /**
@@ -186,8 +186,7 @@ class GameController : FirebaseController() {
      * @param playerId the id of the player
      */
     fun addGameListener(gameId: String, playerId: String) {
-        val docRef = db.collection("games").document(gameId)
-        docRef.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
+        db.collection("games").document(gameId).addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
                     @Nullable snapshot: DocumentSnapshot?,
                     @Nullable e: FirestoreException?
