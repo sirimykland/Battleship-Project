@@ -2,6 +2,7 @@ package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
+import com.battleship.GSM
 import com.battleship.GameStateManager
 import com.battleship.controller.firebase.GameController
 import com.battleship.model.Game
@@ -25,15 +26,14 @@ import com.battleship.view.View
 class PreGameState() : GuiState() {
     override var view: View = PlayView()
     private val gameController = GameController()
-    private var activePlayer = GameStateManager.activeGame.getMe()
     private var game: Game = GameStateManager.activeGame
 
     override fun create() {
         super.create()
         // kan kanskje flyttes til GameController init block
-        gameController.addGameListener(GameStateManager.activeGame.gameId, GameStateManager.userId)
-        activePlayer = GameStateManager.activeGame.getMe()
-        activePlayer.board.randomPlacement(4)
+        gameController.addGameListener(GSM.activeGame.gameId, GSM.userId)
+        GSM.activeGame.activePlayer = GSM.activeGame.getMe()
+        GSM.activeGame.activePlayer.board.randomPlacement(4)
     }
 
     private val readyButton = GuiObject(Gdx.graphics.weaponsetPosition(),
@@ -55,14 +55,14 @@ class PreGameState() : GuiState() {
             Gdx.graphics.gameInfoPosition().y,
             Gdx.graphics.gameInfoSize().x,
             Gdx.graphics.gameInfoSize().y,
-            "Hi,${activePlayer.playerName}! Place your ships and press start")
+            "Hi,${GSM.activeGame.activePlayer.playerName}! Place your ships and press start")
 
     override val guiObjects: List<GuiObject> = listOf(
             readyButton, testText
     )
 
     override fun render() {
-        this.view.render(*guiObjects.toTypedArray(), activePlayer.board)
+        this.view.render(*guiObjects.toTypedArray(), GSM.activeGame.activePlayer.board)
     }
 
     override fun update(dt: Float) {

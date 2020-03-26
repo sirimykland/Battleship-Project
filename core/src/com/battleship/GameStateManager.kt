@@ -4,6 +4,8 @@ import com.battleship.controller.state.State
 import com.battleship.model.Game
 import java.util.*
 
+typealias GSM = GameStateManager
+
 object GameStateManager {
     val userId: String = "uOESp9kOOk9FK51Q6c47" // må ha login/bruker registrering og lagre den her
     lateinit var activeGame: Game

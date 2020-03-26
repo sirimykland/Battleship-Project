@@ -15,6 +15,7 @@ class Game(val gameId: String) {
         this.player1 = player1
         this.player2 = player2
     }
+    var activePlayer = getOpponent() // must be made dynamically
 
     fun getMe(): Player {
         if (player1.playerId.equals(GameStateManager.userId))
