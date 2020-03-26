@@ -42,7 +42,7 @@ class PlayState : GuiState() {
         player.equipmentSet.equipments.add(Shovel())
         player.equipmentSet.equipments.add(BigEquipment())
         player.equipmentSet.equipments.add(MetalDetector())
-        player.equipmentSet.setActiveWeapon(player.equipmentSet.equipments.first())
+        player.equipmentSet.setEquipmentActive(player.equipmentSet.equipments.first())
     }
 
     override fun render() {
