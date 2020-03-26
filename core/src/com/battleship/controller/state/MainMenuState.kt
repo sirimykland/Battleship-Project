@@ -5,7 +5,6 @@ import com.battleship.GameStateManager
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
-import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
@@ -27,15 +26,23 @@ class MainMenuState : GuiState() {
             )
         }
 
-    val header: GuiObject =  GUI.text(
+    private val header: GuiObject =  GUI.text(
         Gdx.graphics.width / 2 - 250f,
-        Gdx.graphics.height - (150f),
+        Gdx.graphics.height - 150f,
         500f,
         100f,
         "Treasure hunt",
         font = Font.LARGE_BLACK
 
     )
+    /*private val image: GuiObject =  GUI.image(
+        Gdx.graphics.width / 2 - 36f,
+        Gdx.graphics.height - 250f,
+        72f,
+        72f,
+        "images/pirateFlag.png"
+
+    )*/
 
     override var view: View = BasicView()
 

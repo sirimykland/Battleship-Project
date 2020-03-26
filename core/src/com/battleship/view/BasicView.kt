@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.battleship.model.GameObject
 
 class BasicView : View() {
-    var backgroundTexture: Texture = Texture("images/background3.jpg")
+    var backgroundTexture: Texture = Texture("images/background6.png")
     var backgroundSprite: Sprite = Sprite(backgroundTexture)
 
     override fun render(vararg gameObjects: GameObject) {

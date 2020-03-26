@@ -83,6 +83,7 @@ object GUI {
     ): GuiObject {
         return GuiObject(posX, posY, 340f, 100f)
             .with(Background(Palette.LIGHT_GREY))
+            .with(Border(Palette.BLACK))
             .with(Text(text, Font.MEDIUM_BLACK))
             .onClick(onClick)
     }
@@ -90,8 +91,9 @@ object GUI {
     fun header(
         text: String
     ): GuiObject {
-        return GuiObject(0f, Gdx.graphics.height.toFloat() - 96f, Gdx.graphics.width.toFloat(), 96f)
+        return GuiObject(-4f, Gdx.graphics.height.toFloat() - 92f, Gdx.graphics.width.toFloat() + 8f, 96f)
             .with(Background(Palette.LIGHT_GREY))
+            .with(Border(Palette.BLACK))
             .with(Text(text, Font.MEDIUM_BLACK))
     }
 
