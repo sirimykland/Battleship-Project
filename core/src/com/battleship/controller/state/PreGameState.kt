@@ -49,7 +49,7 @@ class PreGameState : GuiState() {
             "Place ships")
 
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.backButton
+        GUI.backButton { GameStateManager.set(MainMenuState()) }
     )
 
     override fun render() {

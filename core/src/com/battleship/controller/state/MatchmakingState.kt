@@ -1,6 +1,7 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
+import com.battleship.GameStateManager
 import com.battleship.controller.firebase.GameController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -53,7 +54,7 @@ class MatchmakingState : GuiState() {
         nextPageButton,
         previousPageButton,
         *playerButtons,
-        GUI.backButton
+        GUI.backButton { GameStateManager.set(MainMenuState()) }
     )
 
     var users = emptyMap<String, String>()

@@ -16,35 +16,20 @@ class GameOverState : GuiState() {
     )
 
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.textButton(
+        GUI.menuButton(
             Gdx.graphics.width / 2 - 170f,
-            Gdx.graphics.height - 560f,
-            340f,
-            140f,
-            "Main Menu",
-            font = Font.MEDIUM_BLACK,
-            color = Palette.GREY,
-            borderColor = Palette.LIGHT_GREY,
+            Gdx.graphics.height - 600f,
+            "Back to main menu",
             onClick = { GameStateManager.set(MainMenuState()) }
         ),
-        GUI.textButton(
+        GUI.menuButton(
             Gdx.graphics.width / 2 - 170f,
-            Gdx.graphics.height - 380f,
-            340f,
-            140f,
-            "Play Again",
-            font = Font.MEDIUM_BLACK,
-            color = Palette.GREY,
-            borderColor = Palette.LIGHT_GREY,
+            Gdx.graphics.height - 450f,
+            "Play again",
             onClick = { GameStateManager.set(MatchmakingState()) }
         ),
-        GUI.text(
-            20f,
-            Gdx.graphics.height - 220f,
-            Gdx.graphics.width - 40f,
-            90f,
-            "GAME OVER",
-            Font.LARGE_WHITE
+        GUI.header(
+            "Game over"
         )
     )
 

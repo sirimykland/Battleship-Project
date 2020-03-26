@@ -7,6 +7,7 @@ import com.battleship.GameStateManager
 import com.battleship.controller.state.MainMenuState
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
+import com.battleship.model.ui.BottomBorder
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Image
 import com.battleship.model.ui.ImageButtonText
@@ -63,9 +64,9 @@ object GUI {
         sizeX: Float,
         sizeY: Float,
         text: String,
-        font: BitmapFont = Font.SMALL_WHITE,
-        color: TextureRegion = Palette.BLACK,
-        borderColor: TextureRegion = Palette.WHITE,
+        font: BitmapFont = Font.SMALL_BLACK,
+        color: TextureRegion = Palette.LIGHT_GREY,
+        borderColor: TextureRegion = Palette.BLACK,
         onClick: () -> Unit
     ): GuiObject {
         return GuiObject(posX, posY, sizeX, sizeY)
@@ -93,16 +94,17 @@ object GUI {
     ): GuiObject {
         return GuiObject(0f, Gdx.graphics.height.toFloat() - 96f, Gdx.graphics.width.toFloat(), 96f)
             .with(Background(Palette.DARK_GREY))
+            .with(BottomBorder(Palette.BLACK))
             .with(Text(text, Font.MEDIUM_WHITE))
     }
 
-    val backButton = imageButton(
-        10f,
-        Gdx.graphics.height - 80f,
-        64f,
-        64f,
-        "icons/arrow_back_white.png"
-    ) { GameStateManager.set(MainMenuState()) }
+    fun backButton (
+        onClick: () -> Unit
+    ) : GuiObject {
+        return GuiObject(10f, Gdx.graphics.height - 80f, 64f, 64f)
+            .with(Image("icons/arrow_back_white.png"))
+            .onClick(onClick)
+    }
 
     fun image(
         posX: Float,

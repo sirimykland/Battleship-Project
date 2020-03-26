@@ -1,6 +1,7 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
+import com.battleship.GameStateManager
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Image
 import com.battleship.model.ui.Text
@@ -13,7 +14,7 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the help menu
  */
-class HelpState : GuiState() {
+class UsageGuideState : GuiState() {
     override var view: View = BasicView()
     private var pageIndex: Int = 0
 
@@ -77,7 +78,7 @@ class HelpState : GuiState() {
         previousPageButton,
         currentDescription,
         currentImage,
-        GUI.backButton
+        GUI.backButton { GameStateManager.set(SettingsState()) }
     )
 
     override fun create() {
@@ -86,10 +87,11 @@ class HelpState : GuiState() {
     }
 
     private fun updateButtons() {
-        if (pageIndex < imagePaths.size - 1)
+        if (pageIndex < imagePaths.size - 1) {
             nextPageButton.show()
-        else
+        } else {
             nextPageButton.hide()
+        }
 
         if (pageIndex > 0)
             previousPageButton.show()

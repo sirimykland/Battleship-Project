@@ -1,6 +1,8 @@
 package com.battleship.controller.state.deprecated
 
+import com.battleship.GameStateManager
 import com.battleship.controller.state.GuiState
+import com.battleship.controller.state.MainMenuState
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
@@ -38,7 +40,9 @@ class TestMenuState : GuiState() {
     private val testText = GUI.text(100f, 400f, 200f, 100f, "Just text")
 
     override val guiObjects: List<GuiObject> = listOf(
-        greenBox, blueButton, boxButton, testText, GUI.backButton
+        greenBox, blueButton, boxButton, testText, GUI.backButton { GameStateManager.set(
+            MainMenuState()
+        ) }
     )
 
     override var view: View = BasicView()
