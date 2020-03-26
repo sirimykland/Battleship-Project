@@ -19,7 +19,7 @@ object GUI {
         sizeX: Float,
         sizeY: Float,
         text: String,
-        font: BitmapFont = Font.SMALL_BLACK
+        font: BitmapFont = Font.MEDIUM_WHITE
     ): GuiObject {
         return GuiObject(posX, posY, sizeX, sizeY)
             .with(Text(text, font))
