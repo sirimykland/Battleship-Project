@@ -17,7 +17,7 @@ class EquipmentSet : GameObject() {
 
     override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
         equipmentButtons = arrayOf(*(0 until equipments.size).map { a: Int ->
-            joinWeaponButton(
+            joinEquipmentButton(
                 a,
                 position,
                 dimension
@@ -33,14 +33,14 @@ class EquipmentSet : GameObject() {
         batch.end()
     }
 
-    fun setActiveWeapon(equipment: Equipment) {
+    fun setEquipmentActive(equipment: Equipment) {
         this.activeEquipment?.active = false
         this.activeEquipment = equipment
         this.activeEquipment?.active = true
         println(this.activeEquipment?.name + " satt aktiv")
     }
 
-    private fun joinWeaponButton(
+    private fun joinEquipmentButton(
         index: Int,
         position: Vector2,
         dimension: Vector2
@@ -62,7 +62,7 @@ class EquipmentSet : GameObject() {
             color = Palette.GREY,
             borderColor = borderColor
         ) {
-            setActiveWeapon(equipment)
+            setEquipmentActive(equipment)
         }
     }
 }
