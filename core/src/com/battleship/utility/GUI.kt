@@ -12,17 +12,6 @@ import com.battleship.model.ui.Image
 import com.battleship.model.ui.Text
 
 object GUI {
-
-    val backButton = textButton(
-        20f,
-        Gdx.graphics.height - 110f,
-        170f,
-        90f,
-        "back"
-    ) {
-        GameStateManager.set(MainMenuState())
-    }
-
     fun text(
         posX: Float,
         posY: Float,
@@ -82,6 +71,41 @@ object GUI {
             .with(Border(borderColor))
             .with(Text(text, font))
             .onClick(onClick)
+    }
+
+    fun menuButton(
+        posX: Float,
+        posY: Float,
+        text: String,
+        onClick: () -> Unit
+    ): GuiObject {
+        return GuiObject(posX, posY, 340f, 100f)
+            .with(Background(Palette.LIGHT_GREY))
+            .with(Text(text, Font.MEDIUM_BLACK))
+            .onClick(onClick)
+    }
+
+    fun header(
+        posX: Float,
+        posY: Float,
+        text: String
+    ): GuiObject {
+        return GuiObject(posX, posY, 340f, 100f)
+            .with(Background(Palette.LIGHT_GREY))
+            .with(Text(text, Font.MEDIUM_BLACK))
+    }
+
+    val backButton = textButton(
+        20f,
+        Gdx.graphics.height - 110f,
+        170f,
+        90f,
+        "back",
+        Font.MEDIUM_BLACK,
+        Palette.LIGHT_GREY,
+        Palette.LIGHT_GREY
+    ) {
+        GameStateManager.set(MainMenuState())
     }
 
     fun image(

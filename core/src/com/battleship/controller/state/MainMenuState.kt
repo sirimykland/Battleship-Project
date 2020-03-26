@@ -12,32 +12,36 @@ import com.battleship.view.View
 class MainMenuState : GuiState() {
 
     private val menuList = listOf(
-        Pair("Matchmaking") { GameStateManager.set(MatchmakingState()) },
-        Pair("Settings") { GameStateManager.set(SettingsState()) },
         Pair("Play") { GameStateManager.set(PreGameState()) },
-        Pair("Testmenu") { GameStateManager.set(TestMenuState()) }
+        Pair("Settings") { GameStateManager.set(SettingsState()) },
+        Pair("Matchmaking") { GameStateManager.set(MatchmakingState()) }
     )
 
     override val guiObjects: List<GuiObject> = menuList
         .mapIndexed { i, (name, func) ->
-            GUI.textButton(
+            GUI.menuButton(
                 Gdx.graphics.width / 2 - 170f,
-                Gdx.graphics.height - (200f + 180f * i),
-                340f,
-                140f,
+                Gdx.graphics.height - (450f + 150f * i),
                 name,
-                font = Font.MEDIUM_BLACK,
-                color = Palette.GREY,
-                borderColor = Palette.LIGHT_GREY,
                 onClick = func
             )
         }
+
+    val header: GuiObject =  GUI.text(
+        Gdx.graphics.width / 2 - 250f,
+        Gdx.graphics.height - (150f),
+        500f,
+        100f,
+        "Treasure hunt",
+        font = Font.LARGE_BLACK
+
+    )
 
     override var view: View = BasicView()
 
     override fun update(dt: Float) {}
 
     override fun render() {
-        view.render(*guiObjects.toTypedArray())
+        view.render(header, *guiObjects.toTypedArray())
     }
 }

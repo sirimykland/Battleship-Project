@@ -1,5 +1,6 @@
-package com.battleship.controller.state
+package com.battleship.controller.state.deprecated
 
+import com.battleship.controller.state.GuiState
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
