@@ -28,28 +28,32 @@ class PreGameState : GuiState() {
 
     override fun create() {
         super.create()
-        player.board.randomPlacement(4)
+        player.board.createAndPlaceTreasurechests(4, true)
+        player.board.createAndPlaceGoldcoins(2, true)
     }
 
-    private val readyButton = GuiObject(Gdx.graphics.weaponsetPosition(),
-            Gdx.graphics.weaponsetSize())
-            .with(Background(Palette.BLACK))
-            .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
-            .with(Text("Start Game"))
-            .onClick {
-                println("Player are ready")
-                // GameStateManager.gameController.registerShip(player.board.getships()) - dette må lages
-                GameStateManager.set(PlayState())
-            }
+    private val readyButton = GuiObject(
+        Gdx.graphics.weaponsetPosition(),
+        Gdx.graphics.weaponsetSize()
+    )
+        .with(Background(Palette.BLACK))
+        .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
+        .with(Text("Start Game"))
+        .onClick {
+            println("Player are ready")
+            // GameStateManager.gameController.registerShip(player.board.getships()) - dette må lages
+            GameStateManager.set(PlayState())
+        }
     private val testText = GUI.text(
-            Gdx.graphics.gameInfoPosition().x,
-            Gdx.graphics.gameInfoPosition().y,
-            Gdx.graphics.gameInfoSize().x,
-            Gdx.graphics.gameInfoSize().y,
-            "Place ships")
+        Gdx.graphics.gameInfoPosition().x,
+        Gdx.graphics.gameInfoPosition().y,
+        Gdx.graphics.gameInfoSize().x,
+        Gdx.graphics.gameInfoSize().y,
+        "Place treasures"
+    )
 
     override val guiObjects: List<GuiObject> = listOf(
-            readyButton, testText
+        readyButton, testText
     )
 
     override fun render() {
@@ -64,9 +68,10 @@ class PreGameState : GuiState() {
         // drag ship / set position relative to global
         if (Gdx.input.justTouched()) {
             val touchPos =
-                    Vector2(
-                            Gdx.input.x.toFloat(),
-                            Gdx.graphics.height - Gdx.input.y.toFloat())
+                Vector2(
+                    Gdx.input.x.toFloat(),
+                    Gdx.graphics.height - Gdx.input.y.toFloat()
+                )
             val screenSize = Gdx.graphics.size()
             // if input on board
             if (Gdx.graphics.boardRectangle().contains(touchPos)) {

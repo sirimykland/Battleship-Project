@@ -1,4 +1,4 @@
-package com.battleship.model.weapons
+package com.battleship.model.equipment
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
@@ -10,13 +10,13 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.utility.Palette
 
-class WeaponSet : GameObject() {
-    var weapons: ArrayList<Weapon> = ArrayList()
-    var weapon: Weapon? = null
-    private lateinit var weaponButtons: Array<GuiObject>
+class EquipmentSet : GameObject() {
+    var equipments: ArrayList<Equipment> = ArrayList()
+    var activeEquipment: Equipment? = null
+    private lateinit var equipmentButtons: Array<GuiObject>
 
     override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
-        weaponButtons = arrayOf(*(0 until weapons.size).map { a: Int ->
+        equipmentButtons = arrayOf(*(0 until equipments.size).map { a: Int ->
             joinWeaponButton(
                 a,
                 position,
@@ -24,20 +24,20 @@ class WeaponSet : GameObject() {
             )
         }.toTypedArray())
         Gdx.input.inputProcessor =
-            InputMultiplexer(*weaponButtons.filter { it.isClickable }.map { it.listener }.toTypedArray())
+            InputMultiplexer(*equipmentButtons.filter { it.isClickable }.map { it.listener }.toTypedArray())
 
         batch.begin()
-        weaponButtons.forEach {
+        equipmentButtons.forEach {
             it.draw(batch)
         }
         batch.end()
     }
 
-    fun setActiveWeapon(weapon: Weapon) {
-        this.weapon?.active = false
-        this.weapon = weapon
-        this.weapon?.active = true
-        println(this.weapon?.name + " satt aktiv")
+    fun setActiveWeapon(equipment: Equipment) {
+        this.activeEquipment?.active = false
+        this.activeEquipment = equipment
+        this.activeEquipment?.active = true
+        println(this.activeEquipment?.name + " satt aktiv")
     }
 
     private fun joinWeaponButton(
@@ -45,24 +45,24 @@ class WeaponSet : GameObject() {
         position: Vector2,
         dimension: Vector2
     ): GuiObject {
-        val weapon = weapons[index]
+        val equipment = equipments[index]
 
         var borderColor = Palette.LIGHT_GREY
-        if (weapon.active) {
+        if (equipment.active) {
             borderColor = Palette.GREEN
         }
 
         return GUI.textButton(
-            position.x + dimension.x / weapons.size * index + index * 2,
+            position.x + dimension.x / equipments.size * index + index * 2,
             position.y,
-            dimension.x / weapons.size,
+            dimension.x / equipments.size,
             dimension.y,
-            weapon.name + " " + weapon.ammunition,
+            equipment.name + " " + equipment.uses,
             font = Font.TINY_BLACK,
             color = Palette.GREY,
             borderColor = borderColor
         ) {
-            setActiveWeapon(weapon)
+            setActiveWeapon(equipment)
         }
     }
 }
