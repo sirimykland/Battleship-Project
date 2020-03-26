@@ -29,11 +29,11 @@ class MainMenuState : GuiState() {
 
     private val header: GuiObject =  GUI.text(
         Gdx.graphics.width / 2 - 250f,
-        Gdx.graphics.height - 200f,
+        Gdx.graphics.height - 150f,
         500f,
         100f,
         "Treasure hunt",
-        font = Font.LARGE_BLACK
+        font = Font.XXL_BLACK
 
     )
     private val image: GuiObject =  GUI.image(

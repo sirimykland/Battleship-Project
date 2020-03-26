@@ -12,8 +12,6 @@ import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardRectangle
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
-import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 import com.battleship.utility.GdxGraphicsUtil.size
 import com.battleship.utility.GdxGraphicsUtil.weaponsetPosition
 import com.battleship.utility.GdxGraphicsUtil.weaponsetSize
