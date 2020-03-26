@@ -15,7 +15,7 @@ class MainMenuState : GuiState() {
         Pair("Matchmaking") { GameStateManager.set(MatchmakingState()) },
         Pair("Settings") { GameStateManager.set(SettingsState()) },
         Pair("Play") { GameStateManager.set(PreGameState()) },
-        Pair("Testmenu") { GameStateManager.set(TestMenuState()) }
+        Pair("GameOver") { GameStateManager.set(GameOverState()) }
     )
 
     override val guiObjects: List<GuiObject> = menuList

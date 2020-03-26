@@ -59,7 +59,7 @@ class SettingsState : GuiState() {
                     Gdx.graphics.width - 40f,
                     90f,
                     "Legal stuff",
-                    Font.SMALL_WHITE
+                    Font.SMALL_BLACK
             ),
             GUI.text(
                     20f,

@@ -14,8 +14,8 @@ class BasicView : View() {
         Gdx.gl.glClearColor(50f, 15f, 55f, 19f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         batch.begin()
-        backgroundSprite.draw(batch)
         backgroundSprite.setCenter((Gdx.graphics.getWidth()/2).toFloat(), (Gdx.graphics.getHeight()/2).toFloat());
+        backgroundSprite.draw(batch)
         gameObjects.forEach {
             it.draw(batch)
         }
