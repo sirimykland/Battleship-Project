@@ -26,7 +26,8 @@ class PreGameState : GuiState() {
 
     override fun create() {
         super.create()
-        player.board.randomPlacement(4)
+        player.board.createAndPlaceTreasurechests(4, true)
+        player.board.createAndPlaceGoldcoins(2, true)
     }
 
     private val readyButton = GuiObject(Gdx.graphics.weaponsetPosition(),

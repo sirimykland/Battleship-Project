@@ -1,15 +1,15 @@
 package com.battleship.model
 
-import com.battleship.model.weapons.WeaponSet
+import com.battleship.model.equipment.EquipmentSet
 
 class Player(boardSize: Int) {
     // var id:Int
     // var name:String
-    var weaponSet = WeaponSet()
+    var equipmentSet = EquipmentSet()
     var board: Board = Board(boardSize)
-    var health: Int = board.getAllShipHealth()
+    var health: Int = board.getAllTreasueHealth()
 
     fun updateHealth() {
-        this.health = board.getAllShipHealth()
+        this.health = board.getAllTreasueHealth()
     }
 }
