@@ -49,7 +49,7 @@ class PreGameState : GuiState() {
             "Place ships")
 
     override val guiObjects: List<GuiObject> = listOf(
-            readyButton, testText
+        GUI.backButton
     )
 
     override fun render() {
