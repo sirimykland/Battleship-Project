@@ -1,36 +1,17 @@
 package com.battleship.model.equipment
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.InputMultiplexer
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
-import com.battleship.model.ui.GuiObject
-import com.battleship.utility.Font
-import com.battleship.utility.GUI
-import com.battleship.utility.Palette
 
 class EquipmentSet : GameObject() {
     var equipments: ArrayList<Equipment> = ArrayList()
     var activeEquipment: Equipment? = null
-    private lateinit var equipmentButtons: Array<GuiObject>
+    //private lateinit var equipmentButtons: Array<GuiObject>
 
-    override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
-        equipmentButtons = arrayOf(*(0 until equipments.size).map { a: Int ->
-            joinEquipmentButton(
-                a,
-                position,
-                dimension
-            )
-        }.toTypedArray())
-        Gdx.input.inputProcessor =
-            InputMultiplexer(*equipmentButtons.filter { it.isClickable }.map { it.listener }.toTypedArray())
-
-        batch.begin()
-        equipmentButtons.forEach {
-            it.draw(batch)
-        }
-        batch.end()
+    init {
+        equipments.add(Shovel())
+        equipments.add(BigEquipment())
+        equipments.add(MetalDetector())
+        setEquipmentActive(equipments.first())
     }
 
     fun setEquipmentActive(equipment: Equipment) {
@@ -39,8 +20,27 @@ class EquipmentSet : GameObject() {
         this.activeEquipment?.active = true
         println(this.activeEquipment?.name + " satt aktiv")
     }
+    /*
+    override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
+        equipmentButtons = arrayOf(*(0 until equipments.size).map { a: Int ->
+            joinWeaponButton(
+                a,
+                position,
+                dimension
+            )
+        }.toTypedArray())
+        //Gdx.input.inputProcessor = InputMultiplexer(*equipmentButtons.filter { it.isClickable }.map { it.listener }.toTypedArray())
 
-    private fun joinEquipmentButton(
+        batch.begin()
+        equipmentButtons.forEach {
+            it.draw(batch)
+        }
+        batch.end()
+    }
+
+
+
+    private fun joinWeaponButton(
         index: Int,
         position: Vector2,
         dimension: Vector2
@@ -65,4 +65,6 @@ class EquipmentSet : GameObject() {
             setEquipmentActive(equipment)
         }
     }
+
+     */
 }
