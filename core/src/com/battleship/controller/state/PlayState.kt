@@ -29,7 +29,7 @@ class PlayState : GuiState() {
     var playerBoard: Boolean = false
     var playerTurn: Boolean = true
 
-    private var equipmentButtons: Array<GuiObject> =
+    private val equipmentButtons: Array<GuiObject> =
         arrayOf(*(0 until player.equipmentSet.equipments.size).map { a: Int ->
             joinWeaponButton(
                 a,
@@ -95,18 +95,22 @@ class PlayState : GuiState() {
     override fun update(dt: Float) {
         handleInput()
         updateUIElements()
+        updateHealth()
+    }
+
+    private fun updateHealth(){
         player.updateHealth()
         opponent.updateHealth()
         if (player.health == 0) {
-            println("Player2 won!")
+            println("Opponent won!")
             GameStateManager.set(MainMenuState())
         } else if (opponent.health == 0) {
-            println("Player won!")
+            println("You won!")
             GameStateManager.set(MainMenuState())
         }
     }
 
-    fun handleInput() {
+    private fun handleInput() {
         if (Gdx.input.justTouched()) {
             val touchPos =
                 Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
@@ -142,7 +146,7 @@ class PlayState : GuiState() {
         }
     }
 
-    fun updateUIElements() {
+    private fun updateUIElements() {
         equipmentButtons.forEachIndexed { i, _ ->
             val button = equipmentButtons[i]
             val equipment = player.equipmentSet.equipments[i]
