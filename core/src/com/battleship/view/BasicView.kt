@@ -18,7 +18,7 @@ class BasicView : View() {
         backgroundSprite.setCenter(
             (Gdx.graphics.getWidth() / 2).toFloat(),
             (Gdx.graphics.getHeight() / 2).toFloat()
-        );
+        )
         gameObjects.forEach {
             it.draw(batch)
         }
