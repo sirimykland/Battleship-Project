@@ -7,7 +7,6 @@ import com.battleship.model.ui.Image
 import com.battleship.model.ui.Text
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
-import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 

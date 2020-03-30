@@ -96,9 +96,9 @@ object GUI {
             .with(Text(text, Font.MEDIUM_WHITE))
     }
 
-    fun backButton (
+    fun backButton(
         onClick: () -> Unit
-    ) : GuiObject {
+    ): GuiObject {
         return GuiObject(10f, Gdx.graphics.height - 80f, 64f, 64f)
             .with(Image("icons/arrow_back_white.png"))
             .onClick(onClick)

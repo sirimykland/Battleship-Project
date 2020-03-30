@@ -30,7 +30,7 @@ class MainMenuState : GuiState() {
             )
         }
 
-    private val title: GuiObject =  GUI.text(
+    private val title: GuiObject = GUI.text(
         Gdx.graphics.width / 2 - 250f,
         Gdx.graphics.height - 210f,
         500f,
@@ -39,7 +39,7 @@ class MainMenuState : GuiState() {
         font = Font.XXL_BLACK
 
     )
-    private val skull: GuiObject =  GUI.image(
+    private val skull: GuiObject = GUI.image(
         Gdx.graphics.width / 2 - 36f,
         Gdx.graphics.height - 270f,
         72f,
