@@ -86,6 +86,9 @@ class UsageGuideState : GuiState() {
         updateButtons()
     }
 
+    /**
+     * Decide which buttons to show and update image and text
+     */
     private fun updateButtons() {
         if (pageIndex < imagePaths.size - 1) {
             nextPageButton.show()

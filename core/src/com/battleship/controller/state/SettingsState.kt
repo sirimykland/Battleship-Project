@@ -64,6 +64,9 @@ class SettingsState : GuiState() {
         updateButtons()
     }
 
+    /**
+     * Update button text based on music status
+     */
     private fun updateButtons() {
         if (BattleshipGame.music?.isPlaying == true)
             soundButton.set(Text("Music off", Font.MEDIUM_BLACK))

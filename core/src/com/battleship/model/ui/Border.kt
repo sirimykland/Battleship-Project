@@ -7,10 +7,10 @@ import com.battleship.utility.Palette
 
 class Border(
     private val color: TextureRegion = Palette.WHITE,
-    private val widthTop: Float = 3f,
-    private val widthRight: Float = 3f,
-    private val widthBottom: Float = 3f,
-    private val widthLeft: Float = 3f
+    private val widthTop: Float = 2f,
+    private val widthRight: Float = 2f,
+    private val widthBottom: Float = 2f,
+    private val widthLeft: Float = 2f
 ) : GuiElement() {
 
     constructor(color: TextureRegion = Palette.WHITE, width: Float = 3f) : this(color, width, width, width, width)

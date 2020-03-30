@@ -8,6 +8,9 @@ import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
+/**
+ * State handling all logic related to the main menu
+ */
 class MainMenuState : GuiState() {
 
     private val menuList = listOf(
@@ -27,22 +30,21 @@ class MainMenuState : GuiState() {
             )
         }
 
-    private val header: GuiObject =  GUI.text(
+    private val title: GuiObject =  GUI.text(
         Gdx.graphics.width / 2 - 250f,
-        Gdx.graphics.height - 150f,
+        Gdx.graphics.height - 210f,
         500f,
         100f,
         "Treasure hunt",
         font = Font.XXL_BLACK
 
     )
-    private val image: GuiObject =  GUI.image(
+    private val skull: GuiObject =  GUI.image(
         Gdx.graphics.width / 2 - 36f,
-        Gdx.graphics.height - 280f,
+        Gdx.graphics.height - 270f,
         72f,
         72f,
         "images/skull_and_crossbones.png"
-
     )
 
     override var view: View = BasicView()
@@ -50,6 +52,6 @@ class MainMenuState : GuiState() {
     override fun update(dt: Float) {}
 
     override fun render() {
-        view.render(header, image, *guiObjects.toTypedArray())
+        view.render(title, skull, *guiObjects.toTypedArray())
     }
 }

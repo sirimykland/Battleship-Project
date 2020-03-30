@@ -3,12 +3,13 @@ package com.battleship.controller.state
 import com.badlogic.gdx.Gdx
 import com.battleship.GameStateManager
 import com.battleship.model.ui.GuiObject
-import com.battleship.utility.Font
 import com.battleship.utility.GUI
-import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
+/**
+ * State handling all logic related to the game over screen
+ */
 class GameOverState : GuiState() {
     private val menuList = listOf(
         Pair("Main Menu") { GameStateManager.set(MainMenuState()) },

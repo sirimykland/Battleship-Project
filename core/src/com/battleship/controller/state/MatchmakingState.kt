@@ -21,11 +21,11 @@ class MatchmakingState : GuiState() {
     private var page: Int = 0
 
     private val nextPageButton = GUI.textButton(
-        Gdx.graphics.width - 150f,
+        Gdx.graphics.width - 230f,
         30f,
-        100f,
-        90f,
-        "->"
+        180f,
+        80f,
+        "Next"
     ) {
         page++
         updateButtons()
@@ -34,23 +34,16 @@ class MatchmakingState : GuiState() {
     private val previousPageButton = GUI.textButton(
         30f,
         30f,
-        100f,
-        70f,
-        "<-"
+        180f,
+        80f,
+        "Previous"
     ) {
         page--
         updateButtons()
     }.hide()
 
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.text(
-            20f,
-            Gdx.graphics.height - 220f,
-            Gdx.graphics.width - 40f,
-            90f,
-            "Matchmaking",
-            Font.LARGE_WHITE
-        ),
+        GUI.header("Usage guide"),
         nextPageButton,
         previousPageButton,
         *playerButtons,
