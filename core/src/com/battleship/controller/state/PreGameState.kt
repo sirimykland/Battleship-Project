@@ -12,8 +12,6 @@ import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardRectangle
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
-import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 import com.battleship.utility.GdxGraphicsUtil.size
 import com.battleship.utility.GdxGraphicsUtil.weaponsetPosition
 import com.battleship.utility.GdxGraphicsUtil.weaponsetSize
@@ -32,24 +30,18 @@ class PreGameState : GuiState() {
     }
 
     private val readyButton = GuiObject(Gdx.graphics.weaponsetPosition(),
-            Gdx.graphics.weaponsetSize())
-            .with(Background(Palette.BLACK))
-            .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
-            .with(Text("Start Game"))
-            .onClick {
-                println("Player are ready")
-                // GameStateManager.gameController.registerShip(player.board.getships()) - dette må lages
-                GameStateManager.set(PlayState())
-            }
-    private val testText = GUI.text(
-            Gdx.graphics.gameInfoPosition().x,
-            Gdx.graphics.gameInfoPosition().y,
-            Gdx.graphics.gameInfoSize().x,
-            Gdx.graphics.gameInfoSize().y,
-            "Place ships")
+        Gdx.graphics.weaponsetSize())
+        .with(Background(Palette.BLACK))
+        .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
+        .with(Text("Start Game"))
+        .onClick {
+            println("Player are ready")
+            // GameStateManager.gameController.registerShip(player.board.getships()) - dette må lages
+            GameStateManager.set(PlayState())
+        }
 
     override val guiObjects: List<GuiObject> = listOf(
-            readyButton, testText
+        readyButton, GUI.header("Place ships"), GUI.backButton { GameStateManager.set(MainMenuState()) }
     )
 
     override fun render() {
@@ -64,9 +56,9 @@ class PreGameState : GuiState() {
         // drag ship / set position relative to global
         if (Gdx.input.justTouched()) {
             val touchPos =
-                    Vector2(
-                            Gdx.input.x.toFloat(),
-                            Gdx.graphics.height - Gdx.input.y.toFloat())
+                Vector2(
+                    Gdx.input.x.toFloat(),
+                    Gdx.graphics.height - Gdx.input.y.toFloat())
             val screenSize = Gdx.graphics.size()
             // if input on board
             if (Gdx.graphics.boardRectangle().contains(touchPos)) {
