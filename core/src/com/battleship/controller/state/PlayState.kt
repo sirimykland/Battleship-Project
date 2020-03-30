@@ -62,7 +62,7 @@ class PlayState : GuiState() {
         }
     }
 
-    fun handleInput() {
+    private fun handleInput() {
         if (Gdx.input.justTouched()) {
             val touchPos =
                 Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())

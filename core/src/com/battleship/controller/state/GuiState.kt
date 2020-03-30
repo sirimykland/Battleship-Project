@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.battleship.model.ui.GuiObject
 
+/**
+ * Abstract state class declaring functions and variables for GUI states
+ */
 abstract class GuiState : State() {
     abstract val guiObjects: List<GuiObject>
 

@@ -12,8 +12,6 @@ import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardRectangle
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
-import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 import com.battleship.utility.GdxGraphicsUtil.size
 import com.battleship.utility.GdxGraphicsUtil.weaponsetPosition
 import com.battleship.utility.GdxGraphicsUtil.weaponsetSize
@@ -32,10 +30,8 @@ class PreGameState : GuiState() {
         player.board.createAndPlaceGoldcoins(2, true)
     }
 
-    private val readyButton = GuiObject(
-        Gdx.graphics.weaponsetPosition(),
-        Gdx.graphics.weaponsetSize()
-    )
+    private val readyButton = GuiObject(Gdx.graphics.weaponsetPosition(),
+        Gdx.graphics.weaponsetSize())
         .with(Background(Palette.BLACK))
         .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
         .with(Text("Start Game"))
@@ -44,16 +40,9 @@ class PreGameState : GuiState() {
             // GameStateManager.gameController.registerShip(player.board.getships()) - dette må lages
             GameStateManager.set(PlayState())
         }
-    private val testText = GUI.text(
-        Gdx.graphics.gameInfoPosition().x,
-        Gdx.graphics.gameInfoPosition().y,
-        Gdx.graphics.gameInfoSize().x,
-        Gdx.graphics.gameInfoSize().y,
-        "Place treasures"
-    )
 
     override val guiObjects: List<GuiObject> = listOf(
-        readyButton, testText
+        readyButton, GUI.header("Place ships"), GUI.backButton { GameStateManager.set(MainMenuState()) }
     )
 
     override fun render() {
@@ -70,8 +59,7 @@ class PreGameState : GuiState() {
             val touchPos =
                 Vector2(
                     Gdx.input.x.toFloat(),
-                    Gdx.graphics.height - Gdx.input.y.toFloat()
-                )
+                    Gdx.graphics.height - Gdx.input.y.toFloat())
             val screenSize = Gdx.graphics.size()
             // if input on board
             if (Gdx.graphics.boardRectangle().contains(touchPos)) {
