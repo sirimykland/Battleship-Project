@@ -1,11 +1,10 @@
 package com.battleship.controller.state
 
+import com.battleship.GameStateManager
 import com.battleship.controller.firebase.GameController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
-import com.battleship.utility.Font
 import com.battleship.utility.GUI
-import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
@@ -18,6 +17,11 @@ class MatchmakingState : GuiState() {
     private val playerButtons: Array<GuiObject> = arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
     private var page: Int = 0
+
+    init {
+
+        // gameController.createGame("NefN8HJT5S90ZmDwFGco")
+    }
 
     private val nextPageButton = GUI.textButton(
         78f,
@@ -42,15 +46,7 @@ class MatchmakingState : GuiState() {
     }.hide()
 
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.text(
-            5f,
-            80f,
-            90f,
-            10f,
-            "Matchmaking",
-            Font.LARGE_WHITE
-        ),
-        GUI.header("Usage guide"),
+        GUI.header("Matchmaking"),
         nextPageButton,
         previousPageButton,
         *playerButtons,
@@ -100,9 +96,7 @@ class MatchmakingState : GuiState() {
             70f - index * 9f,
             80f,
             7f,
-            "Loading",
-            font = Font.TINY_WHITE,
-            borderColor = Palette.RED
+            "Loading"
         ) {
             println(userList[(page * 5) + index])
         }

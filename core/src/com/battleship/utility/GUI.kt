@@ -1,10 +1,7 @@
 package com.battleship.utility
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.battleship.GameStateManager
-import com.battleship.controller.state.MainMenuState
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.BottomBorder
@@ -14,17 +11,6 @@ import com.battleship.model.ui.ImageButtonText
 import com.battleship.model.ui.Text
 
 object GUI {
-
-    val backButton = textButton(
-        2f,
-        90f,
-        18f,
-        8f,
-        "back"
-    ) {
-        GameStateManager.set(MainMenuState())
-    }
-
     fun text(
         posX: Float,
         posY: Float,
@@ -74,7 +60,7 @@ object GUI {
         sizeX: Float,
         sizeY: Float,
         text: String,
-        font: BitmapFont = Font.SMALL_BLACK,
+        font: BitmapFont = Font.MEDIUM_BLACK,
         color: TextureRegion = Palette.LIGHT_GREY,
         borderColor: TextureRegion = Palette.BLACK,
         onClick: () -> Unit
@@ -92,7 +78,7 @@ object GUI {
         text: String,
         onClick: () -> Unit
     ): GuiObject {
-        return GuiObject(posX, posY, 340f, 100f)
+        return GuiObject(posX, posY, 53.125f, 12.5f)
             .with(Background(Palette.LIGHT_GREY))
             .with(Border(Palette.BLACK))
             .with(Text(text, Font.MEDIUM_BLACK))
@@ -102,7 +88,7 @@ object GUI {
     fun header(
         text: String
     ): GuiObject {
-        return GuiObject(0f, Gdx.graphics.height.toFloat() - 96f, Gdx.graphics.width.toFloat(), 96f)
+        return GuiObject(0f, 88f, 100f, 12f)
             .with(Background(Palette.DARK_GREY))
             .with(BottomBorder(Palette.BLACK))
             .with(Text(text, Font.MEDIUM_WHITE))
@@ -111,7 +97,7 @@ object GUI {
     fun backButton(
         onClick: () -> Unit
     ): GuiObject {
-        return GuiObject(10f, Gdx.graphics.height - 80f, 64f, 64f)
+        return GuiObject(0.15f, 90f, 10f, 8f)
             .with(Image("icons/arrow_back_white.png"))
             .onClick(onClick)
     }
