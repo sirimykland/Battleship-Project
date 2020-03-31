@@ -1,6 +1,5 @@
 package com.battleship.controller.state
 
-import com.badlogic.gdx.Gdx
 import com.battleship.GameStateManager
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Image
@@ -34,26 +33,26 @@ class UsageGuideState : GuiState() {
     )
 
     private var currentDescription: GuiObject = GUI.text(
-        20f,
-        170f,
-        Gdx.graphics.width - 40f,
-        90f,
+        3.13f,
+        21.25f,
+        93.75f,
+        11.25f,
         descriptions[0],
         Font.MEDIUM_BLACK
     )
     private var currentImage: GuiObject = GUI.image(
-        120f,
-        260f,
-        400f,
-        400f,
+        18.75f,
+        32.5f,
+        62.5f,
+        50f,
         imagePaths[0]
     )
 
     private val nextPageButton = GUI.textButton(
-        Gdx.graphics.width - 230f,
-        30f,
-        180f,
-        80f,
+        64f,
+        3.75f,
+        28.125f,
+        10f,
         "Next"
     ) {
         pageIndex++
@@ -61,10 +60,10 @@ class UsageGuideState : GuiState() {
     }
 
     private val previousPageButton = GUI.textButton(
-        30f,
-        30f,
-        180f,
-        80f,
+        4.6875f,
+        3.75f,
+        28.125f,
+        10f,
         "Previous"
     ) {
         pageIndex--

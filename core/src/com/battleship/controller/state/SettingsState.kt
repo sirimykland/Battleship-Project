@@ -1,6 +1,5 @@
 package com.battleship.controller.state
 
-import com.badlogic.gdx.Gdx
 import com.battleship.BattleshipGame
 import com.battleship.GameStateManager
 import com.battleship.model.ui.GuiObject
@@ -16,8 +15,8 @@ import com.battleship.view.View
 class SettingsState : GuiState() {
     override var view: View = BasicView()
     private var soundButton: GuiObject = GUI.menuButton(
-            Gdx.graphics.width / 2 - 170f,
-            Gdx.graphics.height - 300f,
+            23.44f,
+            62.5f,
             "Music off",
             onClick = {
                 if (BattleshipGame.music?.isPlaying == true)
@@ -29,30 +28,31 @@ class SettingsState : GuiState() {
     override val guiObjects: List<GuiObject> = listOf(
         GUI.header("Settings"),
         soundButton,
-        GUI.menuButton(Gdx.graphics.width / 2 - 170f,
-            Gdx.graphics.height - 450f,
+        GUI.menuButton(
+            23.44f,
+            43.75f,
             "Sound effects on",
             onClick = { print("Sound effects on/off") }),
         GUI.menuButton(
-            Gdx.graphics.width / 2 - 170f,
-            Gdx.graphics.height - 600f,
+            23.44f,
+            25f,
             "Usage guide",
             onClick = { GameStateManager.set(UsageGuideState()) }
         ),
 
         GUI.text(
-            20f,
-            80f,
-            Gdx.graphics.width - 45f,
-            90f,
+            3f,
+            10f,
+            94f,
+            11.25f,
             "Legal stuff",
             Font.SMALL_BLACK
         ),
         GUI.text(
-            20f,
-            40f,
-            Gdx.graphics.width - 45f,
-            90f,
+            3f,
+            5f,
+            94f,
+            11.25f,
             "v0.1.0",
             Font.SMALL_BLACK
         ),

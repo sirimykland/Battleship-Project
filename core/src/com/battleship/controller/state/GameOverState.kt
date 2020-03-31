@@ -1,6 +1,5 @@
 package com.battleship.controller.state
 
-import com.badlogic.gdx.Gdx
 import com.battleship.GameStateManager
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.GUI
@@ -18,14 +17,14 @@ class GameOverState : GuiState() {
 
     override val guiObjects: List<GuiObject> = listOf(
         GUI.menuButton(
-            Gdx.graphics.width / 2 - 170f,
-            Gdx.graphics.height - 600f,
+            23.4375f,
+            25f,
             "Back to main menu",
             onClick = { GameStateManager.set(MainMenuState()) }
         ),
         GUI.menuButton(
-            Gdx.graphics.width / 2 - 170f,
-            Gdx.graphics.height - 450f,
+            23.4375f,
+            43.75f,
             "Play again",
             onClick = { GameStateManager.set(MatchmakingState()) }
         ),
