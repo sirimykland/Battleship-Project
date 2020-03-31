@@ -7,9 +7,6 @@ import com.battleship.GSM
 import com.battleship.GameStateManager
 import com.battleship.controller.firebase.GameController
 import com.battleship.model.ui.GuiObject
-import com.battleship.model.weapons.BigWeapon
-import com.battleship.model.weapons.RadarWeapon
-import com.battleship.model.weapons.SmallWeapon
 import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
@@ -25,6 +22,11 @@ class PlayState() : GuiState() {
 
     private val gameController = GameController()
 
+    override fun create() {
+        super.create()
+        gameController.addGameListener(GSM.activeGame.gameId)
+    }
+
     private val testText = GUI.text(
             Gdx.graphics.gameInfoPosition().x,
             Gdx.graphics.gameInfoPosition().y,
@@ -35,25 +37,18 @@ class PlayState() : GuiState() {
             testText
     )
 
-    override fun create() {
-        super.create()
-        // kan kanskje flyttes til GameController init block
-        gameController.addGameListener(GSM.activeGame.gameId, GSM.userId)
-
-        GSM.activeGame.activePlayer.weaponSet.weapons = arrayListOf(SmallWeapon(),BigWeapon(),RadarWeapon())
-        GSM.activeGame.activePlayer.weaponSet.setActiveWeapon(GSM.activeGame.activePlayer.weaponSet.weapons.first())
-    }
-
     override fun render() {
         this.view.render(*guiObjects.toTypedArray(), GSM.activeGame.activePlayer.board, GSM.activeGame.activePlayer.weaponSet) // , gameInfo)
     }
 
     override fun update(dt: Float) {
-        handleInput()
-        GSM.activeGame.activePlayer.updateHealth()
-        if (GSM.activeGame.activePlayer.health == 0) {
-            println("You won!")
-            GameStateManager.set(MainMenuState())
+        if(GSM.activeGame.isMyTurn()) {
+            handleInput()
+            GSM.activeGame.activePlayer.updateHealth()
+            if (GSM.activeGame.activePlayer.health == 0) {
+                println("You won!")
+                GameStateManager.set(MainMenuState())
+            }
         }
     }
 
@@ -66,9 +61,11 @@ class PlayState() : GuiState() {
             val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
             if (boardBounds.contains(touchPos)) {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
-                if (GSM.activeGame.activePlayer.weaponSet.weapon!!.hasAmmunition()) {
-                    GSM.activeGame.activePlayer.board.shootTiles(boardTouchPos, GSM.activeGame.activePlayer.weaponSet.weapon!!)
-                    GSM.activeGame.activePlayer.weaponSet.weapon!!.shoot()
+                val game = GSM.activeGame
+                if (game.activePlayer.weaponSet.weapon!!.hasAmmunition()) {
+                    game.activePlayer.board.shootTiles(boardTouchPos, GSM.activeGame.activePlayer.weaponSet.weapon!!)
+                    game.activePlayer.weaponSet.weapon!!.shoot()
+                    gameController.makeMove(game.gameId, boardTouchPos.x, boardTouchPos.y, game.getMe().playerId, game.activePlayer.weaponSet.weapon!!.name)
                 } else {
                     println(GSM.activeGame.activePlayer.weaponSet.weapon!!.name + "Has no ammo")
                 }

@@ -1,37 +1,38 @@
 package com.battleship.model
 
-import com.battleship.GameStateManager
+import com.battleship.GSM
 
-class Game(val gameId: String) {
-    // val boardSize: Int? = 10
-    var player1 = Player()
-    var player2 = Player()
+class Game(val gameId: String, var player1: Player, var player2: Player) {
+    var activePlayer = player2 // must be made dynamically
+    var winner: String = ""
 
-    constructor (gameId: String, playerId: String, playerName: String) : this(gameId) {
-        this.player1 = Player(playerId, playerName)
+    fun flipPlayer() {
+        if (activePlayer == player1) activePlayer = player2
+        else if (activePlayer == player2) activePlayer = player1
     }
-
-    constructor (gameId: String, player1: Player, player2: Player) : this(gameId) {
-        this.player1 = player1
-        this.player2 = player2
-    }
-    var activePlayer = getOpponent() // must be made dynamically
 
     fun getMe(): Player {
-        if (player1.playerId.equals(GameStateManager.userId))
+        println("getMe(): " + player1.playerName + " - " + player2.playerName)
+        if (player1.playerId == GSM.userId)
             return player1
-        else if (player2.playerId.equals(GameStateManager.userId))
+        else if (player2.playerId == GSM.userId)
             return player2
         else
-            return Player("errorMe", "Invalid")
+            return Player("errorMe", "InvalidMe")
+    }
+
+    fun isMyTurn(): Boolean {
+        // println("isMyTurn() ")
+        return activePlayer.playerId == GSM.userId
     }
 
     fun getOpponent(): Player {
-        if (player1.playerId.equals(GameStateManager.userId))
+        println("getOpponent(): " + player1.playerName + "  " + player2.playerName)
+        if (player1.playerId == GSM.userId)
             return player2
-        else if (player2.playerId.equals(GameStateManager.userId))
+        else if (player2.playerId == GSM.userId)
             return player1
         else
-            return Player("errorOppnent", "Invalid")
+            return Player("errorOppnent", "Invalidopponnet")
     }
 }

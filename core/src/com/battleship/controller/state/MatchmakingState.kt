@@ -1,9 +1,9 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.battleship.GameStateManager
+import com.battleship.GSM
 import com.battleship.controller.firebase.GameController
-import com.battleship.model.Game
+import com.battleship.model.GameListObject
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
 import com.battleship.utility.Font
@@ -57,7 +57,7 @@ class MatchmakingState : GuiState() {
             *playerButtons,
             GUI.backButton
     )
-    var games = emptyList<Game>()
+    var games = emptyList<GameListObject>()
 
     override fun create() {
         super.create()
@@ -71,7 +71,7 @@ class MatchmakingState : GuiState() {
             val j = index + i
             val button = playerButtons[i]
             if (j < games.size) {
-                button.set(Text(games.get(j).player1.playerName))
+                button.set(Text(games.get(j).playerName))
                 button.show()
             } else {
                 button.hide()
@@ -101,10 +101,10 @@ class MatchmakingState : GuiState() {
             val gameId = games.get((page * 5) + index).gameId
             val successful = gameController.joinGame(
                     gameId,
-                    GameStateManager.userId)
+                    GSM.userId)
             if (successful) {
-                GameStateManager.activeGame = gameController.getGame(gameId)
-                GameStateManager.set(PreGameState())
+                gameController.setGame(gameId)
+                GSM.set(PreGameState())
             }
         }
     }

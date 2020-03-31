@@ -1,6 +1,8 @@
 package com.battleship.controller.firebase
 
+import com.battleship.GSM
 import com.battleship.model.Game
+import com.battleship.model.GameListObject
 import com.battleship.model.Player
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.EventListener
@@ -35,11 +37,12 @@ class GameController : FirebaseController() {
     /**
      * Function getting all games where there is currently only one player
      */
-    fun getPendingGames(): List<Game> {
+    fun getPendingGames(): ArrayList<GameListObject> {
         val gameQuery = db.collection("games").whereEqualTo("player2", "").get()
         val gameQuerySnapshot = gameQuery.get()
         val gameDocuments = gameQuerySnapshot.documents
-        val games = ArrayList<Game>()
+        val games = ArrayList<GameListObject>()
+        // MutableMap<String,ListPlayer>()
         // For each game fitting the criteria, get the id and username of opponent
         for (document in gameDocuments) {
             val id = document.id
@@ -50,8 +53,8 @@ class GameController : FirebaseController() {
             val playerQuerySnapshot = playerQuery?.get()
             val playerName = playerQuerySnapshot?.getString("username")
             if (playerName != null) {
-                //games[id] = playerName
-                games.add(Game(id, playerId.toString(), playerName.toString()))
+                games.add(GameListObject(id, playerId as String, playerName as String))
+                //games.add(Game(id, playerId, playerName))
             }
         }
         return games
@@ -67,7 +70,7 @@ class GameController : FirebaseController() {
         val userQuerySnapshot = userQuery?.get()
         val username = userQuerySnapshot?.getString("username")
         if (username != null) {
-            return Player(userId, username as String)
+            return Player(userId, username.toString())
         }
         return Player(userId, "Unknown")
     }
@@ -110,21 +113,22 @@ class GameController : FirebaseController() {
      * @param gameId the id of the game
      * @return a Game object containing game and player
      */
-    fun getGame(gameId: String): Game {
+    fun setGame(gameId: String) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
 
         if (game.exists()) {
-            val gameObject = Game(gameId)
             val player1Id: String = game.get("player1") as String
             val player2Id: String = game.get("player2") as String
 
-            gameObject.player1 = getUser(player1Id)
-            gameObject.player2 = getUser(player2Id)
+            val player1 = getUser(player1Id)
+            val player2 = getUser(player2Id)
             val ships = getShips(gameId)
-            if (player1Id in ships) ships[player1Id]?.let { gameObject.player1.board.setShipList(it) }
-            if (player2Id in ships) ships[player2Id]?.let { gameObject.player2.board.setShipList(it) }
-            return gameObject
+            if (player1Id in ships) ships[player1Id]?.let { player1.board.setShipList(it) }
+            if (player2Id in ships) ships[player2Id]?.let { player2.board.setShipList(it) }
+
+            print("player1: ${player1.playerName}, player: ${player2.playerName}")
+            GSM.activeGame = Game(gameId, player1, player2)
         } else {
             throw error("Something went wrong when fetching the Game")
         }
@@ -152,7 +156,7 @@ class GameController : FirebaseController() {
      * @param y y coordinate of
      * @param playerId player making the move
      */
-    fun makeMove(gameId: String, x: Int, y: Int, playerId: String) {
+    fun makeMove(gameId: String, x: Float, y: Float, playerId: String, weapon:String) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
@@ -161,6 +165,7 @@ class GameController : FirebaseController() {
             data["x"] = x
             data["y"] = y
             data["playerId"] = playerId
+            data["weapon"] = weapon
             moves.add(data)
             db.collection("games").document(gameId).update("moves", moves)
         } else {
@@ -185,7 +190,7 @@ class GameController : FirebaseController() {
      * @param gameId the id of the game document
      * @param playerId the id of the player
      */
-    fun addGameListener(gameId: String, playerId: String) {
+    fun addGameListener(gameId: String) {
         db.collection("games").document(gameId).addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
                     @Nullable snapshot: DocumentSnapshot?,
@@ -219,20 +224,24 @@ class GameController : FirebaseController() {
                             // If a winner has been set
                             if (winner != "") {
                                 println("The winner is $winner")
+                                GSM.activeGame.winner = winner as String
                             }
                             // If there is no winner, continue game
                             else {
                                 // If no moves has been made yet
                                 if (moves.size == 0) {
                                     println("No moves made yet")
+                                    GSM.activeGame.activePlayer = GSM.activeGame.player2
                                 } else {
                                     // Get the last move
                                     val lastMove = moves.get(moves.size - 1)
                                     // If the last move is performed by opponent
-                                    if (!lastMove["playerId"]!!.equals(playerId)) {
+                                    if (!lastMove["playerId"]!!.equals(GSM.activeGame.getOpponent().playerId)) {
                                         println("Motstander hadde siste trekk")
+                                        GSM.activeGame.activePlayer = GSM.activeGame.getMe()
                                     } else {
                                         println("Du hadde siste trekk, vent")
+                                        GSM.activeGame.activePlayer = GSM.activeGame.getOpponent()
                                     }
                                 }
                             }

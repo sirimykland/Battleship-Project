@@ -10,10 +10,16 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.utility.Palette
 
-class WeaponSet : GameObject() {
+class WeaponSet() : GameObject() {
     var weapons: ArrayList<Weapon> = ArrayList()
     var weapon: Weapon? = null
     private lateinit var weaponButtons: Array<GuiObject>
+
+    constructor(weapons: ArrayList<Weapon>) : this() {
+        this.weapons = weapons
+        setActiveWeapon(weapons[0])
+    }
+
 
     override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
         weaponButtons = arrayOf(*(0 until weapons.size).map { a: Int ->

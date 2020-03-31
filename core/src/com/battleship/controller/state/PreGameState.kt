@@ -26,13 +26,14 @@ import com.battleship.view.View
 class PreGameState() : GuiState() {
     override var view: View = PlayView()
     private val gameController = GameController()
-    private var game: Game = GameStateManager.activeGame
+    private var game: Game = GSM.activeGame
+    private var activePlayer = GSM.activeGame.getMe()
 
     override fun create() {
         super.create()
-        // kan kanskje flyttes til GameController init block
-        gameController.addGameListener(GSM.activeGame.gameId, GSM.userId)
-        GSM.activeGame.activePlayer = GSM.activeGame.getMe()
+        gameController.addGameListener(GSM.activeGame.gameId)
+
+        // GSM.activeGame.activePlayer = GSM.activeGame.getMe()
         GSM.activeGame.activePlayer.board.randomPlacement(4)
     }
 
@@ -42,27 +43,27 @@ class PreGameState() : GuiState() {
             .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
             .with(Text("Start Game"))
             .onClick {
-                game = GameStateManager.activeGame
+                game = GSM.activeGame
                 gameController.registerShips(
                         game.gameId,
-                        game.getMe().playerId,
-                        game.getMe().board.getShipList()
+                        activePlayer.playerId,
+                        activePlayer.board.getShipList()
                 )
-                GameStateManager.set(PlayState())
+                GSM.set(PlayState())
             }
     private val testText = GUI.text(
             Gdx.graphics.gameInfoPosition().x,
             Gdx.graphics.gameInfoPosition().y,
             Gdx.graphics.gameInfoSize().x,
             Gdx.graphics.gameInfoSize().y,
-            "Hi,${GSM.activeGame.activePlayer.playerName}! Place your ships and press start")
+            "Hi,${activePlayer.playerName}! Place your ships and press start")
 
     override val guiObjects: List<GuiObject> = listOf(
             readyButton, testText
     )
 
     override fun render() {
-        this.view.render(*guiObjects.toTypedArray(), GSM.activeGame.activePlayer.board)
+        this.view.render(*guiObjects.toTypedArray(), activePlayer.board)
     }
 
     override fun update(dt: Float) {
