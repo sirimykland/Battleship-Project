@@ -32,7 +32,7 @@ class PreGameState : GuiState() {
     private val readyButton = GuiObject(Gdx.graphics.weaponsetPosition(),
         Gdx.graphics.weaponsetSize())
         .with(Background(Palette.BLACK))
-        .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
+        .with(Border(Palette.WHITE, 10f))
         .with(Text("Start Game"))
         .onClick {
             println("Player are ready")
