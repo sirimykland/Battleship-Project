@@ -15,8 +15,8 @@ import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
 import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
-import com.battleship.utility.GdxGraphicsUtil.weaponsetPosition
-import com.battleship.utility.GdxGraphicsUtil.weaponsetSize
+import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
+import com.battleship.utility.GdxGraphicsUtil.equipmentsetPosition
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
@@ -35,17 +35,17 @@ class PlayState : GuiState() {
         arrayOf(*(0 until player.equipmentSet.equipments.size).map { a: Int ->
             joinEquipmentButton(
                 a,
-                Gdx.graphics.weaponsetPosition(),
-                Gdx.graphics.weaponsetSize()
+                Gdx.graphics.equipmentsetPosition(),
+                Gdx.graphics.equipmentsetSize()
             )
         }.toTypedArray())
 
     // TODO Positioning/design
     private val switchBoardButton = GUI.textButton(
-        Gdx.graphics.width - Gdx.graphics.gameInfoSize().x / 3,
-        Gdx.graphics.gameInfoPosition().y - 20,
-        Gdx.graphics.gameInfoSize().x / 3,
-        Gdx.graphics.gameInfoSize().y,
+        70f,
+        90f,
+        30f,
+        8f,
         "Switch board",
         font = Font.TINY_BLACK,
         color = Palette.GREY,
