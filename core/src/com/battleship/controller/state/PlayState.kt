@@ -29,9 +29,11 @@ class PlayState : GuiState() {
     var playerBoard: Boolean = false
     var playerTurn: Boolean = true
 
+    private val header = GUI.header("Settings")
+
     private val equipmentButtons: Array<GuiObject> =
         arrayOf(*(0 until player.equipmentSet.equipments.size).map { a: Int ->
-            joinWeaponButton(
+            joinEquipmentButton(
                 a,
                 Gdx.graphics.weaponsetPosition(),
                 Gdx.graphics.weaponsetSize()
@@ -48,10 +50,11 @@ class PlayState : GuiState() {
         "Your turn"
     )
 
+    // TODO Positioning/design
     private val switchBoardButton = GUI.textButton(
-        Gdx.graphics.width - Gdx.graphics.gameInfoSize().x / 4,
-        Gdx.graphics.gameInfoPosition().y - 40,
-        Gdx.graphics.gameInfoSize().x / 4,
+        Gdx.graphics.width - Gdx.graphics.gameInfoSize().x / 3,
+        Gdx.graphics.gameInfoPosition().y - 20,
+        Gdx.graphics.gameInfoSize().x / 3,
         Gdx.graphics.gameInfoSize().y,
         "Switch board",
         font = Font.TINY_BLACK,
@@ -63,7 +66,7 @@ class PlayState : GuiState() {
     )
 
     override val guiObjects: List<GuiObject> = listOf(
-        testText, switchBoardButton, *equipmentButtons
+        *equipmentButtons, header, switchBoardButton
     )
 
     override fun create() {
@@ -98,15 +101,15 @@ class PlayState : GuiState() {
         updateHealth()
     }
 
-    private fun updateHealth(){
+    private fun updateHealth() {
         player.updateHealth()
         opponent.updateHealth()
         if (player.health == 0) {
             println("Opponent won!")
-            GameStateManager.set(MainMenuState())
+            GameStateManager.set(GameOverState())
         } else if (opponent.health == 0) {
             println("You won!")
-            GameStateManager.set(MainMenuState())
+            GameStateManager.set(GameOverState())
         }
     }
 
@@ -121,11 +124,14 @@ class PlayState : GuiState() {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
                 if (playerTurn && !playerBoard) {
                     if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        opponent.board.shootTiles(
+                        var valid = opponent.board.shootTiles(
                             boardTouchPos,
                             player.equipmentSet.activeEquipment!!
                         )
-                        playerTurn = !playerTurn
+                        if (valid) {
+                            playerTurn = !playerTurn
+                            player.equipmentSet.activeEquipment!!.use()
+                        }
                     } else {
                         println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
                     }
@@ -133,11 +139,13 @@ class PlayState : GuiState() {
                 // TODO remove else if
                 else if (!playerTurn && playerBoard) {
                     if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        player.board.shootTiles(
+                        var valid = player.board.shootTiles(
                             boardTouchPos,
                             opponent.equipmentSet.activeEquipment!!
                         )
-                        playerTurn = !playerTurn
+                        if (valid) {
+                            playerTurn = !playerTurn
+                        }
                     } else {
                         println(opponent.equipmentSet.activeEquipment!!.name + " has no more uses")
                     }
@@ -159,32 +167,36 @@ class PlayState : GuiState() {
             } else {
                 button.set(Border(Palette.LIGHT_GREY))
             }
-            // Hides and shows equipmentbuttons
+
+            // Hides and shows equipmentbuttons and switchboardbutton' text
             if (playerBoard) {
                 equipmentButtons[i].hide()
+                switchBoardButton.set(Text("Opponent's board", Font.TINY_BLACK))
             } else {
                 equipmentButtons[i].show()
+                switchBoardButton.set(Text("Your board", Font.TINY_BLACK))
             }
-            // Updates text
+
+            // Updates header text
             if (playerTurn) {
-                testText.set(Text("Your turn"))
+                header.set(Text("Your turn"))
             } else {
-                testText.set(Text("Opponent's turn"))
+                header.set(Text("Opponent's turn"))
             }
         }
         //  Updates border of switchboardbutton
-        if(playerTurn && playerBoard){
+        if (playerTurn && playerBoard) {
             switchBoardButton.set(Border(Palette.GREEN))
-        }else if(!playerTurn && !playerBoard){
+        } else if (!playerTurn && !playerBoard) {
             switchBoardButton.set(Border(Palette.GREEN))
-        }else if(playerTurn && !playerBoard){
+        } else if (playerTurn && !playerBoard) {
             switchBoardButton.set(Border(Palette.LIGHT_GREY))
-        }else if(!playerTurn && playerBoard){
+        } else if (!playerTurn && playerBoard) {
             switchBoardButton.set(Border(Palette.LIGHT_GREY))
         }
     }
 
-    private fun joinWeaponButton(
+    private fun joinEquipmentButton(
         index: Int,
         position: Vector2,
         dimension: Vector2
@@ -207,7 +219,6 @@ class PlayState : GuiState() {
             borderColor = borderColor,
             onClick = {
                 player.equipmentSet.setEquipmentActive(equipment)
-                borderColor = Palette.GREEN
             }
         )
     }

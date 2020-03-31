@@ -118,33 +118,37 @@ class Board(val size: Int) : GameObject() {
     }
 
     // her er det to sett med x og y variabler ?
-    fun shootTiles(boardTouchPos: Vector2, equipment: Equipment) {
-        equipment.use()
-        val x = boardTouchPos.x.toInt()
-        val y = boardTouchPos.y.toInt()
+    fun shootTiles(boardTouchPos: Vector2, equipment: Equipment) : Boolean {
+        val touchx = boardTouchPos.x.toInt()
+        val touchy = boardTouchPos.y.toInt()
         // Loops through the equipents search radius
-        for (x in x - equipment.searchRadius until x + equipment.searchRadius + 1 step 1) {
-            for (y in y - equipment.searchRadius until y + equipment.searchRadius + 1 step 1) {
+        var valid = false
+        for (x in touchx - equipment.searchRadius until touchx + equipment.searchRadius + 1 step 1) {
+            for (y in touchy - equipment.searchRadius until touchy + equipment.searchRadius + 1 step 1) {
                 // Checks if inside board
                 if (x >= 0 && x < size && y >= 0 && y < size) {
-                    updateTile(Vector2(x.toFloat(), y.toFloat()), equipment)
+                    var temp = updateTile(Vector2(x.toFloat(), y.toFloat()), equipment)
+                    if(temp){
+                        valid = true
+                    }
                 }
             }
         }
+        return valid
     }
 
     // TODO needs cleanup
-    fun updateTile(pos: Vector2, equipment: Equipment) {
-        var shipPos = Vector2(pos.y, pos.x)
+    fun updateTile(pos: Vector2, equipment: Equipment) : Boolean {
+        var treasurePos = Vector2(pos.y, pos.x)
 
         val boardTile = getTile(pos)
         if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
             println("Guessed, pick new")
-            return
+            return false
         }
 
         var hit = Tile.MISS
-        var hittedTreasure = getTreasureByPosition(shipPos)
+        var hittedTreasure = getTreasureByPosition(treasurePos)
         if (hittedTreasure != null) {
             println("Hitted")
             hit = Tile.HIT
@@ -162,6 +166,7 @@ class Board(val size: Int) : GameObject() {
         }
 
         board[pos.x.toInt()][pos.y.toInt()] = hit
+        return true
     }
 
     fun getTile(pos: Vector2): Board.Tile {
@@ -169,9 +174,9 @@ class Board(val size: Int) : GameObject() {
     }
 
     fun getTreasureByPosition(pos: Vector2): Treasure? {
-        for (ship in treasures) {
-            if (ship.hit(pos)) {
-                return ship
+        for (treasure in treasures) {
+            if (treasure.hit(pos)) {
+                return treasure
             }
         }
         return null
