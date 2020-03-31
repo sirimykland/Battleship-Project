@@ -127,7 +127,7 @@ class GameController : FirebaseController() {
             if (player1Id in ships) ships[player1Id]?.let { player1.board.setShipList(it) }
             if (player2Id in ships) ships[player2Id]?.let { player2.board.setShipList(it) }
 
-            print("player1: ${player1.playerName}, player: ${player2.playerName}")
+            println("player1: ${player1.playerName}, player2: ${player2.playerName}")
             GSM.activeGame = Game(gameId, player1, player2)
         } else {
             throw error("Something went wrong when fetching the Game")
@@ -231,17 +231,16 @@ class GameController : FirebaseController() {
                                 // If no moves has been made yet
                                 if (moves.size == 0) {
                                     println("No moves made yet")
-                                    GSM.activeGame.activePlayer = GSM.activeGame.player2
                                 } else {
                                     // Get the last move
                                     val lastMove = moves.get(moves.size - 1)
                                     // If the last move is performed by opponent
-                                    if (!lastMove["playerId"]!!.equals(GSM.activeGame.getOpponent().playerId)) {
-                                        println("Motstander hadde siste trekk")
-                                        GSM.activeGame.activePlayer = GSM.activeGame.getMe()
+                                    if (!lastMove["playerId"]!!.equals(GSM.activeGame.opponent.playerId)) {
+                                        println("Motstander hadde siste trekk - din tur")
+                                        GSM.activeGame.flipPlayer()
                                     } else {
                                         println("Du hadde siste trekk, vent")
-                                        GSM.activeGame.activePlayer = GSM.activeGame.getOpponent()
+                                        GSM.activeGame.flipPlayer()
                                     }
                                 }
                             }

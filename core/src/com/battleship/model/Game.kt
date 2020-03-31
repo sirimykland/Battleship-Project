@@ -1,38 +1,44 @@
 package com.battleship.model
 
+import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 
-class Game(val gameId: String, var player1: Player, var player2: Player) {
-    var activePlayer = player2 // must be made dynamically
+class Game(val gameId: String, player1: Player, player2: Player, activePlayer: Player = player2) {
     var winner: String = ""
+    var me: Player
+    var opponent: Player
+    var playersTurn: Player = activePlayer
 
-    fun flipPlayer() {
-        if (activePlayer == player1) activePlayer = player2
-        else if (activePlayer == player2) activePlayer = player1
+
+    init {
+        if (player1.playerId == GSM.userId) {
+            this.me = player1
+            this.opponent = player2
+        } else {
+            this.me = player2
+            this.opponent = player1
+        }
     }
 
-    fun getMe(): Player {
-        println("getMe(): " + player1.playerName + " - " + player2.playerName)
-        if (player1.playerId == GSM.userId)
-            return player1
-        else if (player2.playerId == GSM.userId)
-            return player2
-        else
-            return Player("errorMe", "InvalidMe")
+
+    fun makeMove(pos: Vector2): Boolean {
+        if (me.weaponSet.weapon!!.hasAmmunition()) {
+            opponent.board.shootTiles(pos, me.weaponSet.weapon!!)
+            me.weaponSet.weapon!!.shoot()
+            return true
+        } else {
+            println(me.weaponSet.weapon!!.name + "Has no ammo")
+            return false
+        }
+    }
+
+    fun flipPlayer() {
+        if (playersTurn == me) playersTurn = opponent
+        else playersTurn = me
     }
 
     fun isMyTurn(): Boolean {
-        // println("isMyTurn() ")
-        return activePlayer.playerId == GSM.userId
+        return playersTurn.playerId == me.playerId
     }
 
-    fun getOpponent(): Player {
-        println("getOpponent(): " + player1.playerName + "  " + player2.playerName)
-        if (player1.playerId == GSM.userId)
-            return player2
-        else if (player2.playerId == GSM.userId)
-            return player1
-        else
-            return Player("errorOppnent", "Invalidopponnet")
-    }
 }

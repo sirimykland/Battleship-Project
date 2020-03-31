@@ -1,6 +1,7 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.GameController
@@ -26,14 +27,11 @@ class PreGameState() : GuiState() {
     override var view: View = PlayView()
     private val gameController = GameController()
     private var game: Game = GSM.activeGame
-    private var activePlayer = GSM.activeGame.getMe()
 
     override fun create() {
         super.create()
         gameController.addGameListener(GSM.activeGame.gameId)
-
-        // GSM.activeGame.activePlayer = GSM.activeGame.getMe()
-        GSM.activeGame.activePlayer.board.randomPlacement(4)
+        GSM.activeGame.me.board.randomPlacement(4)
     }
 
     private val readyButton = GuiObject(Gdx.graphics.weaponsetPosition(),
@@ -46,24 +44,18 @@ class PreGameState() : GuiState() {
                 game = GSM.activeGame
                 gameController.registerShips(
                         game.gameId,
-                        activePlayer.playerId,
-                        activePlayer.board.getShipList()
+                        game.me.playerId,
+                        game.me.board.getShipList()
                 )
                 GSM.set(PlayState())
             }
-    private val testText = GUI.text(
-            Gdx.graphics.gameInfoPosition().x,
-            Gdx.graphics.gameInfoPosition().y,
-            Gdx.graphics.gameInfoSize().x,
-            Gdx.graphics.gameInfoSize().y,
-            "Hi,${activePlayer.playerName}! Place your ships and press start")
 
     override val guiObjects: List<GuiObject> = listOf(
-            readyButton, GUI.header("Place ships"), GUI.backButton { GSM.set(MainMenuState()) }
+            readyButton, GUI.header("Place your ships and press start"), GUI.backButton { GSM.set(MainMenuState()) }
     )
 
     override fun render() {
-        this.view.render(*guiObjects.toTypedArray(), activePlayer.board)
+        this.view.render(*guiObjects.toTypedArray(), game.me.board)
     }
 
     override fun update(dt: Float) {

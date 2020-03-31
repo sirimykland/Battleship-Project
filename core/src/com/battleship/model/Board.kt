@@ -16,6 +16,7 @@ class Board(val size: Int = 10) : GameObject() {
     private var board = Array(size) { Array(size) { Tile.UNGUESSED } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
+    var boardColor : Color = Color.BLUE;
 
     fun addSmallShip(x: Int, y: Int) {
         // TODO add check
@@ -81,7 +82,7 @@ class Board(val size: Int = 10) : GameObject() {
 
                 when (value) {
                     Tile.HIT -> tileRenderer.color = Color.GREEN
-                    Tile.UNGUESSED -> tileRenderer.color = Color.BLUE
+                    Tile.UNGUESSED -> tileRenderer.color = boardColor
                     Tile.MISS -> tileRenderer.color = Color.RED
                     Tile.NEAR -> tileRenderer.color = Color.YELLOW
                 }
