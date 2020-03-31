@@ -145,16 +145,15 @@ class PlayState : GuiState() {
             val button = equipmentButtons[i]
             val equipment = player.equipmentSet.equipments[i]
 
-            // Updates border of equipement buttons
+            // Updates text and border of equipementbuttons
             button.set(Text(equipment.name + " " + equipment.uses, Font.TINY_BLACK))
-            val active = equipment.active
-            if (active) {
+            if (equipment.active) {
                 button.set(Border(Palette.GREEN))
             } else {
                 button.set(Border(Palette.LIGHT_GREY))
             }
 
-            // Hides and shows equipmentbuttons and switchboardbutton' text
+            // Hides and shows equipmentbuttons and switchboardbuttons text
             if (playerBoard) {
                 equipmentButtons[i].hide()
                 switchBoardButton.set(Text("Opponent's board", Font.TINY_BLACK))
@@ -193,7 +192,7 @@ class PlayState : GuiState() {
         if (equipment.active) {
             borderColor = Palette.GREEN
         }
-
+        // TODO Positioning/design
         return GUI.textButton(
             position.x + dimension.x / player.equipmentSet.equipments.size * index + index * 2,
             position.y,
