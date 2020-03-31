@@ -215,6 +215,7 @@ class GameController : FirebaseController() {
                     // If no opponent has joined yet
                     if (opponent == "") {
                         println("Opponent not joined yet")
+                        addOpponentListener(gameId)
                     }
                     // If there is an opponent in the game
                     else {
@@ -263,5 +264,35 @@ class GameController : FirebaseController() {
                 }
             }
         })
+    }
+    fun addOpponentListener(gameId: String) {
+
+        val query = db.collection("games").document(gameId)
+        val opponentListener = query.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
+            override fun onEvent(
+                    @Nullable snapshot: DocumentSnapshot?,
+                    @Nullable e: FirestoreException?
+            ) {
+                if (e != null) {
+                    System.err.println("Listen failed: $e")
+                    return
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    val opponent = snapshot.data?.get("player2")
+                    // If no opponent has joined yet
+                    if (opponent == "") {
+                        println("Opponent not joined yet")
+                    }else{
+                        setGame(gameId)
+                    }
+                }
+                // If no data is found
+                else {
+                    print("Current data: null")
+                }
+            }
+        })
+        opponentListener.remove()
     }
 }

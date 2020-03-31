@@ -2,6 +2,7 @@ package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
 import com.battleship.GSM
+import com.battleship.controller.firebase.GameController
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
@@ -12,9 +13,14 @@ import com.battleship.view.View
  * State handling all logic related to the main menu
  */
 class MainMenuState : GuiState() {
+    private var gameController = GameController()
 
     private val menuList = listOf(
-            Pair("Play") { GSM.set(PreGameState()) },
+            Pair("Create game as Olivia") {
+                GSM.userId="zmWpyb8luZAMrBwzY97x"
+                val gameId = gameController.createGame(GSM.userId)
+                if (gameId.isNotEmpty()) gameController.setGame(gameId)
+                GSM.set(PreGameState()) },
             Pair("Settings") { GSM.set(SettingsState()) },
             Pair("Matchmaking") { GSM.set(MatchmakingState()) }
     )

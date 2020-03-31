@@ -25,6 +25,7 @@ class Game(val gameId: String, player1: Player, player2: Player = Player()) {
     }
 
 
+
     fun makeMove(pos: Vector2): Boolean {
         if (me.equipmentSet.activeEquipment!!.hasMoreUses()) {
             opponent.board.shootTiles(pos, me.equipmentSet.activeEquipment!!)

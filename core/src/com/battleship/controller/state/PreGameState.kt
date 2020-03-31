@@ -48,9 +48,9 @@ class PreGameState : GuiState() {
                         game.me.playerId,
                         game.me.board.getTreasuresList()
                 )
-                if (game.gameReady) {
-                    GSM.set(PlayState())
-                } else println("gameready is: " + game.gameReady)
+
+                GSM.set(PlayState())
+                println("gameready is: " + game.gameReady)
             }
 
     override val guiObjects: List<GuiObject> = listOf(
