@@ -1,7 +1,7 @@
 package com.battleship.controller.state
 
 import com.battleship.BattleshipGame
-import com.battleship.GameStateManager
+import com.battleship.GSM
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
 import com.battleship.utility.Font
@@ -26,37 +26,37 @@ class SettingsState : GuiState() {
             }
     )
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.header("Settings"),
-        soundButton,
-        GUI.menuButton(
-            23.44f,
-            43.75f,
-            "Sound effects on",
-            onClick = { print("Sound effects on/off") }),
-        GUI.menuButton(
-            23.44f,
-            25f,
-            "Usage guide",
-            onClick = { GameStateManager.set(UsageGuideState()) }
-        ),
+            GUI.header("Settings"),
+            soundButton,
+            GUI.menuButton(
+                    23.44f,
+                    43.75f,
+                    "Sound effects on",
+                    onClick = { print("Sound effects on/off") }),
+            GUI.menuButton(
+                    23.44f,
+                    25f,
+                    "Usage guide",
+                    onClick = { GSM.set(UsageGuideState()) }
+            ),
 
-        GUI.text(
-            3f,
-            10f,
-            94f,
-            11.25f,
-            "Legal stuff",
-            Font.SMALL_BLACK
-        ),
-        GUI.text(
-            3f,
-            5f,
-            94f,
-            11.25f,
-            "v0.1.0",
-            Font.SMALL_BLACK
-        ),
-        GUI.backButton { GameStateManager.set(MainMenuState()) }
+            GUI.text(
+                    3f,
+                    10f,
+                    94f,
+                    11.25f,
+                    "Legal stuff",
+                    Font.SMALL_BLACK
+            ),
+            GUI.text(
+                    3f,
+                    5f,
+                    94f,
+                    11.25f,
+                    "v0.1.0",
+                    Font.SMALL_BLACK
+            ),
+            GUI.backButton { GSM.set(MainMenuState()) }
     )
 
     override fun create() {

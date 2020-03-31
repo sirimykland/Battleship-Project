@@ -5,7 +5,7 @@ import com.battleship.model.Game
 import java.util.*
 
 object GameStateManager {
-    val userId: String = "uOESp9kOOk9FK51Q6c47" // må ha login/bruker registrering og lagre den her
+    val userId: String = "LPuSVUECEJMWVcJSEOMc" // må ha login/bruker registrering og lagre den her
     lateinit var activeGame: Game
 
     private val states: Stack<State> = Stack()

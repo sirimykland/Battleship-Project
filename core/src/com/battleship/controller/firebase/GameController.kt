@@ -4,7 +4,10 @@ import com.battleship.GSM
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import com.battleship.model.Player
-import com.google.cloud.firestore.*
+import com.google.cloud.firestore.DocumentSnapshot
+import com.google.cloud.firestore.EventListener
+import com.google.cloud.firestore.FirestoreException
+import com.google.cloud.firestore.ListenerRegistration
 import com.google.firebase.database.annotations.Nullable
 
 /**
@@ -12,7 +15,7 @@ import com.google.firebase.database.annotations.Nullable
  */
 @Suppress("UNCHECKED_CAST")
 class GameController : FirebaseController() {
-    var registration : ListenerRegistration? = null
+    var registration: ListenerRegistration? = null
     /**
      * Start new game
      * @param userId the id of the user setting up the game
@@ -24,7 +27,7 @@ class GameController : FirebaseController() {
         data["player2"] = ""
         data["winner"] = ""
         data["moves"] = mutableListOf<Map<String, Any>>()
-        data["ships"] = mutableMapOf<String, List<Map<String, Any>>>()
+        data["treasures"] = mutableMapOf<String, List<Map<String, Any>>>()
 
         val res = db.collection("games").add(data)
 
@@ -91,13 +94,13 @@ class GameController : FirebaseController() {
      * @param userId the id of the user owning the ships
      * @param ships list containing the ships that should be added, each described using a map
      */
-    fun registerShips(gameId: String, userId: String, ships: List<Map<String, Any>>) {
+    fun registerTreasures(gameId: String, userId: String, treasures: List<Map<String, Any>>) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
-            val dbShips = game.get("ships") as MutableMap<String, List<Map<String, Any>>>
-            dbShips[userId] = ships
-            db.collection("games").document(gameId).update("ships", dbShips)
+            val dbTreasures = game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
+            dbTreasures[userId] = treasures
+            db.collection("games").document(gameId).update("treasures", dbTreasures)
         } else {
             // Add error handling
             println("Something went wrong when registering ships")
@@ -118,14 +121,14 @@ class GameController : FirebaseController() {
             val player2Id: String = game.get("player2") as String
 
             val player1 = getUser(player1Id)
-            val ships = getShips(gameId)
-            if (player1Id in ships) ships[player1Id]?.let { player1.board.setShipList(it) }
+            val treasures = getTreasures(gameId)
+            if (player1Id in treasures) treasures[player1Id]?.let { player1.board.setTreasuresList(it) }
             println("id er : " + (player2Id != ""))
             val player2 = if (player2Id != "") {
                 getUser(player2Id)
             } else Player("", "")
 
-            if (player2Id in ships) ships[player2Id]?.let { player2.board.setShipList(it) }
+            if (player2Id in treasures) treasures[player2Id]?.let { player2.board.setTreasuresList(it) }
 
             println("player1: ${player1.playerName}, player2: ${player2.playerName}")
             GSM.activeGame = Game(gameId, player1, player2)
@@ -135,17 +138,17 @@ class GameController : FirebaseController() {
     }
 
     /**
-     * Get the ships in a game
+     * Get the treasures in a game
      * @param gameId the id of the game
-     * @return a map containing a list of ships per user
+     * @return a map containing a list of treasures per user
      */
-    fun getShips(gameId: String): MutableMap<String, List<Map<String, Any>>> {
+    fun getTreasures(gameId: String): MutableMap<String, List<Map<String, Any>>> {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
-            return game.get("ships") as MutableMap<String, List<Map<String, Any>>>
+            return game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
         } else {
-            throw error("Something went wrong when fetching ships")
+            throw error("Something went wrong when fetching treasures")
         }
     }
 
@@ -215,12 +218,12 @@ class GameController : FirebaseController() {
                     }
                     // If there is an opponent in the game
                     else {
-                        // Get the field containing the ships in the database
-                        val ships = snapshot.data?.get("ships") as MutableMap<String, List<Map<String, Any>>>
+                        // Get the field containing the treasures in the database
+                        val treasures = snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
 
-                        // If there is not enough ships registered
-                        if (ships.size < 2) {
-                            println("Ships not registered")
+                        // If there is not enough treasures registered
+                        if (treasures.size < 2) {
+                            println("Treasures not registered")
                         } else {
 
                             // Get the list of moves

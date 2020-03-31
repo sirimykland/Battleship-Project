@@ -19,7 +19,7 @@ class BattleshipGame : Game() {
             music?.play()
         }
 
-        GameStateManager.push(MainMenuState())
+        GSM.push(MainMenuState())
     }
 
     override fun dispose() {
@@ -28,7 +28,7 @@ class BattleshipGame : Game() {
 
     override fun render() {
         super.render()
-        GameStateManager.render()
-        GameStateManager.update(Gdx.graphics.deltaTime)
+        GSM.render()
+        GSM.update(Gdx.graphics.deltaTime)
     }
 }

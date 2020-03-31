@@ -26,12 +26,12 @@ class Game(val gameId: String, player1: Player, player2: Player = Player()) {
 
 
     fun makeMove(pos: Vector2): Boolean {
-        if (me.weaponSet.weapon!!.hasAmmunition()) {
-            opponent.board.shootTiles(pos, me.weaponSet.weapon!!)
-            me.weaponSet.weapon!!.shoot()
+        if (me.equipmentSet.activeEquipment!!.hasMoreUses()) {
+            opponent.board.shootTiles(pos, me.equipmentSet.activeEquipment!!)
+            me.equipmentSet.activeEquipment!!.use()
             return true
         } else {
-            println(me.weaponSet.weapon!!.name + "Has no ammo")
+            println(me.equipmentSet.activeEquipment!!.name + "Has no ammo")
             return false
         }
     }

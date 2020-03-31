@@ -1,4 +1,4 @@
-package com.battleship.model.weapons
+package com.battleship.model.equipment
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
@@ -10,27 +10,27 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.utility.Palette
 
-class EquipmentSet : GameObject() {
+class EquipmentSet() : GameObject() {
     var equipments: ArrayList<Equipment> = ArrayList()
     var activeEquipment: Equipment? = null
     private lateinit var equipmentButtons: Array<GuiObject>
 
-    constructor(weapons: ArrayList<Weapon>) : this() {
-        this.weapons = weapons
-        setActiveWeapon(weapons[0])
+    constructor(equipments: ArrayList<Equipment>) : this() {
+        this.equipments = equipments
+        setEquipmentActive(equipments[0])
     }
 
 
     override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
         equipmentButtons = arrayOf(*(0 until equipments.size).map { a: Int ->
             joinEquipmentButton(
-                a,
-                position,
-                dimension
+                    a,
+                    position,
+                    dimension
             )
         }.toTypedArray())
         Gdx.input.inputProcessor =
-            InputMultiplexer(*equipmentButtons.filter { it.isClickable }.map { it.listener }.toTypedArray())
+                InputMultiplexer(*equipmentButtons.filter { it.isClickable }.map { it.listener }.toTypedArray())
 
         batch.begin()
         equipmentButtons.forEach {
@@ -47,9 +47,9 @@ class EquipmentSet : GameObject() {
     }
 
     private fun joinEquipmentButton(
-        index: Int,
-        position: Vector2,
-        dimension: Vector2
+            index: Int,
+            position: Vector2,
+            dimension: Vector2
     ): GuiObject {
         val equipment = equipments[index]
 
@@ -59,14 +59,14 @@ class EquipmentSet : GameObject() {
         }
 
         return GUI.textButton(
-            position.x + dimension.x / equipments.size * index + index * 1,
-            position.y,
-            dimension.x / equipments.size,
-            dimension.y,
-            equipment.name + " " + equipment.uses,
-            font = Font.TINY_BLACK,
-            color = Palette.GREY,
-            borderColor = borderColor
+                position.x + dimension.x / equipments.size * index + index * 1,
+                position.y,
+                dimension.x / equipments.size,
+                dimension.y,
+                equipment.name + " " + equipment.uses,
+                font = Font.TINY_BLACK,
+                color = Palette.GREY,
+                borderColor = borderColor
         ) {
             setEquipmentActive(equipment)
         }

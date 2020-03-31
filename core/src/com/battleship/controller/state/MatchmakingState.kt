@@ -1,6 +1,5 @@
 package com.battleship.controller.state
 
-import com.badlogic.gdx.Gdx
 import com.battleship.GSM
 import com.battleship.controller.firebase.GameController
 import com.battleship.model.GameListObject
@@ -21,22 +20,22 @@ class MatchmakingState : GuiState() {
     private var page: Int = 0
 
     private val nextPageButton = GUI.textButton(
-        78f,
-        2f,
-        20f,
-        10f,
-        "->"
+            78f,
+            2f,
+            20f,
+            10f,
+            "->"
     ) {
         page++
         updateButtons()
     }
 
     private val previousPageButton = GUI.textButton(
-        2f,
-        2f,
-        20f,
-        10f,
-        "<-"
+            2f,
+            2f,
+            20f,
+            10f,
+            "<-"
     ) {
         page--
         updateButtons()
@@ -48,7 +47,7 @@ class MatchmakingState : GuiState() {
             20f,
             20f,
             "+"
-    ){
+    ) {
         val gameId = gameController.createGame(GSM.userId)
         if (gameId.isNotEmpty()) gameController.setGame(gameId)
         GSM.set(PreGameState())
@@ -72,7 +71,7 @@ class MatchmakingState : GuiState() {
     }
 
     private fun retrieve(callback: () -> Unit) {
-        users = gameController.getPendingGames()
+        //users = gameController.getPendingGames()
         //userList = users.toList().map { a -> a.second }
 
         games = gameController.getPendingGames()
@@ -105,11 +104,11 @@ class MatchmakingState : GuiState() {
 
     private fun joinUserButton(index: Int): GuiObject {
         return GUI.textButton(
-            10f,
-            70f - index * 9f,
-            80f,
-            7f,
-            "Loading"
+                10f,
+                70f - index * 9f,
+                80f,
+                7f,
+                "Loading"
         ) {
             val gameId = games.get((page * itemsPerPage) + index).gameId
             val successful = gameController.joinGame(

@@ -16,7 +16,7 @@ class Board(val size: Int = 10) : GameObject() {
     private var board = Array(size) { Array(size) { Tile.UNGUESSED } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
-    var boardColor : Color = Color.BLUE;
+    var boardColor: Color = Color.BLUE
 
     /*
      * creates treasures and places them
@@ -26,12 +26,12 @@ class Board(val size: Int = 10) : GameObject() {
         for (i in 0 until treasureNumber) {
             do {
                 treasure = TreasureChest(
-                    Vector2(
-                        Random.nextInt(
-                            0,
-                            size
-                        ).toFloat(), Random.nextInt(0, size).toFloat()
-                    ), Random.nextBoolean()
+                        Vector2(
+                                Random.nextInt(
+                                        0,
+                                        size
+                                ).toFloat(), Random.nextInt(0, size).toFloat()
+                        ), Random.nextBoolean()
                 )
             } while (!validateTreasurePosition(treasure))
             treasure.reveiled = reveiled
@@ -44,12 +44,12 @@ class Board(val size: Int = 10) : GameObject() {
         for (i in 0 until treasureNumber) {
             do {
                 treasure = GoldCoin(
-                    Vector2(
-                        Random.nextInt(
-                            0,
-                            size
-                        ).toFloat(), Random.nextInt(0, size).toFloat()
-                    ), Random.nextBoolean()
+                        Vector2(
+                                Random.nextInt(
+                                        0,
+                                        size
+                                ).toFloat(), Random.nextInt(0, size).toFloat()
+                        ), Random.nextBoolean()
                 )
             } while (!validateTreasurePosition(treasure))
             treasure.reveiled = reveiled
@@ -62,16 +62,16 @@ class Board(val size: Int = 10) : GameObject() {
     }
 
     /*
-     * This for placing a defined list of ships
+     * This for placing a defined list of treasures
      */
     fun createAndPlaceTreasures(treasures: ArrayList<Treasure>) {
         for (treasure in treasures) {
             do {
                 treasure.position.set(
-                    Random.nextInt(0, size).toFloat(),
-                    Random.nextInt(0, size).toFloat()
+                        Random.nextInt(0, size).toFloat(),
+                        Random.nextInt(0, size).toFloat()
                 )
-                // println("ship position: (" + ship.position.x + ", " + ship.position.y + ")")
+                // println("treasure position: (" + treasure.position.x + ", " + treasure.position.y + ")")
             } while (!validateTreasurePosition(treasure))
             treasures.add(treasure)
         }
@@ -80,8 +80,8 @@ class Board(val size: Int = 10) : GameObject() {
     fun validateTreasurePosition(treasure: Treasure): Boolean {
         for (tile in treasure.getTreasureTiles()) {
             if (tile.x >= size || tile.y >= size) return false
-            for (placedShip in treasures) {
-                if (placedShip.getTreasureTiles().contains(tile)) {
+            for (placedTreasure in treasures) {
+                if (placedTreasure.getTreasureTiles().contains(tile)) {
                     return false
                 }
             }
@@ -135,7 +135,7 @@ class Board(val size: Int = 10) : GameObject() {
 
     // TODO needs cleanup
     fun updateTile(pos: Vector2, equipment: Equipment) {
-        var shipPos = Vector2(pos.y, pos.x)
+        var treasurePos = Vector2(pos.y, pos.x)
 
         val boardTile = getTile(pos)
         if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
@@ -144,7 +144,7 @@ class Board(val size: Int = 10) : GameObject() {
         }
 
         var hit = Tile.MISS
-        var hittedTreasure = getTreasureByPosition(shipPos)
+        var hittedTreasure = getTreasureByPosition(treasurePos)
         if (hittedTreasure != null) {
             println("Hitted")
             hit = Tile.HIT
@@ -169,59 +169,59 @@ class Board(val size: Int = 10) : GameObject() {
     }
 
     fun getTreasureByPosition(pos: Vector2): Treasure? {
-        for (ship in treasures) {
-            if (ship.hit(pos)) {
-                return ship
+        for (treasure in treasures) {
+            if (treasure.hit(pos)) {
+                return treasure
             }
         }
         return null
     }
 
     fun getAllTreasueHealth(): Int {
-    /**
-     * converts arraylist of ship to list of map
-     * @return shipsList List<Map<String, Any>>
-     */
-    fun getShipList(): List<Map<String, Any>> {
-        var shipsList = ArrayList<Map<String, Any>>()
-        for (ship in ships) {
-            shipsList.add(ship.toMap())
-        }
-        return shipsList
-    }
-
-    /**
-     * sets ships arraylist from list with map
-     * @param shipsList List<Map<String, Any>>
-     */
-    fun setShipList(shipsList: List<Map<String, Any>>) {
-        ships = ArrayList<Ship>()
-        lateinit var newShip: Ship
-        lateinit var position: Vector2
-        var rotate: Boolean = true
-        for (ship in shipsList) {
-            position = Vector2((ship["x"] as Number).toFloat(), (ship["y"] as Number).toFloat())
-            rotate = if (ship.containsKey("rotate")) ship["rotate"] as Boolean else false
-            when (ship["type"]) {
-                "SmallShip" ->
-                    newShip = SmallShip(position, rotate)
-                "MediumShip" ->
-                    newShip = MediumShip(position, rotate)
-            }
-            ships.add(newShip)
-        }
-    }
-
-    fun getAllShipHealth(): Int {
         var health = 0
-        for (ship in treasures) {
-            health += ship.health
+        for (treasure in treasures) {
+            health += treasure.health
         }
         return health
     }
 
+
+    /**
+     * converts arraylist of treasures to list of map
+     * @return treasuresList List<Map<String, Any>>
+     */
+    fun getTreasuresList(): List<Map<String, Any>> {
+        var treasuresList = ArrayList<Map<String, Any>>()
+        for (treasure in treasures) {
+            treasuresList.add(treasure.toMap())
+        }
+        return treasuresList
+    }
+
+    /**
+     * sets treasures arraylist from list with map
+     * @param treasuresList List<Map<String, Any>>
+     */
+    fun setTreasuresList(treasuresList: List<Map<String, Any>>) {
+        treasures = ArrayList<Treasure>()
+        lateinit var newTreasure: Treasure
+        lateinit var position: Vector2
+        var rotate: Boolean = true
+        for (treasure in treasuresList) {
+            position = Vector2((treasure["x"] as Number).toFloat(), (treasure["y"] as Number).toFloat())
+            rotate = if (treasure.containsKey("rotate")) treasure["rotate"] as Boolean else false
+            when (treasure["type"]) {
+                "Gold coin" ->
+                    newTreasure = GoldCoin(position, rotate)
+                "Treasure chest" ->
+                    newTreasure = TreasureChest(position, rotate)
+            }
+            treasures.add(newTreasure)
+        }
+    }
+
     override fun toString(): String {
-        return "Board(size=$size, ships=$ships)"
+        return "Board(size=$size, treasure=$treasures)"
     }
 
     enum class Tile {

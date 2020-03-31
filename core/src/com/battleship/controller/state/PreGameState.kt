@@ -26,37 +26,37 @@ class PreGameState : GuiState() {
     override fun create() {
         super.create()
         gameController.addGameListener(GSM.activeGame.gameId)
-        GSM.activeGame.me.board.randomPlacement(4)
-        //player.board.createAndPlaceTreasurechests(4, true)
-        //player.board.createAndPlaceGoldcoins(2, true)
+        //GSM.activeGame.me.board.createAndPlaceTreasures(4)
+        GSM.activeGame.me.board.createAndPlaceTreasurechests(1, true)
+        GSM.activeGame.me.board.createAndPlaceGoldcoins(1, true)
     }
 
     private val readyButton = GuiObject(
-        5f,
-        3f,
-        90f,
-        10f
+            5f,
+            3f,
+            90f,
+            10f
     )
-        .with(Background(Palette.BLACK))
-        .with(Border(Palette.WHITE, 10f))
-        .with(Text("Start Game"))
-        .onClick {
+            .with(Background(Palette.BLACK))
+            .with(Border(Palette.WHITE, 10f))
+            .with(Text("Start Game"))
+            .onClick {
                 println("Player are ready")
                 game = GSM.activeGame
-                gameController.registerShips(
+                gameController.registerTreasures(
                         game.gameId,
                         game.me.playerId,
-                        game.me.board.getShipList()
+                        game.me.board.getTreasuresList()
                 )
                 if (game.gameReady) {
                     GSM.set(PlayState())
-                }else println("gameready is: "+ game.gameReady)
+                } else println("gameready is: " + game.gameReady)
             }
 
     override val guiObjects: List<GuiObject> = listOf(
-        readyButton,
-        GUI.header("Place ships"),
-        GUI.backButton { GSM.set(MainMenuState()) }
+            readyButton,
+            GUI.header("Place treasures"),
+            GUI.backButton { GSM.set(MainMenuState()) }
     )
 
     override fun render() {
@@ -71,10 +71,10 @@ class PreGameState : GuiState() {
         // drag ship / set position relative to global
         if (Gdx.input.justTouched()) {
             val touchPos =
-                Vector2(
-                    Gdx.input.x.toFloat(),
-                    Gdx.graphics.height - Gdx.input.y.toFloat()
-                )
+                    Vector2(
+                            Gdx.input.x.toFloat(),
+                            Gdx.graphics.height - Gdx.input.y.toFloat()
+                    )
             val screenSize = Gdx.graphics.size()
             // if input on board
             if (Gdx.graphics.boardRectangle().contains(touchPos)) {
@@ -83,12 +83,13 @@ class PreGameState : GuiState() {
                 val boardPos = Gdx.graphics.boardPosition()
                 val boardWidth = Gdx.graphics.boardWidth()
                 // TODO
-                // select ship
+                // select treasure
                 // set new midletidig position
                 // if released, snap to board
             }
         }
     }
+
     override fun dispose() {
         super.dispose()
         gameController.detachGameListener(GSM.activeGame.gameId)

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
-import com.battleship.GameStateManager
 import com.battleship.controller.firebase.GameController
 import com.battleship.model.Player
 import com.battleship.model.equipment.BigEquipment
@@ -15,6 +14,8 @@ import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
+import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
+import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
@@ -37,12 +38,6 @@ class PlayState() : GuiState() {
     override fun create() {
         super.create()
         gameController.addGameListener(GSM.activeGame.gameId)
-        /*player.board.createAndPlaceTreasurechests(4, false)
-        player.board.createAndPlaceGoldcoins(2, false)
-        player.equipmentSet.equipments.add(Shovel())
-        player.equipmentSet.equipments.add(BigEquipment())
-        player.equipmentSet.equipments.add(MetalDetector())
-        player.equipmentSet.setEquipmentActive(player.equipmentSet.equipments.first())*/
     }
 
     private fun headerText(): String {
@@ -50,10 +45,13 @@ class PlayState() : GuiState() {
         return "Waiting for opponents turn"
     }
 
-    override val guiObjects: List<GuiObject> = listOf(   )
+    // override val guiObjects: List<GuiObject> = listOf(   )
 
     override fun render() {
-        this.view.render(GUI.header(headerText()),*guiObjects.toTypedArray(), GSM.activeGame.opponent.board, GSM.activeGame.me.equipmentSet) // , gameInfo)
+        this.view.render(GUI.header(headerText()),
+                *guiObjects.toTypedArray(),
+                GSM.activeGame.opponent.board,
+                GSM.activeGame.me.equipmentSet)
     }
 
     override fun update(dt: Float) {
@@ -63,7 +61,7 @@ class PlayState() : GuiState() {
             if (GSM.activeGame.opponent.health == 0) {
                 println("You won!")
                 gameController.setWinner(GSM.userId, GSM.activeGame.gameId)
-                GameStateManager.set(MainMenuState())
+                GSM.set(MainMenuState())
             }
         }
     }
@@ -86,7 +84,7 @@ class PlayState() : GuiState() {
                                 boardTouchPos.x,
                                 boardTouchPos.y,
                                 game.me.playerId,
-                                game.me.weaponSet.weapon!!.name)
+                                game.me.equipmentSet.activeEquipment!!.name)
                     }
                 }
             }
