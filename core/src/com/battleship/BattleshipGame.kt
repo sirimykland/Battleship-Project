@@ -3,7 +3,7 @@ package com.battleship
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
-import com.battleship.controller.state.MainMenuState
+import com.battleship.controller.state.FxTestState
 import com.battleship.utility.Font
 
 class BattleshipGame : Game() {
@@ -12,14 +12,14 @@ class BattleshipGame : Game() {
     }
 
     override fun create() {
-        if (Gdx.files.internal("music.mp3").exists()) {
-            music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"))
+        if (Gdx.files.internal("audio/music.mp3").exists()) {
+            music = Gdx.audio.newMusic(Gdx.files.internal("audio/music.mp3"))
             music?.isLooping = true
             music?.volume = 0.2f
             music?.play()
         }
 
-        GameStateManager.push(MainMenuState())
+        GameStateManager.push(FxTestState())
     }
 
     override fun dispose() {
