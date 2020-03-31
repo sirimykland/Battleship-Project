@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 
 object Palette {
-    private val texture = Texture("palette.png")
+    private val texture = Texture("font/palette.png")
     val WHITE = TextureRegion(texture, 0, 0, 1, 1)
     val BLACK = TextureRegion(texture, 1, 0, 1, 1)
     val GREY = TextureRegion(texture, 2, 0, 1, 1)
@@ -21,4 +21,5 @@ object Palette {
     val VIOLET = TextureRegion(texture, 1, 3, 1, 1)
     val BURGUNDY = TextureRegion(texture, 2, 3, 1, 1)
     val DARK_PURPLE = TextureRegion(texture, 3, 3, 1, 1)
+    val DARK_GREY = TextureRegion(Texture("font/dark_grey.png"), 1, 1, 1, 1)
 }

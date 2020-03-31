@@ -50,10 +50,11 @@ class MatchmakingState : GuiState() {
             "Matchmaking",
             Font.LARGE_WHITE
         ),
+        GUI.header("Usage guide"),
         nextPageButton,
         previousPageButton,
         *playerButtons,
-        GUI.backButton
+        GUI.backButton { GameStateManager.set(MainMenuState()) }
     )
 
     var users = emptyMap<String, String>()
