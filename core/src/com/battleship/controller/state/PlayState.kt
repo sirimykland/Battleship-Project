@@ -29,7 +29,7 @@ class PlayState : GuiState() {
     var playerBoard: Boolean = false
     var playerTurn: Boolean = true
 
-    private val header = GUI.header("Settings")
+    private val header = GUI.header("Your turn")
 
     private val equipmentButtons: Array<GuiObject> =
         arrayOf(*(0 until player.equipmentSet.equipments.size).map { a: Int ->
@@ -39,16 +39,6 @@ class PlayState : GuiState() {
                 Gdx.graphics.weaponsetSize()
             )
         }.toTypedArray())
-
-    // var gameInfo = GameInfo(player)
-
-    private val testText = GUI.text(
-        Gdx.graphics.gameInfoPosition().x,
-        Gdx.graphics.gameInfoPosition().y,
-        Gdx.graphics.gameInfoSize().x,
-        Gdx.graphics.gameInfoSize().y,
-        "Your turn"
-    )
 
     // TODO Positioning/design
     private val switchBoardButton = GUI.textButton(
@@ -75,10 +65,6 @@ class PlayState : GuiState() {
         player.board.createAndPlaceGoldcoins(2, true)
         opponent.board.createAndPlaceTreasurechests(4, false)
         opponent.board.createAndPlaceGoldcoins(2, false)
-        //player.equipmentSet.equipments.add(Shovel())
-        //layer.equipmentSet.equipments.add(BigEquipment())
-        //player.equipmentSet.equipments.add(MetalDetector())
-        //player.equipmentSet.setEquipmentActive(player.equipmentSet.equipments.first())
     }
 
     override fun render() {
@@ -218,7 +204,7 @@ class PlayState : GuiState() {
             color = Palette.GREY,
             borderColor = borderColor,
             onClick = {
-                player.equipmentSet.setEquipmentActive(equipment)
+                player.equipmentSet.activeEquipment = equipment
             }
         )
     }

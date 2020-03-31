@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
-import com.battleship.model.equipment.MetalDetector
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.Treasure
 import com.battleship.model.treasures.TreasureChest
@@ -118,7 +117,7 @@ class Board(val size: Int) : GameObject() {
     }
 
     // her er det to sett med x og y variabler ?
-    fun shootTiles(boardTouchPos: Vector2, equipment: Equipment) : Boolean {
+    fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): Boolean {
         val touchx = boardTouchPos.x.toInt()
         val touchy = boardTouchPos.y.toInt()
         // Loops through the equipents search radius
@@ -127,8 +126,7 @@ class Board(val size: Int) : GameObject() {
             for (y in touchy - equipment.searchRadius until touchy + equipment.searchRadius + 1 step 1) {
                 // Checks if inside board
                 if (x >= 0 && x < size && y >= 0 && y < size) {
-                    var temp = updateTile(Vector2(x.toFloat(), y.toFloat()), equipment)
-                    if(temp){
+                    if (updateTile(Vector2(x.toFloat(), y.toFloat()), equipment)) {
                         valid = true
                     }
                 }
@@ -138,31 +136,19 @@ class Board(val size: Int) : GameObject() {
     }
 
     // TODO needs cleanup
-    fun updateTile(pos: Vector2, equipment: Equipment) : Boolean {
-        var treasurePos = Vector2(pos.y, pos.x)
+    fun updateTile(pos: Vector2, equipment: Equipment): Boolean {
+        val treasurePos = Vector2(pos.y, pos.x)
 
         val boardTile = getTile(pos)
         if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
-            println("Guessed, pick new")
             return false
         }
 
         var hit = Tile.MISS
-        var hittedTreasure = getTreasureByPosition(treasurePos)
-        if (hittedTreasure != null) {
-            println("Hitted")
+        val treasure = getTreasureByPosition(treasurePos)
+        if (treasure != null) {
             hit = Tile.HIT
-            hittedTreasure.takeDamage()
-            if (hittedTreasure.found()) {
-                println(hittedTreasure.name + " Found")
-            }
-        } else {
-            println("Missed")
-        }
-
-        // TODO implement
-        if (equipment is MetalDetector) {
-            hit = Tile.NEAR
+            treasure.takeDamage()
         }
 
         board[pos.x.toInt()][pos.y.toInt()] = hit
