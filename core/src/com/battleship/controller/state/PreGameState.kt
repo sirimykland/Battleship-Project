@@ -13,8 +13,6 @@ import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardRectangle
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.utility.GdxGraphicsUtil.size
-import com.battleship.utility.GdxGraphicsUtil.weaponsetPosition
-import com.battleship.utility.GdxGraphicsUtil.weaponsetSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
@@ -30,8 +28,12 @@ class PreGameState : GuiState() {
         player.board.createAndPlaceGoldcoins(2, true)
     }
 
-    private val readyButton = GuiObject(Gdx.graphics.weaponsetPosition(),
-        Gdx.graphics.weaponsetSize())
+    private val readyButton = GuiObject(
+        5f,
+        3f,
+        90f,
+        10f
+    )
         .with(Background(Palette.BLACK))
         .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
         .with(Text("Start Game"))
@@ -42,7 +44,9 @@ class PreGameState : GuiState() {
         }
 
     override val guiObjects: List<GuiObject> = listOf(
-        readyButton, GUI.header("Place ships"), GUI.backButton { GameStateManager.set(MainMenuState()) }
+        readyButton,
+        GUI.header("Place ships"),
+        GUI.backButton { GameStateManager.set(MainMenuState()) }
     )
 
     override fun render() {
@@ -59,7 +63,8 @@ class PreGameState : GuiState() {
             val touchPos =
                 Vector2(
                     Gdx.input.x.toFloat(),
-                    Gdx.graphics.height - Gdx.input.y.toFloat())
+                    Gdx.graphics.height - Gdx.input.y.toFloat()
+                )
             val screenSize = Gdx.graphics.size()
             // if input on board
             if (Gdx.graphics.boardRectangle().contains(touchPos)) {
