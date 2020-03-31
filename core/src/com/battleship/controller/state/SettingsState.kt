@@ -1,6 +1,5 @@
 package com.battleship.controller.state
 
-import com.badlogic.gdx.Gdx
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
@@ -19,10 +18,10 @@ class SettingsState : GuiState() {
     override val guiObjects: List<GuiObject> = listOf(
         *settingsList.mapIndexed { i, (name, func) ->
             GUI.textButton(
-                Gdx.graphics.width / 2 - 170f,
-                Gdx.graphics.height - (380f + 180f * i),
-                340f,
-                140f,
+                15f,
+                60f - 20f * i,
+                70f,
+                16f,
                 name,
                 font = Font.MEDIUM_WHITE,
                 color = Palette.BLACK,
@@ -32,10 +31,10 @@ class SettingsState : GuiState() {
         }.toTypedArray(),
 
         GUI.text(
-            20f,
-            Gdx.graphics.height - 220f,
-            Gdx.graphics.width - 40f,
+            5f,
+            80f,
             90f,
+            10f,
             "Settings",
             Font.LARGE_WHITE
         ),

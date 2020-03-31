@@ -1,6 +1,5 @@
 package com.battleship.controller.state
 
-import com.badlogic.gdx.Gdx
 import com.battleship.GameStateManager
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.Font
@@ -14,17 +13,16 @@ class MainMenuState : GuiState() {
     private val menuList = listOf(
         Pair("Matchmaking") { GameStateManager.set(MatchmakingState()) },
         Pair("Settings") { GameStateManager.set(SettingsState()) },
-        Pair("Play") { GameStateManager.set(PlayState()) },
-        Pair("Testmenu") { GameStateManager.set(TestMenuState()) }
+        Pair("Play") { GameStateManager.set(PlayState()) }
     )
 
     override val guiObjects: List<GuiObject> = menuList
         .mapIndexed { i, (name, func) ->
             GUI.textButton(
-                Gdx.graphics.width / 2 - 170f,
-                Gdx.graphics.height - (200f + 180f * i),
-                340f,
-                140f,
+                15f,
+                80f - 20f * i,
+                70f,
+                16f,
                 name,
                 font = Font.MEDIUM_BLACK,
                 color = Palette.GREY,

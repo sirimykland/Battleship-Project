@@ -1,6 +1,5 @@
 package com.battleship.utility
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.battleship.GameStateManager
@@ -13,10 +12,10 @@ import com.battleship.model.ui.Text
 object GUI {
 
     val backButton = textButton(
-        20f,
-        Gdx.graphics.height - 110f,
-        170f,
+        2f,
         90f,
+        18f,
+        8f,
         "back"
     ) {
         GameStateManager.set(MainMenuState())

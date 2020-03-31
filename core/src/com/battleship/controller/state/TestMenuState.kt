@@ -11,7 +11,6 @@ import com.battleship.view.BasicView
 import com.battleship.view.View
 
 class TestMenuState : GuiState() {
-
     private val greenBox = GuiObject(330f, 500f, 240f, 120f)
         .with(Background(Palette.GREEN))
         .with(Border(Palette.DARK_GREEN))
