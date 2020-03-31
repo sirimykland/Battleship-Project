@@ -12,8 +12,8 @@ import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
 import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
-import com.battleship.utility.GdxGraphicsUtil.weaponsetPosition
-import com.battleship.utility.GdxGraphicsUtil.weaponsetSize
+import com.battleship.utility.GdxGraphicsUtil.equipmentsetPosition
+import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
 
 class PlayView : View() {
     override fun render(vararg gameObjects: GameObject) {
@@ -29,8 +29,8 @@ class PlayView : View() {
                 )
                 is EquipmentSet -> obj.draw(
                     batch,
-                    Gdx.graphics.weaponsetPosition(),
-                    Gdx.graphics.weaponsetSize()
+                    Gdx.graphics.equipmentsetPosition(),
+                    Gdx.graphics.equipmentsetSize()
                 )
                 is GameInfo -> obj.draw(
                     batch,

@@ -53,7 +53,7 @@ class EquipmentSet : GameObject() {
         }
 
         return GUI.textButton(
-            position.x + dimension.x / equipments.size * index + index * 2,
+            position.x + dimension.x / equipments.size * index + index * 1,
             position.y,
             dimension.x / equipments.size,
             dimension.y,
