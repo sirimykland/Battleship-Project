@@ -13,10 +13,8 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
-import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
-import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
 import com.battleship.utility.GdxGraphicsUtil.equipmentsetPosition
+import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
@@ -83,7 +81,7 @@ class PlayState : GuiState() {
 
     override fun update(dt: Float) {
         handleInput()
-        updateUIElements()
+        updateGUIObjects()
         updateHealth()
     }
 
@@ -140,7 +138,7 @@ class PlayState : GuiState() {
         }
     }
 
-    private fun updateUIElements() {
+    private fun updateGUIObjects() {
         equipmentButtons.forEachIndexed { i, _ ->
             val button = equipmentButtons[i]
             val equipment = player.equipmentSet.equipments[i]
