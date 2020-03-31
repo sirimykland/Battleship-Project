@@ -3,7 +3,6 @@ package com.battleship.controller.state
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
-import com.battleship.GameStateManager
 import com.battleship.controller.firebase.GameController
 import com.battleship.model.Game
 import com.battleship.model.ui.Background
@@ -14,6 +13,8 @@ import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardRectangle
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
+import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
+import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 import com.battleship.utility.GdxGraphicsUtil.size
 import com.battleship.utility.GdxGraphicsUtil.weaponsetPosition
 import com.battleship.utility.GdxGraphicsUtil.weaponsetSize
@@ -36,20 +37,12 @@ class PreGameState() : GuiState() {
     }
 
     private val readyButton = GuiObject(Gdx.graphics.weaponsetPosition(),
-        Gdx.graphics.weaponsetSize())
-        .with(Background(Palette.BLACK))
-        .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
-        .with(Text("Start Game"))
-        .onClick {
-            println("Player are ready")
-            // GameStateManager.gameController.registerShip(player.board.getships()) - dette må lages
-            GameStateManager.set(PlayState())
-        }
             Gdx.graphics.weaponsetSize())
             .with(Background(Palette.BLACK))
             .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
             .with(Text("Start Game"))
             .onClick {
+                println("Player are ready")
                 game = GSM.activeGame
                 gameController.registerShips(
                         game.gameId,
@@ -66,7 +59,7 @@ class PreGameState() : GuiState() {
             "Hi,${activePlayer.playerName}! Place your ships and press start")
 
     override val guiObjects: List<GuiObject> = listOf(
-        readyButton, GUI.header("Place ships"), GUI.backButton { GameStateManager.set(MainMenuState()) }
+            readyButton, GUI.header("Place ships"), GUI.backButton { GSM.set(MainMenuState()) }
     )
 
     override fun render() {
@@ -81,9 +74,9 @@ class PreGameState() : GuiState() {
         // drag ship / set position relative to global
         if (Gdx.input.justTouched()) {
             val touchPos =
-                Vector2(
-                    Gdx.input.x.toFloat(),
-                    Gdx.graphics.height - Gdx.input.y.toFloat())
+                    Vector2(
+                            Gdx.input.x.toFloat(),
+                            Gdx.graphics.height - Gdx.input.y.toFloat())
             val screenSize = Gdx.graphics.size()
             // if input on board
             if (Gdx.graphics.boardRectangle().contains(touchPos)) {

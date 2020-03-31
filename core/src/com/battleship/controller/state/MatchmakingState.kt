@@ -48,7 +48,7 @@ class MatchmakingState : GuiState() {
         nextPageButton,
         previousPageButton,
         *playerButtons,
-        GUI.backButton { GameStateManager.set(MainMenuState()) }
+        GUI.backButton { GSM.set(MainMenuState()) }
     )
     var games = emptyList<GameListObject>()
 
