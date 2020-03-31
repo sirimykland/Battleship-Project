@@ -1,7 +1,6 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.GameController
@@ -14,8 +13,6 @@ import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardRectangle
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
-import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 import com.battleship.utility.GdxGraphicsUtil.size
 import com.battleship.utility.GdxGraphicsUtil.weaponsetPosition
 import com.battleship.utility.GdxGraphicsUtil.weaponsetSize
@@ -23,9 +20,9 @@ import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-class PreGameState() : GuiState() {
+class PreGameState : GuiState() {
     override var view: View = PlayView()
-    private val gameController = GameController()
+    private var gameController = GameController()
     private var game: Game = GSM.activeGame
 
     override fun create() {
@@ -47,7 +44,9 @@ class PreGameState() : GuiState() {
                         game.me.playerId,
                         game.me.board.getShipList()
                 )
-                GSM.set(PlayState())
+                if (game.gameReady) {
+                    GSM.set(PlayState())
+                }else println("gameready is: "+ game.gameReady)
             }
 
     override val guiObjects: List<GuiObject> = listOf(
@@ -82,5 +81,9 @@ class PreGameState() : GuiState() {
                 // if released, snap to board
             }
         }
+    }
+    override fun dispose() {
+        super.dispose()
+        gameController.detachGameListener(GSM.activeGame.gameId)
     }
 }

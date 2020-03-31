@@ -25,17 +25,15 @@ class PlayState() : GuiState() {
         gameController.addGameListener(GSM.activeGame.gameId)
     }
 
-    private val headerText =
-            if (GSM.activeGame.isMyTurn()) GSM.activeGame.opponent.playerName + "'s Board"
-            else "Your board - wait for opponents turn"
+    private fun headerText(): String {
+        if (GSM.activeGame.isMyTurn()) return (GSM.activeGame.opponent.playerName + "'s Board")
+        return "Waiting for opponents turn"
+    }
 
-    override val guiObjects: List<GuiObject> = listOf(
-            GUI.header(headerText)
-
-    )
+    override val guiObjects: List<GuiObject> = listOf(   )
 
     override fun render() {
-        this.view.render(*guiObjects.toTypedArray(), GSM.activeGame.opponent.board, GSM.activeGame.me.weaponSet) // , gameInfo)
+        this.view.render(GUI.header(headerText()),*guiObjects.toTypedArray(), GSM.activeGame.opponent.board, GSM.activeGame.me.weaponSet) // , gameInfo)
     }
 
     override fun update(dt: Float) {
@@ -59,17 +57,24 @@ class PlayState() : GuiState() {
             val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
             if (boardBounds.contains(touchPos)) {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
-                if (GSM.activeGame.makeMove(boardTouchPos)) {
-                    val game = GSM.activeGame
-                    gameController.makeMove(
-                            game.gameId,
-                            boardTouchPos.x,
-                            boardTouchPos.y,
-                            game.me.playerId,
-                            game.me.weaponSet.weapon!!.name)
+                val game = GSM.activeGame
+                if (game.isMyTurn()) {
+                    // println("IsMyTurn:"+ true)
+                    if (GSM.activeGame.makeMove(boardTouchPos)) {
+                        gameController.makeMove(
+                                game.gameId,
+                                boardTouchPos.x,
+                                boardTouchPos.y,
+                                game.me.playerId,
+                                game.me.weaponSet.weapon!!.name)
+                    }
                 }
-
             }
         }
+    }
+
+    override fun dispose() {
+        super.dispose()
+        gameController.detachGameListener(GSM.activeGame.gameId)
     }
 }

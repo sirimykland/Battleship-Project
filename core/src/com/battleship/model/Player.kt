@@ -5,14 +5,8 @@ import com.battleship.model.weapons.RadarWeapon
 import com.battleship.model.weapons.SmallWeapon
 import com.battleship.model.weapons.WeaponSet
 
-class Player( var playerId: String, var playerName: String){
-    var boardSize: Int = 10
-
-    /*constructor(playerId: String, playerName: String) : this() {
-        this.playerId = playerId
-        this.playerName = playerName
-    }*/
-
+class Player(var playerId: String = "", var playerName: String = "") {
+    val boardSize: Int = 10
     var weaponSet = WeaponSet(arrayListOf(SmallWeapon(), BigWeapon(), RadarWeapon()))
     var board: Board = Board(boardSize)
     var health: Int = board.getAllShipHealth()

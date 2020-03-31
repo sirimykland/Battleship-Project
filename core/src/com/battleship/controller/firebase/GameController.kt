@@ -4,9 +4,7 @@ import com.battleship.GSM
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import com.battleship.model.Player
-import com.google.cloud.firestore.DocumentSnapshot
-import com.google.cloud.firestore.EventListener
-import com.google.cloud.firestore.FirestoreException
+import com.google.cloud.firestore.*
 import com.google.firebase.database.annotations.Nullable
 
 /**
@@ -14,7 +12,7 @@ import com.google.firebase.database.annotations.Nullable
  */
 @Suppress("UNCHECKED_CAST")
 class GameController : FirebaseController() {
-
+    var registration : ListenerRegistration? = null
     /**
      * Start new game
      * @param userId the id of the user setting up the game
@@ -42,7 +40,6 @@ class GameController : FirebaseController() {
         val gameQuerySnapshot = gameQuery.get()
         val gameDocuments = gameQuerySnapshot.documents
         val games = ArrayList<GameListObject>()
-        // MutableMap<String,ListPlayer>()
         // For each game fitting the criteria, get the id and username of opponent
         for (document in gameDocuments) {
             val id = document.id
@@ -53,8 +50,7 @@ class GameController : FirebaseController() {
             val playerQuerySnapshot = playerQuery?.get()
             val playerName = playerQuerySnapshot?.getString("username")
             if (playerName != null) {
-                games.add(GameListObject(id, playerId as String, playerName as String))
-                //games.add(Game(id, playerId, playerName))
+                games.add(GameListObject(id, playerId, playerName))
             }
         }
         return games
@@ -84,8 +80,8 @@ class GameController : FirebaseController() {
         // Add the data to the game document
         db.collection("games").document(gameId).update("player2", userId)
         // TODO sjekke om suksess og returnere true
-        val testVal = db.collection("games").document(gameId).get()
-        if (testVal.get().get("player2") == userId) return true
+        val game = db.collection("games").document(gameId).get()
+        if (game.get().get("player2") == userId) return true
         return false
     }
 
@@ -122,9 +118,13 @@ class GameController : FirebaseController() {
             val player2Id: String = game.get("player2") as String
 
             val player1 = getUser(player1Id)
-            val player2 = getUser(player2Id)
             val ships = getShips(gameId)
             if (player1Id in ships) ships[player1Id]?.let { player1.board.setShipList(it) }
+            println("id er : " + (player2Id != ""))
+            val player2 = if (player2Id != "") {
+                getUser(player2Id)
+            } else Player("", "")
+
             if (player2Id in ships) ships[player2Id]?.let { player2.board.setShipList(it) }
 
             println("player1: ${player1.playerName}, player2: ${player2.playerName}")
@@ -156,7 +156,7 @@ class GameController : FirebaseController() {
      * @param y y coordinate of
      * @param playerId player making the move
      */
-    fun makeMove(gameId: String, x: Float, y: Float, playerId: String, weapon:String) {
+    fun makeMove(gameId: String, x: Float, y: Float, playerId: String, weapon: String) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
@@ -183,6 +183,10 @@ class GameController : FirebaseController() {
         db.collection("games").document(gameId).update("winner", userId)
     }
 
+    fun detachGameListener(gameId: String) {
+        registration?.remove()
+    }
+
     /**
      * Function adding listener to a specific game
      * TODO: Replace println with functionality connected to the cases
@@ -191,7 +195,9 @@ class GameController : FirebaseController() {
      * @param playerId the id of the player
      */
     fun addGameListener(gameId: String) {
-        db.collection("games").document(gameId).addSnapshotListener(object : EventListener<DocumentSnapshot?> {
+
+        val query = db.collection("games").document(gameId)
+        registration = query.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
                     @Nullable snapshot: DocumentSnapshot?,
                     @Nullable e: FirestoreException?
@@ -235,10 +241,11 @@ class GameController : FirebaseController() {
                                     // Get the last move
                                     val lastMove = moves.get(moves.size - 1)
                                     // If the last move is performed by opponent
-                                    if (!lastMove["playerId"]!!.equals(GSM.activeGame.opponent.playerId)) {
+                                    val game = GSM.activeGame
+                                    if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
                                         println("Motstander hadde siste trekk - din tur")
                                         GSM.activeGame.flipPlayer()
-                                    } else {
+                                    } else if (lastMove["playerId"]!!.equals(game.me.playerId)) {
                                         println("Du hadde siste trekk, vent")
                                         GSM.activeGame.flipPlayer()
                                     }

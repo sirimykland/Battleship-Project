@@ -22,33 +22,48 @@ class MatchmakingState : GuiState() {
     private var page: Int = 0
 
     private val nextPageButton = GUI.textButton(
-        Gdx.graphics.width - 230f,
-        30f,
-        180f,
-        80f,
-        "Next"
+            Gdx.graphics.width - 230f,
+            30f,
+            180f,
+            80f,
+            "Next"
     ) {
         page++
         updateButtons()
     }
 
     private val previousPageButton = GUI.textButton(
-        30f,
-        30f,
-        180f,
-        80f,
-        "Previous"
+            30f,
+            30f,
+            180f,
+            80f,
+            "Previous"
     ) {
         page--
         updateButtons()
     }.hide()
 
+    private val createGameButton = GUI.textButton(
+            Gdx.graphics.width - 80f,
+            Gdx.graphics.height - 80f,
+            64f,
+            64f,
+            "+"
+    ){
+        val gameId = gameController.createGame(GSM.userId)
+        if (gameId.isNotEmpty()) gameController.setGame(gameId)
+        GSM.set(PreGameState())
+    }
+
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.header("Usage guide"),
-        nextPageButton,
-        previousPageButton,
-        *playerButtons,
-        GUI.backButton { GSM.set(MainMenuState()) }
+            GUI.header("Usage guide"),
+            nextPageButton,
+            previousPageButton,
+            *playerButtons,
+            GUI.backButton {
+                GSM.set(MainMenuState())
+            },
+            createGameButton
     )
     var games = emptyList<GameListObject>()
 

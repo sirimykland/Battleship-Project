@@ -1,14 +1,15 @@
 package com.battleship.model
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 
-class Game(val gameId: String, player1: Player, player2: Player, activePlayer: Player = player2) {
+class Game(val gameId: String, player1: Player, player2: Player = Player()) {
     var winner: String = ""
     var me: Player
     var opponent: Player
-    var playersTurn: Player = activePlayer
-
+    var playersTurn: String
+    var gameReady = false
 
     init {
         if (player1.playerId == GSM.userId) {
@@ -18,6 +19,9 @@ class Game(val gameId: String, player1: Player, player2: Player, activePlayer: P
             this.me = player2
             this.opponent = player1
         }
+        this.playersTurn = player2.playerId
+        me.board.boardColor = Color.LIGHT_GRAY
+        if (opponent.playerId != "") gameReady = true
     }
 
 
@@ -33,12 +37,13 @@ class Game(val gameId: String, player1: Player, player2: Player, activePlayer: P
     }
 
     fun flipPlayer() {
-        if (playersTurn == me) playersTurn = opponent
-        else playersTurn = me
+        if (playersTurn == me.playerId) playersTurn = opponent.playerId
+        else playersTurn = me.playerId
+        println("playersturn: "+playersTurn)
     }
 
     fun isMyTurn(): Boolean {
-        return playersTurn.playerId == me.playerId
+        return playersTurn == me.playerId
     }
 
 }
