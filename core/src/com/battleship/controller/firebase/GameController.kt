@@ -138,6 +138,31 @@ class GameController : FirebaseController() {
     }
 
     /**
+     * Get the ships in a game
+     * @param gameId the id of the game
+     * @return a Game object containing game and player
+     */
+    fun setOpponent(gameId: String) {
+        val query = db.collection("games").document(gameId).get()
+        val game = query.get()
+
+        if (game.exists()) {
+            val player2Id: String = game.get("player2") as String
+            val treasures = getTreasures(gameId)
+            val player2 = if (player2Id != "") {
+                getUser(player2Id)
+            } else Player("", "")
+
+            if (player2Id in treasures) treasures[player2Id]?.let { player2.board.setTreasuresList(it) }
+
+            println("opponent fetched: ${player2.playerName}")
+            GSM.activeGame.initOpponent(player2)
+        } else {
+            throw error("Something went wrong when fetching the Game")
+        }
+    }
+
+    /**
      * Get the treasures in a game
      * @param gameId the id of the game
      * @return a map containing a list of treasures per user
@@ -215,10 +240,14 @@ class GameController : FirebaseController() {
                     // If no opponent has joined yet
                     if (opponent == "") {
                         println("Opponent not joined yet")
-                        addOpponentListener(gameId)
-                    }
+                        // addOpponentListener(gameId)
+                    } //need to notify the other user if player2 has changed
                     // If there is an opponent in the game
                     else {
+                        if(!GSM.activeGame.gameReady) {
+                            setOpponent(gameId)
+                            println("opponent is set: "+ opponent)
+                        }
                         // Get the field containing the treasures in the database
                         val treasures = snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
 
@@ -265,8 +294,8 @@ class GameController : FirebaseController() {
             }
         })
     }
-    fun addOpponentListener(gameId: String) {
 
+    fun addOpponentListener(gameId: String) {
         val query = db.collection("games").document(gameId)
         val opponentListener = query.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
@@ -277,13 +306,12 @@ class GameController : FirebaseController() {
                     System.err.println("Listen failed: $e")
                     return
                 }
-
+                println("   OPPONENT LISTENER:")
                 if (snapshot != null && snapshot.exists()) {
                     val opponent = snapshot.data?.get("player2")
                     // If no opponent has joined yet
-                    if (opponent == "") {
-                        println("Opponent not joined yet")
-                    }else{
+                    if (opponent != "") {
+                        println("Opponent HAS joined yet")
                         setGame(gameId)
                     }
                 }

@@ -24,6 +24,11 @@ class Game(val gameId: String, player1: Player, player2: Player = Player()) {
         if (opponent.playerId != "") gameReady = true
     }
 
+    fun initOpponent(player2: Player){
+        opponent=player2
+        gameReady=true
+    }
+
 
 
     fun makeMove(pos: Vector2): Boolean {

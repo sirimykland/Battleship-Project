@@ -5,17 +5,13 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.GameController
-import com.battleship.model.Player
-import com.battleship.model.equipment.BigEquipment
-import com.battleship.model.equipment.MetalDetector
-import com.battleship.model.equipment.Shovel
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
+import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
@@ -25,14 +21,14 @@ class PlayState() : GuiState() {
 
     private val gameController = GameController()
     private val testText = GUI.text(
-        Gdx.graphics.gameInfoPosition().x,
-        Gdx.graphics.gameInfoPosition().y,
-        Gdx.graphics.gameInfoSize().x,
-        Gdx.graphics.gameInfoSize().y,
-        "Find treasures"
+            Gdx.graphics.gameInfoPosition().x,
+            Gdx.graphics.gameInfoPosition().y,
+            Gdx.graphics.gameInfoSize().x,
+            Gdx.graphics.gameInfoSize().y,
+            "Find treasures"
     )
     override val guiObjects: List<GuiObject> = listOf(
-        testText
+            testText
     )
 
     override fun create() {
@@ -41,7 +37,8 @@ class PlayState() : GuiState() {
     }
 
     private fun headerText(): String {
-        if (GSM.activeGame.isMyTurn()) return (GSM.activeGame.opponent.playerName + "'s Board")
+        if (GSM.activeGame.opponent.playerId == "") return "Waiting for opponent..."
+        else if (GSM.activeGame.isMyTurn()) return (GSM.activeGame.opponent.playerName + "'s Board")
         return "Waiting for opponents turn"
     }
 
@@ -69,7 +66,7 @@ class PlayState() : GuiState() {
     private fun handleInput() {
         if (Gdx.input.justTouched()) {
             val touchPos =
-                Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
+                    Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
             val boardWidth = Gdx.graphics.boardWidth()
             val boardPos = Gdx.graphics.boardPosition()
             val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
