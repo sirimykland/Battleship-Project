@@ -53,7 +53,11 @@ class EquipmentSet : GameObject() {
         }
 
         return GUI.textButton(
+<<<<<<< HEAD:core/src/com/battleship/model/equipment/EquipmentSet.kt
             position.x + dimension.x / equipments.size * index + index * 1,
+=======
+            position.x + dimension.x / equipments.size * index + index * 2,
+>>>>>>> 01d3cd4701192492c25f2815a6f1289b330be360:core/src/com/battleship/model/equipment/EquipmentSet.kt
             position.y,
             dimension.x / equipments.size,
             dimension.y,

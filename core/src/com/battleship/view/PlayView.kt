@@ -29,8 +29,13 @@ class PlayView : View() {
                 )
                 is EquipmentSet -> obj.draw(
                     batch,
+<<<<<<< HEAD
                     Gdx.graphics.equipmentsetPosition(),
                     Gdx.graphics.equipmentsetSize()
+=======
+                    Gdx.graphics.weaponsetPosition(),
+                    Gdx.graphics.weaponsetSize()
+>>>>>>> 01d3cd4701192492c25f2815a6f1289b330be360
                 )
                 is GameInfo -> obj.draw(
                     batch,
