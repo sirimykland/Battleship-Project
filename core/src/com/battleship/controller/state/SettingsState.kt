@@ -1,13 +1,11 @@
 package com.battleship.controller.state
 
-import com.badlogic.gdx.Gdx
 import com.battleship.BattleshipGame
 import com.battleship.GameStateManager
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
-import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
@@ -16,15 +14,10 @@ import com.battleship.view.View
  */
 class SettingsState : GuiState() {
     override var view: View = BasicView()
-    private var soundButton: GuiObject = GUI.textButton(
-            Gdx.graphics.width / 2 - 170f,
-            Gdx.graphics.height - 380f,
-            340f,
-            140f,
-            "Sound off",
-            font = Font.MEDIUM_WHITE,
-            color = Palette.BLACK,
-            borderColor = Palette.BLUE,
+    private var soundButton: GuiObject = GUI.menuButton(
+            23.44f,
+            62.5f,
+            "Music off",
             onClick = {
                 if (BattleshipGame.music?.isPlaying == true)
                     BattleshipGame.music?.pause()
@@ -33,43 +26,37 @@ class SettingsState : GuiState() {
             }
     )
     override val guiObjects: List<GuiObject> = listOf(
-            soundButton,
-            GUI.textButton(
-                    Gdx.graphics.width / 2 - 170f,
-                    Gdx.graphics.height - 560f,
-                    340f,
-                    140f,
-                    "Help",
-                    font = Font.MEDIUM_WHITE,
-                    color = Palette.BLACK,
-                    borderColor = Palette.BLUE,
-                    onClick = { GameStateManager.set(HelpState()) }
-            ),
-            GUI.text(
-                    20f,
-                    Gdx.graphics.height - 220f,
-                    Gdx.graphics.width - 40f,
-                    90f,
-                    "Settings",
-                    Font.LARGE_WHITE
-            ),
-            GUI.text(
-                    20f,
-                    80f,
-                    Gdx.graphics.width - 40f,
-                    90f,
-                    "Legal stuff",
-                    Font.SMALL_WHITE
-            ),
-            GUI.text(
-                    20f,
-                    20f,
-                    Gdx.graphics.width - 40f,
-                    90f,
-                    "v0.0.1",
-                    Font.SMALL_WHITE
-            ),
-            GUI.backButton
+        GUI.header("Settings"),
+        soundButton,
+        GUI.menuButton(
+            23.44f,
+            43.75f,
+            "Sound effects on",
+            onClick = { print("Sound effects on/off") }),
+        GUI.menuButton(
+            23.44f,
+            25f,
+            "Usage guide",
+            onClick = { GameStateManager.set(UsageGuideState()) }
+        ),
+
+        GUI.text(
+            3f,
+            10f,
+            94f,
+            11.25f,
+            "Legal stuff",
+            Font.SMALL_BLACK
+        ),
+        GUI.text(
+            3f,
+            5f,
+            94f,
+            11.25f,
+            "v0.1.0",
+            Font.SMALL_BLACK
+        ),
+        GUI.backButton { GameStateManager.set(MainMenuState()) }
     )
 
     override fun create() {
@@ -77,11 +64,14 @@ class SettingsState : GuiState() {
         updateButtons()
     }
 
+    /**
+     * Update button text based on music status
+     */
     private fun updateButtons() {
         if (BattleshipGame.music?.isPlaying == true)
-            soundButton.set(Text("Sound off"))
+            soundButton.set(Text("Music off", Font.MEDIUM_BLACK))
         else
-            soundButton.set(Text("Sound on"))
+            soundButton.set(Text("Music on", Font.MEDIUM_BLACK))
     }
 
     override fun update(dt: Float) {

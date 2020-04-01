@@ -21,4 +21,5 @@ object Palette {
     val VIOLET = TextureRegion(texture, 1, 3, 1, 1)
     val BURGUNDY = TextureRegion(texture, 2, 3, 1, 1)
     val DARK_PURPLE = TextureRegion(texture, 3, 3, 1, 1)
+    val DARK_GREY = TextureRegion(Texture("font/dark_grey.png"), 1, 1, 1, 1)
 }

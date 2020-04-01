@@ -5,10 +5,10 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
 import com.battleship.model.Player
+import com.battleship.model.equipment.BigEquipment
+import com.battleship.model.equipment.MetalDetector
+import com.battleship.model.equipment.Shovel
 import com.battleship.model.ui.GuiObject
-import com.battleship.model.weapons.BigWeapon
-import com.battleship.model.weapons.RadarWeapon
-import com.battleship.model.weapons.SmallWeapon
 import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
@@ -25,26 +25,32 @@ class PlayState : GuiState() {
     // var gameInfo = GameInfo(player)
 
     private val testText = GUI.text(
-            Gdx.graphics.gameInfoPosition().x,
-            Gdx.graphics.gameInfoPosition().y,
-            Gdx.graphics.gameInfoSize().x,
-            Gdx.graphics.gameInfoSize().y,
-            "Attack ships")
+        Gdx.graphics.gameInfoPosition().x,
+        Gdx.graphics.gameInfoPosition().y,
+        Gdx.graphics.gameInfoSize().x,
+        Gdx.graphics.gameInfoSize().y,
+        "Find treasures"
+    )
     override val guiObjects: List<GuiObject> = listOf(
-            testText
+        testText
     )
 
     override fun create() {
         super.create()
-        player.board.randomPlacement(4)
-        player.weaponSet.weapons.add(SmallWeapon())
-        player.weaponSet.weapons.add(BigWeapon())
-        player.weaponSet.weapons.add(RadarWeapon())
-        player.weaponSet.setActiveWeapon(player.weaponSet.weapons.first())
+        player.board.createAndPlaceTreasurechests(4, false)
+        player.board.createAndPlaceGoldcoins(2, false)
+        player.equipmentSet.equipments.add(Shovel())
+        player.equipmentSet.equipments.add(BigEquipment())
+        player.equipmentSet.equipments.add(MetalDetector())
+        player.equipmentSet.setEquipmentActive(player.equipmentSet.equipments.first())
     }
 
     override fun render() {
-        this.view.render(*guiObjects.toTypedArray(), player.board, player.weaponSet) // , gameInfo)
+        this.view.render(
+            *guiObjects.toTypedArray(),
+            player.board,
+            player.equipmentSet
+        ) // , gameInfo)
     }
 
     override fun update(dt: Float) {
@@ -56,20 +62,19 @@ class PlayState : GuiState() {
         }
     }
 
-    fun handleInput() {
+    private fun handleInput() {
         if (Gdx.input.justTouched()) {
             val touchPos =
-                    Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
+                Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
             val boardWidth = Gdx.graphics.boardWidth()
             val boardPos = Gdx.graphics.boardPosition()
             val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
             if (boardBounds.contains(touchPos)) {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
-                if (player.weaponSet.weapon!!.hasAmmunition()) {
-                    player.board.shootTiles(boardTouchPos, player.weaponSet.weapon!!)
-                    player.weaponSet.weapon!!.shoot()
+                if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
+                    player.board.shootTiles(boardTouchPos, player.equipmentSet.activeEquipment!!)
                 } else {
-                    println(player.weaponSet.weapon!!.name + "Has no ammo")
+                    println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
                 }
             }
         }
