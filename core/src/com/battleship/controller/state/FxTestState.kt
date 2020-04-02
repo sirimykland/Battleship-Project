@@ -29,29 +29,19 @@ class FxTestState : GuiState(){
 
 
 
-    private var shovelButton: GuiObject = GUI.textButton(
-        Gdx.graphics.width / 2 - 170f,
-        Gdx.graphics.height - 380f,
-        340f,
-        140f,
+    private var shovelButton: GuiObject = GUI.menuButton(
+        23.44f,
+        25f,
         "Shovel",
-        font = Font.MEDIUM_WHITE,
-        color = Palette.BLACK,
-        borderColor = Palette.BLUE,
         onClick = {
             stopSounds()
             shovel.play(0.5f)}
     )
 
-    private var coinButton: GuiObject = GUI.textButton(
-        Gdx.graphics.width / 2 - 170f,
-        Gdx.graphics.height - 560f,
-        340f,
-        140f,
+    private var coinButton: GuiObject = GUI.menuButton(
+        23.44f,
+        43.75f,
         "Coin",
-        font = Font.MEDIUM_WHITE,
-        color = Palette.BLACK,
-        borderColor = Palette.BLUE,
         onClick = {
             stopSounds()
             coin.play(0.8f)}
@@ -62,11 +52,6 @@ class FxTestState : GuiState(){
         coinButton,
         GUI.backButton { GameStateManager.set(MainMenuState()) }
     )
-
-    override fun create() {
-        super.create()
-    }
-
 
     override fun update(dt: Float) {
     }
