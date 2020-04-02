@@ -1,5 +1,6 @@
 package com.battleship.model.treasures
 
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
@@ -10,8 +11,14 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     abstract var name: String
     abstract var health: Int
     abstract var sprite: Sprite
+    abstract var sound: Sound
     var padding = 1
     var reveiled = false
+
+    fun playSound(volume: Float) {
+        sound.stop()
+        sound.play(volume)
+    }
 
     fun hit(coordinates: Vector2): Boolean {
         for (i in 1 until dimension.x.toInt() + 1) {

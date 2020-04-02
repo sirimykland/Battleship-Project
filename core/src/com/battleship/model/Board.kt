@@ -149,16 +149,16 @@ class Board(val size: Int) : GameObject() {
         var hittedTreasure = getTreasureByPosition(shipPos)
         if (hittedTreasure != null) {
             println("Hitted")
-            sound.playHit()
+            sound.playHit(0.8f)
             hit = Tile.HIT
             hittedTreasure.takeDamage()
             if (hittedTreasure.found()) {
                 println(hittedTreasure.name + " Found")
-                sound.playCoin()
+                hittedTreasure.playSound(0.8f)
             }
         } else {
             println("Missed")
-            sound.playDirt()
+            equipment.playSound(0.8f)
         }
 
         // TODO implement
