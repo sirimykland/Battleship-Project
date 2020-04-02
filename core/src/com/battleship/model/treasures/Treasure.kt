@@ -19,7 +19,6 @@ abstract class Treasure(var position: Vector2) : GameObject() {
             for (j in 1 until dimension.y.toInt() + 1) {
                 val y = position.y + j - 1
 
-                // println("Ship: (" + x + "," + y + ")")
                 if (coordinates.epsilonEquals(x, y)) {
                     return true
                 }

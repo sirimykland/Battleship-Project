@@ -20,12 +20,12 @@ import com.battleship.view.View
 
 class PreGameState : GuiState() {
     override var view: View = PlayView()
-    val boardSize = 10
+    private val boardSize = 10
     var player: Player = Player(boardSize)
 
     override fun create() {
         super.create()
-        player.board.createAndPlaceTreasurechests(4, true)
+        player.board.createAndPlaceTreasurechests(2, true)
         player.board.createAndPlaceGoldcoins(2, true)
     }
 
@@ -40,13 +40,13 @@ class PreGameState : GuiState() {
         .with(Text("Start game", Font.MEDIUM_BLACK))
         .onClick {
             println("Player are ready")
-            // GameStateManager.gameController.registerShip(player.board.getships()) - dette må lages
+            // GameStateManager.gameController.registerShip(player.board.getships()) TODO: Create
             GameStateManager.set(PlayState())
         }
 
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
-        GUI.header("Place ships"),
+        GUI.header("Place treasures"),
         GUI.backButton { GameStateManager.set(MainMenuState()) }
     )
 
@@ -59,7 +59,7 @@ class PreGameState : GuiState() {
     }
 
     fun handleInput() {
-        // drag ship / set position relative to global
+        // Drag ship
         if (Gdx.input.justTouched()) {
             val touchPos =
                 Vector2(
@@ -67,16 +67,11 @@ class PreGameState : GuiState() {
                     Gdx.graphics.height - Gdx.input.y.toFloat()
                 )
             val screenSize = Gdx.graphics.size()
-            // if input on board
+
+            // Check if input is on the board
             if (Gdx.graphics.boardRectangle().contains(touchPos)) {
-                // if input on ship
-                // println("   on board")
                 val boardPos = Gdx.graphics.boardPosition()
                 val boardWidth = Gdx.graphics.boardWidth()
-                // TODO
-                // select ship
-                // set new midletidig position
-                // if released, snap to board
             }
         }
     }

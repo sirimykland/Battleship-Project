@@ -8,9 +8,7 @@ class TreasureChest(position: Vector2, rotate: Boolean) : Treasure(position) {
     override var dimension: Vector2 = Vector2(2f, 2f)
     override var name: String = "Treasure chest"
     override var health: Int = 4
-    override var sprite: Sprite = Sprite(Texture("badlogic.jpg"))
+    override var sprite: Sprite = Sprite(Texture("images/chest.png"))
 
-    init {
-        if (rotate) rotateTreasure()
-    }
+    init { if (rotate) rotateTreasure() }
 }

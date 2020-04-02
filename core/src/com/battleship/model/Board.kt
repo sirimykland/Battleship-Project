@@ -16,7 +16,8 @@ class Board(val size: Int) : GameObject() {
     private var board = Array(size) { Array(size) { Tile.UNGUESSED } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
-    
+
+    // TODO: Refactor. Use createAndPlaceTreasures instead
     fun createAndPlaceTreasurechests(treasureNumber: Int, revealed: Boolean) {
         var treasure: Treasure
         for (i in 0 until treasureNumber) {
@@ -35,6 +36,7 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
+    // TODO: Refactor. Use createAndPlaceTreasures instead
     fun createAndPlaceGoldcoins(treasureNumber: Int, revealed: Boolean) {
         var treasure: Treasure
         for (i in 0 until treasureNumber) {

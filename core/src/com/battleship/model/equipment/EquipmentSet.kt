@@ -58,9 +58,7 @@ class EquipmentSet : GameObject() {
             dimension.x / equipments.size,
             dimension.y,
             equipment.name + " " + equipment.uses,
-            font = Font.TINY_BLACK,
-            color = Palette.GREY,
-            borderColor = borderColor
+            font = Font.SMALL_BLACK
         ) {
             setEquipmentActive(equipment)
         }
