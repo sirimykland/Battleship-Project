@@ -16,12 +16,8 @@ class Board(val size: Int) : GameObject() {
     private var board = Array(size) { Array(size) { Tile.UNGUESSED } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
-    // var shipHandler:ShipHandler = ShipHandler(position, size, onClick)
-
-    /*
-     * creates treasures and places them
-     */
-    fun createAndPlaceTreasurechests(treasureNumber: Int, reveiled: Boolean) {
+    
+    fun createAndPlaceTreasurechests(treasureNumber: Int, revealed: Boolean) {
         var treasure: Treasure
         for (i in 0 until treasureNumber) {
             do {
@@ -34,12 +30,12 @@ class Board(val size: Int) : GameObject() {
                     ), Random.nextBoolean()
                 )
             } while (!validateTreasurePosition(treasure))
-            treasure.reveiled = reveiled
+            treasure.revealed = revealed
             treasures.add(treasure)
         }
     }
 
-    fun createAndPlaceGoldcoins(treasureNumber: Int, reveiled: Boolean) {
+    fun createAndPlaceGoldcoins(treasureNumber: Int, revealed: Boolean) {
         var treasure: Treasure
         for (i in 0 until treasureNumber) {
             do {
@@ -52,18 +48,12 @@ class Board(val size: Int) : GameObject() {
                     ), Random.nextBoolean()
                 )
             } while (!validateTreasurePosition(treasure))
-            treasure.reveiled = reveiled
+            treasure.revealed = revealed
             treasures.add(treasure)
         }
     }
 
-    fun moveTreasure() {
-        println("test move treasure()")
-    }
-
-    /*
-     * This for placing a defined list of ships
-     */
+    // TODO: Implement usage of this method
     fun createAndPlaceTreasures(treasures: ArrayList<Treasure>) {
         for (treasure in treasures) {
             do {
@@ -71,15 +61,17 @@ class Board(val size: Int) : GameObject() {
                     Random.nextInt(0, size).toFloat(),
                     Random.nextInt(0, size).toFloat()
                 )
-                // println("ship position: (" + ship.position.x + ", " + ship.position.y + ")")
             } while (!validateTreasurePosition(treasure))
             treasures.add(treasure)
         }
     }
 
-    fun validateTreasurePosition(treasure: Treasure): Boolean {
+    private fun validateTreasurePosition(treasure: Treasure): Boolean {
         for (tile in treasure.getTreasureTiles()) {
+            // TODO: Insert explanation
             if (tile.x >= size || tile.y >= size) return false
+
+            // TODO: Insert explanation
             for (placedShip in treasures) {
                 if (placedShip.getTreasureTiles().contains(tile)) {
                     return false
@@ -93,10 +85,12 @@ class Board(val size: Int) : GameObject() {
         var x = position.x
         var y = position.y
         val tileSize = dimension.x / size
+
+        // Draw board
         for (array in board) {
             for (value in array) {
-                tileRenderer.begin(ShapeRenderer.ShapeType.Filled)
 
+                tileRenderer.begin(ShapeRenderer.ShapeType.Filled)
                 when (value) {
                     Tile.HIT -> tileRenderer.color = Color.GREEN
                     Tile.UNGUESSED -> tileRenderer.color = Color.BLUE
@@ -112,51 +106,54 @@ class Board(val size: Int) : GameObject() {
             x = position.x
         }
 
+        // Draw treasures
         for (treasure in treasures) {
             treasure.draw(batch, position, Vector2(tileSize, tileSize))
         }
     }
 
-    // her er det to sett med x og y variabler ?
     fun shootTiles(boardTouchPos: Vector2, equipment: Equipment) {
         equipment.use()
-        val x = boardTouchPos.x.toInt()
-        val y = boardTouchPos.y.toInt()
-        // Loops through the equipents search radius
-        for (x in x - equipment.searchRadius until x + equipment.searchRadius + 1 step 1) {
-            for (y in y - equipment.searchRadius until y + equipment.searchRadius + 1 step 1) {
-                // Checks if inside board
-                if (x >= 0 && x < size && y >= 0 && y < size) {
+        val xSearchMin = boardTouchPos.x.toInt() - equipment.searchRadius
+        val xSearchMax = boardTouchPos.x.toInt() + equipment.searchRadius + 1
+        val ySearchMin = boardTouchPos.y.toInt() - equipment.searchRadius
+        val ySearchMax = boardTouchPos.y.toInt() + equipment.searchRadius + 1
+
+        // Loops through the equipments search radius
+        for (x in xSearchMin until xSearchMax) {
+            for (y in ySearchMin until ySearchMax) {
+                // Check if inside board
+                if (x in 0 until size && y in 0 until size) {
                     updateTile(Vector2(x.toFloat(), y.toFloat()), equipment)
                 }
             }
         }
     }
 
-    // TODO needs cleanup
-    fun updateTile(pos: Vector2, equipment: Equipment) {
-        var shipPos = Vector2(pos.y, pos.x)
+    private fun updateTile(pos: Vector2, equipment: Equipment) {
+        var shipPos = Vector2(pos.y, pos.x) // Flip position
 
-        val boardTile = getTile(pos)
-        if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
-            println("Guessed, pick new")
+        // Check if tile is already opened
+        if (getTile(pos) == Tile.MISS || getTile(pos) == Tile.HIT) {
+            println("Already guessed, pick a new tile")
             return
         }
 
         var hit = Tile.MISS
-        var hittedTreasure = getTreasureByPosition(shipPos)
-        if (hittedTreasure != null) {
-            println("Hitted")
+        var treasureHit = getTreasureByPosition(shipPos)
+
+        if (treasureHit != null) {
+            println("Hit!")
             hit = Tile.HIT
-            hittedTreasure.takeDamage()
-            if (hittedTreasure.found()) {
-                println(hittedTreasure.name + " Found")
+            treasureHit.takeDamage()
+            if (treasureHit.found()) {
+                println(treasureHit.name + " found!")
             }
         } else {
-            println("Missed")
+            println("Miss!")
         }
 
-        // TODO implement
+        // TODO: Implement feature
         if (equipment is MetalDetector) {
             hit = Tile.NEAR
         }
@@ -164,11 +161,11 @@ class Board(val size: Int) : GameObject() {
         board[pos.x.toInt()][pos.y.toInt()] = hit
     }
 
-    fun getTile(pos: Vector2): Board.Tile {
+    private fun getTile(pos: Vector2): Board.Tile {
         return board[pos.x.toInt()][pos.y.toInt()]
     }
 
-    fun getTreasureByPosition(pos: Vector2): Treasure? {
+    private fun getTreasureByPosition(pos: Vector2): Treasure? {
         for (ship in treasures) {
             if (ship.hit(pos)) {
                 return ship
@@ -177,7 +174,7 @@ class Board(val size: Int) : GameObject() {
         return null
     }
 
-    fun getAllTreasueHealth(): Int {
+    fun getAllTreasureHealth(): Int {
         var health = 0
         for (ship in treasures) {
             health += ship.health

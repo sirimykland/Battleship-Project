@@ -30,9 +30,9 @@ class PreGameState : GuiState() {
     }
 
     private val readyButton = GuiObject(
-        5f,
+        6f,
         3f,
-        91f,
+        90f,
         10f
     )
         .with(Background(Palette.LIGHT_GREY))

@@ -18,10 +18,11 @@ import com.battleship.utility.GdxGraphicsUtil.equipmentsetPosition
 import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
 
 class PlayView : View() {
+    private val background = Sprite(Texture("images/background.png"))
+
     override fun render(vararg gameObjects: GameObject) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        var background = Sprite(Texture("images/background.png"))
 
         batch.begin()
         background.setCenter(Gdx.graphics.width / 1.85f, Gdx.graphics.height.toFloat())
@@ -29,7 +30,7 @@ class PlayView : View() {
         batch.end()
 
         for (obj in gameObjects) {
-            // TODO: Draw board background
+
             when (obj) {
                 is Board -> obj.draw(
                     batch,

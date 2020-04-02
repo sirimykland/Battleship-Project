@@ -22,7 +22,6 @@ class PlayState : GuiState() {
     override var view: View = PlayView()
     var boardSize = 10
     var player: Player = Player(boardSize)
-    // var gameInfo = GameInfo(player)
 
     private val testText = GUI.text(
         Gdx.graphics.gameInfoPosition().x,
@@ -50,7 +49,7 @@ class PlayState : GuiState() {
             *guiObjects.toTypedArray(),
             player.board,
             player.equipmentSet
-        ) // , gameInfo)
+        )
     }
 
     override fun update(dt: Float) {
