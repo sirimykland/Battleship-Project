@@ -2,6 +2,7 @@ package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
+import com.battleship.GameStateManager
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
@@ -59,7 +60,7 @@ class FxTestState : GuiState(){
     override val guiObjects: List<GuiObject> = listOf(
         shovelButton,
         coinButton,
-        GUI.backButton
+        GUI.backButton { GameStateManager.set(MainMenuState()) }
     )
 
     override fun create() {
