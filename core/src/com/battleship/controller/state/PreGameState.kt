@@ -4,17 +4,13 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
 import com.battleship.model.Player
-import com.battleship.model.ui.Background
-import com.battleship.model.ui.Border
+import com.battleship.model.treasures.Treasure
 import com.battleship.model.ui.GuiObject
-import com.battleship.model.ui.Text
-import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardRectangle
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.utility.GdxGraphicsUtil.size
-import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
@@ -25,24 +21,23 @@ class PreGameState : GuiState() {
 
     override fun create() {
         super.create()
-        player.board.createAndPlaceTreasurechests(2, true)
-        player.board.createAndPlaceGoldcoins(2, true)
+        player.board.createAndPlaceTreasures(2, Treasure.TreasureType.TREASURECHEST, true)
+        player.board.createAndPlaceTreasures(2, Treasure.TreasureType.GOLDCOIN, true)
+        player.board.createAndPlaceTreasures(2, Treasure.TreasureType.BOOT, true)
     }
 
-    private val readyButton = GuiObject(
+    private val readyButton = GUI.textButton(
         6f,
         3f,
         90f,
-        10f
-    )
-        .with(Background(Palette.BLACK))
-        .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
-        .with(Text("Start Game"))
-        .onClick {
+        10f,
+        "Start Game",
+        onClick = {
             println("Player are ready")
-            // GameStateManager.gameController.registerShip(player.board.getships()) TODO: Create
+            // GameStateManager.gameController.registerShip(player.board.getShips()) TODO: Create
             GameStateManager.set(PlayState())
         }
+    )
 
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
@@ -61,11 +56,10 @@ class PreGameState : GuiState() {
     fun handleInput() {
         // Drag ship
         if (Gdx.input.justTouched()) {
-            val touchPos =
-                Vector2(
-                    Gdx.input.x.toFloat(),
-                    Gdx.graphics.height - Gdx.input.y.toFloat()
-                )
+            val touchX = Gdx.input.x.toFloat()
+            val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()
+            val touchPos = Vector2(touchX, touchY)
+
             val screenSize = Gdx.graphics.size()
 
             // Check if input is on the board

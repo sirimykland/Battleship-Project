@@ -46,7 +46,7 @@ class MainMenuState : GuiState() {
     )
     private val map: GuiObject = GUI.image(
         52f,
-        58f,
+        59f,
         16f,
         16f,
         "images/skull.png"

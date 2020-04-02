@@ -18,6 +18,7 @@ import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
+import com.battleship.model.treasures.Treasure.TreasureType
 
 class PlayState : GuiState() {
     override var view: View = PlayView()
@@ -39,44 +40,48 @@ class PlayState : GuiState() {
         }.toTypedArray())
 
     // TODO Positioning/design
-    private val switchBoardButton = GUI.textButton(
-        70f,
+    private val switchBoardButton = GUI.imageButton(
+        87f,
         90f,
-        30f,
         8f,
-        "Switch board",
-        font = Font.TINY_BLACK,
-        color = Palette.GREY,
-        borderColor = Palette.LIGHT_GREY,
+        8f,
+        "icons/refresh_white.png",
         onClick = {
             playerBoard = !playerBoard
         }
     )
+    private val opponentsBoardText = GUI.text(
+        5f,
+        5f,
+        90f,
+        10f,
+        "Opponent's board"
+    )
 
     override val guiObjects: List<GuiObject> = listOf(
-        *equipmentButtons, header, switchBoardButton
+        *equipmentButtons, header, switchBoardButton, opponentsBoardText
     )
 
     override fun create() {
         super.create()
-        player.board.createAndPlaceTreasurechests(4, true)
-        player.board.createAndPlaceGoldcoins(2, true)
-        opponent.board.createAndPlaceTreasurechests(4, false)
-        opponent.board.createAndPlaceGoldcoins(2, false)
+        player.board.setTilesUnopened()
+        player.board.createAndPlaceTreasures(1, TreasureType.TREASURECHEST, true)
+        player.board.createAndPlaceTreasures(2, TreasureType.GOLDCOIN, true)
+        player.board.createAndPlaceTreasures(2, TreasureType.BOOT, true)
+
+        opponent.board.setTilesUnopened()
+        opponent.board.createAndPlaceTreasures(1, TreasureType.TREASURECHEST, false)
+        opponent.board.createAndPlaceTreasures(2, TreasureType.GOLDCOIN, false)
+        opponent.board.createAndPlaceTreasures(2, TreasureType.BOOT, false)
+
+        opponentsBoardText.hide()
     }
 
     override fun render() {
-        if (playerBoard) {
-            this.view.render(
-                *guiObjects.toTypedArray(),
-                player.board
-            )
-        } else {
-            this.view.render(
-                *guiObjects.toTypedArray(),
-                opponent.board
-            )
-        }
+        view.render(
+            *guiObjects.toTypedArray(),
+            if (playerBoard) player.board else opponent.board
+        )
     }
 
     override fun update(dt: Float) {
@@ -97,6 +102,7 @@ class PlayState : GuiState() {
         }
     }
 
+    // TODO: Rector complicated function
     private fun handleInput() {
         if (Gdx.input.justTouched()) {
             val touchPos =
@@ -151,31 +157,36 @@ class PlayState : GuiState() {
                 button.set(Border(Palette.LIGHT_GREY))
             }
 
-            // Hides and shows equipmentbuttons and switchboardbuttons text
+            // Hides and shows equipmentbuttons and opponent's board text
             if (playerBoard) {
                 equipmentButtons[i].hide()
-                switchBoardButton.set(Text("Opponent's board", Font.TINY_BLACK))
+                opponentsBoardText.show()
             } else {
                 equipmentButtons[i].show()
-                switchBoardButton.set(Text("Your board", Font.TINY_BLACK))
+                opponentsBoardText.hide()
             }
 
             // Updates header text
             if (playerTurn) {
                 header.set(Text("Your turn"))
             } else {
-                header.set(Text("Opponent's turn"))
+                header.set(Text("Waiting for opponent..."))
             }
         }
+        // playerBoard = playerTurn
+
         //  Updates border of switchboardbutton
         if (playerTurn && playerBoard) {
-            switchBoardButton.set(Border(Palette.GREEN))
+
+            //switchBoardButton.set(Border(Palette.GREEN))
         } else if (!playerTurn && !playerBoard) {
-            switchBoardButton.set(Border(Palette.GREEN))
+
+            //switchBoardButton.set(Border(Palette.GREEN))
         } else if (playerTurn && !playerBoard) {
-            switchBoardButton.set(Border(Palette.LIGHT_GREY))
+            //switchBoardButton.set(Border(Palette.LIGHT_GREY))
         } else if (!playerTurn && playerBoard) {
-            switchBoardButton.set(Border(Palette.LIGHT_GREY))
+
+            //switchBoardButton.set(Border(Palette.LIGHT_GREY))
         }
     }
 

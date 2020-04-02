@@ -125,18 +125,4 @@ object GUI {
             .with(Image(texturePath))
             .onClick(onClick)
     }
-    fun imageAndTextButton(
-        posX: Float,
-        posY: Float,
-        sizeX: Float,
-        sizeY: Float,
-        text: String,
-        texturePath: String,
-        onClick: () -> Unit
-    ): GuiObject {
-        return GuiObject(posX, posY, sizeX, sizeY)
-            .with(Image(texturePath))
-            .with(ImageButtonText(text, Font.MEDIUM_BLACK))
-            .onClick(onClick)
-    }
 }

@@ -10,8 +10,13 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     abstract var name: String
     abstract var health: Int
     abstract var sprite: Sprite
+    abstract var type: TreasureType
     var padding = 1
     var revealed = false
+
+    enum class TreasureType {
+        TREASURECHEST, GOLDCOIN, BOOT
+    }
 
     fun hit(coordinates: Vector2): Boolean {
         for (i in 1 until dimension.x.toInt() + 1) {
@@ -31,7 +36,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
         health--
     }
 
-    fun found(): Boolean {
+    private fun found(): Boolean {
         return health == 0
     }
 
@@ -46,15 +51,11 @@ abstract class Treasure(var position: Vector2) : GameObject() {
 
             val newX = boardPos.x + dimension.x * position.x + position.x * padding
             val newY = boardPos.y + dimension.y * position.y + position.y * padding
+            val newWidth = this.dimension.x * dimension.x
+            val newHeight = this.dimension.y * dimension.y
 
             batch.begin()
-            batch.draw(
-                sprite.texture,
-                newX,
-                newY,
-                this.dimension.x * dimension.x,
-                this.dimension.y * dimension.y
-            )
+            batch.draw(sprite.texture, newX, newY, newWidth, newHeight)
             batch.end()
         }
     }
