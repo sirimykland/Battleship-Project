@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
-import com.battleship.model.equipment.MetalDetector
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.Treasure
 import com.battleship.model.treasures.TreasureChest
@@ -130,37 +129,27 @@ class Board(val size: Int) : GameObject() {
                 }
             }
         }
+        return valid
     }
 
-    private fun updateTile(pos: Vector2, equipment: Equipment) {
-        var shipPos = Vector2(pos.y, pos.x) // Flip position
+    // TODO needs cleanup
+    private fun updateTile(pos: Vector2, equipment: Equipment): Boolean {
+        val treasurePos = Vector2(pos.y, pos.x) // Flip position
 
-        // Check if tile is already opened
-        if (getTile(pos) == Tile.MISS || getTile(pos) == Tile.HIT) {
-            println("Already guessed, pick a new tile")
-            return
+        val boardTile = getTile(pos)
+        if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
+            return false
         }
 
         var hit = Tile.MISS
-        var treasureHit = getTreasureByPosition(shipPos)
-
-        if (treasureHit != null) {
-            println("Hit!")
+        val treasure = getTreasureByPosition(treasurePos)
+        if (treasure != null) {
             hit = Tile.HIT
-            treasureHit.takeDamage()
-            if (treasureHit.found()) {
-                println(treasureHit.name + " found!")
-            }
-        } else {
-            println("Miss!")
-        }
-
-        // TODO: Implement feature
-        if (equipment is MetalDetector) {
-            hit = Tile.NEAR
+            treasure.takeDamage()
         }
 
         board[pos.x.toInt()][pos.y.toInt()] = hit
+        return true
     }
 
     private fun getTile(pos: Vector2): Board.Tile {
@@ -168,9 +157,9 @@ class Board(val size: Int) : GameObject() {
     }
 
     private fun getTreasureByPosition(pos: Vector2): Treasure? {
-        for (ship in treasures) {
-            if (ship.hit(pos)) {
-                return ship
+        for (treasure in treasures) {
+            if (treasure.hit(pos)) {
+                return treasure
             }
         }
         return null

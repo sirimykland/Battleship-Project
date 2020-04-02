@@ -35,9 +35,9 @@ class PreGameState : GuiState() {
         90f,
         10f
     )
-        .with(Background(Palette.LIGHT_GREY))
-        .with(Border(Palette.BLACK))
-        .with(Text("Start game", Font.MEDIUM_BLACK))
+        .with(Background(Palette.BLACK))
+        .with(Border(Palette.WHITE, 10f, 10f, 10f, 10f))
+        .with(Text("Start Game"))
         .onClick {
             println("Player are ready")
             // GameStateManager.gameController.registerShip(player.board.getships()) TODO: Create

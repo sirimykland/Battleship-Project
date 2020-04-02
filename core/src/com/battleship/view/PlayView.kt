@@ -12,10 +12,10 @@ import com.battleship.model.ui.GameInfo
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
-import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 import com.battleship.utility.GdxGraphicsUtil.equipmentsetPosition
 import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
+import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
+import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 
 class PlayView : View() {
     private val background = Sprite(Texture("images/background.png"))
