@@ -7,9 +7,9 @@ class Player(boardSize: Int) {
     // var name:String
     var equipmentSet = EquipmentSet()
     var board: Board = Board(boardSize)
-    var health: Int = board.getAllTreasueHealth()
+    var health: Int = board.getAllTreasureHealth()
 
     fun updateHealth() {
-        this.health = board.getAllTreasueHealth()
+        health = board.getAllTreasureHealth()
     }
 }
