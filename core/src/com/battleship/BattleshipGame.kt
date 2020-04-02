@@ -3,7 +3,7 @@ package com.battleship
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
-import com.battleship.controller.state.FxTestState
+import com.battleship.controller.state.MainMenuState
 import com.battleship.utility.Font
 
 class BattleshipGame : Game() {
@@ -19,7 +19,7 @@ class BattleshipGame : Game() {
             music?.play()
         }
 
-        GameStateManager.push(FxTestState())
+        GameStateManager.push(MainMenuState())
     }
 
     override fun dispose() {

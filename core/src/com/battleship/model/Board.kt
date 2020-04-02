@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
 import com.battleship.model.equipment.MetalDetector
+import com.battleship.model.sound_effects.SoundEffects
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.Treasure
 import com.battleship.model.treasures.TreasureChest
@@ -15,6 +16,7 @@ class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var board = Array(size) { Array(size) { Tile.UNGUESSED } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
+    private var sound = SoundEffects()
     var padding: Int = 1
     // var shipHandler:ShipHandler = ShipHandler(position, size, onClick)
 
@@ -147,13 +149,16 @@ class Board(val size: Int) : GameObject() {
         var hittedTreasure = getTreasureByPosition(shipPos)
         if (hittedTreasure != null) {
             println("Hitted")
+            sound.playHit()
             hit = Tile.HIT
             hittedTreasure.takeDamage()
             if (hittedTreasure.found()) {
                 println(hittedTreasure.name + " Found")
+                sound.playCoin()
             }
         } else {
             println("Missed")
+            sound.playDirt()
         }
 
         // TODO implement
