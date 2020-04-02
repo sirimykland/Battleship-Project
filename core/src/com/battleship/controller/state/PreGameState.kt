@@ -8,6 +8,7 @@ import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
+import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardRectangle
@@ -31,12 +32,12 @@ class PreGameState : GuiState() {
     private val readyButton = GuiObject(
         5f,
         3f,
-        90f,
+        91f,
         10f
     )
-        .with(Background(Palette.BLACK))
-        .with(Border(Palette.WHITE, 10f))
-        .with(Text("Start Game"))
+        .with(Background(Palette.LIGHT_GREY))
+        .with(Border(Palette.BLACK))
+        .with(Text("Start game", Font.MEDIUM_BLACK))
         .onClick {
             println("Player are ready")
             // GameStateManager.gameController.registerShip(player.board.getships()) - dette må lages

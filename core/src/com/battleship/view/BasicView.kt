@@ -7,15 +7,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.battleship.model.GameObject
 
 class BasicView : View() {
-    var backgroundTexture: Texture = Texture("images/background.png")
-    var backgroundSprite: Sprite = Sprite(backgroundTexture)
+    var background = Sprite(Texture("images/background.png"))
 
     override fun render(vararg gameObjects: GameObject) {
         Gdx.gl.glClearColor(50f, 15f, 55f, 19f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         batch.begin()
-        backgroundSprite.setCenter(Gdx.graphics.width / 1.85f, Gdx.graphics.height.toFloat())
-        backgroundSprite.draw(batch)
+        background.setCenter(Gdx.graphics.width / 1.85f, Gdx.graphics.height.toFloat())
+        background.draw(batch)
         gameObjects.forEach {
             it.draw(batch)
         }
