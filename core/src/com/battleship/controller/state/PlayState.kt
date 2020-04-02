@@ -27,6 +27,7 @@ class PlayState : GuiState() {
     private var opponent: Player = Player(boardSize)
     private var playerBoard: Boolean = false
     private var playerTurn: Boolean = true
+    private var newMove: Boolean = false
 
     private val header = GUI.header("Your turn")
 
@@ -39,7 +40,6 @@ class PlayState : GuiState() {
             )
         }.toTypedArray())
 
-    // TODO Positioning/design
     private val switchBoardButton = GUI.imageButton(
         87f,
         90f,
@@ -52,10 +52,11 @@ class PlayState : GuiState() {
     )
     private val opponentsBoardText = GUI.text(
         5f,
-        5f,
+        2f,
         90f,
         10f,
-        "Opponent's board"
+        "Opponent's board",
+        font = Font.LARGE_BLACK
     )
 
     override val guiObjects: List<GuiObject> = listOf(
@@ -102,14 +103,16 @@ class PlayState : GuiState() {
         }
     }
 
-    // TODO: Rector complicated function
     private fun handleInput() {
         if (Gdx.input.justTouched()) {
-            val touchPos =
-                Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
+            val touchX = Gdx.input.x.toFloat()
+            val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()
+            val touchPos = Vector2(touchX, touchY)
+
             val boardWidth = Gdx.graphics.boardWidth()
             val boardPos = Gdx.graphics.boardPosition()
             val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
+
             if (boardBounds.contains(touchPos)) {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
                 if (playerTurn && !playerBoard) {
@@ -121,6 +124,7 @@ class PlayState : GuiState() {
                         if (valid) {
                             playerTurn = !playerTurn
                             player.equipmentSet.activeEquipment!!.use()
+                            newMove = true
                         }
                     } else {
                         println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
@@ -135,6 +139,7 @@ class PlayState : GuiState() {
                         )
                         if (valid) {
                             playerTurn = !playerTurn
+                            newMove = true
                         }
                     } else {
                         println(opponent.equipmentSet.activeEquipment!!.name + " has no more uses")
@@ -149,15 +154,15 @@ class PlayState : GuiState() {
             val button = equipmentButtons[i]
             val equipment = player.equipmentSet.equipments[i]
 
-            // Updates text and border of equipementbuttons
+            // Updates text and border of equipment buttons
             button.set(Text(equipment.name + " " + equipment.uses, Font.TINY_BLACK))
             if (equipment.active) {
                 button.set(Border(Palette.GREEN))
             } else {
-                button.set(Border(Palette.LIGHT_GREY))
+                button.set(Border(Palette.BLACK))
             }
 
-            // Hides and shows equipmentbuttons and opponent's board text
+            // Hides and shows equipment buttons and opponent's board text
             if (playerBoard) {
                 equipmentButtons[i].hide()
                 opponentsBoardText.show()
@@ -173,20 +178,14 @@ class PlayState : GuiState() {
                 header.set(Text("Waiting for opponent..."))
             }
         }
-        // playerBoard = playerTurn
 
-        //  Updates border of switchboardbutton
-        if (playerTurn && playerBoard) {
-
-            //switchBoardButton.set(Border(Palette.GREEN))
-        } else if (!playerTurn && !playerBoard) {
-
-            //switchBoardButton.set(Border(Palette.GREEN))
-        } else if (playerTurn && !playerBoard) {
-            //switchBoardButton.set(Border(Palette.LIGHT_GREY))
-        } else if (!playerTurn && playerBoard) {
-
-            //switchBoardButton.set(Border(Palette.LIGHT_GREY))
+        // Auto switching of boards when new moves are made
+        if (playerTurn && playerBoard && newMove) {
+            newMove = false
+            playerBoard = !playerBoard
+        } else if (!playerTurn && !playerBoard && newMove) {
+            newMove = false
+            playerBoard = !playerBoard
         }
     }
 
@@ -197,23 +196,15 @@ class PlayState : GuiState() {
     ): GuiObject {
         val equipment = player.equipmentSet.equipments[index]
 
-        var borderColor = Palette.LIGHT_GREY
-        if (equipment.active) {
-            borderColor = Palette.GREEN
-        }
         // TODO Positioning/design
         return GUI.textButton(
             position.x + dimension.x / player.equipmentSet.equipments.size * index + index * 2,
             position.y,
             dimension.x / player.equipmentSet.equipments.size,
             dimension.y,
-            equipment.name + " " + equipment.uses,
-            font = Font.TINY_BLACK,
-            color = Palette.GREY,
-            borderColor = borderColor,
-            onClick = {
-                player.equipmentSet.activeEquipment = equipment
-            }
+            equipment.name + " x" + equipment.uses,
+            borderColor = if (equipment.active) Palette.GREEN else Palette.BLACK,
+            onClick = { player.equipmentSet.activeEquipment = equipment }
         )
     }
 }
