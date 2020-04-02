@@ -21,11 +21,11 @@ import com.battleship.view.View
 
 class PlayState : GuiState() {
     override var view: View = PlayView()
-    var boardSize = 10
-    var player: Player = Player(boardSize)
-    var opponent: Player = Player(boardSize)
-    var playerBoard: Boolean = false
-    var playerTurn: Boolean = true
+    private var boardSize = 10
+    private var player: Player = Player(boardSize)
+    private var opponent: Player = Player(boardSize)
+    private var playerBoard: Boolean = false
+    private var playerTurn: Boolean = true
 
     private val header = GUI.header("Your turn")
 
@@ -108,7 +108,7 @@ class PlayState : GuiState() {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
                 if (playerTurn && !playerBoard) {
                     if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        var valid = opponent.board.shootTiles(
+                        val valid = opponent.board.shootTiles(
                             boardTouchPos,
                             player.equipmentSet.activeEquipment!!
                         )
@@ -120,10 +120,10 @@ class PlayState : GuiState() {
                         println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
                     }
                 }
-                // TODO remove else if
+                // TODO remove else if. Handles opponent's moves
                 else if (!playerTurn && playerBoard) {
                     if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        var valid = player.board.shootTiles(
+                        val valid = player.board.shootTiles(
                             boardTouchPos,
                             opponent.equipmentSet.activeEquipment!!
                         )

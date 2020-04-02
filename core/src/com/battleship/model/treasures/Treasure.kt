@@ -11,7 +11,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     abstract var health: Int
     abstract var sprite: Sprite
     var padding = 1
-    var reveiled = false
+    var revealed = false
 
     fun hit(coordinates: Vector2): Boolean {
         for (i in 1 until dimension.x.toInt() + 1) {
@@ -43,7 +43,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     }
 
     override fun draw(batch: SpriteBatch, boardPos: Vector2, dimension: Vector2) {
-        if (found() || reveiled) {
+        if (found() || revealed) {
 
             val newX = boardPos.x + dimension.x * position.x + position.x * padding
             val newY = boardPos.y + dimension.y * position.y + position.y * padding

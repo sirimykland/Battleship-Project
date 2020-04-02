@@ -20,7 +20,7 @@ class Board(val size: Int) : GameObject() {
     /*
      * creates treasures and places them
      */
-    fun createAndPlaceTreasurechests(treasureNumber: Int, reveiled: Boolean) {
+    fun createAndPlaceTreasurechests(treasureNumber: Int, revealed: Boolean) {
         var treasure: Treasure
         for (i in 0 until treasureNumber) {
             do {
@@ -33,12 +33,12 @@ class Board(val size: Int) : GameObject() {
                     ), Random.nextBoolean()
                 )
             } while (!validateTreasurePosition(treasure))
-            treasure.reveiled = reveiled
+            treasure.revealed = revealed
             treasures.add(treasure)
         }
     }
 
-    fun createAndPlaceGoldcoins(treasureNumber: Int, reveiled: Boolean) {
+    fun createAndPlaceGoldcoins(treasureNumber: Int, revealed: Boolean) {
         var treasure: Treasure
         for (i in 0 until treasureNumber) {
             do {
@@ -51,18 +51,11 @@ class Board(val size: Int) : GameObject() {
                     ), Random.nextBoolean()
                 )
             } while (!validateTreasurePosition(treasure))
-            treasure.reveiled = reveiled
+            treasure.revealed = revealed
             treasures.add(treasure)
         }
     }
 
-    fun moveTreasure() {
-        println("test move treasure()")
-    }
-
-    /*
-     * This for placing a defined list of ships
-     */
     fun createAndPlaceTreasures(treasures: ArrayList<Treasure>) {
         for (treasure in treasures) {
             do {
@@ -70,13 +63,12 @@ class Board(val size: Int) : GameObject() {
                     Random.nextInt(0, size).toFloat(),
                     Random.nextInt(0, size).toFloat()
                 )
-                // println("ship position: (" + ship.position.x + ", " + ship.position.y + ")")
             } while (!validateTreasurePosition(treasure))
             treasures.add(treasure)
         }
     }
 
-    fun validateTreasurePosition(treasure: Treasure): Boolean {
+    private fun validateTreasurePosition(treasure: Treasure): Boolean {
         for (tile in treasure.getTreasureTiles()) {
             if (tile.x >= size || tile.y >= size) return false
             for (placedShip in treasures) {
@@ -136,8 +128,8 @@ class Board(val size: Int) : GameObject() {
     }
 
     // TODO needs cleanup
-    fun updateTile(pos: Vector2, equipment: Equipment): Boolean {
-        val treasurePos = Vector2(pos.y, pos.x)
+    private fun updateTile(pos: Vector2, equipment: Equipment): Boolean {
+        val treasurePos = Vector2(pos.y, pos.x) // Flip position
 
         val boardTile = getTile(pos)
         if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
@@ -155,11 +147,11 @@ class Board(val size: Int) : GameObject() {
         return true
     }
 
-    fun getTile(pos: Vector2): Board.Tile {
+    private fun getTile(pos: Vector2): Board.Tile {
         return board[pos.x.toInt()][pos.y.toInt()]
     }
 
-    fun getTreasureByPosition(pos: Vector2): Treasure? {
+    private fun getTreasureByPosition(pos: Vector2): Treasure? {
         for (treasure in treasures) {
             if (treasure.hit(pos)) {
                 return treasure
@@ -168,7 +160,7 @@ class Board(val size: Int) : GameObject() {
         return null
     }
 
-    fun getAllTreasueHealth(): Int {
+    fun getAllTreasureHealth(): Int {
         var health = 0
         for (ship in treasures) {
             health += ship.health
