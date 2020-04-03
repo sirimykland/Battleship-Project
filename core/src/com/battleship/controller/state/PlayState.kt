@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Player
 import com.battleship.model.equipment.BigEquipment
 import com.battleship.model.equipment.MetalDetector
@@ -18,7 +19,7 @@ import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-class PlayState : GuiState() {
+class PlayState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     var boardSize = 10
     var player: Player = Player(boardSize)
@@ -58,7 +59,7 @@ class PlayState : GuiState() {
         player.updateHealth()
         if (player.health == 0) {
             println("You won!")
-            GameStateManager.set(MainMenuState())
+            GameStateManager.set(MainMenuState(controller))
         }
     }
 

@@ -3,6 +3,7 @@ package com.battleship.controller.state
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Player
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
@@ -17,7 +18,7 @@ import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-class PreGameState : GuiState() {
+class PreGameState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     val boardSize = 10
     var player: Player = Player(boardSize)
@@ -40,13 +41,13 @@ class PreGameState : GuiState() {
         .onClick {
             println("Player are ready")
             // GameStateManager.gameController.registerShip(player.board.getships()) - dette må lages
-            GameStateManager.set(PlayState())
+            GameStateManager.set(PlayState(controller))
         }
 
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
         GUI.header("Place ships"),
-        GUI.backButton { GameStateManager.set(MainMenuState()) }
+        GUI.backButton { GameStateManager.set(MainMenuState(controller)) }
     )
 
     override fun render() {

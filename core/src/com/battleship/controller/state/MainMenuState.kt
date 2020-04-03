@@ -1,6 +1,7 @@
 package com.battleship.controller.state
 
 import com.battleship.GameStateManager
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
@@ -10,12 +11,12 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the main menu
  */
-class MainMenuState : GuiState() {
+class MainMenuState(private val controller : FirebaseController) : GuiState(controller) {
 
     private val menuList = listOf(
-        Pair("Play") { GameStateManager.set(PreGameState()) },
-        Pair("Settings") { GameStateManager.set(SettingsState()) },
-        Pair("Matchmaking") { GameStateManager.set(MatchmakingState()) }
+        Pair("Play") { GameStateManager.set(PreGameState(controller)) },
+        Pair("Settings") { GameStateManager.set(SettingsState(controller)) },
+        Pair("Matchmaking") { GameStateManager.set(MatchmakingState(controller)) }
 
     )
 
