@@ -11,7 +11,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     abstract var health: Int
     abstract var sprite: Sprite
     abstract var type: TreasureType
-    var padding = 1
+    var padding = 0
     var revealed = false
 
     enum class TreasureType {

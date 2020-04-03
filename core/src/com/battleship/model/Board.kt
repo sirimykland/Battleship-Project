@@ -8,55 +8,20 @@ import com.battleship.model.equipment.Equipment
 import com.battleship.model.treasures.Boot
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.Treasure
+import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.treasures.TreasureChest
 import kotlin.random.Random
-import com.battleship.model.treasures.Treasure.TreasureType
 
 class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var board = Array(size) { Array(size) { Tile.PREGAME } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
-    var padding: Int = 1
+    var padding: Int = 0
 
     // Change all tiles to unopened state
     fun setTilesUnopened() {
         board = Array(size) { Array(size) { Tile.UNOPENED } }
     }
-
-    /*
-    // TODO: Refactor. Use createAndPlaceTreasures instead
-    fun createAndPlaceTreasurechests(treasureNumber: Int, revealed: Boolean) {
-        var treasure: Treasure
-        for (i in 0 until treasureNumber) {
-            do {
-                treasure = TreasureChest(
-                    Vector2(
-                        Random.nextInt(
-                            0,
-                            size
-                        ).toFloat(), Random.nextInt(0, size).toFloat()
-                    ), Random.nextBoolean()
-                )
-            } while (!validateTreasurePosition(treasure))
-            treasure.revealed = revealed
-            treasures.add(treasure)
-        }
-    }
-
-    // TODO: Refactor. Use createAndPlaceTreasures instead
-    fun createAndPlaceGoldcoins(treasureNumber: Int, revealed: Boolean) {
-        var treasure: Treasure
-        for (i in 0 until treasureNumber) {
-            do {
-                treasure = GoldCoin(
-                    Vector2(Random.nextInt(0, size).toFloat(), Random.nextInt(0, size).toFloat()
-                    ), Random.nextBoolean()
-                )
-            } while (!validateTreasurePosition(treasure))
-            treasure.revealed = revealed
-            treasures.add(treasure)
-        }
-    }*/
 
     fun createAndPlaceTreasures(quantity: Int,  type: TreasureType, revealed: Boolean) {
         var treasure: Treasure
@@ -104,17 +69,30 @@ class Board(val size: Int) : GameObject() {
         for (array in board) {
             for (value in array) {
 
-                tileRenderer.begin(ShapeRenderer.ShapeType.Filled)
-                when (value) {
-                    Tile.HIT -> tileRenderer.color = Color.GREEN
-                    Tile.MISS -> tileRenderer.color = Color.RED
-                    Tile.NEAR -> tileRenderer.color = Color.YELLOW
-                    Tile.UNOPENED -> tileRenderer.color = Color.BLACK
-                    Tile.PREGAME -> tileRenderer.color = Color.WHITE
+                if (value == Tile.PREGAME) {
+                    tileRenderer.begin(ShapeRenderer.ShapeType.Line)
+                    tileRenderer.color = Color.BLACK
+                    tileRenderer.rect(x, y, tileSize, tileSize)
+                    //  tileRenderer.rectLine(x, y,x + size, y + size, 10f)
+                    tileRenderer.end()
+                } else {
+                    tileRenderer.begin(ShapeRenderer.ShapeType.Filled)
+                    when (value) {
+                        Tile.HIT -> tileRenderer.color = Color.GREEN
+                        Tile.MISS -> tileRenderer.color = Color.RED
+                        Tile.NEAR -> tileRenderer.color = Color.YELLOW
+                        Tile.UNOPENED -> tileRenderer.color = Color.BLACK
+                    }
+                    tileRenderer.rect(x, y, tileSize, tileSize)
+                    tileRenderer.end()
+
+                    tileRenderer.begin(ShapeRenderer.ShapeType.Line)
+                    tileRenderer.color = Color.WHITE
+                    tileRenderer.rect(x, y, tileSize, tileSize)
+                    tileRenderer.end()
+
                 }
 
-                tileRenderer.rect(x, y, tileSize, tileSize)
-                tileRenderer.end()
                 x += tileSize + padding
             }
             y += tileSize + padding
