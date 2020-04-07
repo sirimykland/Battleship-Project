@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
 import com.battleship.model.Player
+import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -18,7 +19,6 @@ import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
-import com.battleship.model.treasures.Treasure.TreasureType
 
 class PlayState : GuiState() {
     override var view: View = PlayView()

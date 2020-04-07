@@ -23,7 +23,7 @@ class Board(val size: Int) : GameObject() {
         board = Array(size) { Array(size) { Tile.UNOPENED } }
     }
 
-    fun createAndPlaceTreasures(quantity: Int,  type: TreasureType, revealed: Boolean) {
+    fun createAndPlaceTreasures(quantity: Int, type: TreasureType, revealed: Boolean) {
         var treasure: Treasure
         for (i in 0 until quantity) {
             do {
@@ -35,7 +35,6 @@ class Board(val size: Int) : GameObject() {
                     TreasureType.GOLDCOIN -> GoldCoin(Vector2(x, y), Random.nextBoolean())
                     TreasureType.BOOT -> Boot(Vector2(x, y), Random.nextBoolean())
                 }
-
             } while (!validateTreasurePosition(treasure))
 
             treasure.revealed = revealed
@@ -44,7 +43,7 @@ class Board(val size: Int) : GameObject() {
     }
 
     private fun validateTreasurePosition(treasure: Treasure?): Boolean {
-        if(treasure == null) return false
+        if (treasure == null) return false
 
         for (tile in treasure.getTreasureTiles()) {
             // Tile outside board
@@ -90,7 +89,6 @@ class Board(val size: Int) : GameObject() {
                     tileRenderer.color = Color.WHITE
                     tileRenderer.rect(x, y, tileSize, tileSize)
                     tileRenderer.end()
-
                 }
 
                 x += tileSize + padding
