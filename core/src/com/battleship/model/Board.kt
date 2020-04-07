@@ -5,11 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
-<<<<<<< HEAD
 import com.battleship.model.equipment.MetalDetector
 import com.battleship.model.sound_effects.SoundEffects
-=======
->>>>>>> master
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.Treasure
 import com.battleship.model.treasures.TreasureChest
