@@ -8,5 +8,5 @@ class MetalDetector : Equipment() {
     override var uses: Int = 1
     override var name: String = "Metal detector"
     override var active: Boolean = false
-    override var sound: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/dirt_sound.mp3"))
+    override var sound: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/radar_sound.mp3"))
 }

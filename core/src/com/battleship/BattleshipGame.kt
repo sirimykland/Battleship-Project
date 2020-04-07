@@ -9,6 +9,7 @@ import com.battleship.utility.Font
 class BattleshipGame : Game() {
     companion object {
         var music: Music? = null
+        var soundOn: Boolean = true
     }
 
     override fun create() {

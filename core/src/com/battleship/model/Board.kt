@@ -144,6 +144,7 @@ class Board(val size: Int) : GameObject() {
         if (hittedTreasure != null) {
             println("Hitted")
             sound.playHit(0.8f)
+
             hit = Tile.HIT
             hittedTreasure.takeDamage()
             if (hittedTreasure.found()) {
