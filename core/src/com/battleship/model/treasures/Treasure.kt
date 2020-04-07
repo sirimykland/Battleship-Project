@@ -13,7 +13,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     abstract var sprite: Sprite
     abstract var sound: Sound
     var padding = 1
-    var reveiled = false
+    var revealed = false
 
     fun playSound(volume: Float) {
         sound.stop()
@@ -50,7 +50,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     }
 
     override fun draw(batch: SpriteBatch, boardPos: Vector2, dimension: Vector2) {
-        if (found() || reveiled) {
+        if (found() || revealed) {
 
             val newX = boardPos.x + dimension.x * position.x + position.x * padding
             val newY = boardPos.y + dimension.y * position.y + position.y * padding
