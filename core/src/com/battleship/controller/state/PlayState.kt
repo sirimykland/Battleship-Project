@@ -28,7 +28,6 @@ class PlayState : GuiState() {
     private var opponent: Player = Player(boardSize)
     private var playerBoard: Boolean = false
     private var playerTurn: Boolean = true
-    private var newMove: Boolean = false
 
     private val header = GUI.header("Your turn")
 
@@ -129,7 +128,9 @@ class PlayState : GuiState() {
                                 println("You missed, opponent's turn")
                             }
                             Board.Result.HIT -> println("You hit, your turn again")
+
                             Board.Result.FOUND -> println("You found a treasure, your turn again")
+
                         }
                     } else {
                         println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
@@ -174,27 +175,26 @@ class PlayState : GuiState() {
 
             // Hides and shows equipment buttons and opponent's board text
             if (playerBoard) {
-                equipmentButtons[i].hide()
+                button.hide()
                 opponentsBoardText.show()
             } else {
-                equipmentButtons[i].show()
+                button.show()
                 opponentsBoardText.hide()
             }
 
-            // Updates header text
-            if (playerTurn) {
-                header.set(Text("Your turn"))
-            } else {
-                header.set(Text("Waiting for opponent..."))
-            }
         }
 
-        // Auto switching of boards when new moves are made
-        if (playerTurn && playerBoard && newMove) {
-            newMove = false
+        // Updates header text
+        if (playerTurn) {
+            header.set(Text("Your turn"))
+        } else {
+            header.set(Text("Waiting for opponent..."))
+        }
+
+        // Auto switching of boards
+        if (playerTurn && playerBoard) {
             playerBoard = !playerBoard
-        } else if (!playerTurn && !playerBoard && newMove) {
-            newMove = false
+        } else if (!playerTurn && !playerBoard) {
             playerBoard = !playerBoard
         }
     }
