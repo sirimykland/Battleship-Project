@@ -7,7 +7,6 @@ import com.battleship.model.ui.Border
 import com.battleship.model.ui.BottomBorder
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Image
-import com.battleship.model.ui.ImageButtonText
 import com.battleship.model.ui.Text
 
 object GUI {
