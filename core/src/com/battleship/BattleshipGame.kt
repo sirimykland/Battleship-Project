@@ -15,7 +15,7 @@ class BattleshipGame : Game() {
         if (Gdx.files.internal("music.mp3").exists()) {
             music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"))
             music?.isLooping = true
-            music?.volume = 0.0f // TODO: Set to 0.2f
+            music?.volume = 0.2f
             music?.play()
         }
 
