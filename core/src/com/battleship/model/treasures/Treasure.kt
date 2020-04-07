@@ -36,7 +36,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
         health--
     }
 
-    private fun found(): Boolean {
+    fun found(): Boolean {
         return health == 0
     }
 

@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
+import com.battleship.model.Board
 import com.battleship.model.Player
+import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -18,7 +20,6 @@ import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
-import com.battleship.model.treasures.Treasure.TreasureType
 
 class PlayState : GuiState() {
     override var view: View = PlayView()
@@ -117,14 +118,16 @@ class PlayState : GuiState() {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
                 if (playerTurn && !playerBoard) {
                     if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        val valid = opponent.board.shootTiles(
+                        val result = opponent.board.shootTiles(
                             boardTouchPos,
                             player.equipmentSet.activeEquipment!!
                         )
-                        if (valid) {
-                            playerTurn = !playerTurn
+                        println(result)
+                        if (result != Board.Result.NOT_VALID) {
                             player.equipmentSet.activeEquipment!!.use()
-                            newMove = true
+                            if (result == Board.Result.MISS) {
+                                playerTurn = !playerTurn
+                            }
                         }
                     } else {
                         println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
@@ -133,13 +136,14 @@ class PlayState : GuiState() {
                 // TODO remove else if. Handles opponent's moves
                 else if (!playerTurn && playerBoard) {
                     if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        val valid = player.board.shootTiles(
+                        val result = player.board.shootTiles(
                             boardTouchPos,
                             opponent.equipmentSet.activeEquipment!!
                         )
-                        if (valid) {
-                            playerTurn = !playerTurn
-                            newMove = true
+                        if (result != Board.Result.NOT_VALID) {
+                            if (result == Board.Result.MISS) {
+                                playerTurn = !playerTurn
+                            }
                         }
                     } else {
                         println(opponent.equipmentSet.activeEquipment!!.name + " has no more uses")

@@ -23,7 +23,7 @@ class Board(val size: Int) : GameObject() {
         board = Array(size) { Array(size) { Tile.UNOPENED } }
     }
 
-    fun createAndPlaceTreasures(quantity: Int,  type: TreasureType, revealed: Boolean) {
+    fun createAndPlaceTreasures(quantity: Int, type: TreasureType, revealed: Boolean) {
         var treasure: Treasure
         for (i in 0 until quantity) {
             do {
@@ -35,7 +35,6 @@ class Board(val size: Int) : GameObject() {
                     TreasureType.GOLDCOIN -> GoldCoin(Vector2(x, y), Random.nextBoolean())
                     TreasureType.BOOT -> Boot(Vector2(x, y), Random.nextBoolean())
                 }
-
             } while (!validateTreasurePosition(treasure))
 
             treasure.revealed = revealed
@@ -44,7 +43,7 @@ class Board(val size: Int) : GameObject() {
     }
 
     private fun validateTreasurePosition(treasure: Treasure?): Boolean {
-        if(treasure == null) return false
+        if (treasure == null) return false
 
         for (tile in treasure.getTreasureTiles()) {
             // Tile outside board
@@ -90,7 +89,6 @@ class Board(val size: Int) : GameObject() {
                     tileRenderer.color = Color.WHITE
                     tileRenderer.rect(x, y, tileSize, tileSize)
                     tileRenderer.end()
-
                 }
 
                 x += tileSize + padding
@@ -105,45 +103,56 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
-    fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): Boolean {
-        equipment.use()
+    fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): Result {
         val xSearchMin = boardTouchPos.x.toInt() - equipment.searchRadius
         val xSearchMax = boardTouchPos.x.toInt() + equipment.searchRadius + 1
         val ySearchMin = boardTouchPos.y.toInt() - equipment.searchRadius
         val ySearchMax = boardTouchPos.y.toInt() + equipment.searchRadius + 1
 
         // Loops through the equipments search radius
-        var valid = false
+        var resultList = ArrayList<Result>()
         for (x in xSearchMin until xSearchMax) {
             for (y in ySearchMin until ySearchMax) {
                 // Check if inside board
                 if (x in 0 until size && y in 0 until size) {
-                    if (updateTile(Vector2(x.toFloat(), y.toFloat()))) {
-                        valid = true
-                    }
+                    resultList.add(updateTile(Vector2(x.toFloat(), y.toFloat())))
                 }
             }
         }
-        return valid
+
+        return when {
+            resultList.contains(Result.FOUND) -> {
+                Result.FOUND
+            }
+            resultList.contains(Result.HIT) -> {
+                Result.HIT
+            }
+            resultList.all { n -> n == Result.NOT_VALID } -> {
+                Result.NOT_VALID
+            }
+            else -> {
+                Result.MISS
+            }
+        }
     }
 
-    private fun updateTile(pos: Vector2): Boolean {
+    private fun updateTile(pos: Vector2): Result {
         val treasurePos = Vector2(pos.y, pos.x) // Flip position
 
         val boardTile = getTile(pos)
         if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
-            return false
+            return Result.NOT_VALID
         }
 
-        var hit = Tile.MISS
         val treasure = getTreasureByPosition(treasurePos)
         if (treasure != null) {
-            hit = Tile.HIT
+            board[pos.x.toInt()][pos.y.toInt()] = Tile.HIT
             treasure.takeDamage()
+            return if (treasure.found()) Result.FOUND else Result.HIT
+        } else {
+            board[pos.x.toInt()][pos.y.toInt()] = Tile.MISS
+            return Result.MISS
         }
-
-        board[pos.x.toInt()][pos.y.toInt()] = hit
-        return true
     }
 
     private fun getTile(pos: Vector2): Board.Tile {
@@ -169,5 +178,9 @@ class Board(val size: Int) : GameObject() {
 
     enum class Tile {
         HIT, MISS, NEAR, UNOPENED, PREGAME
+    }
+
+    enum class Result {
+        HIT, FOUND, MISS, NOT_VALID
     }
 }
