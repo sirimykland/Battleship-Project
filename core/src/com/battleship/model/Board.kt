@@ -104,6 +104,7 @@ class Board(val size: Int) : GameObject() {
     }
 
     fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): Result {
+        equipment.use()
         val xSearchMin = boardTouchPos.x.toInt() - equipment.searchRadius
         val xSearchMax = boardTouchPos.x.toInt() + equipment.searchRadius + 1
         val ySearchMin = boardTouchPos.y.toInt() - equipment.searchRadius

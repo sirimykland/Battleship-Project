@@ -122,12 +122,14 @@ class PlayState : GuiState() {
                             boardTouchPos,
                             player.equipmentSet.activeEquipment!!
                         )
-                        println(result)
-                        if (result != Board.Result.NOT_VALID) {
-                            player.equipmentSet.activeEquipment!!.use()
-                            if (result == Board.Result.MISS) {
+                        when (result) {
+                            Board.Result.NOT_VALID -> println("Not valid, try again")
+                            Board.Result.MISS -> {
                                 playerTurn = !playerTurn
+                                println("You missed, opponent's turn")
                             }
+                            Board.Result.HIT -> println("You hit, your turn again")
+                            Board.Result.FOUND -> println("You found a treasure, your turn again")
                         }
                     } else {
                         println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
@@ -140,10 +142,14 @@ class PlayState : GuiState() {
                             boardTouchPos,
                             opponent.equipmentSet.activeEquipment!!
                         )
-                        if (result != Board.Result.NOT_VALID) {
-                            if (result == Board.Result.MISS) {
+                        when (result) {
+                            Board.Result.NOT_VALID -> println("Not valid, try again")
+                            Board.Result.MISS -> {
                                 playerTurn = !playerTurn
+                                println("Opponent missed, your turn")
                             }
+                            Board.Result.HIT -> println("Opponent hit, his turn again")
+                            Board.Result.FOUND -> println("Opponent found a treasure, his turn again")
                         }
                     } else {
                         println(opponent.equipmentSet.activeEquipment!!.name + " has no more uses")
