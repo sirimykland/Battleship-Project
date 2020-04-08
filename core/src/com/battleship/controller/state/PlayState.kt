@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
+import com.battleship.model.Board
 import com.battleship.model.Player
 import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.ui.Border
@@ -27,7 +28,6 @@ class PlayState : GuiState() {
     private var opponent: Player = Player(boardSize)
     private var playerBoard: Boolean = false
     private var playerTurn: Boolean = true
-    private var newMove: Boolean = false
 
     private val header = GUI.header("Your turn")
 
@@ -117,14 +117,18 @@ class PlayState : GuiState() {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
                 if (playerTurn && !playerBoard) {
                     if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        val valid = opponent.board.shootTiles(
+                        val result = opponent.board.shootTiles(
                             boardTouchPos,
                             player.equipmentSet.activeEquipment!!
                         )
-                        if (valid) {
-                            playerTurn = !playerTurn
-                            player.equipmentSet.activeEquipment!!.use()
-                            newMove = true
+                        when (result) {
+                            Board.Result.NOT_VALID -> println("Not valid, try again")
+                            Board.Result.MISS -> {
+                                playerTurn = !playerTurn
+                                println("You missed, opponent's turn")
+                            }
+                            Board.Result.HIT -> println("You hit, your turn again")
+                            Board.Result.FOUND -> println("You found a treasure, your turn again")
                         }
                     } else {
                         println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
@@ -133,13 +137,18 @@ class PlayState : GuiState() {
                 // TODO remove else if. Handles opponent's moves
                 else if (!playerTurn && playerBoard) {
                     if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        val valid = player.board.shootTiles(
+                        val result = player.board.shootTiles(
                             boardTouchPos,
                             opponent.equipmentSet.activeEquipment!!
                         )
-                        if (valid) {
-                            playerTurn = !playerTurn
-                            newMove = true
+                        when (result) {
+                            Board.Result.NOT_VALID -> println("Not valid, try again")
+                            Board.Result.MISS -> {
+                                playerTurn = !playerTurn
+                                println("Opponent missed, your turn")
+                            }
+                            Board.Result.HIT -> println("Opponent hit, his turn again")
+                            Board.Result.FOUND -> println("Opponent found a treasure, his turn again")
                         }
                     } else {
                         println(opponent.equipmentSet.activeEquipment!!.name + " has no more uses")
@@ -164,27 +173,25 @@ class PlayState : GuiState() {
 
             // Hides and shows equipment buttons and opponent's board text
             if (playerBoard) {
-                equipmentButtons[i].hide()
+                button.hide()
                 opponentsBoardText.show()
             } else {
-                equipmentButtons[i].show()
+                button.show()
                 opponentsBoardText.hide()
-            }
-
-            // Updates header text
-            if (playerTurn) {
-                header.set(Text("Your turn"))
-            } else {
-                header.set(Text("Waiting for opponent..."))
             }
         }
 
-        // Auto switching of boards when new moves are made
-        if (playerTurn && playerBoard && newMove) {
-            newMove = false
+        // Updates header text
+        if (playerTurn) {
+            header.set(Text("Your turn"))
+        } else {
+            header.set(Text("Waiting for opponent..."))
+        }
+
+        // Auto switching of boards
+        if (playerTurn && playerBoard) {
             playerBoard = !playerBoard
-        } else if (!playerTurn && !playerBoard && newMove) {
-            newMove = false
+        } else if (!playerTurn && !playerBoard) {
             playerBoard = !playerBoard
         }
     }
