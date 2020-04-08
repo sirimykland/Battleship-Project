@@ -128,9 +128,7 @@ class PlayState : GuiState() {
                                 println("You missed, opponent's turn")
                             }
                             Board.Result.HIT -> println("You hit, your turn again")
-
                             Board.Result.FOUND -> println("You found a treasure, your turn again")
-
                         }
                     } else {
                         println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
@@ -181,7 +179,6 @@ class PlayState : GuiState() {
                 button.show()
                 opponentsBoardText.hide()
             }
-
         }
 
         // Updates header text
