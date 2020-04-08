@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.battleship.controller.input.ButtonHandler
 import com.battleship.model.GameObject
+import com.battleship.model.sound_effects.SoundEffects
 
 class GuiObject(
     val position: Vector2,
@@ -15,6 +16,7 @@ class GuiObject(
     var listener: ButtonHandler = ButtonHandler(position, size) { }
     var isClickable: Boolean = false
     var hidden: Boolean = false
+    var sound: SoundEffects = SoundEffects()
 
     fun hide(): GuiObject {
         hidden = true
@@ -61,6 +63,7 @@ class GuiObject(
             size.cpy().scl(Gdx.graphics.width / 100f, Gdx.graphics.height / 100f)
         ) {
             if (!hidden) {
+                sound.playClick(4.0f)
                 onClick()
             }
         }
