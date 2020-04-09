@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
+import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.treasures.Boot
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.Treasure
@@ -16,6 +17,7 @@ class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var board = Array(size) { Array(size) { Tile.PREGAME } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
+    private var sound = SoundEffects()
     var padding: Int = 0
 
     // Change all tiles to unopened state
@@ -129,12 +131,14 @@ class Board(val size: Int) : GameObject() {
                 Result.FOUND
             }
             resultList.contains(Result.HIT) -> {
+                sound.playHit(0.8f)
                 Result.HIT
             }
             resultList.all { n -> n == Result.NOT_VALID } -> {
                 Result.NOT_VALID
             }
             else -> {
+                equipment.playSound(0.8f)
                 Result.MISS
             }
         }
@@ -154,6 +158,9 @@ class Board(val size: Int) : GameObject() {
         if (treasure != null) {
             board[pos.x.toInt()][pos.y.toInt()] = Tile.HIT
             treasure.takeDamage()
+            if (treasure.found()) {
+                treasure.playSound(0.8f)
+            }
             return if (treasure.found()) Result.FOUND else Result.HIT
         } else {
             board[pos.x.toInt()][pos.y.toInt()] = Tile.MISS
