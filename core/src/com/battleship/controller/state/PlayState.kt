@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
+import com.battleship.model.Board
 import com.battleship.model.Player
+import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -38,45 +40,49 @@ class PlayState : GuiState() {
             )
         }.toTypedArray())
 
-    // TODO Positioning/design
-    private val switchBoardButton = GUI.textButton(
-        70f,
+    private val switchBoardButton = GUI.imageButton(
+        87f,
         90f,
-        30f,
         8f,
-        "Switch board",
-        font = Font.TINY_BLACK,
-        color = Palette.GREY,
-        borderColor = Palette.LIGHT_GREY,
+        8f,
+        "icons/refresh_white.png",
         onClick = {
             playerBoard = !playerBoard
         }
     )
+    private val opponentsBoardText = GUI.text(
+        5f,
+        2f,
+        90f,
+        10f,
+        "Opponent's board",
+        font = Font.LARGE_BLACK
+    )
 
     override val guiObjects: List<GuiObject> = listOf(
-        *equipmentButtons, header, switchBoardButton
+        *equipmentButtons, header, switchBoardButton, opponentsBoardText
     )
 
     override fun create() {
         super.create()
-        player.board.createAndPlaceTreasurechests(4, true)
-        player.board.createAndPlaceGoldcoins(2, true)
-        opponent.board.createAndPlaceTreasurechests(4, false)
-        opponent.board.createAndPlaceGoldcoins(2, false)
+        player.board.setTilesUnopened()
+        player.board.createAndPlaceTreasures(1, TreasureType.TREASURECHEST, true)
+        player.board.createAndPlaceTreasures(2, TreasureType.GOLDCOIN, true)
+        player.board.createAndPlaceTreasures(2, TreasureType.BOOT, true)
+
+        opponent.board.setTilesUnopened()
+        opponent.board.createAndPlaceTreasures(1, TreasureType.TREASURECHEST, false)
+        opponent.board.createAndPlaceTreasures(2, TreasureType.GOLDCOIN, false)
+        opponent.board.createAndPlaceTreasures(2, TreasureType.BOOT, false)
+
+        opponentsBoardText.hide()
     }
 
     override fun render() {
-        if (playerBoard) {
-            this.view.render(
-                *guiObjects.toTypedArray(),
-                player.board
-            )
-        } else {
-            this.view.render(
-                *guiObjects.toTypedArray(),
-                opponent.board
-            )
-        }
+        view.render(
+            *guiObjects.toTypedArray(),
+            if (playerBoard) player.board else opponent.board
+        )
     }
 
     override fun update(dt: Float) {
@@ -99,22 +105,30 @@ class PlayState : GuiState() {
 
     private fun handleInput() {
         if (Gdx.input.justTouched()) {
-            val touchPos =
-                Vector2(Gdx.input.x.toFloat(), Gdx.graphics.height - Gdx.input.y.toFloat())
+            val touchX = Gdx.input.x.toFloat()
+            val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()
+            val touchPos = Vector2(touchX, touchY)
+
             val boardWidth = Gdx.graphics.boardWidth()
             val boardPos = Gdx.graphics.boardPosition()
             val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
+
             if (boardBounds.contains(touchPos)) {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
                 if (playerTurn && !playerBoard) {
                     if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        val valid = opponent.board.shootTiles(
+                        val result = opponent.board.shootTiles(
                             boardTouchPos,
                             player.equipmentSet.activeEquipment!!
                         )
-                        if (valid) {
-                            playerTurn = !playerTurn
-                            player.equipmentSet.activeEquipment!!.use()
+                        when (result) {
+                            Board.Result.NOT_VALID -> println("Not valid, try again")
+                            Board.Result.MISS -> {
+                                playerTurn = !playerTurn
+                                println("You missed, opponent's turn")
+                            }
+                            Board.Result.HIT -> println("You hit, your turn again")
+                            Board.Result.FOUND -> println("You found a treasure, your turn again")
                         }
                     } else {
                         println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
@@ -123,12 +137,18 @@ class PlayState : GuiState() {
                 // TODO remove else if. Handles opponent's moves
                 else if (!playerTurn && playerBoard) {
                     if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        val valid = player.board.shootTiles(
+                        val result = player.board.shootTiles(
                             boardTouchPos,
                             opponent.equipmentSet.activeEquipment!!
                         )
-                        if (valid) {
-                            playerTurn = !playerTurn
+                        when (result) {
+                            Board.Result.NOT_VALID -> println("Not valid, try again")
+                            Board.Result.MISS -> {
+                                playerTurn = !playerTurn
+                                println("Opponent missed, your turn")
+                            }
+                            Board.Result.HIT -> println("Opponent hit, his turn again")
+                            Board.Result.FOUND -> println("Opponent found a treasure, his turn again")
                         }
                     } else {
                         println(opponent.equipmentSet.activeEquipment!!.name + " has no more uses")
@@ -143,39 +163,36 @@ class PlayState : GuiState() {
             val button = equipmentButtons[i]
             val equipment = player.equipmentSet.equipments[i]
 
-            // Updates text and border of equipementbuttons
+            // Updates text and border of equipment buttons
             button.set(Text(equipment.name + " " + equipment.uses, Font.TINY_BLACK))
             if (equipment.active) {
                 button.set(Border(Palette.GREEN))
             } else {
-                button.set(Border(Palette.LIGHT_GREY))
+                button.set(Border(Palette.BLACK))
             }
 
-            // Hides and shows equipmentbuttons and switchboardbuttons text
+            // Hides and shows equipment buttons and opponent's board text
             if (playerBoard) {
-                equipmentButtons[i].hide()
-                switchBoardButton.set(Text("Opponent's board", Font.TINY_BLACK))
+                button.hide()
+                opponentsBoardText.show()
             } else {
-                equipmentButtons[i].show()
-                switchBoardButton.set(Text("Your board", Font.TINY_BLACK))
-            }
-
-            // Updates header text
-            if (playerTurn) {
-                header.set(Text("Your turn"))
-            } else {
-                header.set(Text("Opponent's turn"))
+                button.show()
+                opponentsBoardText.hide()
             }
         }
-        //  Updates border of switchboardbutton
+
+        // Updates header text
+        if (playerTurn) {
+            header.set(Text("Your turn"))
+        } else {
+            header.set(Text("Waiting for opponent..."))
+        }
+
+        // Auto switching of boards
         if (playerTurn && playerBoard) {
-            switchBoardButton.set(Border(Palette.GREEN))
+            playerBoard = !playerBoard
         } else if (!playerTurn && !playerBoard) {
-            switchBoardButton.set(Border(Palette.GREEN))
-        } else if (playerTurn && !playerBoard) {
-            switchBoardButton.set(Border(Palette.LIGHT_GREY))
-        } else if (!playerTurn && playerBoard) {
-            switchBoardButton.set(Border(Palette.LIGHT_GREY))
+            playerBoard = !playerBoard
         }
     }
 
@@ -186,23 +203,15 @@ class PlayState : GuiState() {
     ): GuiObject {
         val equipment = player.equipmentSet.equipments[index]
 
-        var borderColor = Palette.LIGHT_GREY
-        if (equipment.active) {
-            borderColor = Palette.GREEN
-        }
         // TODO Positioning/design
         return GUI.textButton(
             position.x + dimension.x / player.equipmentSet.equipments.size * index + index * 2,
             position.y,
             dimension.x / player.equipmentSet.equipments.size,
             dimension.y,
-            equipment.name + " " + equipment.uses,
-            font = Font.TINY_BLACK,
-            color = Palette.GREY,
-            borderColor = borderColor,
-            onClick = {
-                player.equipmentSet.activeEquipment = equipment
-            }
+            equipment.name + " x" + equipment.uses,
+            borderColor = if (equipment.active) Palette.GREEN else Palette.BLACK,
+            onClick = { player.equipmentSet.activeEquipment = equipment }
         )
     }
 }
