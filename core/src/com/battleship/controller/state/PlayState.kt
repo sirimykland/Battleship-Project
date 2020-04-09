@@ -28,6 +28,7 @@ class PlayState : GuiState() {
     private var opponent: Player = Player(boardSize)
     private var playerBoard: Boolean = false
     private var playerTurn: Boolean = true
+    private var newTurn: Boolean = true
 
     private val header = GUI.header("Your turn")
 
@@ -126,6 +127,7 @@ class PlayState : GuiState() {
                             Board.Result.MISS -> {
                                 playerTurn = !playerTurn
                                 println("You missed, opponent's turn")
+                                newTurn = true
                             }
                             Board.Result.HIT -> println("You hit, your turn again")
                             Board.Result.FOUND -> println("You found a treasure, your turn again")
@@ -146,6 +148,7 @@ class PlayState : GuiState() {
                             Board.Result.MISS -> {
                                 playerTurn = !playerTurn
                                 println("Opponent missed, your turn")
+                                newTurn = true
                             }
                             Board.Result.HIT -> println("Opponent hit, his turn again")
                             Board.Result.FOUND -> println("Opponent found a treasure, his turn again")
@@ -189,10 +192,12 @@ class PlayState : GuiState() {
         }
 
         // Auto switching of boards
-        if (playerTurn && playerBoard) {
+        if (playerTurn && playerBoard && newTurn) {
             playerBoard = !playerBoard
-        } else if (!playerTurn && !playerBoard) {
+            newTurn = false
+        } else if (!playerTurn && !playerBoard && newTurn) {
             playerBoard = !playerBoard
+            newTurn = false
         }
     }
 
