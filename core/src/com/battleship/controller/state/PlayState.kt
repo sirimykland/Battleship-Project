@@ -3,7 +3,6 @@ package com.battleship.controller.state
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.scenes.scene2d.actions.Actions.delay
 import com.battleship.GameStateManager
 import com.battleship.model.Board
 import com.battleship.model.Player
@@ -130,10 +129,9 @@ class PlayState : GuiState() {
                             Board.Result.MISS -> {
                                 playerTurn = !playerTurn
                                 println("You missed, opponent's turn")
-                                Timer().schedule(2000){
+                                Timer().schedule(2000) {
                                     newTurn = true
                                 }
-
                             }
                             Board.Result.HIT -> println("You hit, your turn again")
                             Board.Result.FOUND -> println("You found a treasure, your turn again")
@@ -154,7 +152,7 @@ class PlayState : GuiState() {
                             Board.Result.MISS -> {
                                 playerTurn = !playerTurn
                                 println("Opponent missed, your turn")
-                                Timer().schedule(2000){
+                                Timer().schedule(2000) {
                                     newTurn = true
                                 }
                             }
