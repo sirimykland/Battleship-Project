@@ -140,7 +140,7 @@ class PlayState : GuiState() {
     private fun handleResult(result: Board.Result) {
         when (result) {
             Board.Result.NOT_VALID -> println("Not valid, try again")
-            Board.Result.NO_USES_LEFT ->  println("No more uses left")
+            Board.Result.NO_USES_LEFT -> println("No more uses left")
             Board.Result.HIT -> println("Hitted")
             Board.Result.FOUND -> println("Found")
             Board.Result.MISS -> {

@@ -104,7 +104,7 @@ class Board(val size: Int) : GameObject() {
     }
 
     fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): Result {
-        if(!equipment.hasMoreUses()){
+        if (!equipment.hasMoreUses()) {
             return Result.NO_USES_LEFT
         }
         equipment.use()
