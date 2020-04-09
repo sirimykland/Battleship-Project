@@ -1,4 +1,4 @@
-package com.battleship.model.sound_effects
+package com.battleship.model.soundeffects
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
@@ -37,5 +37,3 @@ class SoundEffects {
         }
     }
 }
-
-

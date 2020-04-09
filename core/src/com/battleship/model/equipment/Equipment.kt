@@ -25,5 +25,4 @@ abstract class Equipment : GameObject() {
             sound.play(volume)
         }
     }
-
 }

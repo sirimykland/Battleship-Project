@@ -18,7 +18,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     var revealed = false
 
     fun playSound(volume: Float) {
-        if(BattleshipGame.soundOn) {
+        if (BattleshipGame.soundOn) {
             sound.stop()
             sound.play(volume)
         }

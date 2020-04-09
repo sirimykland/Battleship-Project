@@ -41,7 +41,7 @@ class SettingsState : GuiState() {
             23.44f,
             25f,
             "Usage guide",
-            onClick = { GameStateManager.set(UsageGuideState())  }
+            onClick = { GameStateManager.set(UsageGuideState()) }
         ),
 
         GUI.text(
@@ -76,7 +76,6 @@ class SettingsState : GuiState() {
             musicButton.set(Text("Music off", Font.MEDIUM_BLACK))
         else
             musicButton.set(Text("Music on", Font.MEDIUM_BLACK))
-        
         if (BattleshipGame.soundOn)
             soundButton.set(Text("Sound off", Font.MEDIUM_BLACK))
         else
