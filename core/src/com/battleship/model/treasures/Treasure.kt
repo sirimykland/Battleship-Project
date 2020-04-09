@@ -4,8 +4,8 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
-import com.battleship.model.GameObject
 import com.battleship.BattleshipGame
+import com.battleship.model.GameObject
 
 abstract class Treasure(var position: Vector2) : GameObject() {
     abstract var dimension: Vector2
@@ -47,7 +47,6 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     }
 
     fun found(): Boolean {
-        playSound(0.8f)
         return health == 0
     }
 

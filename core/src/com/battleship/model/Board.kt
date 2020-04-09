@@ -129,12 +129,14 @@ class Board(val size: Int) : GameObject() {
                 Result.FOUND
             }
             resultList.contains(Result.HIT) -> {
+                sound.playHit(0.8f)
                 Result.HIT
             }
             resultList.all { n -> n == Result.NOT_VALID } -> {
                 Result.NOT_VALID
             }
             else -> {
+                equipment.playSound(0.8f)
                 Result.MISS
             }
         }
@@ -150,10 +152,12 @@ class Board(val size: Int) : GameObject() {
 
         val treasure = getTreasureByPosition(treasurePos)
         if (treasure != null) {
-            sound.playHit(0.8f)
             board[pos.x.toInt()][pos.y.toInt()] = Tile.HIT
             treasure.takeDamage()
-            return if (treasure.found()) Result.FOUND else Result.HIT
+            if(treasure.found()){
+                treasure.playSound(0.8f)
+            }
+            return if (treasure.found()) Result.FOUND  else Result.HIT
         } else {
             board[pos.x.toInt()][pos.y.toInt()] = Tile.MISS
             return Result.MISS
