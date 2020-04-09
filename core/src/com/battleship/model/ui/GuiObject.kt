@@ -3,6 +3,7 @@ package com.battleship.model.ui
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
+import com.battleship.BattleshipGame
 import com.battleship.controller.input.ButtonHandler
 import com.battleship.model.GameObject
 import com.battleship.model.sound_effects.SoundEffects
@@ -63,7 +64,9 @@ class GuiObject(
             size.cpy().scl(Gdx.graphics.width / 100f, Gdx.graphics.height / 100f)
         ) {
             if (!hidden) {
-                sound.playClick(4.0f)
+                if(BattleshipGame.soundOn) {
+                    sound.playClick(4.0f)
+                }
                 onClick()
             }
         }
