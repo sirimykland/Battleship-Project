@@ -20,6 +20,8 @@ import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 class PlayState : GuiState() {
     override var view: View = PlayView()
@@ -28,6 +30,7 @@ class PlayState : GuiState() {
     private var opponent: Player = Player(boardSize)
     private var playerBoard: Boolean = false
     private var playerTurn: Boolean = true
+    private var newTurn: Boolean = false
 
     private val header = GUI.header("Your turn")
 
@@ -116,43 +119,35 @@ class PlayState : GuiState() {
             if (boardBounds.contains(touchPos)) {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
                 if (playerTurn && !playerBoard) {
-                    if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        val result = opponent.board.shootTiles(
-                            boardTouchPos,
-                            player.equipmentSet.activeEquipment!!
-                        )
-                        when (result) {
-                            Board.Result.NOT_VALID -> println("Not valid, try again")
-                            Board.Result.MISS -> {
-                                playerTurn = !playerTurn
-                                println("You missed, opponent's turn")
-                            }
-                            Board.Result.HIT -> println("You hit, your turn again")
-                            Board.Result.FOUND -> println("You found a treasure, your turn again")
-                        }
-                    } else {
-                        println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
-                    }
+                    val result = opponent.board.shootTiles(
+                        boardTouchPos,
+                        player.equipmentSet.activeEquipment!!
+                    )
+                    handleResult(result)
                 }
                 // TODO remove else if. Handles opponent's moves
                 else if (!playerTurn && playerBoard) {
-                    if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        val result = player.board.shootTiles(
-                            boardTouchPos,
-                            opponent.equipmentSet.activeEquipment!!
-                        )
-                        when (result) {
-                            Board.Result.NOT_VALID -> println("Not valid, try again")
-                            Board.Result.MISS -> {
-                                playerTurn = !playerTurn
-                                println("Opponent missed, your turn")
-                            }
-                            Board.Result.HIT -> println("Opponent hit, his turn again")
-                            Board.Result.FOUND -> println("Opponent found a treasure, his turn again")
-                        }
-                    } else {
-                        println(opponent.equipmentSet.activeEquipment!!.name + " has no more uses")
-                    }
+                    val result = player.board.shootTiles(
+                        boardTouchPos,
+                        opponent.equipmentSet.activeEquipment!!
+                    )
+                    handleResult(result)
+                }
+            }
+        }
+    }
+
+    private fun handleResult(result: Board.Result) {
+        when (result) {
+            Board.Result.NOT_VALID -> println("Not valid, try again")
+            Board.Result.NO_USES_LEFT -> println("No more uses left")
+            Board.Result.HIT -> println("Hitted")
+            Board.Result.FOUND -> println("Found")
+            Board.Result.MISS -> {
+                playerTurn = !playerTurn
+                println("Missed")
+                Timer().schedule(2000) {
+                    newTurn = true
                 }
             }
         }
@@ -189,10 +184,12 @@ class PlayState : GuiState() {
         }
 
         // Auto switching of boards
-        if (playerTurn && playerBoard) {
+        if (playerTurn && playerBoard && newTurn) {
             playerBoard = !playerBoard
-        } else if (!playerTurn && !playerBoard) {
+            newTurn = false
+        } else if (!playerTurn && !playerBoard && newTurn) {
             playerBoard = !playerBoard
+            newTurn = false
         }
     }
 
