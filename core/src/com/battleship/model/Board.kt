@@ -104,6 +104,9 @@ class Board(val size: Int) : GameObject() {
     }
 
     fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): Result {
+        if(!equipment.hasMoreUses()){
+            return Result.NO_USES_LEFT
+        }
         equipment.use()
         val xSearchMin = boardTouchPos.x.toInt() - equipment.searchRadius
         val xSearchMax = boardTouchPos.x.toInt() + equipment.searchRadius + 1
@@ -140,11 +143,13 @@ class Board(val size: Int) : GameObject() {
     private fun updateTile(pos: Vector2): Result {
         val treasurePos = Vector2(pos.y, pos.x) // Flip position
 
+        // Check if tile is previously opened
         val boardTile = getTile(pos)
         if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
             return Result.NOT_VALID
         }
 
+        // Check if tile contains a treasure
         val treasure = getTreasureByPosition(treasurePos)
         if (treasure != null) {
             board[pos.x.toInt()][pos.y.toInt()] = Tile.HIT
@@ -169,10 +174,10 @@ class Board(val size: Int) : GameObject() {
         return null
     }
 
-    fun getAllTreasureHealth(): Int {
+    fun getCombinedTreasureHealth(): Int {
         var health = 0
-        for (ship in treasures) {
-            health += ship.health
+        for (treasure in treasures) {
+            health += treasure.health
         }
         return health
     }
@@ -182,6 +187,6 @@ class Board(val size: Int) : GameObject() {
     }
 
     enum class Result {
-        HIT, FOUND, MISS, NOT_VALID
+        HIT, FOUND, MISS, NOT_VALID, NO_USES_LEFT
     }
 }
