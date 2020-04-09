@@ -111,6 +111,7 @@ class MatchmakingState : GuiState() {
                 "Loading"
         ) {
             val gameId = games.get((page * itemsPerPage) + index).gameId
+            print("My id:  "+GSM.userId)
             val successful = gameController.joinGame(
                     gameId,
                     GSM.userId)
@@ -126,5 +127,9 @@ class MatchmakingState : GuiState() {
 
     override fun render() {
         this.view.render(*guiObjects.toTypedArray())
+    }
+
+    override fun dispose() {
+        super.dispose()
     }
 }

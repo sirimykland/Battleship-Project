@@ -12,7 +12,7 @@ import com.battleship.model.treasures.TreasureChest
 import kotlin.random.Random
 
 class Board(val size: Int = 10) : GameObject() {
-    private var treasures: ArrayList<Treasure> = ArrayList()
+    var treasures: ArrayList<Treasure> = ArrayList()
     private var board = Array(size) { Array(size) { Tile.UNGUESSED } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 1
@@ -191,7 +191,7 @@ class Board(val size: Int = 10) : GameObject() {
      * @return treasuresList List<Map<String, Any>>
      */
     fun getTreasuresList(): List<Map<String, Any>> {
-        var treasuresList = ArrayList<Map<String, Any>>()
+        val treasuresList = ArrayList<Map<String, Any>>()
         for (treasure in treasures) {
             treasuresList.add(treasure.toMap())
         }

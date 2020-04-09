@@ -25,8 +25,7 @@ class PreGameState : GuiState() {
 
     override fun create() {
         super.create()
-        gameController.addGameListener(GSM.activeGame.gameId)
-        //GSM.activeGame.me.board.createAndPlaceTreasures(4)
+        print("---PREGAMESTATE---")
         GSM.activeGame.me.board.createAndPlaceTreasurechests(1, true)
         GSM.activeGame.me.board.createAndPlaceGoldcoins(1, true)
     }
@@ -41,7 +40,7 @@ class PreGameState : GuiState() {
             .with(Border(Palette.WHITE, 10f))
             .with(Text("Start Game"))
             .onClick {
-                println("Player are ready")
+                println("PREGAMESTATE: gameready is: " + game.gameReady)
                 game = GSM.activeGame
                 gameController.registerTreasures(
                         game.gameId,
@@ -49,8 +48,8 @@ class PreGameState : GuiState() {
                         game.me.board.getTreasuresList()
                 )
 
-                GSM.set(PlayState())
-                println("gameready is: " + game.gameReady)
+                println("PREGAMESTATE: gameready is: " + game.gameReady)
+                GSM.set(LoadingGameState(gameController))
             }
 
     override val guiObjects: List<GuiObject> = listOf(
@@ -92,6 +91,6 @@ class PreGameState : GuiState() {
 
     override fun dispose() {
         super.dispose()
-        gameController.detachGameListener(GSM.activeGame.gameId)
+        // gameController.detachGameListener(GSM.activeGame.gameId)
     }
 }

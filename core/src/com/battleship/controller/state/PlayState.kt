@@ -15,11 +15,10 @@ import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-class PlayState() : GuiState() {
+class PlayState(var gameController:GameController) : GuiState() {
     override var view: View = PlayView()
     var boardSize = 10
 
-    private val gameController = GameController()
     private val testText = GUI.text(
             Gdx.graphics.gameInfoPosition().x,
             Gdx.graphics.gameInfoPosition().y,
@@ -33,7 +32,7 @@ class PlayState() : GuiState() {
 
     override fun create() {
         super.create()
-        gameController.addGameListener(GSM.activeGame.gameId)
+        print("---PLAYSTATE---")
     }
 
     private fun headerText(): String {
@@ -42,10 +41,9 @@ class PlayState() : GuiState() {
         return "Waiting for opponents turn"
     }
 
-    // override val guiObjects: List<GuiObject> = listOf(   )
-
     override fun render() {
-        this.view.render(GUI.header(headerText()),
+        this.view.render(
+                GUI.header(headerText()),
                 *guiObjects.toTypedArray(),
                 GSM.activeGame.opponent.board,
                 GSM.activeGame.me.equipmentSet)
@@ -74,7 +72,7 @@ class PlayState() : GuiState() {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
                 val game = GSM.activeGame
                 if (game.isMyTurn()) {
-                    // println("IsMyTurn:"+ true)
+                    println("IsMyTurn:"+ true)
                     if (GSM.activeGame.makeMove(boardTouchPos)) {
                         gameController.makeMove(
                                 game.gameId,

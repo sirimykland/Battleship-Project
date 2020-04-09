@@ -8,7 +8,7 @@ class Game(val gameId: String, player1: Player, player2: Player = Player()) {
     var winner: String = ""
     var me: Player
     var opponent: Player
-    var playersTurn: String
+    var playersTurn: String = ""
     var gameReady = false
 
     init {
@@ -21,14 +21,24 @@ class Game(val gameId: String, player1: Player, player2: Player = Player()) {
         }
         this.playersTurn = player2.playerId
         me.board.boardColor = Color.LIGHT_GRAY
-        if (opponent.playerId != "") gameReady = true
     }
 
-    fun initOpponent(player2: Player){
-        opponent=player2
-        gameReady=true
+    fun initOpponent(playerId: String, playerName: String) {
+        opponent.playerId = playerId
+        opponent.playerName = playerName
+        this.playersTurn = opponent.playerId
+        print("players registererd : ${opponent}")
     }
 
+    fun playersRegistered() : Boolean {
+        if (me.playerId != "" && opponent.playerId != "") {
+            print("players registererd : ${opponent}")
+            return true
+        } else {
+            print("players NOT registererd : opponent-> ${opponent}")
+        }
+        return false
+    }
 
 
     fun makeMove(pos: Vector2): Boolean {
@@ -45,11 +55,16 @@ class Game(val gameId: String, player1: Player, player2: Player = Player()) {
     fun flipPlayer() {
         if (playersTurn == me.playerId) playersTurn = opponent.playerId
         else playersTurn = me.playerId
-        println("playersturn: "+playersTurn)
+        println("playersturn: " + playersTurn)
     }
 
     fun isMyTurn(): Boolean {
         return playersTurn == me.playerId
     }
+
+    override fun toString(): String {
+        return "Game( gameReady=$gameReady, opponent=$opponent, playersTurn='$playersTurn')"
+    }
+
 
 }
