@@ -100,7 +100,7 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
         opponent.updateHealth()
         if (player.health == 0) {
             println("Opponent won!")
-            GameStateManager.set(GameOverState())
+            GameStateManager.set(GameOverState(controller))
         } else if (opponent.health == 0) {
             println("You won!")
             GameStateManager.set(GameOverState(controller))
