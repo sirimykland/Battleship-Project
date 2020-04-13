@@ -6,12 +6,16 @@ import com.battleship.GSM
 import com.battleship.controller.firebase.GameController
 import com.battleship.model.Game
 import com.battleship.model.treasures.Treasure
+import com.battleship.model.ui.Background
+import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
+import com.battleship.model.ui.Text
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardRectangle
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.utility.GdxGraphicsUtil.size
+import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
@@ -23,12 +27,13 @@ class PreGameState : GuiState() {
     override fun create() {
         super.create()
         print("---PREGAMESTATE---")
-        GSM.activeGame.me.board.createAndPlaceTreasurechests(1, true)
-        GSM.activeGame.me.board.createAndPlaceGoldcoins(1, true)
+        GSM.activeGame.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.BOOT, true)
+        GSM.activeGame.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDCOIN, true)
+        GSM.activeGame.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.TREASURECHEST, true)
     }
 
     private val readyButton = GuiObject(
-            5f,
+            6f,
             3f,
             90f,
             10f
@@ -48,18 +53,6 @@ class PreGameState : GuiState() {
                 println("PREGAMESTATE: gameready is: " + game.gameReady)
                 GSM.set(LoadingGameState(gameController))
             }
-    private val readyButton = GUI.textButton(
-        6f,
-        3f,
-        90f,
-        10f,
-        "Start Game",
-        onClick = {
-            println("Player are ready")
-            // GameStateManager.gameController.registerShip(player.board.getShips()) TODO: Create
-            GameStateManager.set(PlayState())
-        }
-    )
 
     override val guiObjects: List<GuiObject> = listOf(
             readyButton,
@@ -92,8 +85,4 @@ class PreGameState : GuiState() {
         }
     }
 
-    override fun dispose() {
-        super.dispose()
-        // gameController.detachGameListener(GSM.activeGame.gameId)
-    }
 }

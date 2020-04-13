@@ -14,7 +14,7 @@ import com.battleship.model.treasures.TreasureChest
 import kotlin.random.Random
 
 class Board(val size: Int) : GameObject() {
-    private var treasures: ArrayList<Treasure> = ArrayList()
+    var treasures: ArrayList<Treasure> = ArrayList()
     private var board = Array(size) { Array(size) { Tile.PREGAME } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
     private var sound = SoundEffects()
@@ -187,6 +187,43 @@ class Board(val size: Int) : GameObject() {
             health += treasure.health
         }
         return health
+    }
+    /**
+     * converts arraylist of treasures to list of map
+     * @return treasuresList List<Map<String, Any>>
+     */
+    fun getTreasuresList(): List<Map<String, Any>> {
+        val treasuresList = ArrayList<Map<String, Any>>()
+        for (treasure in treasures) {
+            treasuresList.add(treasure.toMap())
+        }
+        return treasuresList
+    }
+
+    /**
+     * sets treasures arraylist from list with map
+     * @param treasuresList List<Map<String, Any>>
+     */
+    fun setTreasuresList(treasuresList: List<Map<String, Any>>) {
+        treasures = ArrayList<Treasure>()
+        lateinit var newTreasure: Treasure
+        lateinit var position: Vector2
+        var rotate: Boolean = true
+        for (treasure in treasuresList) {
+            position = Vector2((treasure["x"] as Number).toFloat(), (treasure["y"] as Number).toFloat())
+            rotate = if (treasure.containsKey("rotate")) treasure["rotate"] as Boolean else false
+            when (treasure["type"]) {
+                "Gold coin" ->
+                    newTreasure = GoldCoin(position, rotate)
+                "Treasure chest" ->
+                    newTreasure = TreasureChest(position, rotate)
+            }
+            treasures.add(newTreasure)
+        }
+    }
+
+    override fun toString(): String {
+        return "Board(size=$size, treasure=$treasures)"
     }
 
     enum class Tile {

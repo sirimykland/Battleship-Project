@@ -20,7 +20,7 @@ class Game(val gameId: String, player1: Player, player2: Player = Player()) {
             this.opponent = player1
         }
         this.playersTurn = player2.playerId
-        me.board.boardColor = Color.LIGHT_GRAY
+        // me.board.boardColor = Color.LIGHT_GRAY
     }
 
     fun initOpponent(playerId: String, playerName: String) {
