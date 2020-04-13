@@ -9,11 +9,12 @@ import com.battleship.utility.Font
 class BattleshipGame : Game() {
     companion object {
         var music: Music? = null
+        var soundOn: Boolean = true
     }
 
     override fun create() {
-        if (Gdx.files.internal("music.mp3").exists()) {
-            music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"))
+        if (Gdx.files.internal("audio/music.mp3").exists()) {
+            music = Gdx.audio.newMusic(Gdx.files.internal("audio/music.mp3"))
             music?.isLooping = true
             music?.volume = 0.2f
             music?.play()

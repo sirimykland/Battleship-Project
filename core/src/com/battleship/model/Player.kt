@@ -7,10 +7,10 @@ class Player(var playerId: String = "", var playerName: String = "") {
     val boardSize: Int = 10
     var equipmentSet = EquipmentSet(arrayListOf(Shovel(), BigEquipment(), MetalDetector()))
     var board: Board = Board(boardSize)
-    var health: Int = board.getAllTreasueHealth()
+    var health: Int = board.getCombinedTreasureHealth()
 
     fun updateHealth() {
-        this.health = board.getAllTreasueHealth()
+        health = board.getCombinedTreasureHealth()
     }
 
     override fun toString(): String {
