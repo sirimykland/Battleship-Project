@@ -8,13 +8,9 @@ import com.battleship.BattleshipGame
 object DesktopLauncher {
     @JvmStatic
     fun main(arg: Array<String>) {
-        val testUser = "LPuSVUECEJMWVcJSEOMc"
-        val desktopController = DesktopFirebase()
-        println("game: " + desktopController.createGame(testUser))
-
         val config = LwjglApplicationConfiguration()
         config.height = 800
         config.width = 640
-        LwjglApplication(BattleshipGame(desktopController), config)
+        LwjglApplication(BattleshipGame(DesktopFirebase), config)
     }
 }

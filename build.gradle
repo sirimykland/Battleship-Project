@@ -12,7 +12,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-
+        classpath 'com.google.gms:google-services:4.3.3'
     }
 }
 
@@ -77,7 +77,6 @@ project(":android") {
 
 project(":core") {
     apply plugin: "kotlin"
-
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"

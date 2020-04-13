@@ -61,7 +61,8 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
     }
 
     private fun retrieve(callback: () -> Unit) {
-        users = controller.getPendingGames()
+        //Commented out because firebase doesn't work like this anymore
+        //users = controller.getPendingGames()
         userList = users.toList().map { a -> a.second }
         callback()
     }
