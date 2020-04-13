@@ -3,10 +3,11 @@ package com.battleship
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.state.MainMenuState
 import com.battleship.utility.Font
 
-class BattleshipGame : Game() {
+class BattleshipGame (private val controller: FirebaseController) : Game() {
     companion object {
         var music: Music? = null
         var soundOn: Boolean = true
@@ -20,7 +21,7 @@ class BattleshipGame : Game() {
             music?.play()
         }
 
-        GameStateManager.push(MainMenuState())
+        GameStateManager.push(MainMenuState(controller))
     }
 
     override fun dispose() {
