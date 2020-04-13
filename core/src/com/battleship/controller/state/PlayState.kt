@@ -72,11 +72,13 @@ class PlayState : GuiState() {
         player.board.createAndPlaceTreasures(1, TreasureType.TREASURECHEST, true)
         player.board.createAndPlaceTreasures(2, TreasureType.GOLDCOIN, true)
         player.board.createAndPlaceTreasures(2, TreasureType.BOOT, true)
+        player.board.createAndPlaceTreasures(1, TreasureType.GOLDBAR, true)
 
         opponent.board.setTilesUnopened()
         opponent.board.createAndPlaceTreasures(1, TreasureType.TREASURECHEST, false)
         opponent.board.createAndPlaceTreasures(2, TreasureType.GOLDCOIN, false)
         opponent.board.createAndPlaceTreasures(2, TreasureType.BOOT, false)
+        opponent.board.createAndPlaceTreasures(1, TreasureType.GOLDBAR, false)
 
         opponentsBoardText.hide()
     }

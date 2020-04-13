@@ -24,6 +24,7 @@ class PreGameState : GuiState() {
         player.board.createAndPlaceTreasures(2, Treasure.TreasureType.TREASURECHEST, true)
         player.board.createAndPlaceTreasures(2, Treasure.TreasureType.GOLDCOIN, true)
         player.board.createAndPlaceTreasures(2, Treasure.TreasureType.BOOT, true)
+        player.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDBAR, true)
     }
 
     private val readyButton = GUI.textButton(

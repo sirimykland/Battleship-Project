@@ -24,7 +24,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     }
 
     enum class TreasureType {
-        TREASURECHEST, GOLDCOIN, BOOT
+        TREASURECHEST, GOLDCOIN, BOOT, GOLDBAR
     }
 
     fun hit(coordinates: Vector2): Boolean {
