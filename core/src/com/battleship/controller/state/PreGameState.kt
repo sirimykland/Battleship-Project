@@ -5,48 +5,44 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Player
-import com.battleship.model.ui.Background
-import com.battleship.model.ui.Border
+import com.battleship.model.treasures.Treasure
 import com.battleship.model.ui.GuiObject
-import com.battleship.model.ui.Text
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardRectangle
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.utility.GdxGraphicsUtil.size
-import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
 class PreGameState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
-    val boardSize = 10
+    private val boardSize = 10
     var player: Player = Player(boardSize)
 
     override fun create() {
         super.create()
-        player.board.createAndPlaceTreasurechests(4, true)
-        player.board.createAndPlaceGoldcoins(2, true)
+        player.board.createAndPlaceTreasures(2, Treasure.TreasureType.TREASURECHEST, true)
+        player.board.createAndPlaceTreasures(2, Treasure.TreasureType.GOLDCOIN, true)
+        player.board.createAndPlaceTreasures(2, Treasure.TreasureType.BOOT, true)
     }
 
-    private val readyButton = GuiObject(
-        5f,
+    private val readyButton = GUI.textButton(
+        6f,
         3f,
         90f,
-        10f
-    )
-        .with(Background(Palette.BLACK))
-        .with(Border(Palette.WHITE, 10f))
-        .with(Text("Start Game"))
-        .onClick {
+        10f,
+        "Start Game",
+        onClick = {
             println("Player are ready")
-            // GameStateManager.gameController.registerShip(player.board.getships()) - dette må lages
+            // GameStateManager.gameController.registerShip(player.board.getShips()) TODO: Create
             GameStateManager.set(PlayState(controller))
         }
+    )
 
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
-        GUI.header("Place ships"),
+        GUI.header("Place treasures"),
         GUI.backButton { GameStateManager.set(MainMenuState(controller)) }
     )
 
@@ -59,24 +55,18 @@ class PreGameState(private val controller : FirebaseController) : GuiState(contr
     }
 
     fun handleInput() {
-        // drag ship / set position relative to global
+        // Drag ship
         if (Gdx.input.justTouched()) {
-            val touchPos =
-                Vector2(
-                    Gdx.input.x.toFloat(),
-                    Gdx.graphics.height - Gdx.input.y.toFloat()
-                )
+            val touchX = Gdx.input.x.toFloat()
+            val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()
+            val touchPos = Vector2(touchX, touchY)
+
             val screenSize = Gdx.graphics.size()
-            // if input on board
+
+            // Check if input is on the board
             if (Gdx.graphics.boardRectangle().contains(touchPos)) {
-                // if input on ship
-                // println("   on board")
                 val boardPos = Gdx.graphics.boardPosition()
                 val boardWidth = Gdx.graphics.boardWidth()
-                // TODO
-                // select ship
-                // set new midletidig position
-                // if released, snap to board
             }
         }
     }

@@ -35,7 +35,6 @@ android {
     }
 }
 
-
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders
 // so they get packed with the APK.
@@ -100,11 +99,3 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.3.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
 }
-
-/*
-configurations.implementation.exclude(group: 'com.google.firebase', module: 'protolite-well-known-types')
-configurations.implementation.exclude(group: 'com.google.firebase', module: 'firebase-admin')
-configurations.implementation.exclude(group: 'com.google.protobuf', module: 'protobuf-lite')
-configurations.implementation.exclude(group: 'com.google.api.grpc', module: 'proto-google-cloud-firestore-v1')
-*/
-

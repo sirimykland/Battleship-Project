@@ -39,12 +39,19 @@ class MainMenuState(private val controller : FirebaseController) : GuiState(cont
         font = Font.XXL_BLACK
 
     )
-    private val skull: GuiObject = GUI.image(
-        44.375f,
-        66.25f,
-        11.25f,
-        9f,
-        "images/skull_and_crossbones.png"
+    private val skeleton: GuiObject = GUI.image(
+        35f,
+        60f,
+        14f,
+        14f,
+        "images/skeleton.png"
+    )
+    private val map: GuiObject = GUI.image(
+        52f,
+        59f,
+        16f,
+        16f,
+        "images/skull.png"
     )
 
     override var view: View = BasicView()
@@ -52,6 +59,6 @@ class MainMenuState(private val controller : FirebaseController) : GuiState(cont
     override fun update(dt: Float) {}
 
     override fun render() {
-        view.render(title, skull, *guiObjects.toTypedArray())
+        view.render(title, skeleton, map, *guiObjects.toTypedArray())
     }
 }
