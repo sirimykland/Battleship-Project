@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
-import com.battleship.GameStateManager
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.firebase.GameController
 import com.battleship.model.Player
 import com.battleship.model.ui.Border
@@ -23,7 +23,7 @@ import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-class PlayState(var gameController: GameController) : GuiState() {
+class PlayState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     // private var boardSize = 10
     private var player: Player = GSM.activeGame.me
@@ -32,18 +32,16 @@ class PlayState(var gameController: GameController) : GuiState() {
     private var playerTurn: Boolean = true
     private var newTurn: Boolean = false
 
-
     private val header = GUI.header("Your turn")
 
     private val equipmentButtons: Array<GuiObject> =
-            arrayOf(*(0 until player.equipmentSet.equipments.size).map { a: Int ->
-                joinEquipmentButton(
-                        a,
-                        Gdx.graphics.equipmentsetPosition(),
-                        Gdx.graphics.equipmentsetSize()
-                )
-            }.toTypedArray())
-
+        arrayOf(*(0 until player.equipmentSet.equipments.size).map { a: Int ->
+            joinEquipmentButton(
+                a,
+                Gdx.graphics.equipmentsetPosition(),
+                Gdx.graphics.equipmentsetSize()
+            )
+        }.toTypedArray())
 
     private val switchBoardButton = GUI.imageButton(
             87f,
@@ -62,12 +60,12 @@ class PlayState(var gameController: GameController) : GuiState() {
             "Find treasures"
     )
     private val opponentsBoardText = GUI.text(
-            5f,
-            2f,
-            90f,
-            10f,
-            "Opponent's board",
-            font = Font.LARGE_BLACK
+        5f,
+        2f,
+        90f,
+        10f,
+        "Opponent's board",
+        font = Font.LARGE_BLACK
     )
 
     override val guiObjects: List<GuiObject> = listOf(
@@ -105,11 +103,11 @@ class PlayState(var gameController: GameController) : GuiState() {
         GSM.activeGame.opponent.updateHealth()
         if (player.health == 0) {
             println("Opponent won!")
-            GameStateManager.set(GameOverState())
+            GSM.set(GameOverState())
         } else if (GSM.activeGame.opponent.health == 0) {
             println("You won!")
-            gameController.setWinner(GSM.userId, GSM.activeGame.gameId)
-            GameStateManager.set(GameOverState())
+            controller.setWinner(GSM.userId, GSM.activeGame.gameId)
+            GSM.set(GameOverState())
         }
     }
 
@@ -130,6 +128,22 @@ class PlayState(var gameController: GameController) : GuiState() {
                     } else {
                         println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
                     }
+                }
+            }
+        }
+    }
+
+    private fun handleResult(result: Board.Result) {
+        when (result) {
+            Board.Result.NOT_VALID -> println("Not valid, try again")
+            Board.Result.NO_USES_LEFT -> println("No more uses left")
+            Board.Result.HIT -> println("Hitted")
+            Board.Result.FOUND -> println("Found")
+            Board.Result.MISS -> {
+                playerTurn = !playerTurn
+                println("Missed")
+                Timer().schedule(2000) {
+                    newTurn = true
                 }
             }
         }
@@ -176,21 +190,21 @@ class PlayState(var gameController: GameController) : GuiState() {
     }
 
     private fun joinEquipmentButton(
-            index: Int,
-            position: Vector2,
-            dimension: Vector2
+        index: Int,
+        position: Vector2,
+        dimension: Vector2
     ): GuiObject {
         val equipment = player.equipmentSet.equipments[index]
 
         // TODO Positioning/design
         return GUI.textButton(
-                position.x + dimension.x / player.equipmentSet.equipments.size * index + index * 2,
-                position.y,
-                dimension.x / player.equipmentSet.equipments.size,
-                dimension.y,
-                equipment.name + " x" + equipment.uses,
-                borderColor = if (equipment.active) Palette.GREEN else Palette.BLACK,
-                onClick = { player.equipmentSet.activeEquipment = equipment }
+            position.x + dimension.x / player.equipmentSet.equipments.size * index + index * 2,
+            position.y,
+            dimension.x / player.equipmentSet.equipments.size,
+            dimension.y,
+            equipment.name + " x" + equipment.uses,
+            borderColor = if (equipment.active) Palette.GREEN else Palette.BLACK,
+            onClick = { player.equipmentSet.activeEquipment = equipment }
         )
     }
 }

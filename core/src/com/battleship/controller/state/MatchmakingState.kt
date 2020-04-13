@@ -3,39 +3,39 @@ package com.battleship.controller.state
 import com.battleship.GSM
 import com.battleship.controller.firebase.GameController
 import com.battleship.model.GameListObject
+import com.battleship.GameStateManager
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
 import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
-class MatchmakingState : GuiState() {
+class MatchmakingState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private val itemsPerPage = 3
-
-    private val gameController = GameController()
 
     private val playerButtons: Array<GuiObject> = arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
     private var page: Int = 0
 
     private val nextPageButton = GUI.textButton(
-            78f,
-            2f,
-            20f,
-            10f,
-            "->"
+        78f,
+        2f,
+        20f,
+        10f,
+        "->"
     ) {
         page++
         updateButtons()
     }
 
     private val previousPageButton = GUI.textButton(
-            2f,
-            2f,
-            20f,
-            10f,
-            "<-"
+        2f,
+        2f,
+        20f,
+        10f,
+        "<-"
     ) {
         page--
         updateButtons()
@@ -54,6 +54,11 @@ class MatchmakingState : GuiState() {
     }
 
     override val guiObjects: List<GuiObject> = listOf(
+        GUI.header("Matchmaking"),
+        nextPageButton,
+        previousPageButton,
+        *playerButtons,
+        GUI.backButton { GameStateManager.set(MainMenuState(controller)) }
             GUI.header("Usage guide"),
             nextPageButton,
             previousPageButton,
@@ -75,8 +80,10 @@ class MatchmakingState : GuiState() {
         //userList = users.toList().map { a -> a.second }
 
         games = gameController.getPendingGames()
+        //Commented out because firebase doesn't work like this anymore
+        //users = controller.getPendingGames()
+        userList = users.toList().map { a -> a.second }
         callback()
-        //updateButtons()
     }
 
     private fun updateButtons() {
@@ -104,11 +111,11 @@ class MatchmakingState : GuiState() {
 
     private fun joinUserButton(index: Int): GuiObject {
         return GUI.textButton(
-                10f,
-                70f - index * 9f,
-                80f,
-                7f,
-                "Loading"
+            10f,
+            70f - index * 9f,
+            80f,
+            7f,
+            "Loading"
         ) {
             val gameId = games.get((page * itemsPerPage) + index).gameId
             print("My id:  "+GSM.userId)
@@ -127,9 +134,5 @@ class MatchmakingState : GuiState() {
 
     override fun render() {
         this.view.render(*guiObjects.toTypedArray())
-    }
-
-    override fun dispose() {
-        super.dispose()
     }
 }

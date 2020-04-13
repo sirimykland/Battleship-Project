@@ -11,52 +11,51 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the main menu
  */
-class MainMenuState : GuiState() {
-    private var gameController = GameController()
+class MainMenuState(private val controller : FirebaseController) : GuiState(controller) {
 
     private val menuList = listOf(
             Pair("Create game as Olivia") {
                 GSM.userId = "zmWpyb8luZAMrBwzY97x"
                 val gameId = gameController.createGame(GSM.userId)
                 if (gameId.isNotEmpty()) gameController.setGame(gameId)
-                GSM.set(PreGameState())
+                GSM.set(PreGameState(controller))
             },
-            Pair("Settings") { GSM.set(SettingsState()) },
-            Pair("Matchmaking") { GSM.set(MatchmakingState()) }
+            Pair("Settings") { GSM.set(SettingsState(controller)) },
+            Pair("Matchmaking") { GSM.set(MatchmakingState(controller)) }
     )
 
     override val guiObjects: List<GuiObject> = menuList
-            .mapIndexed { i, (name, func) ->
-                GUI.menuButton(
-                        23.4375f,
-                        100f - (56.25f + 18.75f * i),
-                        name,
-                        onClick = func
-                )
-            }
+        .mapIndexed { i, (name, func) ->
+            GUI.menuButton(
+                23.4375f,
+                100f - (56.25f + 18.75f * i),
+                name,
+                onClick = func
+            )
+        }
 
     private val title: GuiObject = GUI.text(
-            11f,
-            74f,
-            78f,
-            12.5f,
-            "Treasure hunt",
-            font = Font.XXL_BLACK
+        11f,
+        74f,
+        78f,
+        12.5f,
+        "Treasure hunt",
+        font = Font.XXL_BLACK
 
     )
     private val skeleton: GuiObject = GUI.image(
-            35f,
-            60f,
-            14f,
-            14f,
-            "images/skeleton.png"
+        35f,
+        60f,
+        14f,
+        14f,
+        "images/skeleton.png"
     )
     private val map: GuiObject = GUI.image(
-            52f,
-            59f,
-            16f,
-            16f,
-            "images/skull.png"
+        52f,
+        59f,
+        16f,
+        16f,
+        "images/skull.png"
     )
 
     override var view: View = BasicView()

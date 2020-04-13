@@ -10,6 +10,6 @@ object DesktopLauncher {
         val config = LwjglApplicationConfiguration()
         config.height = 700
         config.width = 500
-        LwjglApplication(BattleshipGame(), config)
+        LwjglApplication(BattleshipGame(DesktopFirebase), config)
     }
 }

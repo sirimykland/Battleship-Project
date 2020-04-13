@@ -2,6 +2,7 @@ package com.battleship.controller.state
 
 import com.battleship.BattleshipGame
 import com.battleship.GameStateManager
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
 import com.battleship.utility.Font
@@ -12,7 +13,7 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the settings menu
  */
-class SettingsState : GuiState() {
+class SettingsState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private var musicButton: GuiObject = GUI.menuButton(
             23.44f,
@@ -41,7 +42,7 @@ class SettingsState : GuiState() {
             23.44f,
             25f,
             "Usage guide",
-            onClick = { GameStateManager.set(UsageGuideState()) }
+            onClick = { GameStateManager.set(UsageGuideState(controller)) }
         ),
 
         GUI.text(
@@ -60,7 +61,7 @@ class SettingsState : GuiState() {
             "v0.1.0",
             Font.SMALL_BLACK
         ),
-        GUI.backButton { GameStateManager.set(MainMenuState()) }
+        GUI.backButton { GameStateManager.set(MainMenuState(controller)) }
     )
 
     override fun create() {
