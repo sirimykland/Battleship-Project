@@ -29,27 +29,12 @@ class MainMenuState : GuiState() {
         }
 
     private val title: GuiObject = GUI.text(
-        11f,
-        74f,
-        78f,
+        10f,
+        72f,
+        80f,
         12.5f,
         "Treasure hunt",
         font = Font.XXL_BLACK
-
-    )
-    private val skeleton: GuiObject = GUI.image(
-        35f,
-        60f,
-        14f,
-        14f,
-        "images/skeleton.png"
-    )
-    private val map: GuiObject = GUI.image(
-        52f,
-        59f,
-        16f,
-        16f,
-        "images/skull.png"
     )
 
     override var view: View = BasicView()
@@ -57,6 +42,6 @@ class MainMenuState : GuiState() {
     override fun update(dt: Float) {}
 
     override fun render() {
-        view.render(title, skeleton, map, *guiObjects.toTypedArray())
+        view.render(title, *guiObjects.toTypedArray())
     }
 }

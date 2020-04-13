@@ -1,5 +1,6 @@
 package com.battleship.model
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -65,16 +66,17 @@ class Board(val size: Int) : GameObject() {
         var x = position.x
         var y = position.y
         val tileSize = dimension.x / size
+        var x2 = x + dimension.x
+        var y2 = y + dimension.y
 
         // Draw board
         for (array in board) {
             for (value in array) {
-
                 if (value == Tile.PREGAME) {
                     tileRenderer.begin(ShapeRenderer.ShapeType.Line)
+                    Gdx.gl.glLineWidth(2f)
                     tileRenderer.color = Color.BLACK
                     tileRenderer.rect(x, y, tileSize, tileSize)
-                    //  tileRenderer.rectLine(x, y,x + size, y + size, 10f)
                     tileRenderer.end()
                 } else {
                     tileRenderer.begin(ShapeRenderer.ShapeType.Filled)
@@ -94,9 +96,12 @@ class Board(val size: Int) : GameObject() {
                 }
 
                 x += tileSize + padding
+                x2 += tileSize + padding
             }
             y += tileSize + padding
+            y2 += tileSize + padding
             x = position.x
+            x2 = position.x + dimension.x
         }
 
         // Draw treasures

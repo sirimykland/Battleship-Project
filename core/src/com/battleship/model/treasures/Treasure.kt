@@ -14,7 +14,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     abstract var sprite: Sprite
     abstract var type: TreasureType
     abstract var sound: Sound
-    var padding = 1
+    var padding = 0
     var revealed = false
 
     fun playSound(volume: Float) {
