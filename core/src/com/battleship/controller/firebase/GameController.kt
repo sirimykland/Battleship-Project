@@ -213,26 +213,10 @@ class GameController : FirebaseController() {
         val game = query.get()
         if (game.exists()) {
             val treasures = game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
-            val activeGame = GSM.activeGame
-            println("opponent  is:" + (activeGame.opponent.playerId in treasures))
-
-            if (GSM.activeGame.opponent.playerId in treasures) {
-                println("2. Opponents registered treasures: " + treasures[activeGame.opponent.playerId])
-                treasures[GSM.activeGame.opponent.playerId]?.let { GSM.activeGame.me.board.setTreasuresList(it) }
-            }
-
-            if (GSM.activeGame.me.playerId in treasures) {
-                println("   1. My registered treasures: " + treasures[activeGame.me.playerId])
-                treasures[GSM.activeGame.me.playerId]?.let { GSM.activeGame.me.board.setTreasuresList(it) }
-            }
-
-            println("Are they registered:" + (GSM.activeGame.me.board.treasures.isNotEmpty() )+" and "+ GSM.activeGame.opponent.board.treasures.isNotEmpty())
-            if (GSM.activeGame.me.board.treasures.isNotEmpty() && GSM.activeGame.opponent.board.treasures.isNotEmpty()) {
-                GSM.activeGame.gameReady = true
-                println("Treasures are registered")
-            }
+            println("all treasures:"+ treasures)
+            GSM.activeGame.setTreasures(treasures)
         }else {
-                throw error("Something went wrong when setting treasures")
+            throw error("Something went wrong when setting treasures")
         }
     }
 
@@ -310,10 +294,9 @@ class GameController : FirebaseController() {
                         } else {
                             // Get the field containing the treasures in the database
                             val treasures = snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
-                            println("fb treasures: " + treasures)
                             // If there is not enough treasures registered
                             if (treasures.size == 2 && GSM.activeGame.playersRegistered()) {
-                               kotlin.run { setTreasures(gameId)}
+                               setTreasures(gameId)
                             } else {
                                 // Get the list of moves
                                 val moves = snapshot.data?.get("moves") as MutableList<Map<String, Any>>

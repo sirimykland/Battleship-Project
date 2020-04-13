@@ -217,6 +217,10 @@ class Board(val size: Int) : GameObject() {
                     newTreasure = GoldCoin(position, rotate)
                 "Treasure chest" ->
                     newTreasure = TreasureChest(position, rotate)
+                "Boot" ->
+                    newTreasure = Boot(position, rotate)
+                "Old stinking boot" ->
+                    newTreasure = Boot(position, rotate)
             }
             treasures.add(newTreasure)
         }

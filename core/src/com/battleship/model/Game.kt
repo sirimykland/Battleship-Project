@@ -61,6 +61,24 @@ class Game(val gameId: String, player1: Player, player2: Player = Player()) {
     fun isMyTurn(): Boolean {
         return playersTurn == me.playerId
     }
+    fun setTreasures(treasures : MutableMap<String, List<Map<String, Any>>>){
+        println("opponent is:" + (opponent.playerId in treasures))
+
+        if (opponent.playerId in treasures) {
+            treasures[opponent.playerId]?.let { opponent.board.setTreasuresList(it) }
+            println("   2. Opponents registered treasures: " + treasures[opponent.playerId])
+        }
+
+        if (me.playerId in treasures) {
+            treasures[me.playerId]?.let { me.board.setTreasuresList(it) }
+            println("   1. My registered treasures: " + treasures[me.playerId])
+        }
+        println("Are they registered:" + (me.board.treasures.isNotEmpty() )+" and "+ opponent.board.treasures.isNotEmpty())
+        if (me.board.treasures.isNotEmpty() && opponent.board.treasures.isNotEmpty()) {
+            gameReady = true
+            println("Treasures are registered")
+        }
+    }
 
     override fun toString(): String {
         return "Game( gameReady=$gameReady, opponent=$opponent, playersTurn='$playersTurn')"
