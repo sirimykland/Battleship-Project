@@ -1,6 +1,5 @@
 package com.battleship.model
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 
@@ -21,25 +20,27 @@ class Game(val gameId: String, player1: Player, player2: Player = Player()) {
         }
         this.playersTurn = player2.playerId
         // me.board.boardColor = Color.LIGHT_GRAY
+        isGameReady()
     }
 
     fun initOpponent(playerId: String, playerName: String) {
         opponent.playerId = playerId
         opponent.playerName = playerName
         this.playersTurn = opponent.playerId
-        print("players registererd : ${opponent}")
+        isGameReady()
+        print("opponent registererd : ${opponent}")
     }
 
-    fun playersRegistered() : Boolean {
+    fun playersRegistered(): Boolean {
         if (me.playerId != "" && opponent.playerId != "") {
-            print("players registererd : ${opponent}")
+            println("players registererd : ${me}, ${opponent}")
             return true
         } else {
-            print("players NOT registererd : opponent-> ${opponent}")
+            println("players NOT registererd : opponent-> ${opponent}")
         }
+        isGameReady()
         return false
     }
-
 
     fun makeMove(pos: Vector2): Boolean {
         if (me.equipmentSet.activeEquipment!!.hasMoreUses()) {
@@ -55,26 +56,38 @@ class Game(val gameId: String, player1: Player, player2: Player = Player()) {
     fun flipPlayer() {
         if (playersTurn == me.playerId) playersTurn = opponent.playerId
         else playersTurn = me.playerId
-        println("playersturn: " + playersTurn)
+        println("playersturn: $playersTurn")
     }
 
     fun isMyTurn(): Boolean {
         return playersTurn == me.playerId
     }
-    fun setTreasures(treasures : MutableMap<String, List<Map<String, Any>>>){
-        println("opponent is:" + (opponent.playerId in treasures))
 
-        if (opponent.playerId in treasures) {
-            treasures[opponent.playerId]?.let { opponent.board.setTreasuresList(it) }
+    fun setTreasures(treasures: Map<String, List<Map<String, Any>>>) {
+        println("ID: o:" + (opponent.playerId in treasures) + " and m:" + (this.me.playerId in treasures))
+        println("treasures: o:" + (opponent.board.treasures) + " and m:" + (this.me.board.treasures))
+
+        if (opponent.board.treasures.isNullOrEmpty() && opponent.playerId in treasures) {
             println("   2. Opponents registered treasures: " + treasures[opponent.playerId])
+            treasures[opponent.playerId]?.let { this.opponent.board.setTreasuresList(it as ArrayList) }
+            /* this.opponent.board.setTreasuresList(treasures[opponent.playerId]?: error("No treasures in list"))*/
+            isGameReady()
+            println("   2. Opponents registered treasures: " + opponent.board.treasures)
+            println("is game ready? $gameReady")
         }
+        println("treasures: o:" + (opponent.board.treasures) + " and m:" + (this.me.board.treasures))
 
-        if (me.playerId in treasures) {
-            treasures[me.playerId]?.let { me.board.setTreasuresList(it) }
+        /*if (me.board.treasures.isNullOrEmpty() && me.playerId in treasures) {
             println("   1. My registered treasures: " + treasures[me.playerId])
-        }
-        println("Are they registered:" + (me.board.treasures.isNotEmpty() )+" and "+ opponent.board.treasures.isNotEmpty())
-        if (me.board.treasures.isNotEmpty() && opponent.board.treasures.isNotEmpty()) {
+            treasures[me.playerId]?.let { me.board.setTreasuresList(it) }
+        }*/
+
+
+    }
+
+    fun isGameReady() {
+        println("Are they registered:" + (me.board.treasures.isNotEmpty()) + " and " + opponent.board.treasures.isNotEmpty())
+        if (!me.board.treasures.isNullOrEmpty() && !opponent.board.treasures.isNullOrEmpty()) {
             gameReady = true
             println("Treasures are registered")
         }

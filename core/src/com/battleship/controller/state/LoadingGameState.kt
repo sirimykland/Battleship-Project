@@ -7,12 +7,13 @@ import com.battleship.utility.GUI
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-class LoadingGameState(var gameController:GameController) : GuiState() {
+class LoadingGameState(var gameController: GameController) : GuiState() {
     override var view: View = PlayView()
 
     override fun create() {
         super.create()
         println("---LOADINGSTATE---")
+        println("gameready is: " + GSM.activeGame.gameReady)
         gameController.addGameListener(GSM.activeGame.gameId)
     }
 
@@ -32,7 +33,9 @@ class LoadingGameState(var gameController:GameController) : GuiState() {
     }
 
     override fun update(dt: Float) {
-        if (GSM.activeGame.gameReady) {GSM.set(PlayState(gameController))}
+        if (GSM.activeGame.gameReady) {
+            GSM.set(PlayState(gameController))
+        }
     }
 
     override fun dispose() {

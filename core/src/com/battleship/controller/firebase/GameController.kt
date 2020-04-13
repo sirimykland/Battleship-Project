@@ -124,23 +124,24 @@ class GameController : FirebaseController() {
         val game = query.get()
 
         if (game.exists()) {
-            val treasures = getTreasures(gameId)
+            // val treasures = getTreasures(gameId)
 
             val player1Id: String = game.get("player1") as String
             val player1: Player = getUser(player1Id)
-
-            if (player1.playerId in treasures) treasures[player1Id]?.let { player1.board.setTreasuresList(it) }
 
             val player2Id: String = game.get("player2") as String
 
             val player2: Player = if (player2Id != "") {
                 getUser(player2Id)
             } else Player(player2Id, "Unknown")
+            GSM.activeGame = Game(gameId, player1, player2)
 
-            if (player2.playerId in treasures){ treasures[player2Id]?.let { player2.board.setTreasuresList(it) }}
+            // if (player1.playerId in treasures) treasures[player1Id]?.let { player1.board.setTreasuresList(it) }
+            // if (player2.playerId in treasures){ treasures[player2Id]?.let { player2.board.setTreasuresList(it) }}
 
             println("player1: ${player1}, player2: ${player2}")
-            GSM.activeGame = Game(gameId, player1, player2)
+
+            setTreasures(gameId)
         } else {
             throw error("Something went wrong when fetching the Game")
         }
@@ -156,9 +157,7 @@ class GameController : FirebaseController() {
         val game = query.get()
 
         if (game.exists()) {
-
             val player2Id: String = game.get("player2") as String
-            println("setopponent2() : ${player2Id} != '' ${player2Id.isNotEmpty()}")
 
             GSM.activeGame.opponent.playerId = player2Id
             GSM.activeGame.opponent.playerName = db.collection("users").document(player2Id).get().get().get("username").toString()
@@ -170,29 +169,11 @@ class GameController : FirebaseController() {
     }
 
     /**
-     * Get the treasures of a player in a game
-     * @param gameId the id of the game
-     * @param playerId the id of the player
-     * @return a map containing a list of treasures per user
-     */
-    fun getPlayerTreasures(gameId: String, playerId: String): List<Map<String, Any>>? {
-        val query = db.collection("games").document(gameId).get()
-        val game = query.get()
-        if (game.exists()) {
-            val treasures = getTreasures(gameId)
-            if (playerId in treasures) return treasures[playerId]
-            return null
-        } else {
-            throw error("Something went wrong when fetching treasures")
-        }
-    }
-
-    /**
      * Get the treasures in a game
      * @param gameId the id of the game
      * @return a map containing a list of treasures per user
      */
-    private fun getTreasures(gameId: String): MutableMap<String, List<Map<String, Any>>> {
+    /* private fun getTreasures(gameId: String): MutableMap<String, List<Map<String, Any>>> {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
@@ -200,7 +181,7 @@ class GameController : FirebaseController() {
         } else {
             throw error("Something went wrong when fetching treasures")
         }
-    }
+    }*/
 
     /**
      * set the treasures in a game
@@ -213,13 +194,12 @@ class GameController : FirebaseController() {
         val game = query.get()
         if (game.exists()) {
             val treasures = game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
-            println("all treasures:"+ treasures)
+            println("all treasures: $treasures")
             GSM.activeGame.setTreasures(treasures)
-        }else {
+        } else {
             throw error("Something went wrong when setting treasures")
         }
     }
-
 
     /**
      * Registers the move
@@ -295,8 +275,8 @@ class GameController : FirebaseController() {
                             // Get the field containing the treasures in the database
                             val treasures = snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
                             // If there is not enough treasures registered
-                            if (treasures.size == 2 && GSM.activeGame.playersRegistered()) {
-                               setTreasures(gameId)
+                            if (treasures.size <= 2 && GSM.activeGame.playersRegistered()) {
+                                setTreasures(gameId)
                             } else {
                                 // Get the list of moves
                                 val moves = snapshot.data?.get("moves") as MutableList<Map<String, Any>>

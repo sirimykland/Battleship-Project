@@ -14,7 +14,7 @@ import com.battleship.model.treasures.TreasureChest
 import kotlin.random.Random
 
 class Board(val size: Int) : GameObject() {
-    var treasures: ArrayList<Treasure> = ArrayList()
+    var treasures: ArrayList<Treasure> = ArrayList<Treasure>()
     private var board = Array(size) { Array(size) { Tile.PREGAME } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
     private var sound = SoundEffects()
@@ -83,6 +83,7 @@ class Board(val size: Int) : GameObject() {
                         Tile.MISS -> tileRenderer.color = Color.RED
                         Tile.NEAR -> tileRenderer.color = Color.YELLOW
                         Tile.UNOPENED -> tileRenderer.color = Color.BLACK
+                        //else -> // TODO
                     }
                     tileRenderer.rect(x, y, tileSize, tileSize)
                     tileRenderer.end()
@@ -116,7 +117,7 @@ class Board(val size: Int) : GameObject() {
         val ySearchMax = boardTouchPos.y.toInt() + equipment.searchRadius + 1
 
         // Loops through the equipments search radius
-        var resultList = ArrayList<Result>()
+        val resultList = ArrayList<Result>()
         for (x in xSearchMin until xSearchMax) {
             for (y in ySearchMin until ySearchMax) {
                 // Check if inside board
@@ -154,7 +155,7 @@ class Board(val size: Int) : GameObject() {
         }
 
         // Check if tile contains a treasure
-        val treasure = getTreasureByPosition(treasurePos)
+        val treasure: Treasure? = getTreasureByPosition(treasurePos)
         if (treasure != null) {
             board[pos.x.toInt()][pos.y.toInt()] = Tile.HIT
             treasure.takeDamage()
@@ -188,6 +189,7 @@ class Board(val size: Int) : GameObject() {
         }
         return health
     }
+
     /**
      * converts arraylist of treasures to list of map
      * @return treasuresList List<Map<String, Any>>
@@ -209,9 +211,11 @@ class Board(val size: Int) : GameObject() {
         lateinit var newTreasure: Treasure
         lateinit var position: Vector2
         var rotate: Boolean = true
+        println("list length: " + treasuresList.size)
         for (treasure in treasuresList) {
             position = Vector2((treasure["x"] as Number).toFloat(), (treasure["y"] as Number).toFloat())
             rotate = if (treasure.containsKey("rotate")) treasure["rotate"] as Boolean else false
+            println("parsing treasure: $treasure")
             when (treasure["type"]) {
                 "Gold coin" ->
                     newTreasure = GoldCoin(position, rotate)
@@ -227,7 +231,7 @@ class Board(val size: Int) : GameObject() {
     }
 
     override fun toString(): String {
-        return "Board(size=$size, treasure=$treasures)"
+        return "Board(treasure=$treasures)"
     }
 
     enum class Tile {

@@ -42,7 +42,7 @@ class PreGameState : GuiState() {
             .with(Border(Palette.WHITE, 10f))
             .with(Text("Start Game"))
             .onClick {
-                println("PREGAMESTATE: gameready is: " + game.gameReady)
+                println("gameready is: " + game.gameReady)
                 game = GSM.activeGame
                 gameController.registerTreasures(
                         game.gameId,

@@ -36,27 +36,27 @@ class MainMenuState : GuiState() {
             }
 
     private val title: GuiObject = GUI.text(
-        11f,
-        74f,
-        78f,
-        12.5f,
-        "Treasure hunt",
-        font = Font.XXL_BLACK
+            11f,
+            74f,
+            78f,
+            12.5f,
+            "Treasure hunt",
+            font = Font.XXL_BLACK
 
     )
     private val skeleton: GuiObject = GUI.image(
-        35f,
-        60f,
-        14f,
-        14f,
-        "images/skeleton.png"
+            35f,
+            60f,
+            14f,
+            14f,
+            "images/skeleton.png"
     )
     private val map: GuiObject = GUI.image(
-        52f,
-        59f,
-        16f,
-        16f,
-        "images/skull.png"
+            52f,
+            59f,
+            16f,
+            16f,
+            "images/skull.png"
     )
 
     override var view: View = BasicView()

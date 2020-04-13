@@ -45,6 +45,7 @@ abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject
     fun takeDamage() {
         health--
     }
+
     fun toMap(): Map<String, Any> {
         val shipMap = mutableMapOf<String, Any>()
         shipMap["type"] = name
@@ -91,6 +92,6 @@ abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject
     }
 
     override fun toString(): String {
-        return "Ship(position=$position, rotate=$rotate, name='$name')"
+        return "Ship(pos=$position, rotate=$rotate, name='$name')"
     }
 }
