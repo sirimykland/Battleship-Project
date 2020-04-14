@@ -9,9 +9,8 @@ import com.battleship.model.Player
 
 // TODO make this a list of GUI Elements to display player data in a "table view"
 class GameInfo(var player: Player) : GameObject() {
-    var shapeRenderer = ShapeRenderer()
 
-    override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
+    override fun draw(batch: SpriteBatch, shapeRenderer: ShapeRenderer, position: Vector2, dimension: Vector2) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
         shapeRenderer.color = Color.LIGHT_GRAY
         shapeRenderer.rect(position.x, position.y, dimension.x, dimension.y)
