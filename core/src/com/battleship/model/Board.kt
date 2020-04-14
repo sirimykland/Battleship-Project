@@ -67,8 +67,8 @@ class Board(val size: Int) : GameObject() {
         val tileSize = dimension.x / size
 
         // Draw board
-        for (array in board) { // Row
-            for (value in array) { // Column
+        for (row in tiles) {
+            for (value in row) { // Column
                 if (value == Tile.PREGAME) {
                     tileRenderer.begin(ShapeRenderer.ShapeType.Line)
                     Gdx.gl.glLineWidth(3f)
