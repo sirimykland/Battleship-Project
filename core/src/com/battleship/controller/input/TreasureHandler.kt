@@ -22,20 +22,17 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
         val treasurePos = Vector2(boardTouchPos.y, boardTouchPos.x) // Flip position
 
         val treasure = board.getTreasureByPosition(treasurePos)
-        if (treasure != null){
-            activeTreasure  = treasure
+        if (treasure != null) {
+            activeTreasure = treasure
             oldPosition = activeTreasure!!.position
         }
         return false
     }
 
     override fun touchUp(x: Int, y: Int, pointer: Int, button: Int): Boolean {
-        if(activeTreasure != null){
-            if(board.validateTreasurePosition(activeTreasure)){
-                println("Godkjent")
-            }else{
+        if (activeTreasure != null) {
+            if (!board.validateTreasurePosition(activeTreasure)) {
                 activeTreasure!!.updatePosition(oldPosition!!)
-                println("Ikke Godkjent")
             }
         }
         activeTreasure = null
@@ -44,16 +41,20 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
     }
 
     override fun touchDragged(x: Int, y: Int, pointer: Int): Boolean {
-        if(activeTreasure != null){
+        if (activeTreasure != null) {
             val boardWidth = Gdx.graphics.boardWidth()
             val boardPos = Gdx.graphics.boardPosition()
-            val newBoardTouchPos = Vector2(x.toFloat(), Gdx.graphics.height - y.toFloat()).toCoordinate(boardPos, boardWidth, board.size)
+            val newBoardTouchPos =
+                Vector2(x.toFloat(), Gdx.graphics.height - y.toFloat()).toCoordinate(
+                    boardPos,
+                    boardWidth,
+                    board.size
+                )
             val newTreasurePos = Vector2(newBoardTouchPos.y, newBoardTouchPos.x)
             println(newTreasurePos)
+
             activeTreasure!!.updatePosition(newTreasurePos)
         }
-
         return false
     }
-
 }

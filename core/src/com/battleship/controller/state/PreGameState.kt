@@ -1,17 +1,13 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.input.TreasureHandler
 import com.battleship.model.Player
 import com.battleship.model.treasures.Treasure
 import com.battleship.model.ui.GuiObject
-import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GUI
-import com.battleship.utility.GdxGraphicsUtil.boardPosition
-import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
@@ -27,8 +23,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
         player.board.createAndPlaceTreasures(2, Treasure.TreasureType.GOLDCOIN, true)
         player.board.createAndPlaceTreasures(2, Treasure.TreasureType.BOOT, true)
 
-
-        Gdx.input.inputProcessor = inputProcessor
+        addInputProcessor(inputProcessor)
     }
 
     private val readyButton = GUI.textButton(
@@ -62,7 +57,6 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
         // Drag ship
         if (Gdx.input.isTouched) {
 
-
             /*
             if (active != null) {
                 //println(treasure.name)
@@ -76,7 +70,6 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
 
             }
             */
-
         }
     }
 }

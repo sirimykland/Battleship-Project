@@ -44,21 +44,18 @@ class Board(val size: Int) : GameObject() {
 
     fun validateTreasurePosition(treasure: Treasure?): Boolean {
         if (treasure == null){
-            println("1")
             return false
         }
 
         for (tile in treasure.getTreasureTiles()) {
             // Tile outside board
-            if (tile.x >= size || tile.y >= size){
-                println("2")
+            if (tile.x >= size || tile.y >= size || tile.x < 0 || tile.y < 0) {
                 return false
             }
 
             // Another tile already in this place
             for (placedShip in treasures) {
                 if (placedShip.getTreasureTiles().contains(tile) && placedShip != treasure) {
-                    println("3")
                     return false
                 }
             }
