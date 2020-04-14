@@ -8,12 +8,13 @@ import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
-class MatchmakingState(private val controller : FirebaseController) : GuiState(controller) {
+class MatchmakingState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private val itemsPerPage = 3
     var games = GSM.pendingGames
 
-    private val playerButtons: Array<GuiObject> = arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
+    private val playerButtons: Array<GuiObject> =
+        arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
     private var page: Int = 0
 
@@ -56,12 +57,7 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
         previousPageButton,
         *playerButtons,
         GUI.backButton { GSM.set(MainMenuState(controller)) },
-        GUI.header("Usage guide"),
-        nextPageButton,
-        previousPageButton,
-        *playerButtons,
-        GUI.backButton { GSM.set(MainMenuState(controller)) },
-            createGameButton
+        createGameButton
     )
 
     override fun create() {

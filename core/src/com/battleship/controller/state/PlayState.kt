@@ -5,8 +5,11 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
-import com.battleship.model.Board
+import com.battleship.model.Board.Result
 import com.battleship.model.Player
+import com.battleship.model.equipment.Equipment
+import com.battleship.model.soundeffects.SoundEffects
+import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -25,7 +28,7 @@ import com.battleship.view.View
 import java.util.Timer
 import kotlin.concurrent.schedule
 
-class PlayState(private val controller : FirebaseController) : GuiState(controller) {
+class PlayState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     // private var boardSize = 10
     private var player: Player = GSM.activeGame!!.me
@@ -33,6 +36,7 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
     private var playerBoard: Boolean = false
     private var playerTurn: Boolean = true
     private var newTurn: Boolean = false
+    private var sound = SoundEffects()
 
     private val header = GUI.header("Your turn")
 
@@ -46,20 +50,14 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
         }.toTypedArray())
 
     private val switchBoardButton = GUI.imageButton(
-            87f,
-            90f,
-            8f,
-            8f,
-            "icons/refresh_white.png",
-            onClick = {
-                playerBoard = !playerBoard
-            })
-    private val testText = GUI.text(
-            Gdx.graphics.gameInfoPosition().x,
-            Gdx.graphics.gameInfoPosition().y,
-            Gdx.graphics.gameInfoSize().x,
-            Gdx.graphics.gameInfoSize().y,
-            "Find treasures"
+        87f,
+        90f,
+        8f,
+        8f,
+        "icons/refresh_white.png",
+        onClick = {
+            playerBoard = !playerBoard
+        }
     )
     private val opponentsBoardText = GUI.text(
         5f,
@@ -71,8 +69,7 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
     )
 
     override val guiObjects: List<GuiObject> = listOf(
-            testText,
-            *equipmentButtons, header, switchBoardButton, opponentsBoardText
+        *equipmentButtons, header, switchBoardButton, opponentsBoardText
     )
 
     override fun create() {
@@ -135,15 +132,25 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
         }
     }
 
-    private fun handleResult(result: Board.Result) {
-        when (result) {
-            Board.Result.NOT_VALID -> println("Not valid, try again")
-            Board.Result.NO_USES_LEFT -> println("No more uses left")
-            Board.Result.HIT -> println("Hitted")
-            Board.Result.FOUND -> println("Found")
-            Board.Result.MISS -> {
-                playerTurn = !playerTurn
+    private fun handleResultFromMove(resultList: ArrayList<Result>, equipment: Equipment) {
+        when {
+            resultList.contains(Result.FOUND) -> {
+                println("Found")
+                equipment.use()
+            }
+            resultList.contains(Result.HIT) -> {
+                println("Hit")
+                equipment.use()
+                sound.playHit(0.8f)
+            }
+            resultList.all { n -> n == Result.NOT_VALID } -> {
+                println("Not valid, try again")
+            }
+            else -> {
                 println("Missed")
+                equipment.use()
+                equipment.playSound(0.8f)
+                playerTurn = !playerTurn
                 Timer().schedule(2000) {
                     newTurn = true
                 }

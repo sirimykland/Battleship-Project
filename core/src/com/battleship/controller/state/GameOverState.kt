@@ -11,7 +11,7 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the game over screen
  */
-class GameOverState(private val controller : FirebaseController) : GuiState(controller) {
+class GameOverState(private val controller: FirebaseController) : GuiState(controller) {
     private val menuList = listOf(
         Pair("Main Menu") { GameStateManager.set(MainMenuState(controller)) },
         Pair("Play Again") { GameStateManager.set(PreGameState(controller)) }

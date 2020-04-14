@@ -19,7 +19,7 @@ import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-class PreGameState(private val controller : FirebaseController) : GuiState(controller) {
+class PreGameState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
 
     override fun create() {

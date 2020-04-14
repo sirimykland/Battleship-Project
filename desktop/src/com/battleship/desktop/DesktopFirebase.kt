@@ -23,6 +23,7 @@ import java.io.FileInputStream
 object DesktopFirebase : FirebaseController {
     // The URL of the firebase project
     private const val firebaseUrl = "https://battleshipz.firebaseio.com"
+
     // Protected variable used by the other controllers to access database
     private val db: Firestore
 
@@ -39,16 +40,15 @@ object DesktopFirebase : FirebaseController {
             val credentials = GoogleCredentials.fromStream(serviceAccount)
             // Set options for connection
             val options = FirebaseOptions.Builder()
-                    .setCredentials(credentials)
-                    .setDatabaseUrl(firebaseUrl)
-                    .build()
+                .setCredentials(credentials)
+                .setDatabaseUrl(firebaseUrl)
+                .build()
             FirebaseApp.initializeApp(options)
         }
 
         // Initialize database connection using the firebase app
         db = FirestoreClient.getFirestore()
     }
-
 
     /**
      * Get all the players registered in the database
@@ -65,7 +65,7 @@ object DesktopFirebase : FirebaseController {
             val name = document.getString("username")
             playerMap[id] = name
         }
-        //TODO: Call function that saves the playerMap
+        // TODO: Call function that saves the playerMap
     }
 
     /**
@@ -122,6 +122,7 @@ object DesktopFirebase : FirebaseController {
                 GSM.pendingGames.add(GameListObject(gameId, playerId, username))
             }
         }
+        // TODO: Call function that saves the "games" list of pending games
     }
 
     /**
@@ -152,7 +153,7 @@ object DesktopFirebase : FirebaseController {
      */
     override fun joinGame(gameId: String, userId: String) {
         // Add the data to the game document
-        val result = db.collection("games").document(gameId).update("player2", userId)
+        db.collection("games").document(gameId).update("player2", userId)
         setGame(gameId)
     }
 
@@ -162,16 +163,19 @@ object DesktopFirebase : FirebaseController {
      * @param userId the id of the user owning the treasures
      * @param treasures list containing the treasures that should be added, each described using a map
      */
-    override fun registerTreasures(gameId: String, userId: String, treasures: List<Map<String, Any>>) {
+    override fun registerTreasures(
+        gameId: String,
+        userId: String,
+        treasures: List<Map<String, Any>>
+    ) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
-            println("args: $gameId, $userId, $treasures")
             val dbTreasures = game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
             dbTreasures[userId] = treasures
             db.collection("games").document(gameId).update("treasures", dbTreasures)
         } else {
-            //TODO: Add exception handling
+            // TODO: Add exception handling
             println("Something went wrong when registering treasures")
         }
     }
@@ -235,7 +239,7 @@ object DesktopFirebase : FirebaseController {
             println("all treasures: $treasures")
             GSM.activeGame!!.setTreasures(treasures)
         } else {
-            //TODO: Add error handling
+            // TODO: Add error handling
             throw error("Something went wrong when fetching treasures")
         }
     }
@@ -259,9 +263,9 @@ object DesktopFirebase : FirebaseController {
             data["weapon"] = weapon
             moves.add(data)
             db.collection("games").document(gameId).update("moves", moves)
-            //TODO: Call function that handles what should happen after move is made
+            // TODO: Call function that handles what should happen after move is made
         } else {
-            //TODO: Add exception handling
+            // TODO: Add exception handling
             println("Something went wrong when making move")
         }
     }
@@ -273,7 +277,7 @@ object DesktopFirebase : FirebaseController {
      */
     override fun setWinner(userId: String, gameId: String) {
         db.collection("games").document(gameId).update("winner", userId)
-        //TODO: Call function that should handle what happens when a winner is set
+        // TODO: Call function that should handle what happens when a winner is set
     }
 
     /**
@@ -287,8 +291,8 @@ object DesktopFirebase : FirebaseController {
         val docRef = db.collection("games").document(gameId)
         docRef.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
-                    @Nullable snapshot: DocumentSnapshot?,
-                    @Nullable e: FirestoreException?
+                @Nullable snapshot: DocumentSnapshot?,
+                @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
                     System.err.println("Listen failed: $e")

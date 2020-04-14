@@ -12,7 +12,9 @@ abstract class GuiState(controller: FirebaseController) : State(controller) {
     abstract val guiObjects: List<GuiObject>
 
     override fun create() {
-        Gdx.input.inputProcessor = InputMultiplexer(*guiObjects.filter { it.isClickable }.map { it.listener }.toTypedArray())
+        Gdx.input.inputProcessor =
+            InputMultiplexer(*guiObjects.filter { it.isClickable }.map { it.listener }
+                .toTypedArray())
     }
 
     override fun dispose() {
