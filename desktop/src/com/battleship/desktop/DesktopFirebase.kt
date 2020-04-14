@@ -61,7 +61,7 @@ object DesktopFirebase : FirebaseController {
             val name = document.getString("username")
             playerMap[id] = name
         }
-        //TODO: Call function that saves the playerMap
+        // TODO: Call function that saves the playerMap
     }
 
     /**

@@ -144,7 +144,7 @@ object AndroidFirebase : FirebaseController {
             }
             .addOnFailureListener { exception ->
                 Log.w("joinGame", exception)
-                //TODO: Add exception handling
+                // TODO: Add exception handling
             }
     }
 
