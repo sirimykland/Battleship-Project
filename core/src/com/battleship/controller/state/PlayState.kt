@@ -16,8 +16,8 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-import com.battleship.utility.GdxGraphicsUtil.equipmentsetPosition
-import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
+import com.battleship.utility.GdxGraphicsUtil.equipmentSetPosition
+import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
@@ -39,8 +39,8 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
         arrayOf(*(0 until player.equipmentSet.equipments.size).map { a: Int ->
             joinEquipmentButton(
                 a,
-                Gdx.graphics.equipmentsetPosition(),
-                Gdx.graphics.equipmentsetSize()
+                Gdx.graphics.equipmentSetPosition(),
+                Gdx.graphics.equipmentSetSize()
             )
         }.toTypedArray())
 
@@ -72,14 +72,12 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
         player.board.setTilesUnopened()
         player.board.createAndPlaceTreasures(1, TreasureType.TREASURECHEST, true)
         player.board.createAndPlaceTreasures(2, TreasureType.GOLDCOIN, true)
-        player.board.createAndPlaceTreasures(2, TreasureType.BOOT, true)
-        player.board.createAndPlaceTreasures(1, TreasureType.GOLDBAR, true)
+        player.board.createAndPlaceTreasures(2, TreasureType.GOLDKEY, true)
 
         opponent.board.setTilesUnopened()
         opponent.board.createAndPlaceTreasures(1, TreasureType.TREASURECHEST, false)
         opponent.board.createAndPlaceTreasures(2, TreasureType.GOLDCOIN, false)
-        opponent.board.createAndPlaceTreasures(2, TreasureType.BOOT, false)
-        opponent.board.createAndPlaceTreasures(1, TreasureType.GOLDBAR, false)
+        opponent.board.createAndPlaceTreasures(2, TreasureType.GOLDKEY, false)
 
         opponentsBoardText.hide()
     }
@@ -183,7 +181,7 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
         if (playerTurn) {
             header.set(Text("Your turn"))
         } else {
-            header.set(Text("Waiting for opponent..."))
+            header.set(Text("Waiting for opponent's move..."))
         }
 
         // Auto switching of boards
@@ -203,7 +201,6 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
     ): GuiObject {
         val equipment = player.equipmentSet.equipments[index]
 
-        // TODO Positioning/design
         return GUI.textButton(
             position.x + dimension.x / player.equipmentSet.equipments.size * index + index * 2,
             position.y,

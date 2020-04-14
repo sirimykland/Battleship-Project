@@ -7,9 +7,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
 import com.battleship.model.soundeffects.SoundEffects
-import com.battleship.model.treasures.Boot
 import com.battleship.model.treasures.GoldCoin
-import com.battleship.model.treasures.GoldBar
+import com.battleship.model.treasures.GoldKey
 import com.battleship.model.treasures.Treasure
 import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.treasures.TreasureChest
@@ -37,8 +36,7 @@ class Board(val size: Int) : GameObject() {
                 treasure = when (type) {
                     TreasureType.TREASURECHEST -> TreasureChest(Vector2(x, y), Random.nextBoolean())
                     TreasureType.GOLDCOIN -> GoldCoin(Vector2(x, y), Random.nextBoolean())
-                    TreasureType.BOOT -> Boot(Vector2(x, y), Random.nextBoolean())
-                    TreasureType.GOLDBAR -> GoldBar(Vector2(x, y), Random.nextBoolean())
+                    TreasureType.GOLDKEY -> GoldKey(Vector2(x, y), Random.nextBoolean())
                 }
             } while (!validateTreasurePosition(treasure))
 
@@ -68,16 +66,14 @@ class Board(val size: Int) : GameObject() {
         var x = position.x
         var y = position.y
         val tileSize = dimension.x / size
-        var x2 = x + dimension.x
-        var y2 = y + dimension.y
 
         // Draw board
-        for (array in board) {
-            for (value in array) {
+        for (array in board) { // Row
+            for (value in array) { // Column
                 if (value == Tile.PREGAME) {
                     tileRenderer.begin(ShapeRenderer.ShapeType.Line)
-                    Gdx.gl.glLineWidth(2f)
-                    tileRenderer.color = Color.BLACK
+                    Gdx.gl.glLineWidth(3f)
+                    tileRenderer.color = Color.DARK_GRAY
                     tileRenderer.rect(x, y, tileSize, tileSize)
                     tileRenderer.end()
                 } else {
@@ -98,12 +94,9 @@ class Board(val size: Int) : GameObject() {
                 }
 
                 x += tileSize + padding
-                x2 += tileSize + padding
             }
             y += tileSize + padding
-            y2 += tileSize + padding
             x = position.x
-            x2 = position.x + dimension.x
         }
 
         // Draw treasures

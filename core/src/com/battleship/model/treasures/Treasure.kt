@@ -13,7 +13,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     abstract var sprite: Sprite
     abstract var type: TreasureType
     abstract var sound: Sound
-    var padding = 0
+    private var padding = 3
     var revealed = false
 
     fun playSound(volume: Float) {
@@ -24,7 +24,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     }
 
     enum class TreasureType {
-        TREASURECHEST, GOLDCOIN, BOOT, GOLDBAR
+        TREASURECHEST, GOLDCOIN, GOLDKEY
     }
 
     fun hit(coordinates: Vector2): Boolean {
@@ -58,16 +58,17 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     override fun draw(batch: SpriteBatch, boardPos: Vector2, dimension: Vector2) {
         if (found() || revealed) {
 
-            val newX = boardPos.x + dimension.x * position.x + position.x * padding
-            val newY = boardPos.y + dimension.y * position.y + position.y * padding
-            val newWidth = this.dimension.x * dimension.x
-            val newHeight = this.dimension.y * dimension.y
+            val xPos = boardPos.x + dimension.x * position.x + padding
+            val yPos = boardPos.y + dimension.y * position.y + padding
+            val width = this.dimension.x * dimension.x - (padding * 2)
+            val height = this.dimension.y * dimension.y - (padding * 2)
+
             val spriteTexture = sprite.texture
             spriteTexture.magFilter
             spriteTexture.setFilter(spriteTexture.minFilter, spriteTexture.magFilter)
 
             batch.begin()
-            batch.draw(sprite.texture, newX, newY, newWidth, newHeight)
+            batch.draw(sprite.texture, xPos, yPos, width, height)
             batch.end()
         }
     }
