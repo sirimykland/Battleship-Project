@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
-import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.GoldKey
 import com.battleship.model.treasures.Treasure
@@ -17,7 +16,6 @@ import kotlin.random.Random
 class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
-    var padding: Int = 0 // Remove?
 
     // Change all tiles to unopened state
     fun setTilesUnopened() {
@@ -71,11 +69,11 @@ class Board(val size: Int) : GameObject() {
 
         // Draw board
         for (row in tiles) {
-            for (value in row) { // Column
+            for (value in row) {
                 if (value == Tile.PREGAME) {
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
                     Gdx.gl.glLineWidth(3f)
-                    shapeRenderer.color = Color.BLACK
+                    shapeRenderer.color = Color.DARK_GRAY
                     shapeRenderer.rect(x, y, tileSize, tileSize)
                     shapeRenderer.end()
                 } else {
@@ -95,9 +93,9 @@ class Board(val size: Int) : GameObject() {
                     shapeRenderer.end()
                 }
 
-                x += tileSize + padding
+                x += tileSize
             }
-            y += tileSize + padding
+            y += tileSize
             x = position.x
         }
 
