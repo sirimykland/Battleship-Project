@@ -58,7 +58,7 @@ object AndroidFirebase : FirebaseController {
         db.collection("users").add(data)
             .addOnSuccessListener { documentReference ->
                 val id = documentReference.id
-                Log.d("addPlayer", "player added with id=${id}")
+                Log.d("addPlayer", "player added with id=$id")
                 // TODO: Call some function that saves player id for later use
             }
             .addOnFailureListener { exception ->
@@ -83,7 +83,7 @@ object AndroidFirebase : FirebaseController {
         db.collection("games").add(data)
             .addOnSuccessListener { documentReference ->
                 val gameId = documentReference.id
-                Log.d("createGame", "created game with id=${gameId}")
+                Log.d("createGame", "created game with id=$gameId")
                 // TODO: Call some function that saves the game id for later use
             }
             .addOnFailureListener { exception ->
@@ -111,8 +111,8 @@ object AndroidFirebase : FirebaseController {
                                     val gameId = document.id
                                     Log.d(
                                         "getPendingGames",
-                                        "game found with id=${gameId} and " +
-                                            "user=${username}"
+                                        "game found with id=$gameId and " +
+                                            "user=$username"
                                     )
                                     // TODO: Call some function that adds the gameId and the username to a list of pending games
                                 }
