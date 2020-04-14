@@ -35,14 +35,6 @@ class Game(val gameId: String ) {
         isGameReady()
     }
 
-    fun initOpponent(playerId: String, playerName: String) {
-        opponent.playerId = playerId
-        opponent.playerName = playerName
-        this.playersTurn = opponent.playerId
-        isGameReady()
-        print("opponent registererd : ${opponent}")
-    }
-
     fun playersRegistered(): Boolean {
         if (me.playerId != "" && opponent.playerId != "") {
             println("players registererd : ${me}, ${opponent}")
@@ -88,13 +80,6 @@ class Game(val gameId: String ) {
             println("is game ready? $gameReady")
         }
         println("treasures: o:" + (opponent.board.treasures) + " and m:" + (this.me.board.treasures))
-
-        /*if (me.board.treasures.isNullOrEmpty() && me.playerId in treasures) {
-            println("   1. My registered treasures: " + treasures[me.playerId])
-            treasures[me.playerId]?.let { me.board.setTreasuresList(it) }
-        }*/
-
-
     }
 
     fun isGameReady() {
