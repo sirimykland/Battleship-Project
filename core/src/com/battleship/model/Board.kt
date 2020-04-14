@@ -15,7 +15,6 @@ import kotlin.random.Random
 class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
-    private val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 0 // Remove?
 
     // Change all tiles to unopened state
@@ -63,7 +62,7 @@ class Board(val size: Int) : GameObject() {
         return true
     }
 
-    override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
+    override fun draw(batch: SpriteBatch, shapeRenderer: ShapeRenderer, position: Vector2, dimension: Vector2) {
         var x = position.x
         var y = position.y
         val tileSize = dimension.x / size
@@ -73,26 +72,26 @@ class Board(val size: Int) : GameObject() {
             for (value in array) {
 
                 if (value == Tile.PREGAME) {
-                    tileRenderer.begin(ShapeRenderer.ShapeType.Line)
-                    tileRenderer.color = Color.BLACK
-                    tileRenderer.rect(x, y, tileSize, tileSize)
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+                    shapeRenderer.color = Color.BLACK
+                    shapeRenderer.rect(x, y, tileSize, tileSize)
                     //  tileRenderer.rectLine(x, y,x + size, y + size, 10f)
-                    tileRenderer.end()
+                    shapeRenderer.end()
                 } else {
-                    tileRenderer.begin(ShapeRenderer.ShapeType.Filled)
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
                     when (value) {
-                        Tile.HIT -> tileRenderer.color = Color.GREEN
-                        Tile.MISS -> tileRenderer.color = Color.RED
-                        Tile.NEAR -> tileRenderer.color = Color.YELLOW
-                        Tile.UNOPENED -> tileRenderer.color = Color.BLACK
+                        Tile.HIT -> shapeRenderer.color = Color.GREEN
+                        Tile.MISS -> shapeRenderer.color = Color.RED
+                        Tile.NEAR -> shapeRenderer.color = Color.YELLOW
+                        Tile.UNOPENED -> shapeRenderer.color = Color.BLACK
                     }
-                    tileRenderer.rect(x, y, tileSize, tileSize)
-                    tileRenderer.end()
+                    shapeRenderer.rect(x, y, tileSize, tileSize)
+                    shapeRenderer.end()
 
-                    tileRenderer.begin(ShapeRenderer.ShapeType.Line)
-                    tileRenderer.color = Color.WHITE
-                    tileRenderer.rect(x, y, tileSize, tileSize)
-                    tileRenderer.end()
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+                    shapeRenderer.color = Color.WHITE
+                    shapeRenderer.rect(x, y, tileSize, tileSize)
+                    shapeRenderer.end()
                 }
 
                 x += tileSize + padding
