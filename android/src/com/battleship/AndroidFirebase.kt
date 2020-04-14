@@ -190,7 +190,7 @@ object AndroidFirebase : FirebaseController{
      * @param y y coordinate of
      * @param playerId player making the move
      */
-    override fun makeMove(gameId: String, x: Int, y: Int, playerId: String) {
+    override fun makeMove(gameId: String, x: Int, y: Int, playerId: String, weapon: String) {
         //Get the document for the game using the id of the document
         db.collection("games").document(gameId).get()
                 .addOnSuccessListener { document ->
@@ -205,6 +205,7 @@ object AndroidFirebase : FirebaseController{
                     data["x"] = x
                     data["y"] = y
                     data["playerId"] = playerId
+                    data["weapon"] = weapon
                     //Add the move to the list of existing moves
                     moves.add(data)
                     //Push the list of moves to the database

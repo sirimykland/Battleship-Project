@@ -1,7 +1,7 @@
 package com.battleship.controller.state
 
 import com.battleship.GSM
-import com.battleship.controller.firebase.GameController
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
@@ -16,8 +16,8 @@ class MainMenuState(private val controller : FirebaseController) : GuiState(cont
     private val menuList = listOf(
             Pair("Create game as Olivia") {
                 GSM.userId = "zmWpyb8luZAMrBwzY97x"
-                val gameId = gameController.createGame(GSM.userId)
-                if (gameId.isNotEmpty()) gameController.setGame(gameId)
+                controller.createGame(GSM.userId)
+                // controller.setGame(GSM.activeGame.gameId)
                 GSM.set(PreGameState(controller))
             },
             Pair("Settings") { GSM.set(SettingsState(controller)) },

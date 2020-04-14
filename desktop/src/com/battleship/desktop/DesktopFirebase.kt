@@ -1,16 +1,15 @@
 package com.battleship.desktop
 
 import com.battleship.GSM
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import com.battleship.model.Player
-import com.battleship.controller.firebase.FirebaseController
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.EventListener
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.FirestoreException
-import com.google.cloud.firestore.ListenerRegistration
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.FirestoreClient
@@ -25,7 +24,7 @@ object DesktopFirebase : FirebaseController {
     // The URL of the firebase project
     private const val firebaseUrl = "https://battleshipz.firebaseio.com"
     // Protected variable used by the other controllers to access database
-    private val db : Firestore
+    private val db: Firestore
 
     // Set up database connection
     init {
@@ -55,7 +54,7 @@ object DesktopFirebase : FirebaseController {
      * Get all the players registered in the database
      * @return a map containing user id and username
      */
-    override fun getPlayers(){
+    override fun getPlayers() {
         val query = db.collection("users").get()
         val querySnapshot = query.get()
         val documents = querySnapshot.documents
@@ -89,7 +88,7 @@ object DesktopFirebase : FirebaseController {
      * Start new game
      * @param userId the id of the user setting up the game
      */
-    override fun createGame(userId: String){
+    override fun createGame(userId: String) {
         // Set up game data
         val data = mutableMapOf<String, Any>()
         data["player1"] = userId
@@ -106,7 +105,7 @@ object DesktopFirebase : FirebaseController {
     /**
      * Function getting all games where there is currently only one player
      */
-    override fun getPendingGames(){
+    override fun getPendingGames() {
         val gameQuery = db.collection("games").whereEqualTo("player2", "").get()
         val gameQuerySnapshot = gameQuery.get()
         val gameDocuments = gameQuerySnapshot.documents
@@ -193,7 +192,7 @@ object DesktopFirebase : FirebaseController {
         val game = query.get()
 
         if (game.exists()) {
-            // val treasures = getTreasures(gameId)
+            val treasures = getTreasures(gameId)
 
             val player1Id: String = game.get("player1") as String
             val player1: Player = getUser(player1Id)
@@ -210,7 +209,7 @@ object DesktopFirebase : FirebaseController {
 
             println("player1: ${player1}, player2: ${player2}")
 
-            setTreasures(gameId)
+            // GSM.activeGame.setTreasures()
         } else {
             throw error("Something went wrong when fetching the Game")
         }
@@ -231,7 +230,7 @@ object DesktopFirebase : FirebaseController {
             GSM.activeGame.opponent.playerId = player2Id
             GSM.activeGame.opponent.playerName = db.collection("users").document(player2Id).get().get().get("username").toString()
             println("name " + GSM.activeGame.opponent.playerName)
-            setTreasures(gameId)
+            // setTreasures(gameId)
         } else {
             throw error("Something went wrong when fetching the Game")
         }
@@ -257,7 +256,7 @@ object DesktopFirebase : FirebaseController {
      * @param gameId the id of the game
      * @return a map containing a list of treasures per user
      */
-    override fun getTreasures(gameId: String){
+    override fun getTreasures(gameId: String) {
         println("settreasures is called()")
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
@@ -265,8 +264,6 @@ object DesktopFirebase : FirebaseController {
             val treasures = game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
             println("all treasures: $treasures")
             GSM.activeGame.setTreasures(treasures)
-            val treasures = game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
-            //TODO: Call a function that saves the map of treasures
         } else {
             //TODO: Add error handling
             throw error("Something went wrong when fetching treasures")
@@ -280,7 +277,7 @@ object DesktopFirebase : FirebaseController {
      * @param y y coordinate of
      * @param playerId player making the move
      */
-    override fun makeMove(gameId: String, x: Float, y: Float, playerId: String, weapon: String) {
+    override fun makeMove(gameId: String, x: Int, y: Int, playerId: String, weapon: String) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
@@ -307,11 +304,6 @@ object DesktopFirebase : FirebaseController {
     override fun setWinner(userId: String, gameId: String) {
         db.collection("games").document(gameId).update("winner", userId)
         //TODO: Call function that should handle what happens when a winner is set
-    }
-
-    fun detachGameListener(gameId: String) {
-        println("gamelistener removed")
-        registration?.remove()
     }
 
     /**
@@ -349,7 +341,7 @@ object DesktopFirebase : FirebaseController {
                             val treasures = snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
                             // If there is not enough treasures registered
                             if (treasures.size <= 2 && GSM.activeGame.playersRegistered()) {
-                                setTreasures(gameId)
+                                getTreasures(gameId)
                             } else {
                                 // Get the list of moves
                                 val moves = snapshot.data?.get("moves") as MutableList<Map<String, Any>>
@@ -362,7 +354,7 @@ object DesktopFirebase : FirebaseController {
                                 }
                                 // If there is no winner, continue game
                                 else {
-                                    addMoveListener(gameId)
+                                    addMoveListener(gameId, playerId)
                                 }
                             }
                         }
@@ -376,7 +368,7 @@ object DesktopFirebase : FirebaseController {
         })
     }
 
-    fun addMoveListener(gameId: String) {
+    fun addMoveListener(gameId: String, playerId: String) {
         val query = db.collection("games").document(gameId)
         val moveListener = query.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(

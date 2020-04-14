@@ -1,9 +1,7 @@
 package com.battleship.controller.state
 
 import com.battleship.GSM
-import com.battleship.controller.firebase.GameController
 import com.battleship.model.GameListObject
-import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -48,9 +46,9 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
             20f,
             "+"
     ) {
-        val gameId = gameController.createGame(GSM.userId)
-        if (gameId.isNotEmpty()) gameController.setGame(gameId)
-        GSM.set(PreGameState())
+        controller.createGame(GSM.userId)
+        //if (gameId.isNotEmpty()) controller.setGame(GSM.activeGame.gameId)
+        GSM.set(PreGameState(controller))
     }
 
     override val guiObjects: List<GuiObject> = listOf(
@@ -58,20 +56,19 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
         nextPageButton,
         previousPageButton,
         *playerButtons,
-        GUI.backButton { GameStateManager.set(MainMenuState(controller)) }
-            GUI.header("Usage guide"),
-            nextPageButton,
-            previousPageButton,
-            *playerButtons,
-            GUI.backButton {
-                GSM.set(MainMenuState())
-            },
+        GUI.backButton { GSM.set(MainMenuState(controller)) },
+        GUI.header("Usage guide"),
+        nextPageButton,
+        previousPageButton,
+        *playerButtons,
+        GUI.backButton { GSM.set(MainMenuState(controller)) },
             createGameButton
     )
     var games = emptyList<GameListObject>()
 
     override fun create() {
         super.create()
+        controller.getPendingGames()
         retrieve(this::updateButtons)
     }
 
@@ -79,10 +76,8 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
         //users = gameController.getPendingGames()
         //userList = users.toList().map { a -> a.second }
 
-        games = gameController.getPendingGames()
-        //Commented out because firebase doesn't work like this anymore
-        //users = controller.getPendingGames()
-        userList = users.toList().map { a -> a.second }
+        games = GSM.pendingGames
+        // userList = users.toList().map { a -> a.second }
         callback()
     }
 
@@ -119,17 +114,18 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
         ) {
             val gameId = games.get((page * itemsPerPage) + index).gameId
             print("My id:  "+GSM.userId)
-            val successful = gameController.joinGame(
+            controller.joinGame(
                     gameId,
                     GSM.userId)
-            if (successful) {
-                gameController.setGame(gameId)
-                GSM.set(PreGameState())
-            }
         }
     }
 
     override fun update(dt: Float) {
+        // TODO
+        /*if (GSM.activeGame){
+            controller.setGame(gameId)
+            GSM.set(PreGameState())
+        }*/
     }
 
     override fun render() {

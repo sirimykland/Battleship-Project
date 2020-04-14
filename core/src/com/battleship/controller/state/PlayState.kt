@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
-import com.battleship.controller.firebase.GameController
+import com.battleship.model.Board
 import com.battleship.model.Player
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
@@ -22,6 +22,8 @@ import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 class PlayState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
@@ -103,11 +105,11 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
         GSM.activeGame.opponent.updateHealth()
         if (player.health == 0) {
             println("Opponent won!")
-            GSM.set(GameOverState())
+            GSM.set(GameOverState(controller))
         } else if (GSM.activeGame.opponent.health == 0) {
             println("You won!")
             controller.setWinner(GSM.userId, GSM.activeGame.gameId)
-            GSM.set(GameOverState())
+            GSM.set(GameOverState(controller))
         }
     }
 

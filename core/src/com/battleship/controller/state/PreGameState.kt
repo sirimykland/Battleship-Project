@@ -3,7 +3,6 @@ package com.battleship.controller.state
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
-import com.battleship.controller.firebase.GameController
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Game
 import com.battleship.model.treasures.Treasure
@@ -44,7 +43,7 @@ class PreGameState(private val controller : FirebaseController) : GuiState(contr
             .onClick {
                 println("gameready is: " + game.gameReady)
                 game = GSM.activeGame
-                gameController.registerTreasures(
+                controller.registerTreasures(
                         game.gameId,
                         game.me.playerId,
                         game.me.board.getTreasuresList()
@@ -57,7 +56,7 @@ class PreGameState(private val controller : FirebaseController) : GuiState(contr
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
         GUI.header("Place treasures"),
-        GUI.backButton { GameStateManager.set(MainMenuState(controller)) }
+        GUI.backButton { GSM.set(MainMenuState(controller)) }
     )
 
     override fun render() {

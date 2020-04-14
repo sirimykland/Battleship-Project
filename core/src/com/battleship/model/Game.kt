@@ -96,6 +96,4 @@ class Game(val gameId: String, player1: Player, player2: Player = Player()) {
     override fun toString(): String {
         return "Game( gameReady=$gameReady, opponent=$opponent, playersTurn='$playersTurn')"
     }
-
-
 }
