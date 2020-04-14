@@ -1,6 +1,8 @@
 package com.battleship.utility
 
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
@@ -124,4 +126,10 @@ object GUI {
             .with(Image(texturePath))
             .onClick(onClick)
     }
+
+    fun background(): GuiObject {
+        return GuiObject(0f,0f, 100f, 100f)
+            .with(Background(Sprite(Texture("images/background.png"))))
+    }
+
 }
