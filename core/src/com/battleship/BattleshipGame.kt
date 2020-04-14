@@ -7,7 +7,7 @@ import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.state.MainMenuState
 import com.battleship.utility.Font
 
-class BattleshipGame (private val controller: FirebaseController) : Game() {
+class BattleshipGame(private val controller: FirebaseController) : Game() {
     companion object {
         var music: Music? = null
         var soundOn: Boolean = false //TODO: Set true

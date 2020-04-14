@@ -15,7 +15,7 @@ import com.battleship.utility.GdxGraphicsUtil.size
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-class PreGameState(private val controller : FirebaseController) : GuiState(controller) {
+class PreGameState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     private val boardSize = 10
     var player: Player = Player(boardSize)
