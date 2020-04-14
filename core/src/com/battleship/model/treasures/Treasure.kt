@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.battleship.BattleshipGame
 import com.battleship.model.GameObject
-
 abstract class Treasure(var position: Vector2) : GameObject() {
     abstract var dimension: Vector2
     abstract var name: String
@@ -25,7 +24,7 @@ abstract class Treasure(var position: Vector2) : GameObject() {
     }
 
     enum class TreasureType {
-        TREASURECHEST, GOLDCOIN, BOOT
+        TREASURECHEST, GOLDCOIN, BOOT, GOLDBAR
     }
 
     fun hit(coordinates: Vector2): Boolean {
@@ -63,6 +62,9 @@ abstract class Treasure(var position: Vector2) : GameObject() {
             val newY = boardPos.y + dimension.y * position.y + position.y * padding
             val newWidth = this.dimension.x * dimension.x
             val newHeight = this.dimension.y * dimension.y
+            val spriteTexture = sprite.texture
+            spriteTexture.magFilter
+            spriteTexture.setFilter(spriteTexture.minFilter, spriteTexture.magFilter)
 
             batch.begin()
             batch.draw(sprite.texture, newX, newY, newWidth, newHeight)

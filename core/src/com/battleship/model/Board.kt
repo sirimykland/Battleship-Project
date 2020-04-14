@@ -9,6 +9,7 @@ import com.battleship.model.equipment.Equipment
 import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.treasures.Boot
 import com.battleship.model.treasures.GoldCoin
+import com.battleship.model.treasures.GoldBar
 import com.battleship.model.treasures.Treasure
 import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.treasures.TreasureChest
@@ -37,6 +38,7 @@ class Board(val size: Int) : GameObject() {
                     TreasureType.TREASURECHEST -> TreasureChest(Vector2(x, y), Random.nextBoolean())
                     TreasureType.GOLDCOIN -> GoldCoin(Vector2(x, y), Random.nextBoolean())
                     TreasureType.BOOT -> Boot(Vector2(x, y), Random.nextBoolean())
+                    TreasureType.GOLDBAR -> GoldBar(Vector2(x, y), Random.nextBoolean())
                 }
             } while (!validateTreasurePosition(treasure))
 

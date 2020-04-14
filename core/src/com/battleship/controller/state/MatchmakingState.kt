@@ -1,18 +1,16 @@
 package com.battleship.controller.state
 
 import com.battleship.GameStateManager
-import com.battleship.controller.firebase.GameController
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
 import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
-class MatchmakingState : GuiState() {
+class MatchmakingState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private val itemsPerPage = 3
-
-    private val gameController = GameController()
 
     private val playerButtons: Array<GuiObject> = arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
@@ -50,7 +48,7 @@ class MatchmakingState : GuiState() {
         nextPageButton,
         previousPageButton,
         *playerButtons,
-        GUI.backButton { GameStateManager.set(MainMenuState()) }
+        GUI.backButton { GameStateManager.set(MainMenuState(controller)) }
     )
 
     var users = emptyMap<String, String>()
@@ -63,7 +61,8 @@ class MatchmakingState : GuiState() {
     }
 
     private fun retrieve(callback: () -> Unit) {
-        users = gameController.getPendingGames()
+        //Commented out because firebase doesn't work like this anymore
+        //users = controller.getPendingGames()
         userList = users.toList().map { a -> a.second }
         callback()
     }
