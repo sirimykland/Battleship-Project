@@ -109,7 +109,7 @@ class Board(val size: Int) : GameObject() {
         if (!equipment.hasMoreUses()) {
             return Result.NO_USES_LEFT
         }
-        equipment.use()
+
         val xSearchMin = boardTouchPos.x.toInt() - equipment.searchRadius
         val xSearchMax = boardTouchPos.x.toInt() + equipment.searchRadius + 1
         val ySearchMin = boardTouchPos.y.toInt() - equipment.searchRadius
@@ -128,9 +128,11 @@ class Board(val size: Int) : GameObject() {
 
         return when {
             resultList.contains(Result.FOUND) -> {
+                equipment.use()
                 Result.FOUND
             }
             resultList.contains(Result.HIT) -> {
+                equipment.use()
                 sound.playHit(0.8f)
                 Result.HIT
             }
@@ -138,6 +140,7 @@ class Board(val size: Int) : GameObject() {
                 Result.NOT_VALID
             }
             else -> {
+                equipment.use()
                 equipment.playSound(0.8f)
                 Result.MISS
             }
