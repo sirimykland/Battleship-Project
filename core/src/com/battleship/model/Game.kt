@@ -30,7 +30,7 @@ class Game(val gameId: String ) {
             this.me = player2
             this.opponent = player1
         }
-        this.playersTurn = player2.playerId
+        // this.playersTurn = player2.playerId
         // me.board.boardColor = Color.LIGHT_GRAY
         isGameReady()
     }

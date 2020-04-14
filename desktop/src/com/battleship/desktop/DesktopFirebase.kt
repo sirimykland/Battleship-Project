@@ -152,7 +152,7 @@ object DesktopFirebase : FirebaseController {
      */
     override fun joinGame(gameId: String, userId: String) {
         // Add the data to the game document
-        db.collection("games").document(gameId).update("player2", userId)
+        val result = db.collection("games").document(gameId).update("player2", userId)
         setGame(gameId)
     }
 
@@ -166,6 +166,7 @@ object DesktopFirebase : FirebaseController {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
+            println("args: $gameId, $userId, $treasures")
             val dbTreasures = game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
             dbTreasures[userId] = treasures
             db.collection("games").document(gameId).update("treasures", dbTreasures)
@@ -183,19 +184,17 @@ object DesktopFirebase : FirebaseController {
      */
     override fun setGame(gameId: String) {
         GSM.activeGame = Game(gameId)
-        val query = db?.collection("games")?.document(gameId!!).get()
+        val query = db.collection("games").document(gameId).get()
         val game = query.get()
 
         if (game.exists()) {
             val player1Id: String = game.get("player1") as String
             val player1: Player = getUser(player1Id)
-            GSM.activeGame?.setPlayers(player1)
 
             val player2Id: String = game.get("player2") as String
-            if (player2Id != "") {
-                val player2: Player = getUser(player2Id)
-                GSM.activeGame?.initOpponent(player2.playerId, player2.playerName)
-            }
+            val player2: Player = if (player2Id != "") getUser(player2Id) else Player()
+
+            GSM.activeGame?.setPlayers(player1, player2)
             println("setGame: ${GSM.activeGame}")
         } else {
             throw error("Something went wrong when setting the Game")

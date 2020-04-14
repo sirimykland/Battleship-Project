@@ -25,7 +25,7 @@ class PreGameState(private val controller : FirebaseController) : GuiState(contr
 
     override fun create() {
         super.create()
-        print("---PREGAMESTATE---")
+        println("---PREGAMESTATE---")
         GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.BOOT, true)
         GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDCOIN, true)
         GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.TREASURECHEST, true)
@@ -43,6 +43,7 @@ class PreGameState(private val controller : FirebaseController) : GuiState(contr
             .onClick {
                 println("gameready is: " + game.gameReady)
                 game = GSM.activeGame!!
+                println("t: "+game.me.board.getTreasuresList())
                 controller.registerTreasures(
                         game.gameId,
                         game.me.playerId,
@@ -50,6 +51,7 @@ class PreGameState(private val controller : FirebaseController) : GuiState(contr
                 )
 
                 println("PREGAMESTATE: gameready is: " + game.gameReady)
+                // todo something here
                 GSM.set(LoadingGameState(controller))
             }
 
