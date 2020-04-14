@@ -32,7 +32,7 @@ class Game(val gameId: String ) {
         }
         // this.playersTurn = player2.playerId
         // me.board.boardColor = Color.LIGHT_GRAY
-        isGameReady()
+        // isGameReady()
     }
 
     fun playersRegistered(): Boolean {
@@ -75,11 +75,11 @@ class Game(val gameId: String ) {
             println("   2. Opponents registered treasures: " + treasures[opponent.playerId])
             treasures[opponent.playerId]?.let { this.opponent.board.setTreasuresList(it as ArrayList) }
             /* this.opponent.board.setTreasuresList(treasures[opponent.playerId]?: error("No treasures in list"))*/
-            isGameReady()
             println("   2. Opponents registered treasures: " + opponent.board.treasures)
             println("is game ready? $gameReady")
         }
         println("treasures: o:" + (opponent.board.treasures) + " and m:" + (this.me.board.treasures))
+        isGameReady()
     }
 
     fun isGameReady() {

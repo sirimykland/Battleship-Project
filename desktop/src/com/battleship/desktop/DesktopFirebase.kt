@@ -223,27 +223,11 @@ object DesktopFirebase : FirebaseController {
     }
 
     /**
-     * Get the treasures in a game
-     * @param gameId the id of the game
-     * @return a map containing a list of treasures per user
-     */
-    /* private fun getTreasures(gameId: String): MutableMap<String, List<Map<String, Any>>> {
-        val query = db.collection("games").document(gameId).get()
-        val game = query.get()
-        if (game.exists()) {
-            return game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
-        } else {
-            throw error("Something went wrong when fetching treasures")
-        }
-    }*/
-
-    /**
-     * set the treasures in a game
+     * get the treasures from firebase and stores them in a game
      * @param gameId the id of the game
      * @return a map containing a list of treasures per user
      */
     override fun getTreasures(gameId: String) {
-        println("settreasures is called()")
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
@@ -341,6 +325,7 @@ object DesktopFirebase : FirebaseController {
                                 // If there is no winner, continue game
                                 else {
                                     addMoveListener(gameId, playerId)
+                                    // remove this listener ? and only listen for moves
                                 }
                             }
                         }

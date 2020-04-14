@@ -210,12 +210,11 @@ class Board(val size: Int) : GameObject() {
         treasures = ArrayList<Treasure>()
         lateinit var newTreasure: Treasure
         lateinit var position: Vector2
-        var rotate: Boolean = true
-        println("list length: " + treasuresList.size)
+        var rotate = true
         for (treasure in treasuresList) {
             position = Vector2((treasure["x"] as Number).toFloat(), (treasure["y"] as Number).toFloat())
             rotate = if (treasure.containsKey("rotate")) treasure["rotate"] as Boolean else false
-            println("parsing treasure: $treasure")
+
             when (treasure["type"]) {
                 "Gold coin" ->
                     newTreasure = GoldCoin(position, rotate)
@@ -228,6 +227,7 @@ class Board(val size: Int) : GameObject() {
             }
             treasures.add(newTreasure)
         }
+        println("- new treasure: $treasures")
     }
 
     override fun toString(): String {
