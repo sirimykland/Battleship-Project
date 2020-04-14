@@ -51,8 +51,6 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
                     board.size
                 )
             val newTreasurePos = Vector2(newBoardTouchPos.y, newBoardTouchPos.x)
-            println(newTreasurePos)
-
             activeTreasure!!.updatePosition(newTreasurePos)
         }
         return false
