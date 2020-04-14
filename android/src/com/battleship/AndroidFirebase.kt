@@ -114,7 +114,10 @@ object AndroidFirebase : FirebaseController {
                         val player1: Player = Player(player1Id, "Unknown")
 
                         val player2Id: String = document.getString("player2") as String
-                        val player2: Player = Player(player2Id, "Unknown")
+                        val player2: Player =
+                                if (player2Id != "")
+                                    Player(player2Id, "Unknown")
+                                else Player()
                         GSM.activeGame!!.setPlayers(player1, player2)
 
                         for (p in listOf(GSM.activeGame!!.me, GSM.activeGame!!.opponent)) {
@@ -123,9 +126,7 @@ object AndroidFirebase : FirebaseController {
                                 db.collection("users").document(p.playerId).get()
                                         .addOnSuccessListener { documentReference ->
                                             val username = documentReference.get("username")
-                                            Log.d("setGame",
-                                                    "game set with id=${gameId} and " +
-                                                            "user=${username}")
+                                            Log.d("setGame", "user set with id=${p.playerId} and " + "user=${username}")
                                             if (username != null) {
                                                 p.playerName = username as String
                                             }
@@ -136,6 +137,7 @@ object AndroidFirebase : FirebaseController {
                                         }
                             }
                         }
+
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -165,7 +167,7 @@ object AndroidFirebase : FirebaseController {
                                             Log.d("getPendingGames",
                                                     "game found with id=${gameId} and " +
                                                             "user=${username}")
-                                            if (username !=null) {
+                                            if (username != null) {
                                                 GSM.pendingGames.add(GameListObject(gameId, playerId, username as String))
                                             }
                                             Log.d("getpendingGames", GSM.pendingGames.toString())
@@ -234,7 +236,7 @@ object AndroidFirebase : FirebaseController {
                     val treasures = document.get("treasures")
                     Log.d("getTreasures", "successful! $treasures")
                     //TODO: Call function that stores the treasures
-                    if (treasures != null){
+                    if (treasures != null) {
                         GSM.activeGame!!.setTreasures(treasures as Map<String, List<Map<String, Any>>>)
                     }
                 }

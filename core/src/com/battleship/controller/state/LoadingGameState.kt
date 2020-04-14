@@ -13,7 +13,6 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     override fun create() {
         super.create()
         println("---LOADINGSTATE---")
-        println("gameready is: " + GSM.activeGame!!.gameReady)
         controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.me.playerId)
     }
 
@@ -33,7 +32,8 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     }
 
     override fun update(dt: Float) {
-        if (GSM.activeGame!!.gameReady) {
+        if (GSM.activeGame != null && GSM.activeGame!!.gameReady) {
+            println("GAME is READY: " + GSM.activeGame!!.gameReady)
             GSM.set(PlayState(controller))
         }
     }

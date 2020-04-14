@@ -17,7 +17,6 @@ class MainMenuState(private val controller : FirebaseController) : GuiState(cont
             Pair("Create game as Olivia") {
                 GSM.userId = "zmWpyb8luZAMrBwzY97x"
                 controller.createGame(GSM.userId)
-                GSM.set(PreGameState(controller))
             },
             Pair("Settings") { GSM.set(SettingsState(controller)) },
             Pair("Matchmaking") { GSM.set(MatchmakingState(controller)) }
@@ -59,7 +58,10 @@ class MainMenuState(private val controller : FirebaseController) : GuiState(cont
 
     override var view: View = BasicView()
 
-    override fun update(dt: Float) {}
+    override fun update(dt: Float) {
+        if (GSM.activeGame != null)
+            GSM.set(PreGameState(controller))
+    }
 
     override fun render() {
         view.render(title, skeleton, map, *guiObjects.toTypedArray())

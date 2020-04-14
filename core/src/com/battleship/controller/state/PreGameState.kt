@@ -21,7 +21,6 @@ import com.battleship.view.View
 
 class PreGameState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
-    private var game: Game = GSM.activeGame!!
 
     override fun create() {
         super.create()
@@ -41,8 +40,8 @@ class PreGameState(private val controller : FirebaseController) : GuiState(contr
             .with(Border(Palette.WHITE, 10f))
             .with(Text("Start Game"))
             .onClick {
+                val game = GSM.activeGame!!
                 println("gameready is: " + game.gameReady)
-                game = GSM.activeGame!!
                 println("t: "+game.me.board.getTreasuresList())
                 controller.registerTreasures(
                         game.gameId,
@@ -62,7 +61,7 @@ class PreGameState(private val controller : FirebaseController) : GuiState(contr
     )
 
     override fun render() {
-        this.view.render(*guiObjects.toTypedArray(), game.me.board)
+        this.view.render(*guiObjects.toTypedArray(), GSM.activeGame!!.me.board)
     }
 
     override fun update(dt: Float) {
