@@ -19,8 +19,9 @@ import java.io.FileInputStream
 object DesktopFirebase : FirebaseController {
     // The URL of the firebase project
     private const val firebaseUrl = "https://battleshipz.firebaseio.com"
+
     // Protected variable used by the other controllers to access database
-    private val db : Firestore
+    private val db: Firestore
 
     // Set up database connection
     init {
@@ -35,9 +36,9 @@ object DesktopFirebase : FirebaseController {
             val credentials = GoogleCredentials.fromStream(serviceAccount)
             // Set options for connection
             val options = FirebaseOptions.Builder()
-                    .setCredentials(credentials)
-                    .setDatabaseUrl(firebaseUrl)
-                    .build()
+                .setCredentials(credentials)
+                .setDatabaseUrl(firebaseUrl)
+                .build()
             FirebaseApp.initializeApp(options)
         }
 
@@ -45,12 +46,11 @@ object DesktopFirebase : FirebaseController {
         db = FirestoreClient.getFirestore()
     }
 
-
     /**
      * Get all the players registered in the database
      * @return a map containing user id and username
      */
-    override fun getPlayers(){
+    override fun getPlayers() {
         val query = db.collection("users").get()
         val querySnapshot = query.get()
         val documents = querySnapshot.documents
@@ -84,7 +84,7 @@ object DesktopFirebase : FirebaseController {
      * Start new game
      * @param userId the id of the user setting up the game
      */
-    override fun createGame(userId: String){
+    override fun createGame(userId: String) {
         // Set up game data
         val data = mutableMapOf<String, Any>()
         data["player1"] = userId
@@ -101,7 +101,7 @@ object DesktopFirebase : FirebaseController {
     /**
      * Function getting all games where there is currently only one player
      */
-    override fun getPendingGames(){
+    override fun getPendingGames() {
         val gameQuery = db.collection("games").whereEqualTo("player2", "").get()
         val gameQuerySnapshot = gameQuery.get()
         val gameDocuments = gameQuerySnapshot.documents
@@ -140,7 +140,11 @@ object DesktopFirebase : FirebaseController {
      * @param userId the id of the user owning the treasures
      * @param treasures list containing the treasures that should be added, each described using a map
      */
-    override fun registerTreasures(gameId: String, userId: String, treasures: List<Map<String, Any>>) {
+    override fun registerTreasures(
+        gameId: String,
+        userId: String,
+        treasures: List<Map<String, Any>>
+    ) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
@@ -159,7 +163,7 @@ object DesktopFirebase : FirebaseController {
      * @param gameId the id of the game
      * @return a map containing a list of treasures per user
      */
-    override fun getTreasures(gameId: String){
+    override fun getTreasures(gameId: String) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
@@ -217,8 +221,8 @@ object DesktopFirebase : FirebaseController {
         val docRef = db.collection("games").document(gameId)
         docRef.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
-                    @Nullable snapshot: DocumentSnapshot?,
-                    @Nullable e: FirestoreException?
+                @Nullable snapshot: DocumentSnapshot?,
+                @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
                     System.err.println("Listen failed: $e")
@@ -234,7 +238,8 @@ object DesktopFirebase : FirebaseController {
                     // If there is an opponent in the game
                     else {
                         // Get the field containing the treasures in the database
-                        val treasures = snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
+                        val treasures =
+                            snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
 
                         // If there is not enough treasures registered
                         //TODO: Do this in a better way

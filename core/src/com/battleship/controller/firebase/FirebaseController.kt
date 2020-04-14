@@ -1,7 +1,6 @@
 package com.battleship.controller.firebase
 
 interface FirebaseController {
-
     fun getPlayers()
     fun addPlayer(username: String)
     fun createGame(userId: String)
@@ -12,5 +11,4 @@ interface FirebaseController {
     fun makeMove(gameId: String, x: Int, y: Int, playerId: String)
     fun setWinner(userId: String, gameId: String)
     fun addGameListener(gameId: String, playerId: String)
-
 }
