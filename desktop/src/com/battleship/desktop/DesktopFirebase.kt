@@ -220,7 +220,7 @@ object DesktopFirebase : FirebaseController {
      * @param gameId the id of the game
      * @return a Game object containing game and player
      */
-    fun setOpponent(gameId: String) {
+    override fun getOpponent(gameId: String) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
 
@@ -335,7 +335,7 @@ object DesktopFirebase : FirebaseController {
                     else {
                         println("opponent id " + GSM.activeGame.opponent.playerId)
                         if (GSM.activeGame.opponent.playerId == "") {
-                            setOpponent(gameId)
+                            getOpponent(gameId)
                         } else {
                             // Get the field containing the treasures in the database
                             val treasures = snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>

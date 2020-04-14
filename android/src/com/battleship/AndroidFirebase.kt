@@ -44,6 +44,7 @@ object AndroidFirebase : FirebaseController{
                 }
     }
 
+
     /**
      * Register new player in the db
      * @param username the username wanted
@@ -184,6 +185,32 @@ object AndroidFirebase : FirebaseController{
     }
 
     /**
+     * Get the ships in a game
+     * @param gameId the id of the game
+     * @return a Game object containing game and player
+     */
+    override fun getOpponent(gameId: String) {
+        db.collection("games").document(gameId).get()
+                .addOnSuccessListener {document ->
+                    val player2Id = document.get("player2")
+                    Log.d("getOpponent", "successful! $player2Id")
+                    //TODO: Call function that stores the treasures
+                    GSM.activeGame.opponent.playerId = player2Id as String
+                    db.collection("users").document(player2Id).get()
+                            .addOnSuccessListener { document ->
+                                GSM.activeGame.opponent.playerName = document.get("username") as String
+                            }.addOnFailureListener{exception ->
+                                Log.w("getOpponent", exception)
+                                //TODO: Add exception handling
+                            }
+                }
+                .addOnFailureListener{exception ->
+                    Log.w("getOpponent", exception)
+                    //TODO: Add exception handling
+                }
+    }
+
+    /**
      * Registers the move
      * @param gameId the id of the game document
      * @param x x coordinate of move
@@ -264,6 +291,10 @@ object AndroidFirebase : FirebaseController{
                 }
                 // If there is an opponent in the game
                 else {
+                    println("opponent id " + GSM.activeGame.opponent.playerId)
+                    if (GSM.activeGame.opponent.playerId == "") {
+                        getOpponent(gameId)
+                    }
                     // Get the field containing the treasures in the database
                     var treasures = mutableMapOf<String, List<Map<String, Any>>>()
                     if (snapshot.data?.get("treasures")!=null){
@@ -271,9 +302,9 @@ object AndroidFirebase : FirebaseController{
                     }
 
                     // If there is not enough treasures registered
-                    if (treasures.size < 2) {
+                    if (treasures.size <= 2 && GSM.activeGame.playersRegistered()) {
                         Log.d("addGameListener","Treasures not registered")
-                        //TODO: Call function that should be called when not enough treasures is registered
+                        getTreasures(gameId)
                     } else {
 
                         // Get the list of moves
@@ -287,6 +318,7 @@ object AndroidFirebase : FirebaseController{
                         if (winner != "") {
                             Log.d("addGameListener","The winner is $winner")
                             //TODO: Call function that should be called when a winner is registered
+                            GSM.activeGame.winner = winner as String // or something
                         }
                         // If there is no winner, continue game
                         else {
@@ -294,16 +326,18 @@ object AndroidFirebase : FirebaseController{
                             if (moves.size == 0) {
                                 Log.d("addGameListener","No moves made yet")
                                 //TODO: Call function that should be called when no moves is registered yet
+                                // set game status to ready
+                                GSM.activeGame.isGameReady()
                             } else {
                                 // Get the last move
                                 val lastMove = moves.get(moves.size - 1)
-                                // If the last move is performed by opponent
-                                if (!lastMove["playerId"]!!.equals(playerId)) {
+                                val game = GSM.activeGame
+                                if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
                                     Log.d("addGameListener","Opponent made the last move")
-                                    //TODO: Call function that should be called when it's your turn
-                                } else {
+                                    GSM.activeGame.flipPlayer()
+                                } else if (lastMove["playerId"]!!.equals(game.me.playerId)) {
                                     Log.d("addGameListener","You made the last move")
-                                    //TODO: Call function that should be called when it's not your turn
+                                    GSM.activeGame.flipPlayer()
                                 }
                             }
                         }
