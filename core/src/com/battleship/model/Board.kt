@@ -72,7 +72,7 @@ class Board(val size: Int) : GameObject() {
                 if (value == Tile.PREGAME) {
                     tileRenderer.begin(ShapeRenderer.ShapeType.Line)
                     Gdx.gl.glLineWidth(3f)
-                    tileRenderer.color = Color.DARK_GRAY
+                    tileRenderer.color = Color.BLACK
                     tileRenderer.rect(x, y, tileSize, tileSize)
                     tileRenderer.end()
                 } else {
@@ -87,7 +87,7 @@ class Board(val size: Int) : GameObject() {
                     tileRenderer.end()
 
                     tileRenderer.begin(ShapeRenderer.ShapeType.Line)
-                    tileRenderer.color = Color.WHITE
+                    tileRenderer.color = Color.BLACK
                     tileRenderer.rect(x, y, tileSize, tileSize)
                     tileRenderer.end()
                 }
