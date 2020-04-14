@@ -17,7 +17,6 @@ import kotlin.random.Random
 class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
-    private val tileRenderer: ShapeRenderer = ShapeRenderer()
     var padding: Int = 0 // Remove?
 
     // Change all tiles to unopened state
@@ -44,16 +43,20 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
-    private fun validateTreasurePosition(treasure: Treasure?): Boolean {
-        if (treasure == null) return false
+    fun validateTreasurePosition(treasure: Treasure?): Boolean {
+        if (treasure == null) {
+            return false
+        }
 
         for (tile in treasure.getTreasureTiles()) {
             // Tile outside board
-            if (tile.x >= size || tile.y >= size) return false
+            if (tile.x >= size || tile.y >= size || tile.x < 0 || tile.y < 0) {
+                return false
+            }
 
             // Another tile already in this place
             for (placedShip in treasures) {
-                if (placedShip.getTreasureTiles().contains(tile)) {
+                if (placedShip.getTreasureTiles().contains(tile) && placedShip != treasure) {
                     return false
                 }
             }
@@ -61,7 +64,7 @@ class Board(val size: Int) : GameObject() {
         return true
     }
 
-    override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
+    override fun draw(batch: SpriteBatch, shapeRenderer: ShapeRenderer, position: Vector2, dimension: Vector2) {
         var x = position.x
         var y = position.y
         val tileSize = dimension.x / size
@@ -70,26 +73,26 @@ class Board(val size: Int) : GameObject() {
         for (row in tiles) {
             for (value in row) { // Column
                 if (value == Tile.PREGAME) {
-                    tileRenderer.begin(ShapeRenderer.ShapeType.Line)
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
                     Gdx.gl.glLineWidth(3f)
-                    tileRenderer.color = Color.BLACK
-                    tileRenderer.rect(x, y, tileSize, tileSize)
-                    tileRenderer.end()
+                    shapeRenderer.color = Color.BLACK
+                    shapeRenderer.rect(x, y, tileSize, tileSize)
+                    shapeRenderer.end()
                 } else {
-                    tileRenderer.begin(ShapeRenderer.ShapeType.Filled)
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
                     when (value) {
-                        Tile.HIT -> tileRenderer.color = Color.GREEN
-                        Tile.MISS -> tileRenderer.color = Color.RED
-                        Tile.NEAR -> tileRenderer.color = Color.YELLOW
-                        Tile.UNOPENED -> tileRenderer.color = Color.BLACK
+                        Tile.HIT -> shapeRenderer.color = Color.GREEN
+                        Tile.MISS -> shapeRenderer.color = Color.RED
+                        Tile.NEAR -> shapeRenderer.color = Color.YELLOW
+                        Tile.UNOPENED -> shapeRenderer.color = Color.BLACK
                     }
-                    tileRenderer.rect(x, y, tileSize, tileSize)
-                    tileRenderer.end()
+                    shapeRenderer.rect(x, y, tileSize, tileSize)
+                    shapeRenderer.end()
 
-                    tileRenderer.begin(ShapeRenderer.ShapeType.Line)
-                    tileRenderer.color = Color.BLACK
-                    tileRenderer.rect(x, y, tileSize, tileSize)
-                    tileRenderer.end()
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+                    shapeRenderer.color = Color.WHITE
+                    shapeRenderer.rect(x, y, tileSize, tileSize)
+                    shapeRenderer.end()
                 }
 
                 x += tileSize + padding
@@ -155,7 +158,7 @@ class Board(val size: Int) : GameObject() {
         tiles[pos.x.toInt()][pos.y.toInt()] = tile
     }
 
-    private fun getTreasureByPosition(pos: Vector2): Treasure? {
+    fun getTreasureByPosition(pos: Vector2): Treasure? {
         for (treasure in treasures) {
             if (treasure.hit(pos)) {
                 return treasure

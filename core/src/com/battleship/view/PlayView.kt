@@ -34,6 +34,7 @@ class PlayView : View() {
             when (obj) {
                 is Board -> obj.draw(
                     batch,
+                    shapeRenderer,
                     Gdx.graphics.boardPosition(),
                     Vector2(Gdx.graphics.boardWidth(), Gdx.graphics.boardWidth())
                 )
@@ -44,6 +45,7 @@ class PlayView : View() {
                 )
                 is GameInfo -> obj.draw(
                     batch,
+                    shapeRenderer,
                     Gdx.graphics.gameInfoPosition(),
                     Gdx.graphics.gameInfoSize()
                 )
