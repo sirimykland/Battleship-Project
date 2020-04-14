@@ -9,12 +9,20 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the game over screen
  */
-class GameOverState : GuiState() {
+class GameOverState(win: Boolean) : GuiState() {
     private val menuList = listOf(
         Pair("Main Menu") { GameStateManager.set(MainMenuState()) },
         Pair("Play Again") { GameStateManager.set(PreGameState()) }
     )
+    var winString = ""
+        init {
+            if (win){
+                winString = "You won the game!"
+            }else{
+                winString = "You lost the game..."
+            }
 
+    }
     override val guiObjects: List<GuiObject> = listOf(
         GUI.menuButton(
             23.4375f,
@@ -29,7 +37,7 @@ class GameOverState : GuiState() {
             onClick = { GameStateManager.set(MatchmakingState()) }
         ),
         GUI.header(
-            "Game over"
+            winString
         )
     )
 

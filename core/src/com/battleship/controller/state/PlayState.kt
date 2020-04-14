@@ -101,10 +101,10 @@ class PlayState : GuiState() {
         opponent.updateHealth()
         if (player.health == 0) {
             println("Opponent won!")
-            GameStateManager.set(GameOverState())
+            GameStateManager.set(GameOverState(false))
         } else if (opponent.health == 0) {
             println("You won!")
-            GameStateManager.set(GameOverState())
+            GameStateManager.set(GameOverState(true))
         }
     }
 
