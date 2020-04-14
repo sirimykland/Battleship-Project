@@ -11,7 +11,7 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the main menu
  */
-class MainMenuState(private val controller : FirebaseController) : GuiState(controller) {
+class MainMenuState(private val controller: FirebaseController) : GuiState(controller) {
 
     private val menuList = listOf(
         Pair("Play") { GameStateManager.set(PreGameState(controller)) },

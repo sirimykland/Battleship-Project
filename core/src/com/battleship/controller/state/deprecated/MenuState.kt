@@ -7,7 +7,7 @@ import com.battleship.controller.state.State
 import com.battleship.model.ui.deprecated.Button
 
 @Deprecated("Use GuiState instead")
-abstract class MenuState(private val controller : FirebaseController) : State(controller) {
+abstract class MenuState(private val controller: FirebaseController) : State(controller) {
     abstract val buttons: List<Button>
 
     override fun create() {

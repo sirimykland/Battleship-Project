@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
-import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.treasures.Boot
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.Treasure
@@ -15,14 +14,13 @@ import kotlin.random.Random
 
 class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
-    private var board = Array(size) { Array(size) { Tile.PREGAME } }
+    private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
-    private var sound = SoundEffects()
-    var padding: Int = 0
+    var padding: Int = 0 // Remove?
 
     // Change all tiles to unopened state
     fun setTilesUnopened() {
-        board = Array(size) { Array(size) { Tile.UNOPENED } }
+        tiles = Array(size) { Array(size) { Tile.UNOPENED } }
     }
 
     fun createAndPlaceTreasures(quantity: Int, type: TreasureType, revealed: Boolean) {
@@ -67,7 +65,7 @@ class Board(val size: Int) : GameObject() {
         val tileSize = dimension.x / size
 
         // Draw board
-        for (array in board) {
+        for (array in tiles) {
             for (value in array) {
 
                 if (value == Tile.PREGAME) {
@@ -105,71 +103,55 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
-    fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): Result {
-        if (!equipment.hasMoreUses()) {
-            return Result.NO_USES_LEFT
-        }
-        equipment.use()
+    fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): ArrayList<Result> {
         val xSearchMin = boardTouchPos.x.toInt() - equipment.searchRadius
         val xSearchMax = boardTouchPos.x.toInt() + equipment.searchRadius + 1
         val ySearchMin = boardTouchPos.y.toInt() - equipment.searchRadius
         val ySearchMax = boardTouchPos.y.toInt() + equipment.searchRadius + 1
 
-        // Loops through the equipments search radius
+        // Loops through the tiles in the equipments search radius and adds the result when explored to the list
         var resultList = ArrayList<Result>()
         for (x in xSearchMin until xSearchMax) {
             for (y in ySearchMin until ySearchMax) {
                 // Check if inside board
                 if (x in 0 until size && y in 0 until size) {
-                    resultList.add(updateTile(Vector2(x.toFloat(), y.toFloat())))
+                    resultList.add(exploreTile(Vector2(x.toFloat(), y.toFloat())))
                 }
             }
         }
-
-        return when {
-            resultList.contains(Result.FOUND) -> {
-                Result.FOUND
-            }
-            resultList.contains(Result.HIT) -> {
-                sound.playHit(0.8f)
-                Result.HIT
-            }
-            resultList.all { n -> n == Result.NOT_VALID } -> {
-                Result.NOT_VALID
-            }
-            else -> {
-                equipment.playSound(0.8f)
-                Result.MISS
-            }
-        }
+        // Returns a list of the results of all tiles explored
+        return resultList
     }
 
-    private fun updateTile(pos: Vector2): Result {
+    private fun exploreTile(pos: Vector2): Result {
         val treasurePos = Vector2(pos.y, pos.x) // Flip position
-
-        // Check if tile is previously opened
-        val boardTile = getTile(pos)
-        if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
-            return Result.NOT_VALID
-        }
-
-        // Check if tile contains a treasure
         val treasure = getTreasureByPosition(treasurePos)
-        if (treasure != null) {
-            board[pos.x.toInt()][pos.y.toInt()] = Tile.HIT
+        val boardTile = getTile(pos)
+
+        // Checks first if tile is previously explored. Checks so if tile contains a treasure and returns result
+        return if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
+            Result.NOT_VALID
+        } else if (treasure != null) {
+            setTile(pos, Tile.HIT)
             treasure.takeDamage()
             if (treasure.found()) {
                 treasure.playSound(0.8f)
+                Result.FOUND
+            } else {
+                Result.HIT
             }
-            return if (treasure.found()) Result.FOUND else Result.HIT
         } else {
-            board[pos.x.toInt()][pos.y.toInt()] = Tile.MISS
-            return Result.MISS
+            setTile(pos, Tile.MISS)
+            Result.MISS
         }
     }
 
-    private fun getTile(pos: Vector2): Board.Tile {
-        return board[pos.x.toInt()][pos.y.toInt()]
+    private fun getTile(pos: Vector2): Tile {
+        return tiles[pos.x.toInt()][pos.y.toInt()]
+    }
+
+    private fun setTile(pos: Vector2, tile: Tile) {
+        tiles[pos.x.toInt()][pos.y.toInt()] = tile
     }
 
     private fun getTreasureByPosition(pos: Vector2): Treasure? {
@@ -194,6 +176,6 @@ class Board(val size: Int) : GameObject() {
     }
 
     enum class Result {
-        HIT, FOUND, MISS, NOT_VALID, NO_USES_LEFT
+        HIT, FOUND, MISS, NOT_VALID
     }
 }

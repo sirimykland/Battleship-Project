@@ -8,11 +8,12 @@ import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
-class MatchmakingState(private val controller : FirebaseController) : GuiState(controller) {
+class MatchmakingState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private val itemsPerPage = 3
 
-    private val playerButtons: Array<GuiObject> = arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
+    private val playerButtons: Array<GuiObject> =
+        arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
     private var page: Int = 0
 
@@ -61,8 +62,8 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
     }
 
     private fun retrieve(callback: () -> Unit) {
-        //Commented out because firebase doesn't work like this anymore
-        //users = controller.getPendingGames()
+        // Commented out because firebase doesn't work like this anymore
+        // users = controller.getPendingGames()
         userList = users.toList().map { a -> a.second }
         callback()
     }
@@ -83,7 +84,7 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
         else
             nextPageButton.hide()
 
-        if (index> 0)
+        if (index > 0)
             previousPageButton.show()
         else
             previousPageButton.hide()
