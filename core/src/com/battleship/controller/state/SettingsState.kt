@@ -13,18 +13,18 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the settings menu
  */
-class SettingsState(private val controller : FirebaseController) : GuiState(controller) {
+class SettingsState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private var musicButton: GuiObject = GUI.menuButton(
-            23.44f,
-            62.5f,
-            "Music off",
-            onClick = {
-                if (BattleshipGame.music?.isPlaying == true)
-                    BattleshipGame.music?.pause()
-                else
-                    BattleshipGame.music?.play()
-            }
+        23.44f,
+        62.5f,
+        "Music off",
+        onClick = {
+            if (BattleshipGame.music?.isPlaying == true)
+                BattleshipGame.music?.pause()
+            else
+                BattleshipGame.music?.play()
+        }
     )
     private var soundButton: GuiObject = GUI.menuButton(
         23.44f,
