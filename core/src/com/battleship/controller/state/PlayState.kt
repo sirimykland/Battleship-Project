@@ -52,7 +52,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         90f,
         8f,
         8f,
-        "icons/refresh_white.png",
+        "icons/swap_horiz_white.png",
         onClick = {
             playerBoard = !playerBoard
         }

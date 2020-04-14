@@ -99,7 +99,7 @@ object GUI {
         onClick: () -> Unit
     ): GuiObject {
         return GuiObject(0.15f, 90f, 10f, 8f)
-            .with(Image("icons/arrow_back_white.png"))
+            .with(Image("icons/round_arrow_back_white.png"))
             .onClick(onClick)
     }
 
