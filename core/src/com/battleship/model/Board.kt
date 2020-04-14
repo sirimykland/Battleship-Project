@@ -42,16 +42,23 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
-    private fun validateTreasurePosition(treasure: Treasure?): Boolean {
-        if (treasure == null) return false
+    fun validateTreasurePosition(treasure: Treasure?): Boolean {
+        if (treasure == null){
+            println("1")
+            return false
+        }
 
         for (tile in treasure.getTreasureTiles()) {
             // Tile outside board
-            if (tile.x >= size || tile.y >= size) return false
+            if (tile.x >= size || tile.y >= size){
+                println("2")
+                return false
+            }
 
             // Another tile already in this place
             for (placedShip in treasures) {
-                if (placedShip.getTreasureTiles().contains(tile)) {
+                if (placedShip.getTreasureTiles().contains(tile) && placedShip != treasure) {
+                    println("3")
                     return false
                 }
             }
@@ -154,7 +161,7 @@ class Board(val size: Int) : GameObject() {
         tiles[pos.x.toInt()][pos.y.toInt()] = tile
     }
 
-    private fun getTreasureByPosition(pos: Vector2): Treasure? {
+    fun getTreasureByPosition(pos: Vector2): Treasure? {
         for (treasure in treasures) {
             if (treasure.hit(pos)) {
                 return treasure
