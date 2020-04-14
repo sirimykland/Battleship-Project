@@ -4,11 +4,12 @@ import com.battleship.controller.state.State
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import java.util.*
+import kotlin.collections.ArrayList
 
 object GameStateManager {
     var userId: String = "LPuSVUECEJMWVcJSEOMc"
     lateinit var activeGame: Game
-    lateinit var pendingGames : List<GameListObject>
+    var pendingGames = ArrayList<GameListObject>()
 
     private val states: Stack<State> = Stack()
 

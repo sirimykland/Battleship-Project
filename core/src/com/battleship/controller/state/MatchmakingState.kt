@@ -1,7 +1,6 @@
 package com.battleship.controller.state
 
 import com.battleship.GSM
-import com.battleship.model.GameListObject
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -12,6 +11,7 @@ import com.battleship.view.View
 class MatchmakingState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private val itemsPerPage = 3
+    var games = GSM.pendingGames
 
     private val playerButtons: Array<GuiObject> = arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
@@ -47,7 +47,6 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
             "+"
     ) {
         controller.createGame(GSM.userId)
-        //if (gameId.isNotEmpty()) controller.setGame(GSM.activeGame.gameId)
         GSM.set(PreGameState(controller))
     }
 
@@ -64,21 +63,12 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
         GUI.backButton { GSM.set(MainMenuState(controller)) },
             createGameButton
     )
-    var games = emptyList<GameListObject>()
 
     override fun create() {
         super.create()
         controller.getPendingGames()
-        retrieve(this::updateButtons)
-    }
-
-    private fun retrieve(callback: () -> Unit) {
-        //users = gameController.getPendingGames()
-        //userList = users.toList().map { a -> a.second }
-
-        games = GSM.pendingGames
-        // userList = users.toList().map { a -> a.second }
-        callback()
+        // TODO create a listener for pending games
+        updateButtons()
     }
 
     private fun updateButtons() {
@@ -87,7 +77,7 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
             val j = index + i
             val button = playerButtons[i]
             if (j < games.size) {
-                button.set(Text(games.get(j).playerName))
+                button.set(Text(games[j].playerName))
                 button.show()
             } else {
                 button.hide()
@@ -112,20 +102,20 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
             7f,
             "Loading"
         ) {
-            val gameId = games.get((page * itemsPerPage) + index).gameId
-            print("My id:  "+GSM.userId)
+            val gameId = games[(page * itemsPerPage) + index].gameId
             controller.joinGame(
                     gameId,
                     GSM.userId)
+            GSM.set(PreGameState(controller))
         }
     }
 
     override fun update(dt: Float) {
-        // TODO
-        /*if (GSM.activeGame){
-            controller.setGame(gameId)
-            GSM.set(PreGameState())
-        }*/
+        if (!games.containsAll(GSM.pendingGames)){
+            games = GSM.pendingGames
+            updateButtons()
+        }
+        // updateButtons() erstattes med lytter
     }
 
     override fun render() {

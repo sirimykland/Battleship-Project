@@ -99,7 +99,7 @@ object DesktopFirebase : FirebaseController {
 
         val res = db.collection("games").add(data)
         val gameId = res.get().id
-        //TODO: Call function that saves the gameId for later use
+        setGame(gameId)
     }
 
     /**
@@ -187,29 +187,21 @@ object DesktopFirebase : FirebaseController {
      * @return a map containing a list of treasures per user
      * @return a Game object containing game and player
      */
-    fun setGame(gameId: String) {
+    override fun setGame(gameId: String) {
         val query = db?.collection("games")?.document(gameId!!).get()
         val game = query.get()
 
         if (game.exists()) {
-            val treasures = getTreasures(gameId)
-
             val player1Id: String = game.get("player1") as String
             val player1: Player = getUser(player1Id)
-
+            GSM.activeGame = Game(gameId, player1)
             val player2Id: String = game.get("player2") as String
-
             val player2: Player = if (player2Id != "") {
                 getUser(player2Id)
             } else Player(player2Id, "Unknown")
-            GSM.activeGame = Game(gameId, player1, player2)
-
-            // if (player1.playerId in treasures) treasures[player1Id]?.let { player1.board.setTreasuresList(it) }
-            // if (player2.playerId in treasures){ treasures[player2Id]?.let { player2.board.setTreasuresList(it) }}
+            GSM.activeGame.initOpponent(player2.playerId, player2.playerName)
 
             println("player1: ${player1}, player2: ${player2}")
-
-            // GSM.activeGame.setTreasures()
         } else {
             throw error("Something went wrong when fetching the Game")
         }

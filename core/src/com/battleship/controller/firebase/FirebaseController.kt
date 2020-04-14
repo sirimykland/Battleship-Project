@@ -5,6 +5,7 @@ interface FirebaseController {
     fun getPlayers()
     fun addPlayer(username: String)
     fun createGame(userId: String)
+    fun setGame(gameId: String)
     fun getPendingGames()
     fun joinGame(gameId: String, userId: String)
     fun registerTreasures(gameId: String, userId: String, treasures: List<Map<String, Any>>)

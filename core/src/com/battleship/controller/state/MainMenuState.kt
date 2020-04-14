@@ -17,7 +17,6 @@ class MainMenuState(private val controller : FirebaseController) : GuiState(cont
             Pair("Create game as Olivia") {
                 GSM.userId = "zmWpyb8luZAMrBwzY97x"
                 controller.createGame(GSM.userId)
-                // controller.setGame(GSM.activeGame.gameId)
                 GSM.set(PreGameState(controller))
             },
             Pair("Settings") { GSM.set(SettingsState(controller)) },
