@@ -2,6 +2,7 @@ package com.battleship
 
 import android.util.Log
 import com.battleship.controller.firebase.FirebaseController
+import com.battleship.model.GameListObject
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.runBlocking
@@ -109,10 +110,13 @@ object AndroidFirebase : FirebaseController{
                                         .addOnSuccessListener { documentReference ->
                                             val username = documentReference.get("username")
                                             val gameId = document.id
+                                            val games = ArrayList<GameListObject>()
                                             Log.d("getPendingGames",
                                                     "game found with id=${gameId} and " +
                                                             "user=${username}")
-                                            //TODO: Call some function that adds the gameId and the username to a list of pending games
+                                            if (username != null) {
+                                                games.add(GameListObject(gameId, playerId as String, username as String))
+                                            }
                                         }
                                         .addOnFailureListener{exception ->
                                             Log.w("getPendingGames", exception)
