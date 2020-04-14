@@ -45,8 +45,8 @@ object GUI {
         posY: Float,
         sizeX: Float,
         sizeY: Float,
-        color: TextureRegion = Palette.BLACK,
-        borderColor: TextureRegion = Palette.WHITE,
+        color: TextureRegion = Palette.LIGHT_GREY,
+        borderColor: TextureRegion = Palette.DARK_GREY,
         onClick: () -> Unit
     ): GuiObject {
         return GuiObject(posX, posY, sizeX, sizeY)
@@ -63,7 +63,7 @@ object GUI {
         text: String,
         font: BitmapFont = Font.MEDIUM_BLACK,
         color: TextureRegion = Palette.LIGHT_GREY,
-        borderColor: TextureRegion = Palette.BLACK,
+        borderColor: TextureRegion = Palette.DARK_GREY,
         onClick: () -> Unit
     ): GuiObject {
         return GuiObject(posX, posY, sizeX, sizeY)
@@ -81,7 +81,7 @@ object GUI {
     ): GuiObject {
         return GuiObject(posX, posY, 53.125f, 12.5f)
             .with(Background(Palette.LIGHT_GREY))
-            .with(Border(Palette.BLACK))
+            .with(Border(Palette.DARK_GREY))
             .with(Text(text, Font.MEDIUM_BLACK))
             .onClick(onClick)
     }

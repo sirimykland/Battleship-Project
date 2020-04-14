@@ -228,7 +228,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             dimension.x / player.equipmentSet.equipments.size,
             dimension.y,
             equipment.name + " x" + equipment.uses,
-            borderColor = if (equipment.active) Palette.GREEN else Palette.BLACK,
+            borderColor = if (equipment.active) Palette.GREEN else Palette.DARK_GREY,
             onClick = { player.equipmentSet.activeEquipment = equipment }
         )
     }
