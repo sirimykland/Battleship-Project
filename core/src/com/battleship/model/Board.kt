@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
-import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.treasures.Boot
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.Treasure
@@ -17,7 +16,6 @@ class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var board = Array(size) { Array(size) { Tile.PREGAME } }
     private val tileRenderer: ShapeRenderer = ShapeRenderer()
-    private var sound = SoundEffects()
     var padding: Int = 0
 
     // Change all tiles to unopened state
@@ -105,17 +103,13 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
-    fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): Result {
-        if (!equipment.hasMoreUses()) {
-            return Result.NO_USES_LEFT
-        }
-
+    fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): ArrayList<Result> {
         val xSearchMin = boardTouchPos.x.toInt() - equipment.searchRadius
         val xSearchMax = boardTouchPos.x.toInt() + equipment.searchRadius + 1
         val ySearchMin = boardTouchPos.y.toInt() - equipment.searchRadius
         val ySearchMax = boardTouchPos.y.toInt() + equipment.searchRadius + 1
 
-        // Loops through the equipments search radius
+        // Loops through the tiles in the equipments search radius and adds the result when explored to the list
         var resultList = ArrayList<Result>()
         for (x in xSearchMin until xSearchMax) {
             for (y in ySearchMin until ySearchMax) {
@@ -125,32 +119,14 @@ class Board(val size: Int) : GameObject() {
                 }
             }
         }
-
-        return when {
-            resultList.contains(Result.FOUND) -> {
-                equipment.use()
-                Result.FOUND
-            }
-            resultList.contains(Result.HIT) -> {
-                equipment.use()
-                sound.playHit(0.8f)
-                Result.HIT
-            }
-            resultList.all { n -> n == Result.NOT_VALID } -> {
-                Result.NOT_VALID
-            }
-            else -> {
-                equipment.use()
-                equipment.playSound(0.8f)
-                Result.MISS
-            }
-        }
+        // Returns a list of the results for all tiles explored
+        return resultList
     }
 
     private fun updateTile(pos: Vector2): Result {
         val treasurePos = Vector2(pos.y, pos.x) // Flip position
 
-        // Check if tile is previously opened
+        // Check if tile is previously explored.
         val boardTile = getTile(pos)
         if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
             return Result.NOT_VALID
@@ -158,20 +134,22 @@ class Board(val size: Int) : GameObject() {
 
         // Check if tile contains a treasure
         val treasure = getTreasureByPosition(treasurePos)
-        if (treasure != null) {
+        return if (treasure != null) {
             board[pos.x.toInt()][pos.y.toInt()] = Tile.HIT
             treasure.takeDamage()
             if (treasure.found()) {
                 treasure.playSound(0.8f)
+                Result.FOUND
+            }else{
+                Result.HIT
             }
-            return if (treasure.found()) Result.FOUND else Result.HIT
         } else {
             board[pos.x.toInt()][pos.y.toInt()] = Tile.MISS
-            return Result.MISS
+            Result.MISS
         }
     }
 
-    private fun getTile(pos: Vector2): Board.Tile {
+    private fun getTile(pos: Vector2): Tile {
         return board[pos.x.toInt()][pos.y.toInt()]
     }
 
@@ -197,6 +175,6 @@ class Board(val size: Int) : GameObject() {
     }
 
     enum class Result {
-        HIT, FOUND, MISS, NOT_VALID, NO_USES_LEFT
+        HIT, FOUND, MISS, NOT_VALID
     }
 }

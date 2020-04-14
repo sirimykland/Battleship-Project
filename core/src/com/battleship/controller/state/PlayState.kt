@@ -5,8 +5,10 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FirebaseController
-import com.battleship.model.Board
+import com.battleship.model.Board.Result
 import com.battleship.model.Player
+import com.battleship.model.equipment.Equipment
+import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
@@ -24,7 +26,7 @@ import com.battleship.view.View
 import java.util.Timer
 import kotlin.concurrent.schedule
 
-class PlayState(private val controller : FirebaseController) : GuiState(controller) {
+class PlayState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     private var boardSize = 10
     private var player: Player = Player(boardSize)
@@ -32,6 +34,7 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
     private var playerBoard: Boolean = false
     private var playerTurn: Boolean = true
     private var newTurn: Boolean = false
+    private var sound = SoundEffects()
 
     private val header = GUI.header("Your turn")
 
@@ -120,33 +123,51 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
             if (boardBounds.contains(touchPos)) {
                 val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
                 if (playerTurn && !playerBoard) {
-                    val result = opponent.board.shootTiles(
-                        boardTouchPos,
-                        player.equipmentSet.activeEquipment!!
-                    )
-                    handleResult(result)
+                    if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
+                        val result = opponent.board.shootTiles(
+                            boardTouchPos,
+                            player.equipmentSet.activeEquipment!!
+                        )
+                        handleResultFromMove(result, player.equipmentSet.activeEquipment!!)
+                    } else {
+                        println("Has no more uses")
+                    }
                 }
                 // TODO remove else if. Handles opponent's moves
-                else if (!playerTurn && playerBoard) {
-                    val result = player.board.shootTiles(
-                        boardTouchPos,
-                        opponent.equipmentSet.activeEquipment!!
-                    )
-                    handleResult(result)
+                else if (!playerTurn && playerBoard && opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
+                    if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
+                        val result = player.board.shootTiles(
+                            boardTouchPos,
+                            opponent.equipmentSet.activeEquipment!!
+                        )
+                        handleResultFromMove(result, opponent.equipmentSet.activeEquipment!!)
+                    } else {
+                        println("Has no more uses")
+                    }
                 }
             }
         }
     }
 
-    private fun handleResult(result: Board.Result) {
-        when (result) {
-            Board.Result.NOT_VALID -> println("Not valid, try again")
-            Board.Result.NO_USES_LEFT -> println("No more uses left")
-            Board.Result.HIT -> println("Hitted")
-            Board.Result.FOUND -> println("Found")
-            Board.Result.MISS -> {
-                playerTurn = !playerTurn
+    private fun handleResultFromMove(resultList: ArrayList<Result>, equipment: Equipment) {
+        when {
+            resultList.contains(Result.FOUND) -> {
+                println("Found")
+                equipment.use()
+            }
+            resultList.contains(Result.HIT) -> {
+                println("Hit")
+                equipment.use()
+                sound.playHit(0.8f)
+            }
+            resultList.all { n -> n == Result.NOT_VALID } -> {
+                println("Not valid, try again")
+            }
+            else -> {
                 println("Missed")
+                equipment.use()
+                equipment.playSound(0.8f)
+                playerTurn = !playerTurn
                 Timer().schedule(2000) {
                     newTurn = true
                 }
