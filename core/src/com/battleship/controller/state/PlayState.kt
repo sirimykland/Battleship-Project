@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GameStateManager
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Board
 import com.battleship.model.Player
 import com.battleship.model.treasures.Treasure.TreasureType
@@ -23,7 +24,7 @@ import com.battleship.view.View
 import java.util.*
 import kotlin.concurrent.schedule
 
-class PlayState : GuiState() {
+class PlayState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     private var boardSize = 10
     private var player: Player = Player(boardSize)
@@ -101,10 +102,10 @@ class PlayState : GuiState() {
         opponent.updateHealth()
         if (player.health == 0) {
             println("Opponent won!")
-            GameStateManager.set(GameOverState(false))
+            GameStateManager.set(GameOverState(controller, false))
         } else if (opponent.health == 0) {
             println("You won!")
-            GameStateManager.set(GameOverState(true))
+            GameStateManager.set(GameOverState(controller, true))
         }
     }
 

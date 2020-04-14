@@ -1,6 +1,7 @@
 package com.battleship.controller.state
 
 import com.battleship.GameStateManager
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Image
 import com.battleship.model.ui.Text
@@ -12,7 +13,7 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the help menu
  */
-class UsageGuideState : GuiState() {
+class UsageGuideState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private var pageIndex: Int = 0
 
@@ -76,7 +77,7 @@ class UsageGuideState : GuiState() {
         previousPageButton,
         currentDescription,
         currentImage,
-        GUI.backButton { GameStateManager.set(SettingsState()) }
+        GUI.backButton { GameStateManager.set(SettingsState(controller)) }
     )
 
     override fun create() {
