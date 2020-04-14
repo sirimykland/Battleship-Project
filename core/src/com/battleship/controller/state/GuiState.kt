@@ -11,7 +11,7 @@ import com.battleship.model.ui.GuiObject
  */
 abstract class GuiState(controller: FirebaseController) : State(controller) {
     abstract val guiObjects: List<GuiObject>
-    private var multiplexer: InputMultiplexer = InputMultiplexer();
+    private var multiplexer: InputMultiplexer = InputMultiplexer()
 
     override fun create() {
         multiplexer.addProcessor(InputMultiplexer(*guiObjects.filter { it.isClickable }

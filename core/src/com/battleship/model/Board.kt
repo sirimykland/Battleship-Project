@@ -43,7 +43,7 @@ class Board(val size: Int) : GameObject() {
     }
 
     fun validateTreasurePosition(treasure: Treasure?): Boolean {
-        if (treasure == null){
+        if (treasure == null) {
             return false
         }
 
