@@ -13,13 +13,13 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     override fun create() {
         super.create()
         println("---LOADINGSTATE---")
-        println("gameready is: " + GSM.activeGame.gameReady)
-        controller.addGameListener(GSM.activeGame.gameId, GSM.activeGame.me.playerId)
+        println("gameready is: " + GSM.activeGame!!.gameReady)
+        controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.me.playerId)
     }
 
     private fun headerText(): String {
-        if (GSM.activeGame.opponent.playerId == "") return "Waiting for opponent to join..."
-        else if (GSM.activeGame.opponent.board.treasures.isEmpty()) return "Waiting for opponent to register ships..."
+        if (GSM.activeGame!!.opponent.playerId == "") return "Waiting for opponent to join..."
+        else if (GSM.activeGame!!.opponent.board.treasures.isEmpty()) return "Waiting for opponent to register ships..."
         return "null"
     }
 
@@ -33,13 +33,13 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     }
 
     override fun update(dt: Float) {
-        if (GSM.activeGame.gameReady) {
+        if (GSM.activeGame!!.gameReady) {
             GSM.set(PlayState(controller))
         }
     }
 
     override fun dispose() {
         super.dispose()
-        // controller.detachGameListener(GSM.activeGame.gameId)
+        // controller.detachGameListener(GSM.activeGame!!.gameId)
     }
 }

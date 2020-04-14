@@ -80,8 +80,7 @@ object DesktopFirebase : FirebaseController {
 
         // Push to db
         val addRes = db.collection("users").add(data)
-        val playerId = addRes.get().id
-        //TODO: Call function saving the playerId
+        GSM.userId = addRes.get().id
     }
 
     /**
@@ -106,24 +105,23 @@ object DesktopFirebase : FirebaseController {
      * Function getting all games where there is currently only one player
      */
     override fun getPendingGames() {
+        GSM.pendingGames = ArrayList<GameListObject>()
         val gameQuery = db.collection("games").whereEqualTo("player2", "").get()
         val gameQuerySnapshot = gameQuery.get()
         val gameDocuments = gameQuerySnapshot.documents
-        val games = ArrayList<GameListObject>()
         // For each game fitting the criteria, get the id and username of opponent
         for (document in gameDocuments) {
-            val id = document.id
+            val gameId = document.id
             val playerId = document.getString("player1")
 
             // Find the username of the player in the game to display
             val playerQuery = playerId?.let { db.collection("users").document(playerId).get() }
             val playerQuerySnapshot = playerQuery?.get()
-            val playerName = playerQuerySnapshot?.getString("username")
-            if (playerName != null) {
-                games.add(GameListObject(id, playerId, playerName))
+            val username = playerQuerySnapshot?.getString("username")
+            if (username != null) {
+                GSM.pendingGames.add(GameListObject(gameId, playerId, username))
             }
         }
-        //TODO: Call function that saves the "games" list of pending games
     }
 
     /**
@@ -155,10 +153,7 @@ object DesktopFirebase : FirebaseController {
     override fun joinGame(gameId: String, userId: String) {
         // Add the data to the game document
         db.collection("games").document(gameId).update("player2", userId)
-        //TODO: Call function that handles what should happend when you have joined a game
-        // TODO sjekke om suksess og returnere true
-        val game = db.collection("games").document(gameId).get()
-        // if (game.get().get("player2") == userId) return true
+        setGame(gameId)
     }
 
     /**
@@ -174,7 +169,6 @@ object DesktopFirebase : FirebaseController {
             val dbTreasures = game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
             dbTreasures[userId] = treasures
             db.collection("games").document(gameId).update("treasures", dbTreasures)
-            //TODO: Call function handling what should happend after registering treasure
         } else {
             //TODO: Add exception handling
             println("Something went wrong when registering treasures")
@@ -188,22 +182,23 @@ object DesktopFirebase : FirebaseController {
      * @return a Game object containing game and player
      */
     override fun setGame(gameId: String) {
+        GSM.activeGame = Game(gameId)
         val query = db?.collection("games")?.document(gameId!!).get()
         val game = query.get()
 
         if (game.exists()) {
             val player1Id: String = game.get("player1") as String
             val player1: Player = getUser(player1Id)
-            GSM.activeGame = Game(gameId, player1)
-            val player2Id: String = game.get("player2") as String
-            val player2: Player = if (player2Id != "") {
-                getUser(player2Id)
-            } else Player(player2Id, "Unknown")
-            GSM.activeGame.initOpponent(player2.playerId, player2.playerName)
+            GSM.activeGame?.setPlayers(player1)
 
-            println("player1: ${player1}, player2: ${player2}")
+            val player2Id: String = game.get("player2") as String
+            if (player2Id != "") {
+                val player2: Player = getUser(player2Id)
+                GSM.activeGame?.initOpponent(player2.playerId, player2.playerName)
+            }
+            println("setGame: ${GSM.activeGame}")
         } else {
-            throw error("Something went wrong when fetching the Game")
+            throw error("Something went wrong when setting the Game")
         }
     }
 
@@ -219,9 +214,9 @@ object DesktopFirebase : FirebaseController {
         if (game.exists()) {
             val player2Id: String = game.get("player2") as String
 
-            GSM.activeGame.opponent.playerId = player2Id
-            GSM.activeGame.opponent.playerName = db.collection("users").document(player2Id).get().get().get("username").toString()
-            println("name " + GSM.activeGame.opponent.playerName)
+            GSM.activeGame!!.opponent.playerId = player2Id
+            GSM.activeGame!!.opponent.playerName = db.collection("users").document(player2Id).get().get().get("username").toString()
+            println("name " + GSM.activeGame!!.opponent.playerName)
             // setTreasures(gameId)
         } else {
             throw error("Something went wrong when fetching the Game")
@@ -255,7 +250,7 @@ object DesktopFirebase : FirebaseController {
         if (game.exists()) {
             val treasures = game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
             println("all treasures: $treasures")
-            GSM.activeGame.setTreasures(treasures)
+            GSM.activeGame!!.setTreasures(treasures)
         } else {
             //TODO: Add error handling
             throw error("Something went wrong when fetching treasures")
@@ -325,14 +320,14 @@ object DesktopFirebase : FirebaseController {
                     }
                     // If there is an opponent in the game
                     else {
-                        println("opponent id " + GSM.activeGame.opponent.playerId)
-                        if (GSM.activeGame.opponent.playerId == "") {
+                        println("opponent id " + GSM.activeGame!!.opponent.playerId)
+                        if (GSM.activeGame!!.opponent.playerId == "") {
                             getOpponent(gameId)
                         } else {
                             // Get the field containing the treasures in the database
                             val treasures = snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
                             // If there is not enough treasures registered
-                            if (treasures.size <= 2 && GSM.activeGame.playersRegistered()) {
+                            if (treasures.size <= 2 && GSM.activeGame!!.playersRegistered()) {
                                 getTreasures(gameId)
                             } else {
                                 // Get the list of moves
@@ -342,7 +337,7 @@ object DesktopFirebase : FirebaseController {
                                 // If a winner has been set
                                 if (winner != "") {
                                     println("The winner is $winner")
-                                    GSM.activeGame.winner = winner as String
+                                    GSM.activeGame!!.winner = winner as String
                                 }
                                 // If there is no winner, continue game
                                 else {
@@ -380,7 +375,7 @@ object DesktopFirebase : FirebaseController {
                     // If a winner has been set
                     if (winner != "") {
                         println("The winner is $winner")
-                        GSM.activeGame.winner = winner as String
+                        GSM.activeGame!!.winner = winner as String
                     }
                     // If there is no winner, continue game
                     else {
@@ -391,13 +386,13 @@ object DesktopFirebase : FirebaseController {
                             // Get the last move
                             val lastMove = moves.get(moves.size - 1)
                             // If the last move is performed by opponent
-                            val game = GSM.activeGame
+                            val game = GSM.activeGame!!
                             if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
                                 println("Motstander hadde siste trekk - din tur")
-                                GSM.activeGame.flipPlayer()
+                                GSM.activeGame!!.flipPlayer()
                             } else if (lastMove["playerId"]!!.equals(game.me.playerId)) {
                                 println("Du hadde siste trekk, vent")
-                                GSM.activeGame.flipPlayer()
+                                GSM.activeGame!!.flipPlayer()
                             }
                         }
                     }

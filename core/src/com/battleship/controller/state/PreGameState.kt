@@ -21,14 +21,14 @@ import com.battleship.view.View
 
 class PreGameState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
-    private var game: Game = GSM.activeGame
+    private var game: Game = GSM.activeGame!!
 
     override fun create() {
         super.create()
         print("---PREGAMESTATE---")
-        GSM.activeGame.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.BOOT, true)
-        GSM.activeGame.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDCOIN, true)
-        GSM.activeGame.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.TREASURECHEST, true)
+        GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.BOOT, true)
+        GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDCOIN, true)
+        GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.TREASURECHEST, true)
     }
 
     private val readyButton = GuiObject(
@@ -42,7 +42,7 @@ class PreGameState(private val controller : FirebaseController) : GuiState(contr
             .with(Text("Start Game"))
             .onClick {
                 println("gameready is: " + game.gameReady)
-                game = GSM.activeGame
+                game = GSM.activeGame!!
                 controller.registerTreasures(
                         game.gameId,
                         game.me.playerId,

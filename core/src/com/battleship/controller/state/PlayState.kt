@@ -28,7 +28,7 @@ import kotlin.concurrent.schedule
 class PlayState(private val controller : FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     // private var boardSize = 10
-    private var player: Player = GSM.activeGame.me
+    private var player: Player = GSM.activeGame!!.me
     // private var opponent: Player = Player(boardSize)
     private var playerBoard: Boolean = false
     private var playerTurn: Boolean = true
@@ -81,8 +81,8 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
     }
 
     private fun headerText(): String {
-        if (GSM.activeGame.opponent.playerId == "") return "Waiting for opponent..."
-        else if (GSM.activeGame.isMyTurn()) return (GSM.activeGame.opponent.playerName + "'s Board")
+        if (GSM.activeGame!!.opponent.playerId == "") return "Waiting for opponent..."
+        else if (GSM.activeGame!!.isMyTurn()) return (GSM.activeGame!!.opponent.playerName + "'s Board")
         return "Waiting for opponents turn"
     }
 
@@ -90,8 +90,8 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
         this.view.render(
                 GUI.header(headerText()),
                 *guiObjects.toTypedArray(),
-                GSM.activeGame.opponent.board,
-                GSM.activeGame.me.equipmentSet)
+                GSM.activeGame!!.opponent.board,
+                GSM.activeGame!!.me.equipmentSet)
     }
 
     override fun update(dt: Float) {
@@ -102,19 +102,19 @@ class PlayState(private val controller : FirebaseController) : GuiState(controll
 
     private fun updateHealth() {
         player.updateHealth()
-        GSM.activeGame.opponent.updateHealth()
+        GSM.activeGame!!.opponent.updateHealth()
         if (player.health == 0) {
             println("Opponent won!")
             GSM.set(GameOverState(controller))
-        } else if (GSM.activeGame.opponent.health == 0) {
+        } else if (GSM.activeGame!!.opponent.health == 0) {
             println("You won!")
-            controller.setWinner(GSM.userId, GSM.activeGame.gameId)
+            controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
             GSM.set(GameOverState(controller))
         }
     }
 
     private fun handleInput() {
-        if (GSM.activeGame.isMyTurn()) {
+        if (GSM.activeGame!!.isMyTurn()) {
             if (Gdx.input.justTouched()) {
                 val touchX = Gdx.input.x.toFloat()
                 val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()

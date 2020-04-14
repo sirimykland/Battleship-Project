@@ -3,14 +3,26 @@ package com.battleship.model
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 
-class Game(val gameId: String, player1: Player, player2: Player = Player()) {
+class Game(val gameId: String ) {
     var winner: String = ""
-    var me: Player
-    var opponent: Player
+    var me: Player = Player()
+    var opponent: Player = Player()
     var playersTurn: String = ""
     var gameReady = false
 
-    init {
+    constructor( gameId: String, player1: Player, player2: Player = Player()): this(gameId){
+        if (player1.playerId == GSM.userId) {
+            this.me = player1
+            this.opponent = player2
+        } else {
+            this.me = player2
+            this.opponent = player1
+        }
+        this.playersTurn = player2.playerId
+        // me.board.boardColor = Color.LIGHT_GRAY
+        isGameReady()
+    }
+    fun setPlayers( player1: Player, player2: Player = Player()){
         if (player1.playerId == GSM.userId) {
             this.me = player1
             this.opponent = player2

@@ -106,7 +106,6 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
             controller.joinGame(
                     gameId,
                     GSM.userId)
-            GSM.set(PreGameState(controller))
         }
     }
 
@@ -115,7 +114,9 @@ class MatchmakingState(private val controller : FirebaseController) : GuiState(c
             games = GSM.pendingGames
             updateButtons()
         }
-        // updateButtons() erstattes med lytter
+        if (GSM.activeGame != null){
+            print(GSM.activeGame!!.gameId)
+            GSM.set(PreGameState(controller)) }
     }
 
     override fun render() {

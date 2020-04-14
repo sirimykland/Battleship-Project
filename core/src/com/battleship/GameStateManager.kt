@@ -8,7 +8,7 @@ import kotlin.collections.ArrayList
 
 object GameStateManager {
     var userId: String = "LPuSVUECEJMWVcJSEOMc"
-    lateinit var activeGame: Game
+    var activeGame: Game? = null
     var pendingGames = ArrayList<GameListObject>()
 
     private val states: Stack<State> = Stack()
