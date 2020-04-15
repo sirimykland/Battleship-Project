@@ -38,15 +38,12 @@ object GdxGraphicsUtil {
         )
     }
 
-    fun Graphics.weaponsetSize(): Vector2 {
-        return Vector2(this.boardWidth(), this.boardPosition().y / 2)
+    fun Graphics.equipmentsetSize(): Vector2 {
+        return Vector2(90f, 10f)
     }
 
-    fun Graphics.weaponsetPosition(): Vector2 {
-        return Vector2(
-                this.boardPosition().x,
-                this.boardPosition().y - this.weaponsetSize().y * 1.5f
-        )
+    fun Graphics.equipmentsetPosition(): Vector2 {
+        return Vector2(5f, 2f)
     }
 
     fun Graphics.gameInfoSize(): Vector2 {

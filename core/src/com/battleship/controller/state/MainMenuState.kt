@@ -1,6 +1,7 @@
 package com.battleship.controller.state
 
-import com.battleship.GameStateManager
+import com.battleship.GSM
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
@@ -10,13 +11,15 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the main menu
  */
-class MainMenuState : GuiState() {
+class MainMenuState(private val controller: FirebaseController) : GuiState(controller) {
 
     private val menuList = listOf(
-        Pair("Play") { GameStateManager.set(PreGameState()) },
-        Pair("Settings") { GameStateManager.set(SettingsState()) },
-        Pair("Matchmaking") { GameStateManager.set(MatchmakingState()) }
-
+            Pair("Create game as Olivia") {
+                GSM.userId = "zmWpyb8luZAMrBwzY97x"
+                controller.createGame(GSM.userId)
+            },
+            Pair("Settings") { GSM.set(SettingsState(controller)) },
+            Pair("Matchmaking") { GSM.set(MatchmakingState(controller)) }
     )
 
     override val guiObjects: List<GuiObject> = menuList
@@ -38,19 +41,29 @@ class MainMenuState : GuiState() {
         font = Font.XXL_BLACK
 
     )
-    private val skull: GuiObject = GUI.image(
-        44.375f,
-        66.25f,
-        11.25f,
-        9f,
-        "images/skull_and_crossbones.png"
+    private val skeleton: GuiObject = GUI.image(
+        35f,
+        60f,
+        14f,
+        14f,
+        "images/skeleton.png"
+    )
+    private val map: GuiObject = GUI.image(
+        52f,
+        59f,
+        16f,
+        16f,
+        "images/skull.png"
     )
 
     override var view: View = BasicView()
 
-    override fun update(dt: Float) {}
+    override fun update(dt: Float) {
+        if (GSM.activeGame != null)
+            GSM.set(PreGameState(controller))
+    }
 
     override fun render() {
-        view.render(title, skull, *guiObjects.toTypedArray())
+        view.render(title, skeleton, map, *guiObjects.toTypedArray())
     }
 }

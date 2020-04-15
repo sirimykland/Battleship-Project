@@ -1,15 +1,21 @@
 package com.battleship.model
 
-import com.battleship.model.weapons.WeaponSet
+import com.battleship.model.equipment.BigEquipment
+import com.battleship.model.equipment.EquipmentSet
+import com.battleship.model.equipment.MetalDetector
+import com.battleship.model.equipment.Shovel
 
-class Player(boardSize: Int) {
-    // var id:Int
-    // var name:String
-    var weaponSet = WeaponSet()
+class Player(var playerId: String = "", var playerName: String = "") {
+    val boardSize: Int = 10
+    var equipmentSet = EquipmentSet(arrayListOf(Shovel(), BigEquipment(), MetalDetector()))
     var board: Board = Board(boardSize)
-    var health: Int = board.getAllShipHealth()
+    var health: Int = board.getCombinedTreasureHealth()
 
     fun updateHealth() {
-        this.health = board.getAllShipHealth()
+        health = board.getCombinedTreasureHealth()
+    }
+
+    override fun toString(): String {
+        return "Player(Id='$playerId', Name='$playerName', board=$board)"
     }
 }

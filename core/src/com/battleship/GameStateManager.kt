@@ -1,11 +1,17 @@
 package com.battleship
 
 import com.battleship.controller.state.State
+import com.battleship.model.Game
+import com.battleship.model.GameListObject
 import java.util.Stack
+import kotlin.collections.ArrayList
 
 object GameStateManager {
     var username = ""
     var userId = ""
+    var activeGame: Game? = null
+    var pendingGames = ArrayList<GameListObject>()
+
     private val states: Stack<State> = Stack()
 
     fun push(state: State) {
@@ -39,3 +45,4 @@ object GameStateManager {
         states.peek().render()
     }
 }
+typealias GSM = GameStateManager

@@ -37,6 +37,7 @@ task dist(type: Jar) {
 
 dependencies{
     implementation 'com.google.firebase:firebase-admin:6.12.2'
+    implementation 'com.google.firebase:firebase-core:17.3.0'
 }
 
 

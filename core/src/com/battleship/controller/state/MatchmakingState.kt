@@ -1,31 +1,27 @@
 package com.battleship.controller.state
 
-import com.battleship.GameStateManager
-import com.battleship.controller.firebase.GameController
+import com.battleship.GSM
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
-import com.battleship.utility.Gamelist
 import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 import java.lang.IllegalStateException
 
-class MatchmakingState : GuiState() {
+class MatchmakingState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
-    private val itemsPerPage = 6
-
-    private val gameController = GameController()
+    private val itemsPerPage = 5
+    var games = GSM.pendingGames
 
     private val playerButtons: Array<GuiObject> =
         arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
     private var page: Int = 0
-
-    private var gameId = ""
 
     private val nextPageButton = GUI.textButton(
         76f,
@@ -51,18 +47,18 @@ class MatchmakingState : GuiState() {
         updateButtons()
     }.hide()
 
-    private val usernameElement = if (GameStateManager.username == "")
+    private val usernameElement = if (GSM.username == "")
         GUI.textButton(
             10f,
             5f,
             40f,
             7f,
             "Select username",
-            font = Font.SMALL_BLACK,
+            font = Font.TINY_BLACK,
             color = Palette.WHITE,
             borderColor = Palette.BLACK
         ) {
-            GameStateManager.push(NameSelectionState())
+            GSM.push(NameSelectionState(controller))
         }
     else
         GUI.textBox(
@@ -70,8 +66,8 @@ class MatchmakingState : GuiState() {
             5f,
             40f,
             7f,
-            GameStateManager.username,
-            font = Font.SMALL_BLACK,
+            GSM.username,
+            font = Font.TINY_BLACK,
             color = Palette.WHITE,
             borderColor = Palette.BLACK
         )
@@ -82,14 +78,15 @@ class MatchmakingState : GuiState() {
         40f,
         7f,
         "Create game",
-        color = Palette.GREEN
+        color = Palette.GREEN,
+        font = Font.TINY_BLACK
     ) {
         createGame()
-        retrieve(this::updateButtons)
+        GSM.set(PreGameState(controller))
     }.hide()
 
     init {
-        if (GameStateManager.username !== "")
+        if (GSM.username !== "")
             createGameButton.show()
     }
 
@@ -101,7 +98,7 @@ class MatchmakingState : GuiState() {
         "icons/refresh_black.png",
         keepRatio = true
     ) {
-        retrieve(this::updateButtons)
+        updateButtons()
     }
         .with(Background(color = Palette.WHITE))
         .with(Border(color = Palette.BLACK, width = 3f))
@@ -114,47 +111,40 @@ class MatchmakingState : GuiState() {
         usernameElement,
         createGameButton,
         refreshButton,
-        GUI.backButton { GameStateManager.set(MainMenuState()) }
+        GUI.backButton { GSM.set(MainMenuState(controller)) }
     )
-
-    private var userList: Gamelist = emptyList()
 
     override fun create() {
         super.create()
-        retrieve(this::updateButtons)
+        updateButtons()
     }
 
     override fun resume() {
-        if (GameStateManager.username !== "") {
+        if (GSM.username !== "") {
             createGameButton.show()
             usernameElement
-                .set(Text(GameStateManager.username, Font.SMALL_BLACK))
+                .set(Text(GSM.username, Font.TINY_BLACK))
                 .noClick()
         }
         super.resume()
     }
 
-    private fun retrieve(callback: () -> Unit) {
-        userList = gameController.getPendingGames().toList()
-        callback()
-    }
-
     private fun updateButtons() {
-        if (userList.find { it.first == gameId } !== null) {
-            println("found me")
-            createGameButton.hide()
-        }
+        controller.getPendingGames()
+        games = GSM.pendingGames
         val index = page * itemsPerPage
         playerButtons.forEachIndexed { i, guiObject ->
             val j = index + i
-            if (j < userList.size) {
-                guiObject.set(Text(userList[j].second, font = Font.MEDIUM_BLACK))
+            if (j < games.size) {
+                guiObject.set(Text(games[j].playerName, font = Font.MEDIUM_BLACK))
                 guiObject.show()
             } else {
                 guiObject.hide()
             }
         }
-        if (index + itemsPerPage < userList.size)
+        println(playerButtons)
+        println(games)
+        if (index + itemsPerPage < games.size)
             nextPageButton.show()
         else
             nextPageButton.hide()
@@ -166,6 +156,7 @@ class MatchmakingState : GuiState() {
     }
 
     private fun joinUserButton(index: Int): GuiObject {
+        println("userbutton $index")
         return GUI.textButton(
             10f,
             70f - index * 9f,
@@ -174,21 +165,29 @@ class MatchmakingState : GuiState() {
             "Loading"
         ) {
             val i = (page * itemsPerPage) + index
-            if (GameStateManager.userId !== "" && userList[i].first != gameId) {
-                println("${userList[i]}, $gameId")
-                // gameController.joinGame(userList[i].first, GameStateManager.userId)
+            if (GSM.userId !== "") {
+                controller.joinGame(GSM.pendingGames[i].gameId, GSM.userId)
             }
         }
     }
 
     private fun createGame() {
-        if (GameStateManager.userId !== "")
-            gameId = gameController.createGame(GameStateManager.userId)
+        if (GSM.userId !== "")
+            controller.createGame(GSM.userId)
         else
             throw IllegalStateException("Can't create game, user has not been created")
     }
 
     override fun update(dt: Float) {
+        if (!games.containsAll(GSM.pendingGames)) { // O(n²) hver frame er kanskje mye å be om?
+            println("does not contain all")
+            games = GSM.pendingGames
+            updateButtons()
+        }
+        if (GSM.activeGame != null) {
+            print(GSM.activeGame!!.gameId)
+            GSM.set(PreGameState(controller))
+        }
     }
 
     override fun render() {

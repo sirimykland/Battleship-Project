@@ -2,7 +2,7 @@ package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
 import com.battleship.GameStateManager
-import com.battleship.controller.firebase.PlayerController
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
 import com.battleship.utility.Font
@@ -11,12 +11,10 @@ import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
-class NameSelectionState : GuiState() {
+class NameSelectionState(val controller: FirebaseController) : GuiState(controller) {
     private var username = ""
 
     private val legalCharacters = "abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ1234567890"
-
-    private val playerController = PlayerController()
 
     private val usernameDisplay = GUI.textBox(
         15f,
@@ -45,9 +43,8 @@ class NameSelectionState : GuiState() {
     }
 
     private fun complete() {
-        GameStateManager.username = username
         println("complete $username")
-        GameStateManager.userId = playerController.addPlayer(username)
+        controller.addPlayer(username)
         GameStateManager.pop()
     }
 

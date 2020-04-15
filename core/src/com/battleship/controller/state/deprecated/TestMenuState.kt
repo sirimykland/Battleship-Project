@@ -1,6 +1,7 @@
 package com.battleship.controller.state.deprecated
 
 import com.battleship.GameStateManager
+import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.state.GuiState
 import com.battleship.controller.state.MainMenuState
 import com.battleship.model.ui.Background
@@ -14,7 +15,7 @@ import com.battleship.view.BasicView
 import com.battleship.view.View
 
 @Deprecated("Only used initially for testing")
-class TestMenuState : GuiState() {
+class TestMenuState(private val controller: FirebaseController) : GuiState(controller) {
     private val greenBox = GuiObject(330f, 500f, 240f, 120f)
         .with(Background(Palette.GREEN))
         .with(Border(Palette.DARK_GREEN))
@@ -39,9 +40,11 @@ class TestMenuState : GuiState() {
     private val testText = GUI.text(100f, 400f, 200f, 100f, "Just text")
 
     override val guiObjects: List<GuiObject> = listOf(
-        greenBox, blueButton, boxButton, testText, GUI.backButton { GameStateManager.set(
-            MainMenuState()
-        ) }
+        greenBox, blueButton, boxButton, testText, GUI.backButton {
+            GameStateManager.set(
+                MainMenuState(controller)
+            )
+        }
     )
 
     override var view: View = BasicView()

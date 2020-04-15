@@ -8,7 +8,6 @@ import com.battleship.model.ui.Border
 import com.battleship.model.ui.BottomBorder
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Image
-import com.battleship.model.ui.ImageButtonText
 import com.battleship.model.ui.Text
 
 object GUI {
@@ -125,20 +124,6 @@ object GUI {
     ): GuiObject {
         return GuiObject(posX, posY, sizeX, if (keepRatio) sizeX * (Gdx.graphics.width.toFloat() / Gdx.graphics.height.toFloat()) else sizeY)
             .with(Image(texturePath))
-            .onClick(onClick)
-    }
-    fun imageAndTextButton(
-        posX: Float,
-        posY: Float,
-        sizeX: Float,
-        sizeY: Float,
-        text: String,
-        texturePath: String,
-        onClick: () -> Unit
-    ): GuiObject {
-        return GuiObject(posX, posY, sizeX, sizeY)
-            .with(Image(texturePath))
-            .with(ImageButtonText(text, Font.MEDIUM_BLACK))
             .onClick(onClick)
     }
 }
