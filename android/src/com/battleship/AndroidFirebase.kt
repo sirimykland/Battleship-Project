@@ -17,14 +17,14 @@ object AndroidFirebase : FirebaseController {
         // Sign in as an anonymous user to authorize, don't know if runBlocking actually works
         runBlocking {
             auth.signInAnonymously()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d("Login", "signInAnonymously successful")
-                    } else {
-                        // TODO: Handle exception, when this occurs you cannot access firebase
-                        Log.w("Login", "signInAnonymously failed", task.exception)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d("Login", "signInAnonymously successful")
+                        } else {
+                            // TODO: Handle exception, when this occurs you cannot access firebase
+                            Log.w("Login", "signInAnonymously failed", task.exception)
+                        }
                     }
-                }
         }
     }
 
@@ -36,16 +36,16 @@ object AndroidFirebase : FirebaseController {
     override fun getPlayers() {
         val playerMap = mutableMapOf<String, String?>()
         db.collection("users").get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    Log.d("Player", "${document.id} => ${document.data}")
-                    playerMap[document.id] = document.getString("username")
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        Log.d("Player", "${document.id} => ${document.data}")
+                        playerMap[document.id] = document.getString("username")
+                    }
+                    // TODO IF USED IN APP: Add function here that stores players
                 }
-                // TODO IF USED IN APP: Add function here that stores players
-            }
-            .addOnFailureListener { exception ->
-                Log.w("Player", "Error getting documents: ", exception)
-            }
+                .addOnFailureListener { exception ->
+                    Log.w("Player", "Error getting documents: ", exception)
+                }
     }
 
     /**
@@ -182,36 +182,36 @@ object AndroidFirebase : FirebaseController {
                     Log.w("getPendingGames", exception)
                     //TODO: Add exception handling, could not find games
                 }
-            .addOnSuccessListener { documents ->
-                if (documents != null) {
-                    for (document in documents) {
-                        Log.d("getPendingGames", "game found with id=${document.id}")
-                        val playerId = document.getString("player1")
-                        if (playerId != null) {
-                            // This call get the username of the player registered under player1
-                            db.collection("users").document(playerId).get()
-                                .addOnSuccessListener { documentReference ->
-                                    val username = documentReference.get("username")
-                                    val gameId = document.id
-                                    Log.d(
-                                        "getPendingGames",
-                                        "game found with id=$gameId and " +
-                                            "user=$username"
-                                    )
-                                    // TODO: Call some function that adds the gameId and the username to a list of pending games
-                                }
-                                .addOnFailureListener { exception ->
-                                    Log.w("getPendingGames", exception)
-                                    // TODO: Add exception handling, could not find player
-                                }
+                .addOnSuccessListener { documents ->
+                    if (documents != null) {
+                        for (document in documents) {
+                            Log.d("getPendingGames", "game found with id=${document.id}")
+                            val playerId = document.getString("player1")
+                            if (playerId != null) {
+                                // This call get the username of the player registered under player1
+                                db.collection("users").document(playerId).get()
+                                        .addOnSuccessListener { documentReference ->
+                                            val username = documentReference.get("username")
+                                            val gameId = document.id
+                                            Log.d(
+                                                    "getPendingGames",
+                                                    "game found with id=$gameId and " +
+                                                            "user=$username"
+                                            )
+                                            // TODO: Call some function that adds the gameId and the username to a list of pending games
+                                        }
+                                        .addOnFailureListener { exception ->
+                                            Log.w("getPendingGames", exception)
+                                            // TODO: Add exception handling, could not find player
+                                        }
+                            }
                         }
                     }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("getPendingGames", exception)
-                // TODO: Add exception handling, could not find games
-            }
+                .addOnFailureListener { exception ->
+                    Log.w("getPendingGames", exception)
+                    // TODO: Add exception handling, could not find games
+                }
     }
 
     /**
@@ -240,21 +240,21 @@ object AndroidFirebase : FirebaseController {
      * @param treasures list containing the treasures that should be added, each described using a map
      */
     override fun registerTreasures(
-        gameId: String,
-        userId: String,
-        treasures: List<Map<String, Any>>
+            gameId: String,
+            userId: String,
+            treasures: List<Map<String, Any>>
     ) {
         val dbTreasures = mutableMapOf<String, List<Map<String, Any>>>()
         dbTreasures[userId] = treasures
         db.collection("games").document(gameId).update("treasures", dbTreasures)
-            .addOnSuccessListener {
-                Log.d("registerTreasures", "treasures registered")
-                // TODO: Call some function that should be triggered when treasures is added
-            }
-            .addOnFailureListener { exception ->
-                Log.w("registerTreasures", exception)
-                // TODO: Add exception handling
-            }
+                .addOnSuccessListener {
+                    Log.d("registerTreasures", "treasures registered")
+                    // TODO: Call some function that should be triggered when treasures is added
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("registerTreasures", exception)
+                    // TODO: Add exception handling
+                }
     }
 
     /**
@@ -334,13 +334,13 @@ object AndroidFirebase : FirebaseController {
                     var moves = mutableListOf<Map<String, Any>>()
                     if (document.get("moves") != null) {
                         moves = document.get("moves") as MutableList<Map<String, Any>>
-}
-                // Making a map for the new move
-                val data = mutableMapOf<String, Any>()
-                data["x"] = x
-                data["y"] = y
-                data["playerId"] = playerId
-                data["weapon"] = weapon
+                    }
+                    // Making a map for the new move
+                    val data = mutableMapOf<String, Any>()
+                    data["x"] = x
+                    data["y"] = y
+                    data["playerId"] = playerId
+                    data["weapon"] = weapon
                     //Add the move to the list of existing moves
                     moves.add(data)
                     //Push the list of moves to the database
@@ -367,14 +367,14 @@ object AndroidFirebase : FirebaseController {
      */
     override fun setWinner(userId: String, gameId: String) {
         db.collection("games").document(gameId).update("winner", userId)
-            .addOnSuccessListener {
-                Log.d("setWinner", "success")
-                // TODO: Call function that handles what should happen after a player won
-            }
-            .addOnFailureListener { exception ->
-                Log.w("setWinner", exception)
-                // TODO: Add exception handling
-            }
+                .addOnSuccessListener {
+                    Log.d("setWinner", "success")
+                    // TODO: Call function that handles what should happen after a player won
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("setWinner", exception)
+                    // TODO: Add exception handling
+                }
     }
 
     /**
@@ -402,7 +402,7 @@ object AndroidFirebase : FirebaseController {
                     println("opponent id $opponent")
                     if (GSM.activeGame!!.opponent.playerId == "") {
                         getOpponent(gameId)
-                    }else {
+                    } else {
                         // Get the field containing the treasures in the database
                         var treasures = mutableMapOf<String, List<Map<String, Any>>>()
                         if (snapshot.data?.get("treasures") != null) {

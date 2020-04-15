@@ -1,24 +1,17 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.battleship.GameStateManager
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
-import com.battleship.model.Game
 import com.battleship.controller.input.TreasureHandler
-import com.battleship.model.Player
 import com.battleship.model.treasures.Treasure
-import com.battleship.model.ui.Background
-import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
-import com.battleship.model.ui.Text
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardRectangle
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.utility.GdxGraphicsUtil.size
-import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
@@ -46,7 +39,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
             onClick = {
                 val game = GSM.activeGame!!
                 println("gameready is: " + game.gameReady)
-                println("t: "+game.me.board.getTreasuresList())
+                println("t: "  + game.me.board.getTreasuresList())
                 controller.registerTreasures(
                         game.gameId,
                         game.me.playerId,
@@ -69,7 +62,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
         handleInput()
     }
 
-    fun handleInput() {
+    private fun handleInput() {
         // Drag ship
         if (Gdx.input.justTouched()) {
             val touchX = Gdx.input.x.toFloat()

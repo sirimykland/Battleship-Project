@@ -106,11 +106,11 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     }
 
     override fun update(dt: Float) {
-        if (!games.containsAll(GSM.pendingGames)){
+        if (!games.containsAll(GSM.pendingGames)) {
             games = GSM.pendingGames
             updateButtons()
         }
-        if (GSM.activeGame != null){
+        if (GSM.activeGame != null) {
             print(GSM.activeGame!!.gameId)
             GSM.set(PreGameState(controller))
         }

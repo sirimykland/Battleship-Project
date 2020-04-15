@@ -36,7 +36,7 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
             println("GAME is READY: " + GSM.activeGame!!.gameReady)
             GSM.set(PlayState(controller))
         }
-        if(Gdx.input.justTouched()){
+        if (Gdx.input.justTouched()) {
             GSM.activeGame!!.isGameReady()
         }
     }

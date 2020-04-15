@@ -9,7 +9,6 @@ import com.battleship.model.Board.Result
 import com.battleship.model.Player
 import com.battleship.model.equipment.Equipment
 import com.battleship.model.soundeffects.SoundEffects
-import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text

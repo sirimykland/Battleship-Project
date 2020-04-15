@@ -36,10 +36,10 @@ class Game(val gameId: String) {
 
     fun playersRegistered(): Boolean {
         if (me.playerId != "" && opponent.playerId != "") {
-            println("players registererd : ${me}, ${opponent}")
+            println("players registererd : $me, $opponent")
             return true
         } else {
-            println("players NOT registererd : opponent-> ${opponent}")
+            println("players NOT registererd : opponent-> $opponent")
         }
         isGameReady()
         return false
