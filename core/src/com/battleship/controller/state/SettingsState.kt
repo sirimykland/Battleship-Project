@@ -50,7 +50,7 @@ class SettingsState(private val controller: FirebaseController) : GuiState(contr
             10f,
             94f,
             11.25f,
-            "Legal stuff",
+            "Made by group 12",
             Font.SMALL_BLACK
         ),
         GUI.text(
@@ -58,7 +58,7 @@ class SettingsState(private val controller: FirebaseController) : GuiState(contr
             5f,
             94f,
             11.25f,
-            "v0.1.0",
+            "v0.2.0",
             Font.SMALL_BLACK
         ),
         GUI.backButton { GameStateManager.set(MainMenuState(controller)) }

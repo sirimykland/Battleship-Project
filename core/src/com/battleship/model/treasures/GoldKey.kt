@@ -9,7 +9,7 @@ class GoldKey(position: Vector2, rotate: Boolean) : Treasure(position) {
     override var dimension: Vector2 = Vector2(1f, 2f)
     override var name: String = "Shiny gold key"
     override var health: Int = 2
-    override var sound: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/goldbar_sound.mp3"))
+    override var sound: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/key_sound.mp3"))
     override var type: TreasureType = TreasureType.GOLDKEY
     override var sprite: Sprite = if (rotate) {
         Sprite(Texture("images/treasures/rotatedKey.png"))
