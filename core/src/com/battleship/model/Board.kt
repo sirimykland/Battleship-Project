@@ -1,12 +1,13 @@
 package com.battleship.model
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
-import com.battleship.model.treasures.Boot
 import com.battleship.model.treasures.GoldCoin
+import com.battleship.model.treasures.GoldKey
 import com.battleship.model.treasures.Treasure
 import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.treasures.TreasureChest
@@ -15,7 +16,6 @@ import kotlin.random.Random
 class Board(val size: Int) : GameObject() {
     var treasures: ArrayList<Treasure> = ArrayList()
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
-    var padding: Int = 0 // Remove?
 
     // Change all tiles to unopened state
     fun setTilesUnopened() {
@@ -32,7 +32,7 @@ class Board(val size: Int) : GameObject() {
                 treasure = when (type) {
                     TreasureType.TREASURECHEST -> TreasureChest(Vector2(x, y), Random.nextBoolean())
                     TreasureType.GOLDCOIN -> GoldCoin(Vector2(x, y), Random.nextBoolean())
-                    TreasureType.BOOT -> Boot(Vector2(x, y), Random.nextBoolean())
+                    TreasureType.GOLDKEY -> GoldKey(Vector2(x, y), Random.nextBoolean())
                 }
             } while (!validateTreasurePosition(treasure))
 
@@ -68,35 +68,34 @@ class Board(val size: Int) : GameObject() {
         val tileSize = dimension.x / size
 
         // Draw board
-        for (array in tiles) {
-            for (value in array) {
-
+        for (row in tiles) {
+            for (value in row) {
                 if (value == Tile.PREGAME) {
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-                    shapeRenderer.color = Color.BLACK
+                    Gdx.gl.glLineWidth(3f)
+                    shapeRenderer.color = Color.DARK_GRAY
                     shapeRenderer.rect(x, y, tileSize, tileSize)
-                    //  tileRenderer.rectLine(x, y,x + size, y + size, 10f)
                     shapeRenderer.end()
                 } else {
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
                     when (value) {
-                        Tile.HIT -> shapeRenderer.color = Color.GREEN
-                        Tile.MISS -> shapeRenderer.color = Color.RED
-                        Tile.NEAR -> shapeRenderer.color = Color.YELLOW
-                        Tile.UNOPENED -> shapeRenderer.color = Color.BLACK
+                        Tile.HIT -> shapeRenderer.color = Color(0.302f, 0.816f, 0.546f, 1f) // Success green
+                        Tile.MISS -> shapeRenderer.color = Color(0.961f, 0.298f, 0.298f, 1f) // Failure red
+                        Tile.NEAR -> shapeRenderer.color = Color(0.950f, 0.961f, 0.298f, 1f) // Near yellow
+                        Tile.UNOPENED -> shapeRenderer.color = Color(0.905f, 0.882f, 0.612f, 1f) // Sand/brown
                     }
                     shapeRenderer.rect(x, y, tileSize, tileSize)
                     shapeRenderer.end()
 
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-                    shapeRenderer.color = Color.WHITE
+                    shapeRenderer.color = Color.DARK_GRAY
                     shapeRenderer.rect(x, y, tileSize, tileSize)
                     shapeRenderer.end()
                 }
 
-                x += tileSize + padding
+                x += tileSize
             }
-            y += tileSize + padding
+            y += tileSize
             x = position.x
         }
 

@@ -44,8 +44,8 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         arrayOf(*(0 until player.equipmentSet.equipments.size).map { a: Int ->
             joinEquipmentButton(
                 a,
-                Gdx.graphics.equipmentsetPosition(),
-                Gdx.graphics.equipmentsetSize()
+                Gdx.graphics.equipmentSetPosition(),
+                Gdx.graphics.equipmentSetSize()
             )
         }.toTypedArray())
 
@@ -54,18 +54,20 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         90f,
         8f,
         8f,
-        "icons/refresh_white.png",
+        "icons/swap_horiz_white.png",
         onClick = {
             playerBoard = !playerBoard
         }
     )
-    private val opponentsBoardText = GUI.text(
+    private val opponentsBoardText = GUI.textBox(
         5f,
         2f,
         90f,
         10f,
         "Opponent's board",
-        font = Font.LARGE_BLACK
+        font = Font.MEDIUM_WHITE,
+        color = Palette.DARK_GREY,
+        borderColor = Palette.DARK_GREY
     )
 
     override val guiObjects: List<GuiObject> = listOf(
@@ -102,11 +104,11 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         GSM.activeGame!!.opponent.updateHealth()
         if (player.health == 0) {
             println("Opponent won!")
-            GSM.set(GameOverState(controller))
+            GSM.set(GameOverState(controller, false))
         } else if (GSM.activeGame!!.opponent.health == 0) {
             println("You won!")
             controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
-            GSM.set(GameOverState(controller))
+            GSM.set(GameOverState(controller, true))
         }
     }
 
@@ -123,9 +125,25 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
                 if (boardBounds.contains(touchPos)) {
                     val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
                     if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        player.board.shootTiles(boardTouchPos, player.equipmentSet.activeEquipment!!)
+                        val result = opponent.board.shootTiles(
+                            boardTouchPos,
+                            player.equipmentSet.activeEquipment!!
+                        )
+                        handleResultFromMove(result, player.equipmentSet.activeEquipment!!)
                     } else {
-                        println(player.equipmentSet.activeEquipment!!.name + " has no more uses")
+                        println("Has no more uses")
+                    }
+                }
+                // TODO remove else if. Handles opponent's moves
+                else if (!playerTurn && playerBoard && opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
+                    if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
+                        val result = player.board.shootTiles(
+                            boardTouchPos,
+                            opponent.equipmentSet.activeEquipment!!
+                        )
+                        handleResultFromMove(result, opponent.equipmentSet.activeEquipment!!)
+                    } else {
+                        println("Has no more uses")
                     }
                 }
             }
@@ -164,7 +182,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             val equipment = player.equipmentSet.equipments[i]
 
             // Updates text and border of equipment buttons
-            button.set(Text(equipment.name + " " + equipment.uses, Font.TINY_BLACK))
+            button.set(Text(equipment.name + " x " + equipment.uses, Font.SMALL_BLACK))
             if (equipment.active) {
                 button.set(Border(Palette.GREEN))
             } else {
@@ -185,7 +203,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         if (playerTurn) {
             header.set(Text("Your turn"))
         } else {
-            header.set(Text("Waiting for opponent..."))
+            header.set(Text("Waiting for opponent's move..."))
         }
 
         // Auto switching of boards
@@ -205,15 +223,15 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     ): GuiObject {
         val equipment = player.equipmentSet.equipments[index]
 
-        // TODO Positioning/design
         return GUI.textButton(
             position.x + dimension.x / player.equipmentSet.equipments.size * index + index * 2,
             position.y,
             dimension.x / player.equipmentSet.equipments.size,
             dimension.y,
-            equipment.name + " x" + equipment.uses,
-            borderColor = if (equipment.active) Palette.GREEN else Palette.BLACK,
-            onClick = { player.equipmentSet.activeEquipment = equipment }
+            equipment.name + " x " + equipment.uses,
+            borderColor = if (equipment.active) Palette.GREEN else Palette.DARK_GREY,
+            onClick = { player.equipmentSet.activeEquipment = equipment },
+            font = Font.SMALL_BLACK
         )
     }
 }

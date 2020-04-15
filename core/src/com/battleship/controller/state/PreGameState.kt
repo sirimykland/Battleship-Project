@@ -37,15 +37,12 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     }
 
     private val readyButton = GuiObject(
-            6f,
+            5f,
             3f,
             90f,
             10f
-    )
-            .with(Background(Palette.BLACK))
-            .with(Border(Palette.WHITE, 10f))
-            .with(Text("Start Game"))
-            .onClick {
+            "Start Game",
+            onClick = {
                 val game = GSM.activeGame!!
                 println("gameready is: " + game.gameReady)
                 println("t: "+game.me.board.getTreasuresList())
@@ -54,9 +51,6 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
                         game.me.playerId,
                         game.me.board.getTreasuresList()
                 )
-
-                println("PREGAMESTATE: gameready is: " + game.gameReady)
-                // todo something here
                 GSM.set(LoadingGameState(controller))
             }
 

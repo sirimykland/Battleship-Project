@@ -28,6 +28,7 @@ object GdxGraphicsUtil {
     fun Graphics.boardWidth(): Float {
         return this.width.toFloat() * 0.9f
     }
+
     fun Graphics.boardRectangle(): Rectangle {
         val pos = this.boardPosition()
         return Rectangle(
@@ -38,11 +39,11 @@ object GdxGraphicsUtil {
         )
     }
 
-    fun Graphics.equipmentsetSize(): Vector2 {
-        return Vector2(90f, 10f)
+    fun Graphics.equipmentSetSize(): Vector2 {
+        return Vector2(88f, 10f)
     }
 
-    fun Graphics.equipmentsetPosition(): Vector2 {
+    fun Graphics.equipmentSetPosition(): Vector2 {
         return Vector2(5f, 2f)
     }
 
