@@ -24,7 +24,7 @@ class WeaponSet : GameObject() {
             )
         }.toTypedArray())
         Gdx.input.inputProcessor =
-            InputMultiplexer(*weaponButtons.filter { it.isClickable }.map { it.listener }.toTypedArray())
+            InputMultiplexer(*weaponButtons.filter { it.hasListener }.map { it.listener }.toTypedArray())
 
         batch.begin()
         weaponButtons.forEach {

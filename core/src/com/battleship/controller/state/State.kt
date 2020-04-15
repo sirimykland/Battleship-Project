@@ -14,6 +14,10 @@ abstract class State {
 
     abstract fun render()
 
+    open fun pause() {}
+
+    open fun resume() {}
+
     open fun dispose() {
         view.dispose()
     }
