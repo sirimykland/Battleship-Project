@@ -17,12 +17,11 @@ class GameOverState(private val controller: FirebaseController, win: Boolean) : 
     )
     var winString = ""
         init {
-            if (win){
+            if (win) {
                 winString = "You won the game!"
-            }else{
+            } else {
                 winString = "You lost the game..."
             }
-
     }
     override val guiObjects: List<GuiObject> = listOf(
         GUI.menuButton(
