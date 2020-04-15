@@ -12,8 +12,8 @@ import com.battleship.model.ui.GameInfo
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-import com.battleship.utility.GdxGraphicsUtil.equipmentsetPosition
-import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
+import com.battleship.utility.GdxGraphicsUtil.equipmentSetPosition
+import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
 import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
 import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 
@@ -25,7 +25,7 @@ class PlayView : View() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         batch.begin()
-        background.setCenter(Gdx.graphics.width / 1.85f, Gdx.graphics.height.toFloat())
+        background.setCenter(Gdx.graphics.width / 1.85f, Gdx.graphics.height.toFloat() / 2)
         background.draw(batch)
         batch.end()
 
@@ -40,8 +40,8 @@ class PlayView : View() {
                 )
                 is EquipmentSet -> obj.draw(
                     batch,
-                    Gdx.graphics.equipmentsetPosition(),
-                    Gdx.graphics.equipmentsetSize()
+                    Gdx.graphics.equipmentSetPosition(),
+                    Gdx.graphics.equipmentSetSize()
                 )
                 is GameInfo -> obj.draw(
                     batch,
