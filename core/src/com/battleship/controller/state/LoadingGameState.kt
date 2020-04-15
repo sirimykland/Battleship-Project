@@ -1,5 +1,6 @@
 package com.battleship.controller.state
 
+import com.badlogic.gdx.Gdx
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
@@ -23,7 +24,7 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     }
 
     override val guiObjects: List<GuiObject> = listOf(
-            GUI.header("Waiting for opponent to register..."),
+            GUI.header(headerText()),
             GUI.backButton { GSM.set(MainMenuState(controller)) }
     )
 
@@ -35,6 +36,9 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
         if (GSM.activeGame != null && GSM.activeGame!!.gameReady) {
             println("GAME is READY: " + GSM.activeGame!!.gameReady)
             GSM.set(PlayState(controller))
+        }
+        if(Gdx.input.justTouched()){
+            GSM.activeGame!!.isGameReady()
         }
     }
 

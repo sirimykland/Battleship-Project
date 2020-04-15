@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
-import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.treasures.Boot
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.Treasure
@@ -14,7 +13,7 @@ import com.battleship.model.treasures.TreasureChest
 import kotlin.random.Random
 
 class Board(val size: Int) : GameObject() {
-    private var treasures: ArrayList<Treasure> = ArrayList()
+    var treasures: ArrayList<Treasure> = ArrayList()
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
     var padding: Int = 0 // Remove?
 
@@ -192,27 +191,38 @@ class Board(val size: Int) : GameObject() {
      * @param treasuresList List<Map<String, Any>>
      */
     fun setTreasuresList(treasuresList: List<Map<String, Any>>) {
-        treasures = ArrayList<Treasure>()
+        val newTreasures = ArrayList<Treasure>()
         lateinit var newTreasure: Treasure
         lateinit var position: Vector2
         var rotate = true
-        for (treasure in treasuresList) {
-            position = Vector2((treasure["x"] as Number).toFloat(), (treasure["y"] as Number).toFloat())
-            rotate = if (treasure.containsKey("rotate")) treasure["rotate"] as Boolean else false
 
-            when (treasure["type"]) {
+        for (treasure in treasuresList.toMutableList()) {
+            position = Vector2(
+                    (treasure["x"] as Number).toFloat(),
+                    (treasure["y"] as Number).toFloat())
+            rotate =
+                    if (treasure.containsKey("rotate")) {
+                        treasure["rotate"] as Boolean
+                    } else false
+            // print("$position  - $rotate: ")
+            // println("${treasure["type"]}: (${(treasure["type"]) == "Old stinking boot"})")
+
+            newTreasure = when (treasure["type"]) {
                 "Gold coin" ->
-                    newTreasure = GoldCoin(position, rotate)
+                    GoldCoin(position, rotate)
                 "Treasure chest" ->
-                    newTreasure = TreasureChest(position, rotate)
+                    TreasureChest(position, rotate)
                 "Boot" ->
-                    newTreasure = Boot(position, rotate)
+                    Boot(position, rotate)
                 "Old stinking boot" ->
-                    newTreasure = Boot(position, rotate)
+                    Boot(position, rotate)
+                else -> GoldCoin(Vector2(0f, 0f), true)
             }
-            treasures.add(newTreasure)
+            // println("newtreasure: $newTreasure")
+            newTreasures.add(newTreasure)
         }
-        println("- new treasure: $treasures")
+        treasures = newTreasures
+        println("new treasures: $treasures")
     }
 
     override fun toString(): String {

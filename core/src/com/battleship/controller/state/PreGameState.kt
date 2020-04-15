@@ -24,9 +24,8 @@ import com.battleship.view.View
 
 class PreGameState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
-    private val boardSize = 10
-    var player: Player = Player(boardSize)
-    val inputProcessor = TreasureHandler(player.board)
+
+    val inputProcessor = TreasureHandler(GSM.activeGame!!.me.board)
 
     override fun create() {
         super.create()

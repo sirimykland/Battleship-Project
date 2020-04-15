@@ -265,11 +265,18 @@ object AndroidFirebase : FirebaseController {
     override fun getTreasures(gameId: String) {
         db.collection("games").document(gameId).get()
                 .addOnSuccessListener { document ->
-                    val treasures = document.get("treasures")
+                    val treasures = document.get("treasures") as Map<String, List<Map<String, Any>>>
                     Log.d("getTreasures", "successful! $treasures")
                     // TODO: Call function that stores the treasures
                     if (treasures != null) {
-                        GSM.activeGame!!.setTreasures(treasures as Map<String, List<Map<String, Any>>>)
+                        //GSM.activeGame!!.setTreasures(treasures as Map<String, List<Map<String, Any>>>)
+                        if (GSM.activeGame!!.me.playerId in treasures) treasures[GSM.activeGame!!.me.playerId]?.let { GSM.activeGame!!.me.board.setTreasuresList(it) }
+                        if (GSM.activeGame!!.opponent.playerId in treasures){
+                            treasures[GSM.activeGame!!.opponent.playerId]?.let {
+                                GSM.activeGame!!.opponent.board.setTreasuresList(it)
+                            }
+                            GSM.activeGame!!.isGameReady()
+                        }
                     }
                 }
                 .addOnFailureListener { exception ->

@@ -1,10 +1,15 @@
 package com.battleship.desktop
 
+import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import com.battleship.model.Player
+import com.battleship.model.treasures.Boot
+import com.battleship.model.treasures.GoldCoin
+import com.battleship.model.treasures.Treasure
+import com.battleship.model.treasures.TreasureChest
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.EventListener
@@ -219,8 +224,7 @@ object DesktopFirebase : FirebaseController {
 
             GSM.activeGame!!.opponent.playerId = player2Id
             GSM.activeGame!!.opponent.playerName = db.collection("users").document(player2Id).get().get().get("username").toString()
-            println("name " + GSM.activeGame!!.opponent.playerName)
-            // setTreasures(gameId)
+            println("opponent name: " + GSM.activeGame!!.opponent.playerName)
         } else {
             throw error("Something went wrong when fetching the Game")
         }
@@ -236,12 +240,48 @@ object DesktopFirebase : FirebaseController {
         val game = query.get()
         if (game.exists()) {
             val treasures = game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
-            println("all treasures: $treasures")
-            GSM.activeGame!!.setTreasures(treasures)
+            // val treasureO = treasures[GSM.activeGame!!.opponent.playerId]
+            if (treasures != null) {
+                // GSM.activeGame!!.setTreasures(treasures)
+                if (GSM.activeGame!!.me.playerId in treasures) {
+                    treasures[GSM.activeGame!!.me.playerId]?.let { GSM.activeGame!!.me.board.setTreasuresList(it) }
+                }
+                if (GSM.activeGame!!.opponent.playerId in treasures){
+                    treasures[GSM.activeGame!!.opponent.playerId]?.let {
+                        GSM.activeGame!!.opponent.board.setTreasuresList(it)
+                    }
+                    GSM.activeGame!!.isGameReady()
+                }
+            }
         } else {
             // TODO: Add error handling
             throw error("Something went wrong when fetching treasures")
         }
+    }
+    private fun List<Map<String, Any>>.treasureToList() : ArrayList<Treasure> {
+        var treasures = ArrayList<Treasure>()
+        lateinit var newTreasure: Treasure
+        lateinit var position: Vector2
+        var rotate = true
+        for (treasure in this) {
+            print("${treasure["type"]} , ${treasure["rotate"]}, ${treasure["x"]} ${treasure["y"]}")
+            position = Vector2((treasure["x"] as Number).toFloat(), (treasure["y"] as Number).toFloat())
+            rotate = if (treasure.containsKey("rotate")) treasure["rotate"] as Boolean else false
+
+            when (treasure["type"]) {
+                "Gold coin" ->
+                    newTreasure = GoldCoin(position, rotate)
+                "Treasure chest" ->
+                    newTreasure = TreasureChest(position, rotate)
+                "Boot" ->
+                    newTreasure = Boot(position, rotate)
+                "Old stinking boot" ->
+                    newTreasure = Boot(position, rotate)
+            }
+            treasures.add(newTreasure)
+        }
+        println("- new treasure: $treasures")
+        return treasures
     }
 
     /**
@@ -307,7 +347,7 @@ object DesktopFirebase : FirebaseController {
                     }
                     // If there is an opponent in the game
                     else {
-                        println("opponent id " + GSM.activeGame!!.opponent.playerId)
+                        // println("opponent id " + GSM.activeGame!!.opponent.playerId)
                         if (GSM.activeGame!!.opponent.playerId == "") {
                             getOpponent(gameId)
                         } else {
@@ -315,6 +355,7 @@ object DesktopFirebase : FirebaseController {
                             val treasures = snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
                             // If there is not enough treasures registered
                             if (treasures.size <= 2 && GSM.activeGame!!.playersRegistered()) {
+                                println("addGameListener:"+ "Treasures not registered")
                                 getTreasures(gameId)
                             } else {
                                 // Get the list of moves
