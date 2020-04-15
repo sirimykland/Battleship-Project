@@ -57,13 +57,15 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             playerBoard = !playerBoard
         }
     )
-    private val opponentsBoardText = GUI.text(
+    private val opponentsBoardText = GUI.textBox(
         5f,
         2f,
         90f,
         10f,
         "Opponent's board",
-        font = Font.LARGE_BLACK
+        font = Font.MEDIUM_WHITE,
+        color = Palette.DARK_GREY,
+        borderColor = Palette.DARK_GREY
     )
 
     override val guiObjects: List<GuiObject> = listOf(
@@ -181,7 +183,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             val equipment = player.equipmentSet.equipments[i]
 
             // Updates text and border of equipment buttons
-            button.set(Text(equipment.name + " " + equipment.uses, Font.TINY_BLACK))
+            button.set(Text(equipment.name + " x " + equipment.uses, Font.SMALL_BLACK))
             if (equipment.active) {
                 button.set(Border(Palette.GREEN))
             } else {
@@ -227,9 +229,10 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             position.y,
             dimension.x / player.equipmentSet.equipments.size,
             dimension.y,
-            equipment.name + " x" + equipment.uses,
+            equipment.name + " x " + equipment.uses,
             borderColor = if (equipment.active) Palette.GREEN else Palette.DARK_GREY,
-            onClick = { player.equipmentSet.activeEquipment = equipment }
+            onClick = { player.equipmentSet.activeEquipment = equipment },
+            font = Font.SMALL_BLACK
         )
     }
 }

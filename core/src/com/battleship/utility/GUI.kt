@@ -30,9 +30,9 @@ object GUI {
         sizeX: Float,
         sizeY: Float,
         text: String,
-        font: BitmapFont = Font.SMALL_WHITE,
-        color: TextureRegion = Palette.BLACK,
-        borderColor: TextureRegion = Palette.WHITE
+        font: BitmapFont = Font.MEDIUM_BLACK,
+        color: TextureRegion = Palette.LIGHT_GREY,
+        borderColor: TextureRegion = Palette.DARK_GREY
     ): GuiObject {
         return GuiObject(posX, posY, sizeX, sizeY)
             .with(Background(color))
@@ -79,7 +79,7 @@ object GUI {
         text: String,
         onClick: () -> Unit
     ): GuiObject {
-        return GuiObject(posX, posY, 53.125f, 12.5f)
+        return GuiObject(posX, posY, 50f, 12.5f)
             .with(Background(Palette.LIGHT_GREY))
             .with(Border(Palette.DARK_GREY))
             .with(Text(text, Font.MEDIUM_BLACK))
@@ -126,10 +126,4 @@ object GUI {
             .with(Image(texturePath))
             .onClick(onClick)
     }
-
-    fun background(): GuiObject {
-        return GuiObject(0f,0f, 100f, 100f)
-            .with(Background(Sprite(Texture("images/background.png"))))
-    }
-
 }

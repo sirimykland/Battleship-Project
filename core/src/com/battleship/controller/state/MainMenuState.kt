@@ -14,29 +14,26 @@ import com.battleship.view.View
 class MainMenuState(private val controller: FirebaseController) : GuiState(controller) {
 
     private val menuList = listOf(
-        Pair("Play") { GameStateManager.set(PreGameState(controller)) },
         Pair("Settings") { GameStateManager.set(SettingsState(controller)) },
-        Pair("Matchmaking") { GameStateManager.set(MatchmakingState(controller)) }
-
+        Pair("Play") { GameStateManager.set(PreGameState(controller)) }
     )
 
     override val guiObjects: List<GuiObject> = menuList
         .mapIndexed { i, (name, func) ->
             GUI.menuButton(
-                23.4375f,
-                100f - (56.25f + 18.75f * i),
+                25f,
+                22f + 22f * i,
                 name,
                 onClick = func
             )
         }
 
-    private val title: GuiObject = GUI.text(
+    private val title: GuiObject = GUI.image(
         10f,
-        72f,
+        66f,
         80f,
         12.5f,
-        "Treasure hunt",
-        font = Font.XXL_BLACK
+        "font/title.png"
     )
 
     override var view: View = BasicView()
