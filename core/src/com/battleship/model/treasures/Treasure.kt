@@ -59,6 +59,10 @@ abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject
         return health == 0
     }
 
+    fun updatePosition(pos: Vector2) {
+        position = pos
+    }
+
     fun rotateTreasure() {
         val temp = dimension.x
         dimension.x = dimension.y

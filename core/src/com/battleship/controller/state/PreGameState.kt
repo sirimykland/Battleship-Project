@@ -1,10 +1,13 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
+import com.battleship.GameStateManager
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Game
+import com.battleship.controller.input.TreasureHandler
+import com.battleship.model.Player
 import com.battleship.model.treasures.Treasure
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
@@ -21,6 +24,9 @@ import com.battleship.view.View
 
 class PreGameState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
+    private val boardSize = 10
+    var player: Player = Player(boardSize)
+    val inputProcessor = TreasureHandler(player.board)
 
     override fun create() {
         super.create()
@@ -28,6 +34,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
         GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.BOOT, true)
         GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDCOIN, true)
         GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.TREASURECHEST, true)
+        addInputProcessor(inputProcessor)
     }
 
     private val readyButton = GuiObject(
