@@ -25,14 +25,14 @@ class GameOverState(private val controller: FirebaseController, win: Boolean) : 
     }
     override val guiObjects: List<GuiObject> = listOf(
         GUI.menuButton(
-            23.4375f,
             25f,
+            32f,
             "Back to main menu",
             onClick = { GameStateManager.set(MainMenuState(controller)) }
         ),
         GUI.menuButton(
-            23.4375f,
-            43.75f,
+            25f,
+            54f,
             "Play again",
             onClick = { GameStateManager.set(MatchmakingState(controller)) }
         ),
