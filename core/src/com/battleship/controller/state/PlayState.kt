@@ -23,7 +23,7 @@ import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
-import java.util.*
+import java.util.Timer
 import kotlin.concurrent.schedule
 
 class PlayState(private val controller: FirebaseController) : GuiState(controller) {
