@@ -41,10 +41,7 @@ object GdxGraphicsUtil {
     }
 
     fun Graphics.equipmentSetSize(): Vector2 {
-        // TODO: Fix size of equipments here
-        val width = (Gdx.graphics.width / 100) * 45
-        print(width)
-        return Vector2(width.toFloat() , 10f)
+        return Vector2(88f, 10f)
     }
 
     fun Graphics.equipmentSetPosition(): Vector2 {

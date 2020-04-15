@@ -79,16 +79,16 @@ class Board(val size: Int) : GameObject() {
                 } else {
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
                     when (value) {
-                        Tile.HIT -> shapeRenderer.color = Color.GREEN
-                        Tile.MISS -> shapeRenderer.color = Color.RED
-                        Tile.NEAR -> shapeRenderer.color = Color.YELLOW
-                        Tile.UNOPENED -> shapeRenderer.color = Color.BLACK
+                        Tile.HIT -> shapeRenderer.color = Color(0.302f, 0.816f, 0.546f, 1f) // Success green
+                        Tile.MISS -> shapeRenderer.color = Color(0.961f, 0.298f, 0.298f, 1f) // Failure red
+                        Tile.NEAR -> shapeRenderer.color = Color(0.950f, 0.961f, 0.298f, 1f) // Near yellow
+                        Tile.UNOPENED -> shapeRenderer.color = Color(0.905f, 0.882f, 0.612f, 1f) // Sand/brown
                     }
                     shapeRenderer.rect(x, y, tileSize, tileSize)
                     shapeRenderer.end()
 
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-                    shapeRenderer.color = Color.WHITE
+                    shapeRenderer.color = Color.DARK_GRAY
                     shapeRenderer.rect(x, y, tileSize, tileSize)
                     shapeRenderer.end()
                 }

@@ -24,4 +24,6 @@ object Palette {
     val DARK_GREY = TextureRegion(Texture("colors/dark_grey.png"), 1, 1, 1, 1)
     val LIGHT_BURGUNDY = TextureRegion(Texture("colors/light_burgundy.png"), 1, 1, 1, 1)
     val DARK_BURGUNDY = TextureRegion(Texture("colors/dark_burgundy.png"), 1, 1, 1, 1)
+    val LIGHT_SAND = TextureRegion(Texture("colors/light_sand.png"), 1, 1, 1, 1)
+    val DARK_SAND = TextureRegion(Texture("colors/dark_sand.png"), 1, 1, 1, 1)
 }
