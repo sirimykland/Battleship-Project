@@ -14,7 +14,6 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     override fun create() {
         super.create()
         println("---LOADINGSTATE---")
-        controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.me.playerId)
     }
 
     private fun headerText(): String {

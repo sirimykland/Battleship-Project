@@ -18,10 +18,8 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-import com.battleship.utility.GdxGraphicsUtil.equipmentsetPosition
-import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
-import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
-import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
+import com.battleship.utility.GdxGraphicsUtil.equipmentSetPosition
+import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
@@ -125,7 +123,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
                 if (boardBounds.contains(touchPos)) {
                     val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
                     if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        val result = opponent.board.shootTiles(
+                        val result = GSM.activeGame!!.opponent.board.shootTiles(
                             boardTouchPos,
                             player.equipmentSet.activeEquipment!!
                         )
@@ -135,13 +133,14 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
                     }
                 }
                 // TODO remove else if. Handles opponent's moves
-                else if (!playerTurn && playerBoard && opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                    if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
+                else if (!playerTurn && playerBoard && GSM.activeGame!!.opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
+                    if (GSM.activeGame!!.opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
+                        val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
                         val result = player.board.shootTiles(
                             boardTouchPos,
-                            opponent.equipmentSet.activeEquipment!!
+                                GSM.activeGame!!.opponent.equipmentSet.activeEquipment!!
                         )
-                        handleResultFromMove(result, opponent.equipmentSet.activeEquipment!!)
+                        handleResultFromMove(result, GSM.activeGame!!.opponent.equipmentSet.activeEquipment!!)
                     } else {
                         println("Has no more uses")
                     }

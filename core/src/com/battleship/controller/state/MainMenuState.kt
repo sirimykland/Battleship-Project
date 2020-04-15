@@ -18,8 +18,8 @@ class MainMenuState(private val controller: FirebaseController) : GuiState(contr
                 controller.createGame(GSM.userId)
             },
             // Pair("Matchmaking") { GSM.set(MatchmakingState(controller)) },
-            Pair("Settings") { GameStateManager.set(SettingsState(controller)) },
-            Pair("Play") { GameStateManager.set(PreGameState(controller)) }
+            Pair("Settings") { GSM.set(SettingsState(controller)) },
+            Pair("Play") { GSM.set(MatchmakingState(controller)) }
     )
 
     override val guiObjects: List<GuiObject> = menuList

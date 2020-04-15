@@ -30,17 +30,18 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     override fun create() {
         super.create()
         println("---PREGAMESTATE---")
-        GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.BOOT, true)
+        GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDKEY, true)
         GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDCOIN, true)
         GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.TREASURECHEST, true)
+        controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.me.playerId)
         addInputProcessor(inputProcessor)
     }
 
-    private val readyButton = GuiObject(
+    private val readyButton = GUI.textButton(
             5f,
             3f,
             90f,
-            10f
+            10f,
             "Start Game",
             onClick = {
                 val game = GSM.activeGame!!
@@ -52,7 +53,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
                         game.me.board.getTreasuresList()
                 )
                 GSM.set(LoadingGameState(controller))
-            }
+            })
 
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,

@@ -203,19 +203,17 @@ class Board(val size: Int) : GameObject() {
                     if (treasure.containsKey("rotate")) {
                         treasure["rotate"] as Boolean
                     } else false
-            // print("$position  - $rotate: ")
+            // println("${treasure["type"]} - $position  - $rotate: ")
             // println("${treasure["type"]}: (${(treasure["type"]) == "Old stinking boot"})")
-
+            // TODO this should be the actual enum types
             newTreasure = when (treasure["type"]) {
                 "Gold coin" ->
                     GoldCoin(position, rotate)
                 "Treasure chest" ->
                     TreasureChest(position, rotate)
-                "Boot" ->
-                    Boot(position, rotate)
-                "Old stinking boot" ->
-                    Boot(position, rotate)
-                else -> GoldCoin(Vector2(0f, 0f), true)
+                "Shiny gold key" ->
+                    GoldKey(position, rotate)
+                else -> GoldCoin(Vector2(0f, 0f), false)
             }
             // println("newtreasure: $newTreasure")
             newTreasures.add(newTreasure)

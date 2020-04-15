@@ -236,18 +236,18 @@ object DesktopFirebase : FirebaseController {
         if (game.exists()) {
             val treasures = game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
             // val treasureO = treasures[GSM.activeGame!!.opponent.playerId]
-            if (treasures != null) {
+            // if (treasures != null) {
                 // GSM.activeGame!!.setTreasures(treasures)
-                if (GSM.activeGame!!.me.playerId in treasures) {
+                /* if (GSM.activeGame!!.me.playerId in treasures) {
                     treasures[GSM.activeGame!!.me.playerId]?.let { GSM.activeGame!!.me.board.setTreasuresList(it) }
-                }
+                } */
                 if (GSM.activeGame!!.opponent.playerId in treasures) {
                     treasures[GSM.activeGame!!.opponent.playerId]?.let {
                         GSM.activeGame!!.opponent.board.setTreasuresList(it)
                     }
                     GSM.activeGame!!.isGameReady()
                 }
-            }
+            //}
         } else {
             // TODO: Add error handling
             throw error("Something went wrong when fetching treasures")
@@ -317,7 +317,7 @@ object DesktopFirebase : FirebaseController {
                     }
                     // If there is an opponent in the game
                     else {
-                        // println("opponent id " + GSM.activeGame!!.opponent.playerId)
+                         println("opponent id $opponent")
                         if (GSM.activeGame!!.opponent.playerId == "") {
                             getOpponent(gameId)
                         } else {
