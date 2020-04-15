@@ -164,9 +164,9 @@ object DesktopFirebase : FirebaseController {
      * @param treasures list containing the treasures that should be added, each described using a map
      */
     override fun registerTreasures(
-            gameId: String,
-            userId: String,
-            treasures: List<Map<String, Any>>
+        gameId: String,
+        userId: String,
+        treasures: List<Map<String, Any>>
     ) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
@@ -247,7 +247,7 @@ object DesktopFirebase : FirebaseController {
                     }
                     GSM.activeGame!!.isGameReady()
                 }
-            //}
+            // }
         } else {
             // TODO: Add error handling
             throw error("Something went wrong when fetching treasures")
@@ -301,8 +301,8 @@ object DesktopFirebase : FirebaseController {
         val docRef = db.collection("games").document(gameId)
         docRef.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
-                    @Nullable snapshot: DocumentSnapshot?,
-                    @Nullable e: FirestoreException?
+                @Nullable snapshot: DocumentSnapshot?,
+                @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
                     System.err.println("Listen failed: $e")
@@ -317,7 +317,7 @@ object DesktopFirebase : FirebaseController {
                     }
                     // If there is an opponent in the game
                     else {
-                         println("opponent id $opponent")
+                        println("opponent id $opponent")
                         if (GSM.activeGame!!.opponent.playerId == "") {
                             getOpponent(gameId)
                         } else {
@@ -358,8 +358,8 @@ object DesktopFirebase : FirebaseController {
         val query = db.collection("games").document(gameId)
         val moveListener = query.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
-                    @Nullable snapshot: DocumentSnapshot?,
-                    @Nullable e: FirestoreException?
+                @Nullable snapshot: DocumentSnapshot?,
+                @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
                     System.err.println("Listen failed: $e")
