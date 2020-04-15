@@ -61,13 +61,13 @@ object AndroidFirebase : FirebaseController {
         db.collection("users").add(data)
                 .addOnSuccessListener { documentReference ->
                     val userId = documentReference.id
-                    Log.d("addPlayer", "player added with id=${userId}")
-                    //TODO: Call some function that saves player id for later use
+                    Log.d("addPlayer", "player added with id=$userId")
+                    // TODO: Call some function that saves player id for later use
                     GSM.userId = userId
                 }
                 .addOnFailureListener { exception ->
                     Log.w("addPlayer", exception)
-                    //TODO: Add exception handling
+                    // TODO: Add exception handling
                 }
     }
 
@@ -87,12 +87,12 @@ object AndroidFirebase : FirebaseController {
         db.collection("games").add(data)
                 .addOnSuccessListener { documentReference ->
                     val gameId = documentReference.id
-                    Log.d("createGame", "created game with id=${gameId}")
+                    Log.d("createGame", "created game with id=$gameId")
                     setGame(gameId)
                 }
                 .addOnFailureListener { exception ->
                     Log.w("createGame", exception)
-                    //TODO: Add exception handling
+                    // TODO: Add exception handling
                 }
     }
 
@@ -120,27 +120,26 @@ object AndroidFirebase : FirebaseController {
 
                         for (p in listOf(GSM.activeGame!!.me, GSM.activeGame!!.opponent)) {
                             if (p.playerId != "") {
-                                //This call get the username of the player registered under player1
+                                // This call get the username of the player registered under player1
                                 db.collection("users").document(p.playerId).get()
                                         .addOnSuccessListener { documentReference ->
                                             val username = documentReference.get("username")
-                                            Log.d("setGame", "user set with id=${p.playerId} and " + "user=${username}")
+                                            Log.d("setGame", "user set with id=${p.playerId} and " + "user=$username")
                                             if (username != null) {
                                                 p.playerName = username as String
                                             }
                                         }
                                         .addOnFailureListener { exception ->
                                             Log.w("setGame", exception)
-                                            //TODO: Add exception handling, could not find player
+                                            // TODO: Add exception handling, could not find player
                                         }
                             }
                         }
-
                     }
                 }
                 .addOnFailureListener { exception ->
                     Log.w("setGame", exception)
-                    //TODO: Add exception handling, could not find games
+                    // TODO: Add exception handling, could not find games
                 }
     }
 
@@ -157,14 +156,14 @@ object AndroidFirebase : FirebaseController {
                             Log.d("getPendingGames", "game found with id=${document.id}")
                             val playerId: String = document.getString("player1") as String
                             if (playerId != "") {
-                                //This call get the username of the player registered under player1
+                                // This call get the username of the player registered under player1
                                 db.collection("users").document(playerId).get()
                                         .addOnSuccessListener { documentReference ->
                                             val username = documentReference.get("username")
                                             val gameId = document.id
                                             Log.d("getPendingGames",
-                                                    "game found with id=${gameId} and " +
-                                                            "user=${username}")
+                                                    "game found with id=$gameId and " +
+                                                            "user=$username")
                                             if (username != null) {
                                                 GSM.pendingGames.add(GameListObject(gameId, playerId, username as String))
                                             }
@@ -172,7 +171,7 @@ object AndroidFirebase : FirebaseController {
                                         }
                                         .addOnFailureListener { exception ->
                                             Log.w("getPendingGames", exception)
-                                            //TODO: Add exception handling, could not find player
+                                            // TODO: Add exception handling, could not find player
                                         }
                             }
                         }
@@ -180,7 +179,7 @@ object AndroidFirebase : FirebaseController {
                 }
                 .addOnFailureListener { exception ->
                     Log.w("getPendingGames", exception)
-                    //TODO: Add exception handling, could not find games
+                    // TODO: Add exception handling, could not find games
                 }
                 .addOnSuccessListener { documents ->
                     if (documents != null) {
@@ -224,12 +223,12 @@ object AndroidFirebase : FirebaseController {
         db.collection("games").document(gameId).update("player2", userId)
                 .addOnSuccessListener {
                     Log.d("joinGame", "Updated successfully")
-                    //TODO: Call some function that should be triggered when you joined successfully
+                    // TODO: Call some function that should be triggered when you joined successfully
                     setGame(gameId)
                 }
                 .addOnFailureListener { exception ->
                     Log.w("joinGame", exception)
-                    //TODO: Add exception handling
+                    // TODO: Add exception handling
                 }
     }
 
@@ -240,9 +239,9 @@ object AndroidFirebase : FirebaseController {
      * @param treasures list containing the treasures that should be added, each described using a map
      */
     override fun registerTreasures(
-            gameId: String,
-            userId: String,
-            treasures: List<Map<String, Any>>
+        gameId: String,
+        userId: String,
+        treasures: List<Map<String, Any>>
     ) {
         val dbTreasures = mutableMapOf<String, List<Map<String, Any>>>()
         dbTreasures[userId] = treasures
@@ -303,19 +302,19 @@ object AndroidFirebase : FirebaseController {
                 .addOnSuccessListener { document ->
                     val player2Id = document.get("player2")
                     Log.d("getOpponent", "successful! $player2Id")
-                    //TODO: Call function that stores the treasures
+                    // TODO: Call function that stores the treasures
                     GSM.activeGame!!.opponent.playerId = player2Id as String
                     db.collection("users").document(player2Id).get()
                             .addOnSuccessListener { document ->
                                 GSM.activeGame!!.opponent.playerName = document.get("username") as String
                             }.addOnFailureListener { exception ->
                                 Log.w("getOpponent", exception)
-                                //TODO: Add exception handling
+                                // TODO: Add exception handling
                             }
                 }
                 .addOnFailureListener { exception ->
                     Log.w("getOpponent", exception)
-                    //TODO: Add exception handling
+                    // TODO: Add exception handling
                 }
     }
 
@@ -330,7 +329,7 @@ object AndroidFirebase : FirebaseController {
         // Get the document for the game using the id of the document
         db.collection("games").document(gameId).get()
                 .addOnSuccessListener { document ->
-                    //Saving existing moves
+                    // Saving existing moves
                     var moves = mutableListOf<Map<String, Any>>()
                     if (document.get("moves") != null) {
                         moves = document.get("moves") as MutableList<Map<String, Any>>
@@ -341,22 +340,22 @@ object AndroidFirebase : FirebaseController {
                     data["y"] = y
                     data["playerId"] = playerId
                     data["weapon"] = weapon
-                    //Add the move to the list of existing moves
+                    // Add the move to the list of existing moves
                     moves.add(data)
-                    //Push the list of moves to the database
+                    // Push the list of moves to the database
                     db.collection("games").document(gameId).update("moves", moves)
                             .addOnSuccessListener {
                                 Log.d("makeMove", "move made")
-                                //TODO: Call function that should be called when move is made
+                                // TODO: Call function that should be called when move is made
                             }
                             .addOnFailureListener { exception ->
                                 Log.w("makeMove", exception)
-                                //TODO: Add exception handling, could not push data to db
+                                // TODO: Add exception handling, could not push data to db
                             }
                 }
                 .addOnFailureListener { exception ->
                     Log.w("makeMove", exception)
-                    //TODO: Add exception handling, could not find game document
+                    // TODO: Add exception handling, could not find game document
                 }
     }
 
@@ -425,7 +424,7 @@ object AndroidFirebase : FirebaseController {
                                 // If a winner has been set
                                 if (winner != "") {
                                     Log.d("addGameListener", "The winner is $winner")
-                                    //TODO: Call function that should be called when a winner is registered
+                                    // TODO: Call function that should be called when a winner is registered
                                     GSM.activeGame!!.winner = winner as String // or something
                                 }
                                 // If there is no winner, continue game
@@ -433,7 +432,7 @@ object AndroidFirebase : FirebaseController {
                                     // If no moves has been made yet
                                     if (moves.size == 0) {
                                         Log.d("addGameListener", "No moves made yet")
-                                        //TODO: Call function that should be called when no moves is registered yet
+                                        // TODO: Call function that should be called when no moves is registered yet
                                         // set game status to ready
                                         GSM.activeGame!!.isGameReady()
                                     } else {

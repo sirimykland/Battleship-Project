@@ -1,6 +1,5 @@
 package com.battleship.controller.state
 
-import com.battleship.GSM
 import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject

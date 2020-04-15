@@ -2,7 +2,7 @@ package com.battleship.model.equipment
 
 import com.battleship.model.GameObject
 
-class EquipmentSet(var equipments : ArrayList<Equipment>) : GameObject() {
+class EquipmentSet(var equipments: ArrayList<Equipment>) : GameObject() {
     // var equipments: ArrayList<Equipment> = ArrayList()
     var activeEquipment: Equipment? = null
         set(equipment) {

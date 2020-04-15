@@ -39,7 +39,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
             onClick = {
                 val game = GSM.activeGame!!
                 println("gameready is: " + game.gameReady)
-                println("t: "  + game.me.board.getTreasuresList())
+                println("t: " + game.me.board.getTreasuresList())
                 controller.registerTreasures(
                         game.gameId,
                         game.me.playerId,
