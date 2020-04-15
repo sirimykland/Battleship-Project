@@ -3,7 +3,6 @@ package com.battleship.controller.state
 import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
-import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
@@ -14,44 +13,26 @@ import com.battleship.view.View
 class MainMenuState(private val controller: FirebaseController) : GuiState(controller) {
 
     private val menuList = listOf(
-        Pair("Play") { GameStateManager.set(PreGameState(controller)) },
         Pair("Settings") { GameStateManager.set(SettingsState(controller)) },
-        Pair("Matchmaking") { GameStateManager.set(MatchmakingState(controller)) }
-
+        Pair("Play") { GameStateManager.set(PreGameState(controller)) }
     )
 
     override val guiObjects: List<GuiObject> = menuList
         .mapIndexed { i, (name, func) ->
             GUI.menuButton(
-                23.4375f,
-                100f - (56.25f + 18.75f * i),
+                25f,
+                22f + 22f * i,
                 name,
                 onClick = func
             )
         }
 
-    private val title: GuiObject = GUI.text(
-        11f,
-        74f,
-        78f,
+    private val title: GuiObject = GUI.image(
+        10f,
+        66f,
+        80f,
         12.5f,
-        "Treasure hunt",
-        font = Font.XXL_BLACK
-
-    )
-    private val skeleton: GuiObject = GUI.image(
-        35f,
-        60f,
-        14f,
-        14f,
-        "images/skeleton.png"
-    )
-    private val map: GuiObject = GUI.image(
-        52f,
-        59f,
-        16f,
-        16f,
-        "images/skull.png"
+        "font/title.png"
     )
 
     override var view: View = BasicView()
@@ -59,6 +40,6 @@ class MainMenuState(private val controller: FirebaseController) : GuiState(contr
     override fun update(dt: Float) {}
 
     override fun render() {
-        view.render(title, skeleton, map, *guiObjects.toTypedArray())
+        view.render(title, *guiObjects.toTypedArray())
     }
 }

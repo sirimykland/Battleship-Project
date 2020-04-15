@@ -18,8 +18,8 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-import com.battleship.utility.GdxGraphicsUtil.equipmentsetPosition
-import com.battleship.utility.GdxGraphicsUtil.equipmentsetSize
+import com.battleship.utility.GdxGraphicsUtil.equipmentSetPosition
+import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
@@ -42,8 +42,8 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         arrayOf(*(0 until player.equipmentSet.equipments.size).map { a: Int ->
             joinEquipmentButton(
                 a,
-                Gdx.graphics.equipmentsetPosition(),
-                Gdx.graphics.equipmentsetSize()
+                Gdx.graphics.equipmentSetPosition(),
+                Gdx.graphics.equipmentSetSize()
             )
         }.toTypedArray())
 
@@ -52,18 +52,20 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         90f,
         8f,
         8f,
-        "icons/refresh_white.png",
+        "icons/swap_horiz_white.png",
         onClick = {
             playerBoard = !playerBoard
         }
     )
-    private val opponentsBoardText = GUI.text(
+    private val opponentsBoardText = GUI.textBox(
         5f,
         2f,
         90f,
         10f,
         "Opponent's board",
-        font = Font.LARGE_BLACK
+        font = Font.MEDIUM_WHITE,
+        color = Palette.DARK_GREY,
+        borderColor = Palette.DARK_GREY
     )
 
     override val guiObjects: List<GuiObject> = listOf(
@@ -75,12 +77,12 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         player.board.setTilesUnopened()
         player.board.createAndPlaceTreasures(1, TreasureType.TREASURECHEST, true)
         player.board.createAndPlaceTreasures(2, TreasureType.GOLDCOIN, true)
-        player.board.createAndPlaceTreasures(2, TreasureType.BOOT, true)
+        player.board.createAndPlaceTreasures(2, TreasureType.GOLDKEY, true)
 
         opponent.board.setTilesUnopened()
         opponent.board.createAndPlaceTreasures(1, TreasureType.TREASURECHEST, false)
         opponent.board.createAndPlaceTreasures(2, TreasureType.GOLDCOIN, false)
-        opponent.board.createAndPlaceTreasures(2, TreasureType.BOOT, false)
+        opponent.board.createAndPlaceTreasures(2, TreasureType.GOLDKEY, false)
 
         opponentsBoardText.hide()
     }
@@ -103,10 +105,10 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         opponent.updateHealth()
         if (player.health == 0) {
             println("Opponent won!")
-            GameStateManager.set(GameOverState(controller))
+            GameStateManager.set(GameOverState(controller, false))
         } else if (opponent.health == 0) {
             println("You won!")
-            GameStateManager.set(GameOverState(controller))
+            GameStateManager.set(GameOverState(controller, true))
         }
     }
 
@@ -181,7 +183,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             val equipment = player.equipmentSet.equipments[i]
 
             // Updates text and border of equipment buttons
-            button.set(Text(equipment.name + " " + equipment.uses, Font.TINY_BLACK))
+            button.set(Text(equipment.name + " x " + equipment.uses, Font.SMALL_BLACK))
             if (equipment.active) {
                 button.set(Border(Palette.GREEN))
             } else {
@@ -202,7 +204,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         if (playerTurn) {
             header.set(Text("Your turn"))
         } else {
-            header.set(Text("Waiting for opponent..."))
+            header.set(Text("Waiting for opponent's move..."))
         }
 
         // Auto switching of boards
@@ -222,15 +224,15 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     ): GuiObject {
         val equipment = player.equipmentSet.equipments[index]
 
-        // TODO Positioning/design
         return GUI.textButton(
             position.x + dimension.x / player.equipmentSet.equipments.size * index + index * 2,
             position.y,
             dimension.x / player.equipmentSet.equipments.size,
             dimension.y,
-            equipment.name + " x" + equipment.uses,
-            borderColor = if (equipment.active) Palette.GREEN else Palette.BLACK,
-            onClick = { player.equipmentSet.activeEquipment = equipment }
+            equipment.name + " x " + equipment.uses,
+            borderColor = if (equipment.active) Palette.GREEN else Palette.DARK_GREY,
+            onClick = { player.equipmentSet.activeEquipment = equipment },
+            font = Font.SMALL_BLACK
         )
     }
 }
