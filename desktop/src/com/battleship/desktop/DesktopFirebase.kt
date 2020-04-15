@@ -1,15 +1,10 @@
 package com.battleship.desktop
 
-import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import com.battleship.model.Player
-import com.battleship.model.treasures.Boot
-import com.battleship.model.treasures.GoldCoin
-import com.battleship.model.treasures.Treasure
-import com.battleship.model.treasures.TreasureChest
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.EventListener
@@ -45,9 +40,9 @@ object DesktopFirebase : FirebaseController {
             val credentials = GoogleCredentials.fromStream(serviceAccount)
             // Set options for connection
             val options = FirebaseOptions.Builder()
-                .setCredentials(credentials)
-                .setDatabaseUrl(firebaseUrl)
-                .build()
+                    .setCredentials(credentials)
+                    .setDatabaseUrl(firebaseUrl)
+                    .build()
             FirebaseApp.initializeApp(options)
         }
 
@@ -169,9 +164,9 @@ object DesktopFirebase : FirebaseController {
      * @param treasures list containing the treasures that should be added, each described using a map
      */
     override fun registerTreasures(
-        gameId: String,
-        userId: String,
-        treasures: List<Map<String, Any>>
+            gameId: String,
+            userId: String,
+            treasures: List<Map<String, Any>>
     ) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
@@ -246,7 +241,7 @@ object DesktopFirebase : FirebaseController {
                 if (GSM.activeGame!!.me.playerId in treasures) {
                     treasures[GSM.activeGame!!.me.playerId]?.let { GSM.activeGame!!.me.board.setTreasuresList(it) }
                 }
-                if (GSM.activeGame!!.opponent.playerId in treasures){
+                if (GSM.activeGame!!.opponent.playerId in treasures) {
                     treasures[GSM.activeGame!!.opponent.playerId]?.let {
                         GSM.activeGame!!.opponent.board.setTreasuresList(it)
                     }
@@ -257,31 +252,6 @@ object DesktopFirebase : FirebaseController {
             // TODO: Add error handling
             throw error("Something went wrong when fetching treasures")
         }
-    }
-    private fun List<Map<String, Any>>.treasureToList() : ArrayList<Treasure> {
-        var treasures = ArrayList<Treasure>()
-        lateinit var newTreasure: Treasure
-        lateinit var position: Vector2
-        var rotate = true
-        for (treasure in this) {
-            print("${treasure["type"]} , ${treasure["rotate"]}, ${treasure["x"]} ${treasure["y"]}")
-            position = Vector2((treasure["x"] as Number).toFloat(), (treasure["y"] as Number).toFloat())
-            rotate = if (treasure.containsKey("rotate")) treasure["rotate"] as Boolean else false
-
-            when (treasure["type"]) {
-                "Gold coin" ->
-                    newTreasure = GoldCoin(position, rotate)
-                "Treasure chest" ->
-                    newTreasure = TreasureChest(position, rotate)
-                "Boot" ->
-                    newTreasure = Boot(position, rotate)
-                "Old stinking boot" ->
-                    newTreasure = Boot(position, rotate)
-            }
-            treasures.add(newTreasure)
-        }
-        println("- new treasure: $treasures")
-        return treasures
     }
 
     /**
@@ -331,8 +301,8 @@ object DesktopFirebase : FirebaseController {
         val docRef = db.collection("games").document(gameId)
         docRef.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
-                @Nullable snapshot: DocumentSnapshot?,
-                @Nullable e: FirestoreException?
+                    @Nullable snapshot: DocumentSnapshot?,
+                    @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
                     System.err.println("Listen failed: $e")
@@ -355,7 +325,7 @@ object DesktopFirebase : FirebaseController {
                             val treasures = snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
                             // If there is not enough treasures registered
                             if (treasures.size <= 2 && GSM.activeGame!!.playersRegistered()) {
-                                println("addGameListener:"+ "Treasures not registered")
+                                println("addGameListener:" + "Treasures not registered")
                                 getTreasures(gameId)
                             } else {
                                 // Get the list of moves
