@@ -3,7 +3,6 @@ package com.battleship.controller.state
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
-import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.input.TreasureHandler
 import com.battleship.model.treasures.Treasure
@@ -53,7 +52,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
         GUI.header("Place treasures"),
-        GUI.backButton { GameStateManager.set(MainMenuState(controller)) },
+        GUI.backButton { GSM.set(MainMenuState(controller)) },
         GuiObject(0f, 0f, 0f, 0f)
             .listen(TreasureHandler(GSM.activeGame!!.me.board))
     )
