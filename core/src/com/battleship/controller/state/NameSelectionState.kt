@@ -32,8 +32,10 @@ class NameSelectionState(val controller: FirebaseController) : GuiState(controll
     private val submitButton = GUI.menuButton(25f, 25f, "Submit") { complete() }
 
     private fun complete() {
-        controller.addPlayer(username)
-        GSM.push(MatchmakingState(controller))
+        if (username != "") {
+            controller.addPlayer(username)
+            GSM.push(MatchmakingState(controller))
+        }
     }
 
     override val guiObjects: List<GuiObject> = listOf(
