@@ -15,7 +15,7 @@ import java.lang.IllegalStateException
 
 class MatchmakingState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
-    private val itemsPerPage = 5
+    private val itemsPerPage = 7
     var games = GSM.pendingGames
 
     private val playerButtons: Array<GuiObject> =
@@ -24,33 +24,31 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     private var page: Int = 0
 
     private val nextPageButton = GUI.textButton(
-        76f,
-        14f,
-        22f,
+        70f,
+        19f,
+        20f,
         5f,
-        "Next",
-        font = Font.SMALL_BLACK
+        "Next"
     ) {
         page++
         updateButtons()
     }
 
     private val previousPageButton = GUI.textButton(
-        2f,
-        14f,
-        22f,
+        10f,
+        19f,
+        20f,
         5f,
-        "Previous",
-        font = Font.SMALL_BLACK
+        "Previous"
     ) {
         page--
         updateButtons()
     }.hide()
 
     private val createGameButton = GUI.textButton(
-        5f,
+        10f,
         2f,
-        90f,
+        80f,
         10f,
         "Create new game"
     ) {
@@ -62,20 +60,21 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         90f,
         8f,
         8f,
-        "icons/refresh_black.png",
+        "icons/refresh_white.png",
         onClick = {
             updateButtons()
         }
     )
+    private val header = GUI.header("Loading available opponents...")
 
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.header("${GSM.username}"),
+        header,
         nextPageButton,
         previousPageButton,
         *playerButtons,
         createGameButton,
         refreshButton,
-        GUI.backButton { GSM.set(MainMenuState(controller)) }
+        GUI.backButton { GSM.set(NameSelectionState(controller)) }
     )
 
     override fun create() {
@@ -86,17 +85,21 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     private fun updateButtons() {
         controller.getPendingGames()
         games = GSM.pendingGames
+
         val index = page * itemsPerPage
+        var loading = false
         playerButtons.forEachIndexed { i, guiObject ->
             val j = index + i
             if (j < games.size) {
-                guiObject.set(Text(games[j].playerName, font = Font.MEDIUM_BLACK))
+                guiObject.set(Text("Join ${games[j].playerName}'s game", font = Font.MEDIUM_BLACK))
+                loading = true
                 guiObject.show()
             } else {
                 guiObject.hide()
             }
         }
-
+        print("Username ${GSM.username}")
+        if (loading) header.set(Text("Choose your opponent ${GSM.username}", font = Font.MEDIUM_WHITE))
         if (index + itemsPerPage < games.size) nextPageButton.show() else nextPageButton.hide()
         if (index > 0) previousPageButton.show() else previousPageButton.hide()
     }
@@ -104,23 +107,19 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     private fun joinUserButton(index: Int): GuiObject {
         return GUI.textButton(
             10f,
-            70f - index * 9f,
+            75f - index * 8f,
             80f,
-            7f,
-            "Loading"
+            6f,
+            "Loading user"
         ) {
             val i = (page * itemsPerPage) + index
-            if (GSM.userId !== "") {
-                controller.joinGame(GSM.pendingGames[i].gameId, GSM.userId)
-            }
+            if (GSM.userId !== "") controller.joinGame(GSM.pendingGames[i].gameId, GSM.userId)
         }
     }
 
     private fun createGame() {
-        if (GSM.userId !== "")
-            controller.createGame(GSM.userId)
-        else
-            throw IllegalStateException("Can't create game, user has not been created")
+        if (GSM.userId !== "") controller.createGame(GSM.userId)
+        else print("Can't create game, user has not been created")
     }
 
     override fun update(dt: Float) {
@@ -128,13 +127,8 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
             games = GSM.pendingGames
             updateButtons()
         }
-        if (GSM.activeGame != null) {
-            print(GSM.activeGame!!.gameId)
-            GSM.set(PreGameState(controller))
-        }
-        if (GSM.userId != "") {
-            createGameButton.show()
-        }
+        if (GSM.activeGame != null) GSM.set(PreGameState(controller))
+        if (GSM.userId != "") createGameButton.show()
     }
 
     override fun render() {

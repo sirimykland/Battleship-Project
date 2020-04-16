@@ -23,12 +23,8 @@ class NameSelectionState(val controller: FirebaseController) : GuiState(controll
         username
     ).onKeyTyped { char ->
         when (char) {
-            '\b' -> {
-                username = if (username.isNotEmpty()) username.substring(0, username.length - 1) else username
-            }
-            '\r', '\n' -> {
-                complete()
-            }
+            '\b' -> username = if (username.isNotEmpty()) username.substring(0, username.length - 1) else username
+            '\r', '\n' -> complete()
             in legalCharacters -> username += char
         }
     }
@@ -36,7 +32,6 @@ class NameSelectionState(val controller: FirebaseController) : GuiState(controll
     private val submitButton = GUI.menuButton(25f, 25f, "Submit") { complete() }
 
     private fun complete() {
-        println("Added player $username")
         controller.addPlayer(username)
         GSM.push(MatchmakingState(controller))
     }
