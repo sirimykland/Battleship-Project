@@ -7,7 +7,7 @@ import com.battleship.model.equipment.Shovel
 
 class Player(var playerId: String = "", var playerName: String = "") {
     val boardSize: Int = 10
-    var equipmentSet = EquipmentSet(arrayListOf(Shovel(), BigEquipment(), MetalDetector()))
+    var equipmentSet = EquipmentSet()
     var board: Board = Board(boardSize)
     var health: Int = board.getCombinedTreasureHealth()
 
