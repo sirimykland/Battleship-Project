@@ -206,7 +206,7 @@ class Board(val size: Int) : GameObject() {
             // println("${treasure["type"]} - $position  - $rotate: ")
             // println("${treasure["type"]}: (${(treasure["type"]) == "Old stinking boot"})")
             // TODO this should be the actual enum types
-            newTreasure = when (  TreasureType.valueOf(treasure["type"] as String)) {
+            newTreasure = when (TreasureType.valueOf(treasure["type"] as String)) {
                 TreasureType.GOLDCOIN ->
                     GoldCoin(position, rotate)
                 TreasureType.TREASURECHEST ->
