@@ -11,7 +11,7 @@ class GoldCoin(position: Vector2, rotate: Boolean) : Treasure(position, rotate) 
     override var name: String = "Gold coin"
     override var health: Int = 1
     override var sound: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/coin_sound.mp3"))
-    override var sprite: Sprite = Sprite(Texture("images/coin.png"))
+    override var sprite: Sprite = Sprite(Texture("images/treasures/coin.png"))
     override var type: TreasureType = TreasureType.GOLDCOIN
 
     init {

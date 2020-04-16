@@ -4,17 +4,14 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
+import com.battleship.controller.input.TreasureHandler
 import com.battleship.model.treasures.Treasure
-import com.battleship.model.ui.Background
-import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
-import com.battleship.model.ui.Text
 import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardRectangle
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.utility.GdxGraphicsUtil.size
-import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
@@ -24,21 +21,19 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     override fun create() {
         super.create()
         println("---PREGAMESTATE---")
-        GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.BOOT, true)
+        GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDKEY, true)
         GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDCOIN, true)
         GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.TREASURECHEST, true)
+        controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.me.playerId)
     }
 
-    private val readyButton = GuiObject(
-            6f,
+    private val readyButton = GUI.textButton(
+            5f,
             3f,
             90f,
-            10f
-    )
-            .with(Background(Palette.BLACK))
-            .with(Border(Palette.WHITE, 10f))
-            .with(Text("Start Game"))
-            .onClick {
+            10f,
+            "Start Game",
+            onClick = {
                 val game = GSM.activeGame!!
                 println("gameready is: " + game.gameReady)
                 println("t: " + game.me.board.getTreasuresList())
@@ -47,16 +42,15 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
                         game.me.playerId,
                         game.me.board.getTreasuresList()
                 )
-
-                println("PREGAMESTATE: gameready is: " + game.gameReady)
-                // todo something here
                 GSM.set(LoadingGameState(controller))
-            }
+            })
 
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
         GUI.header("Place treasures"),
-        GUI.backButton { GSM.set(MainMenuState(controller)) }
+        GUI.backButton { GSM.set(MainMenuState(controller)) },
+        GuiObject(0f, 0f, 0f, 0f)
+            .listen(TreasureHandler(GSM.activeGame!!.me.board))
     )
 
     override fun render() {
@@ -67,7 +61,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
         handleInput()
     }
 
-    fun handleInput() {
+    private fun handleInput() {
         // Drag ship
         if (Gdx.input.justTouched()) {
             val touchX = Gdx.input.x.toFloat()

@@ -180,7 +180,6 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
 
     override fun update(dt: Float) {
         if (!games.containsAll(GSM.pendingGames)) { // O(n²) hver frame er kanskje mye å be om?
-            println("does not contain all")
             games = GSM.pendingGames
             updateButtons()
         }

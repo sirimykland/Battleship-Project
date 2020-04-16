@@ -112,6 +112,15 @@ class GuiObject(
         return this
     }
 
+    fun listen(listener: InputAdapter): GuiObject {
+        if (hasListener) {
+            throw IllegalStateException("This GuiObject already has a listener assigned")
+        }
+        this.listener = listener
+        hasListener = true
+        return this
+    }
+
     override fun draw(batch: SpriteBatch) {
         if (!hidden) {
             parts.forEach {

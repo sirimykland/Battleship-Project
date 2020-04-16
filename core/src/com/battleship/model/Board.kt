@@ -1,12 +1,13 @@
 package com.battleship.model
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
-import com.battleship.model.treasures.Boot
 import com.battleship.model.treasures.GoldCoin
+import com.battleship.model.treasures.GoldKey
 import com.battleship.model.treasures.Treasure
 import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.treasures.TreasureChest
@@ -15,7 +16,6 @@ import kotlin.random.Random
 class Board(val size: Int) : GameObject() {
     var treasures: ArrayList<Treasure> = ArrayList() // TODO skal være private, men er gjort public for å unngå feilmeldinger midlertidig
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
-    var padding: Int = 0 // Remove?
 
     // Change all tiles to unopened state
     fun setTilesUnopened() {
@@ -32,7 +32,7 @@ class Board(val size: Int) : GameObject() {
                 treasure = when (type) {
                     TreasureType.TREASURECHEST -> TreasureChest(Vector2(x, y), Random.nextBoolean())
                     TreasureType.GOLDCOIN -> GoldCoin(Vector2(x, y), Random.nextBoolean())
-                    TreasureType.BOOT -> Boot(Vector2(x, y), Random.nextBoolean())
+                    TreasureType.GOLDKEY -> GoldKey(Vector2(x, y), Random.nextBoolean())
                 }
             } while (!validateTreasurePosition(treasure))
 
@@ -41,16 +41,20 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
-    private fun validateTreasurePosition(treasure: Treasure?): Boolean {
-        if (treasure == null) return false
+    fun validateTreasurePosition(treasure: Treasure?): Boolean {
+        if (treasure == null) {
+            return false
+        }
 
         for (tile in treasure.getTreasureTiles()) {
             // Tile outside board
-            if (tile.x >= size || tile.y >= size) return false
+            if (tile.x >= size || tile.y >= size || tile.x < 0 || tile.y < 0) {
+                return false
+            }
 
             // Another tile already in this place
             for (placedShip in treasures) {
-                if (placedShip.getTreasureTiles().contains(tile)) {
+                if (placedShip.getTreasureTiles().contains(tile) && placedShip != treasure) {
                     return false
                 }
             }
@@ -64,35 +68,34 @@ class Board(val size: Int) : GameObject() {
         val tileSize = dimension.x / size
 
         // Draw board
-        for (array in tiles) {
-            for (value in array) {
-
+        for (row in tiles) {
+            for (value in row) {
                 if (value == Tile.PREGAME) {
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-                    shapeRenderer.color = Color.BLACK
+                    Gdx.gl.glLineWidth(3f)
+                    shapeRenderer.color = Color.DARK_GRAY
                     shapeRenderer.rect(x, y, tileSize, tileSize)
-                    //  tileRenderer.rectLine(x, y,x + size, y + size, 10f)
                     shapeRenderer.end()
                 } else {
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
                     when (value) {
-                        Tile.HIT -> shapeRenderer.color = Color.GREEN
-                        Tile.MISS -> shapeRenderer.color = Color.RED
-                        Tile.NEAR -> shapeRenderer.color = Color.YELLOW
-                        Tile.UNOPENED -> shapeRenderer.color = Color.BLACK
+                        Tile.HIT -> shapeRenderer.color = Color(0.302f, 0.816f, 0.546f, 1f) // Success green
+                        Tile.MISS -> shapeRenderer.color = Color(0.961f, 0.298f, 0.298f, 1f) // Failure red
+                        Tile.NEAR -> shapeRenderer.color = Color(0.950f, 0.961f, 0.298f, 1f) // Near yellow
+                        Tile.UNOPENED -> shapeRenderer.color = Color(0.905f, 0.882f, 0.612f, 1f) // Sand/brown
                     }
                     shapeRenderer.rect(x, y, tileSize, tileSize)
                     shapeRenderer.end()
 
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-                    shapeRenderer.color = Color.WHITE
+                    shapeRenderer.color = Color.DARK_GRAY
                     shapeRenderer.rect(x, y, tileSize, tileSize)
                     shapeRenderer.end()
                 }
 
-                x += tileSize + padding
+                x += tileSize
             }
-            y += tileSize + padding
+            y += tileSize
             x = position.x
         }
 
@@ -153,7 +156,7 @@ class Board(val size: Int) : GameObject() {
         tiles[pos.x.toInt()][pos.y.toInt()] = tile
     }
 
-    private fun getTreasureByPosition(pos: Vector2): Treasure? {
+    fun getTreasureByPosition(pos: Vector2): Treasure? {
         for (treasure in treasures) {
             if (treasure.hit(pos)) {
                 return treasure
@@ -187,27 +190,36 @@ class Board(val size: Int) : GameObject() {
      * @param treasuresList List<Map<String, Any>>
      */
     fun setTreasuresList(treasuresList: List<Map<String, Any>>) {
-        treasures = ArrayList<Treasure>()
+        val newTreasures = ArrayList<Treasure>()
         lateinit var newTreasure: Treasure
         lateinit var position: Vector2
         var rotate = true
-        for (treasure in treasuresList) {
-            position = Vector2((treasure["x"] as Number).toFloat(), (treasure["y"] as Number).toFloat())
-            rotate = if (treasure.containsKey("rotate")) treasure["rotate"] as Boolean else false
 
-            when (treasure["type"]) {
+        for (treasure in treasuresList.toMutableList()) {
+            position = Vector2(
+                    (treasure["x"] as Number).toFloat(),
+                    (treasure["y"] as Number).toFloat())
+            rotate =
+                    if (treasure.containsKey("rotate")) {
+                        treasure["rotate"] as Boolean
+                    } else false
+            // println("${treasure["type"]} - $position  - $rotate: ")
+            // println("${treasure["type"]}: (${(treasure["type"]) == "Old stinking boot"})")
+            // TODO this should be the actual enum types
+            newTreasure = when (treasure["type"]) {
                 "Gold coin" ->
-                    newTreasure = GoldCoin(position, rotate)
+                    GoldCoin(position, rotate)
                 "Treasure chest" ->
-                    newTreasure = TreasureChest(position, rotate)
-                "Boot" ->
-                    newTreasure = Boot(position, rotate)
-                "Old stinking boot" ->
-                    newTreasure = Boot(position, rotate)
+                    TreasureChest(position, rotate)
+                "Shiny gold key" ->
+                    GoldKey(position, rotate)
+                else -> GoldCoin(Vector2(0f, 0f), false)
             }
-            treasures.add(newTreasure)
+            // println("newtreasure: $newTreasure")
+            newTreasures.add(newTreasure)
         }
-        println("- new treasure: $treasures")
+        treasures = newTreasures
+        println("new treasures: $treasures")
     }
 
     override fun toString(): String {

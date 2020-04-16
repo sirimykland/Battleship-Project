@@ -29,9 +29,9 @@ object GUI {
         sizeX: Float,
         sizeY: Float,
         text: String,
-        font: BitmapFont = Font.SMALL_WHITE,
-        color: TextureRegion = Palette.BLACK,
-        borderColor: TextureRegion = Palette.WHITE
+        font: BitmapFont = Font.MEDIUM_BLACK,
+        color: TextureRegion = Palette.LIGHT_GREY,
+        borderColor: TextureRegion = Palette.DARK_GREY
     ): GuiObject {
         return GuiObject(posX, posY, sizeX, sizeY)
             .with(Background(color))
@@ -44,8 +44,8 @@ object GUI {
         posY: Float,
         sizeX: Float,
         sizeY: Float,
-        color: TextureRegion = Palette.BLACK,
-        borderColor: TextureRegion = Palette.WHITE,
+        color: TextureRegion = Palette.LIGHT_GREY,
+        borderColor: TextureRegion = Palette.DARK_GREY,
         onClick: () -> Unit
     ): GuiObject {
         return GuiObject(posX, posY, sizeX, sizeY)
@@ -62,7 +62,7 @@ object GUI {
         text: String,
         font: BitmapFont = Font.MEDIUM_BLACK,
         color: TextureRegion = Palette.LIGHT_GREY,
-        borderColor: TextureRegion = Palette.BLACK,
+        borderColor: TextureRegion = Palette.DARK_GREY,
         onClick: () -> Unit
     ): GuiObject {
         return GuiObject(posX, posY, sizeX, sizeY)
@@ -78,9 +78,9 @@ object GUI {
         text: String,
         onClick: () -> Unit
     ): GuiObject {
-        return GuiObject(posX, posY, 53.125f, 12.5f)
+        return GuiObject(posX, posY, 50f, 12.5f)
             .with(Background(Palette.LIGHT_GREY))
-            .with(Border(Palette.BLACK))
+            .with(Border(Palette.DARK_GREY))
             .with(Text(text, Font.MEDIUM_BLACK))
             .onClick(onClick)
     }
@@ -98,7 +98,7 @@ object GUI {
         onClick: () -> Unit
     ): GuiObject {
         return GuiObject(0.15f, 90f, 10f, 8f)
-            .with(Image("icons/arrow_back_white.png"))
+            .with(Image("icons/round_arrow_back_white.png"))
             .onClick(onClick)
     }
 
