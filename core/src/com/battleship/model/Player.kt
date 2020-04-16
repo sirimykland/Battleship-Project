@@ -1,13 +1,10 @@
 package com.battleship.model
 
-import com.battleship.model.equipment.BigEquipment
 import com.battleship.model.equipment.EquipmentSet
-import com.battleship.model.equipment.MetalDetector
-import com.battleship.model.equipment.Shovel
 
 class Player(var playerId: String = "", var playerName: String = "") {
     val boardSize: Int = 10
-    var equipmentSet = EquipmentSet(arrayListOf(Shovel(), BigEquipment(), MetalDetector()))
+    var equipmentSet = EquipmentSet()
     var board: Board = Board(boardSize)
     var health: Int = board.getCombinedTreasureHealth()
 
