@@ -228,12 +228,18 @@ object AndroidFirebase : FirebaseController {
         userId: String,
         treasures: List<Map<String, Any>>
     ) {
-        val dbTreasures = mutableMapOf<String, List<Map<String, Any>>>()
-        dbTreasures[userId] = treasures
-        db.collection("games").document(gameId).update("treasures", dbTreasures)
-                .addOnSuccessListener {
-                    Log.d("registerTreasures", "treasures registered")
-                    // TODO: Call some function that should be triggered when treasures is added
+        db.collection("games").document(gameId).get()
+                .addOnSuccessListener { document ->
+                    val dbTreasures = document.get("treasures") as MutableMap<String, List<Map<String, Any>>>
+                    dbTreasures[userId] = treasures
+                    db.collection("games").document(gameId).update("treasures", dbTreasures)
+                            .addOnSuccessListener {
+                                Log.d("registerTreasures", "treasures registered")
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.w("registerTreasures", exception)
+                                // TODO: Add exception handling
+                            }
                 }
                 .addOnFailureListener { exception ->
                     Log.w("registerTreasures", exception)
