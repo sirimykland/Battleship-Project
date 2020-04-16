@@ -13,11 +13,6 @@ import com.battleship.view.View
 class MainMenuState(private val controller: FirebaseController) : GuiState(controller) {
 
     private val menuList = listOf(
-            Pair("Create game as Olivia") {
-                GSM.userId = "zmWpyb8luZAMrBwzY97x"
-                controller.createGame(GSM.userId)
-            },
-            // Pair("Matchmaking") { GSM.set(MatchmakingState(controller)) },
             Pair("Settings") { GSM.set(SettingsState(controller)) },
             Pair("Play") { GSM.set(MatchmakingState(controller)) }
     )
