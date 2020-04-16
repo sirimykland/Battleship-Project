@@ -65,7 +65,7 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
             updateButtons()
         }
     )
-    private val header = GUI.header("Loading available opponents...")
+    private val header = GUI.header("Choose your opponent ${GSM.username}")
 
     override val guiObjects: List<GuiObject> = listOf(
         header,
@@ -85,21 +85,23 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     private fun updateButtons() {
         controller.getPendingGames()
         games = GSM.pendingGames
-
+        print(games)
         val index = page * itemsPerPage
-        var loading = false
+        var loading = true
         playerButtons.forEachIndexed { i, guiObject ->
             val j = index + i
             if (j < games.size) {
                 guiObject.set(Text("Join ${games[j].playerName}'s game", font = Font.MEDIUM_BLACK))
-                loading = true
+                loading = false
                 guiObject.show()
             } else {
                 guiObject.hide()
             }
         }
-        print("Username ${GSM.username}")
-        if (loading) header.set(Text("Choose your opponent ${GSM.username}", font = Font.MEDIUM_WHITE))
+
+        if (loading) header.set(Text("Loading available opponents...", font = Font.MEDIUM_WHITE))
+        else header.set(Text("Choose your opponent ${GSM.username}", font = Font.MEDIUM_WHITE))
+
         if (index + itemsPerPage < games.size) nextPageButton.show() else nextPageButton.hide()
         if (index > 0) previousPageButton.show() else previousPageButton.hide()
     }

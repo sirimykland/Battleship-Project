@@ -64,6 +64,7 @@ object AndroidFirebase : FirebaseController {
                 Log.d("addPlayer", "player added with id=$userId")
                 // TODO: Call some function that saves player id for later use
                 GSM.userId = userId
+                GSM.username = username
             }
             .addOnFailureListener { exception ->
                 Log.w("addPlayer", exception)
