@@ -3,7 +3,7 @@ package com.battleship
 import com.battleship.controller.state.State
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
-import java.util.Stack
+import java.util.*
 import kotlin.collections.ArrayList
 
 object GameStateManager {
@@ -11,6 +11,7 @@ object GameStateManager {
     var userId = ""
     var activeGame: Game? = null
     var pendingGames = ArrayList<GameListObject>()
+    var first:Boolean = true
 
     private val states: Stack<State> = Stack()
 
