@@ -65,34 +65,6 @@ class Game(val gameId: String) {
         return playersTurn == me.playerId
     }
 
-    /* private fun List<Map<String, Any>>.treasureToList() : ArrayList<Treasure> {
-        val treasures = ArrayList<Treasure>()
-        lateinit var newTreasure: Treasure
-        var position: Vector2 = Vector2(1f,1f)
-        var rotate = true
-        println(this.size)
-        for (treasure in this) {
-
-            // position = Vector2((treasure["x"] as Number).toFloat(), (treasure["y"] as Number).toFloat())
-            // rotate = if (treasure.containsKey("rotate")) treasure["rotate"] as Boolean else false
-            print("${treasure["type"]} , ${treasure["rotate"]}, ${treasure["x"]} ${treasure["y"]}")
-            when (treasure["type"]) {
-              "Gold coin" ->
-                    newTreasure = GoldCoin(position, rotate)
-                "Treasure chest" ->
-                    newTreasure = TreasureChest(position, rotate)
-                "Boot" ->
-                    newTreasure = Boot(position, rotate)
-                "Old stinking boot" ->
-                    newTreasure = Boot(position, rotate)
-            }
-            newTreasure = Boot(position,rotate)
-            treasures.add(newTreasure)
-        }
-        println("- new treasure: $treasures")
-        return treasures
-    }*/
-
     fun setTreasures(treasures: Map<String, List<Map<String, Any>>>) {
         println("input param: $treasures")
         println("is not empty?" + (treasures.isNotEmpty()))
