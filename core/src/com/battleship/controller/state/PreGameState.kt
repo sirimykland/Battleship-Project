@@ -1,74 +1,80 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.battleship.GameStateManager
+import com.badlogic.gdx.math.Vector2
+import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.input.TreasureHandler
-import com.battleship.model.Player
 import com.battleship.model.treasures.Treasure
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.GUI
+import com.battleship.utility.GdxGraphicsUtil.boardPosition
+import com.battleship.utility.GdxGraphicsUtil.boardRectangle
+import com.battleship.utility.GdxGraphicsUtil.boardWidth
+import com.battleship.utility.GdxGraphicsUtil.size
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
 class PreGameState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
-    private val boardSize = 10
-    var player: Player = Player(boardSize)
-    val inputProcessor = TreasureHandler(player.board)
 
     override fun create() {
         super.create()
-        player.board.createAndPlaceTreasures(1, Treasure.TreasureType.TREASURECHEST, true)
-        player.board.createAndPlaceTreasures(2, Treasure.TreasureType.GOLDCOIN, true)
-        player.board.createAndPlaceTreasures(2, Treasure.TreasureType.GOLDKEY, true)
-        addInputProcessor(inputProcessor)
+        println("---PREGAMESTATE---")
+        GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDKEY, true)
+        GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDCOIN, true)
+        GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.TREASURECHEST, true)
+        controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.me.playerId)
     }
 
     private val readyButton = GUI.textButton(
-        5f,
-        3f,
-        90f,
-        10f,
-        "Start Game",
-        onClick = {
-            println("Player are ready")
-            // GameStateManager.gameController.registerShip(player.board.getShips()) TODO: Create
-            GameStateManager.set(PlayState(controller))
-        }
-    )
+            5f,
+            3f,
+            90f,
+            10f,
+            "Start Game",
+            onClick = {
+                val game = GSM.activeGame!!
+                println("gameready is: " + game.gameReady)
+                println("t: " + game.me.board.getTreasuresList())
+                controller.registerTreasures(
+                        game.gameId,
+                        game.me.playerId,
+                        game.me.board.getTreasuresList()
+                )
+                GSM.set(LoadingGameState(controller))
+            })
 
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
         GUI.header("Place treasures"),
-        GUI.backButton { GameStateManager.set(MainMenuState(controller)) }
+        GUI.backButton { GSM.set(MainMenuState(controller)) },
+        GuiObject(0f, 0f, 0f, 0f)
+            .listen(TreasureHandler(GSM.activeGame!!.me.board))
     )
 
     override fun render() {
-        this.view.render(*guiObjects.toTypedArray(), player.board)
+        this.view.render(*guiObjects.toTypedArray(), GSM.activeGame!!.me.board)
     }
 
     override fun update(dt: Float) {
         handleInput()
     }
 
-    fun handleInput() {
+    private fun handleInput() {
         // Drag ship
-        if (Gdx.input.isTouched) {
+        if (Gdx.input.justTouched()) {
+            val touchX = Gdx.input.x.toFloat()
+            val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()
+            val touchPos = Vector2(touchX, touchY)
 
-            /*
-            if (active != null) {
-                //println(treasure.name)
-                val x2 = Gdx.input.deltaX + touchPos.x
-                val y2 = Gdx.input.deltaY + touchPos.y
+            val screenSize = Gdx.graphics.size()
 
-                val newBoardTouchPos = Vector2(x2, y2).toCoordinate(boardPos, boardWidth, boardSize)
-                val newTreasurePos = Vector2(newBoardTouchPos.y, newBoardTouchPos.x)
-                println(newTreasurePos)
-                active!!.updatePosition(newTreasurePos)
-
+            // Check if input is on the board
+            if (Gdx.graphics.boardRectangle().contains(touchPos)) {
+                val boardPos = Gdx.graphics.boardPosition()
+                val boardWidth = Gdx.graphics.boardWidth()
             }
-            */
         }
     }
 }

@@ -14,10 +14,21 @@ abstract class GuiState(controller: FirebaseController) : State(controller) {
     private var multiplexer: InputMultiplexer = InputMultiplexer()
 
     override fun create() {
-        multiplexer.addProcessor(InputMultiplexer(*guiObjects.filter { it.isClickable }
-            .map { it.listener }
-            .toTypedArray()))
-        Gdx.input.inputProcessor = multiplexer
+        Gdx.input.inputProcessor =
+            InputMultiplexer(*guiObjects.filter { it.hasListener }.map { it.listener }
+                .toTypedArray())
+    }
+
+    override fun pause() {
+        Gdx.input.inputProcessor = InputMultiplexer()
+        super.pause()
+    }
+
+    override fun resume() {
+        Gdx.input.inputProcessor =
+            InputMultiplexer(*guiObjects.filter { it.hasListener }.map { it.listener }
+                .toTypedArray())
+        super.resume()
     }
 
     override fun dispose() {

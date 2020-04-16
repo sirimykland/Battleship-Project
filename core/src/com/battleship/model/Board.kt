@@ -14,7 +14,7 @@ import com.battleship.model.treasures.TreasureChest
 import kotlin.random.Random
 
 class Board(val size: Int) : GameObject() {
-    private var treasures: ArrayList<Treasure> = ArrayList()
+    var treasures: ArrayList<Treasure> = ArrayList() // TODO skal være private, men er gjort public for å unngå feilmeldinger midlertidig
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
 
     // Change all tiles to unopened state
@@ -111,8 +111,8 @@ class Board(val size: Int) : GameObject() {
         val ySearchMin = boardTouchPos.y.toInt() - equipment.searchRadius
         val ySearchMax = boardTouchPos.y.toInt() + equipment.searchRadius + 1
 
-        // Loops through the tiles in the equipments search radius and adds the result when explored to the list
-        var resultList = ArrayList<Result>()
+        // Loops through the equipments search radius
+        val resultList = ArrayList<Result>()
         for (x in xSearchMin until xSearchMax) {
             for (y in ySearchMin until ySearchMax) {
                 // Check if inside board
@@ -171,6 +171,59 @@ class Board(val size: Int) : GameObject() {
             health += treasure.health
         }
         return health
+    }
+
+    /**
+     * converts arraylist of treasures to list of map
+     * @return treasuresList List<Map<String, Any>>
+     */
+    fun getTreasuresList(): List<Map<String, Any>> {
+        val treasuresList = ArrayList<Map<String, Any>>()
+        for (treasure in treasures) {
+            treasuresList.add(treasure.toMap())
+        }
+        return treasuresList
+    }
+
+    /**
+     * sets treasures arraylist from list with map
+     * @param treasuresList List<Map<String, Any>>
+     */
+    fun setTreasuresList(treasuresList: List<Map<String, Any>>) {
+        val newTreasures = ArrayList<Treasure>()
+        lateinit var newTreasure: Treasure
+        lateinit var position: Vector2
+        var rotate = true
+
+        for (treasure in treasuresList.toMutableList()) {
+            position = Vector2(
+                    (treasure["x"] as Number).toFloat(),
+                    (treasure["y"] as Number).toFloat())
+            rotate =
+                    if (treasure.containsKey("rotate")) {
+                        treasure["rotate"] as Boolean
+                    } else false
+            // println("${treasure["type"]} - $position  - $rotate: ")
+            // println("${treasure["type"]}: (${(treasure["type"]) == "Old stinking boot"})")
+            // TODO this should be the actual enum types
+            newTreasure = when (treasure["type"]) {
+                "Gold coin" ->
+                    GoldCoin(position, rotate)
+                "Treasure chest" ->
+                    TreasureChest(position, rotate)
+                "Shiny gold key" ->
+                    GoldKey(position, rotate)
+                else -> GoldCoin(Vector2(0f, 0f), false)
+            }
+            // println("newtreasure: $newTreasure")
+            newTreasures.add(newTreasure)
+        }
+        treasures = newTreasures
+        println("new treasures: $treasures")
+    }
+
+    override fun toString(): String {
+        return "Board(treasure=$treasures)"
     }
 
     enum class Tile {

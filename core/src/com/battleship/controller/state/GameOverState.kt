@@ -1,6 +1,6 @@
 package com.battleship.controller.state
 
-import com.battleship.GameStateManager
+import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.GUI
@@ -12,8 +12,8 @@ import com.battleship.view.View
  */
 class GameOverState(private val controller: FirebaseController, win: Boolean) : GuiState(controller) {
     private val menuList = listOf(
-        Pair("Main Menu") { GameStateManager.set(MainMenuState(controller)) },
-        Pair("Play Again") { GameStateManager.set(PreGameState(controller)) }
+        Pair("Main Menu") { GSM.set(MainMenuState(controller)) },
+        Pair("Play Again") { GSM.set(PreGameState(controller)) }
     )
     var winString = ""
         init {
@@ -28,13 +28,13 @@ class GameOverState(private val controller: FirebaseController, win: Boolean) : 
             25f,
             32f,
             "Back to main menu",
-            onClick = { GameStateManager.set(MainMenuState(controller)) }
+            onClick = { GSM.set(MainMenuState(controller)) }
         ),
         GUI.menuButton(
             25f,
             54f,
             "Play again",
-            onClick = { GameStateManager.set(MatchmakingState(controller)) }
+            onClick = { GSM.set(MatchmakingState(controller)) }
         ),
         GUI.header(
             winString

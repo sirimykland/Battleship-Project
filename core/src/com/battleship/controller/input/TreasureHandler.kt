@@ -14,6 +14,7 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
     private var oldPosition: Vector2? = null
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        println("touchdown")
         val touchPos = Vector2(screenX.toFloat(), Gdx.graphics.height - screenY.toFloat())
         val boardWidth = Gdx.graphics.boardWidth()
         val boardPos = Gdx.graphics.boardPosition()

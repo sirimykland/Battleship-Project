@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.battleship.BattleshipGame
 import com.battleship.model.GameObject
-abstract class Treasure(var position: Vector2) : GameObject() {
+
+abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject() {
     abstract var dimension: Vector2
     abstract var name: String
     abstract var health: Int
@@ -43,6 +44,15 @@ abstract class Treasure(var position: Vector2) : GameObject() {
 
     fun takeDamage() {
         health--
+    }
+
+    fun toMap(): Map<String, Any> {
+        val shipMap = mutableMapOf<String, Any>()
+        shipMap["type"] = name
+        shipMap["x"] = position.x
+        shipMap["y"] = position.y
+        shipMap["rotate"] = rotate
+        return shipMap
     }
 
     fun found(): Boolean {
@@ -87,5 +97,9 @@ abstract class Treasure(var position: Vector2) : GameObject() {
             }
         }
         return tiles
+    }
+
+    override fun toString(): String {
+        return "Ship(pos=$position, rotate=$rotate, name='$name')"
     }
 }

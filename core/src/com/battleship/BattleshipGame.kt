@@ -21,7 +21,7 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
             music?.play()
         }
 
-        GameStateManager.push(MainMenuState(controller))
+        GSM.push(MainMenuState(controller))
     }
 
     override fun dispose() {
@@ -30,7 +30,7 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
 
     override fun render() {
         super.render()
-        GameStateManager.render()
-        GameStateManager.update(Gdx.graphics.deltaTime)
+        GSM.render()
+        GSM.update(Gdx.graphics.deltaTime)
     }
 }
