@@ -47,24 +47,12 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         updateButtons()
     }.hide()
 
-    private val userNameText = GUI.textBox(
+    private val createGameButton = GUI.textButton(
         5f,
         2f,
         90f,
         10f,
-        GSM.username,
-        font = Font.MEDIUM_WHITE,
-        color = Palette.DARK_GREY,
-        borderColor = Palette.DARK_GREY
-    )
-    private val createGameButton = GUI.textButton(
-        55f,
-        5f,
-        40f,
-        7f,
-        "Create game",
-        color = Palette.GREEN,
-        font = Font.TINY_BLACK
+        "Create new game"
     ) {
         createGame()
         GSM.set(PreGameState(controller))
@@ -81,11 +69,10 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     )
 
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.header("Choose opponent"),
+        GUI.header("${GSM.username}"),
         nextPageButton,
         previousPageButton,
         *playerButtons,
-        userNameText,
         createGameButton,
         refreshButton,
         GUI.backButton { GSM.set(MainMenuState(controller)) }
