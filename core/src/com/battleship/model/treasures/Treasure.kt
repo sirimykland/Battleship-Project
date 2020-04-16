@@ -48,7 +48,7 @@ abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject
 
     fun toMap(): Map<String, Any> {
         val shipMap = mutableMapOf<String, Any>()
-        shipMap["type"] = name
+        shipMap["type"] = type.toString()
         shipMap["x"] = position.x
         shipMap["y"] = position.y
         shipMap["rotate"] = rotate
