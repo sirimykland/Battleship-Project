@@ -1,11 +1,12 @@
 package com.battleship.model.treasures
+
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Vector2
 
-class GoldKey(position: Vector2, rotate: Boolean) : Treasure(position) {
+class GoldKey(position: Vector2, rotate: Boolean) : Treasure(position, rotate) {
     override var dimension: Vector2 = Vector2(1f, 2f)
     override var name: String = "Shiny gold key"
     override var health: Int = 2

@@ -3,13 +3,12 @@ package com.battleship.controller.state
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
-import com.battleship.GameStateManager
+import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Board.Result
 import com.battleship.model.Player
 import com.battleship.model.equipment.Equipment
 import com.battleship.model.soundeffects.SoundEffects
-import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -28,9 +27,9 @@ import kotlin.concurrent.schedule
 
 class PlayState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
-    private var boardSize = 10
-    private var player: Player = Player(boardSize)
-    private var opponent: Player = Player(boardSize)
+    // private var boardSize = 10
+    private var player: Player = GSM.activeGame!!.me
+    // private var opponent: Player = Player(boardSize)
     private var playerBoard: Boolean = false
     private var playerTurn: Boolean = true
     private var newTurn: Boolean = false
@@ -74,24 +73,21 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
     override fun create() {
         super.create()
-        player.board.setTilesUnopened()
-        player.board.createAndPlaceTreasures(1, TreasureType.TREASURECHEST, true)
-        player.board.createAndPlaceTreasures(2, TreasureType.GOLDCOIN, true)
-        player.board.createAndPlaceTreasures(2, TreasureType.GOLDKEY, true)
+        print("---PLAYSTATE---")
+    }
 
-        opponent.board.setTilesUnopened()
-        opponent.board.createAndPlaceTreasures(1, TreasureType.TREASURECHEST, false)
-        opponent.board.createAndPlaceTreasures(2, TreasureType.GOLDCOIN, false)
-        opponent.board.createAndPlaceTreasures(2, TreasureType.GOLDKEY, false)
-
-        opponentsBoardText.hide()
+    private fun headerText(): String {
+        if (GSM.activeGame!!.opponent.playerId == "") return "Waiting for opponent..."
+        else if (GSM.activeGame!!.isMyTurn()) return (GSM.activeGame!!.opponent.playerName + "'s Board")
+        return "Waiting for opponents turn"
     }
 
     override fun render() {
-        view.render(
-            *guiObjects.toTypedArray(),
-            if (playerBoard) player.board else opponent.board
-        )
+        this.view.render(
+                GUI.header(headerText()),
+                *guiObjects.toTypedArray(),
+                GSM.activeGame!!.opponent.board,
+                GSM.activeGame!!.me.equipmentSet)
     }
 
     override fun update(dt: Float) {
@@ -102,31 +98,31 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
     private fun updateHealth() {
         player.updateHealth()
-        opponent.updateHealth()
+        GSM.activeGame!!.opponent.updateHealth()
         if (player.health == 0) {
             println("Opponent won!")
-            GameStateManager.set(GameOverState(controller, false))
-        } else if (opponent.health == 0) {
+            GSM.set(GameOverState(controller, false))
+        } else if (GSM.activeGame!!.opponent.health == 0) {
             println("You won!")
-            GameStateManager.set(GameOverState(controller, true))
+            controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
+            GSM.set(GameOverState(controller, true))
         }
     }
 
     private fun handleInput() {
-        if (Gdx.input.justTouched()) {
-            val touchX = Gdx.input.x.toFloat()
-            val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()
-            val touchPos = Vector2(touchX, touchY)
+        if (GSM.activeGame!!.isMyTurn()) {
+            if (Gdx.input.justTouched()) {
+                val touchX = Gdx.input.x.toFloat()
+                val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()
+                val touchPos = Vector2(touchX, touchY)
+                val boardWidth = Gdx.graphics.boardWidth()
+                val boardPos = Gdx.graphics.boardPosition()
+                val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
 
-            val boardWidth = Gdx.graphics.boardWidth()
-            val boardPos = Gdx.graphics.boardPosition()
-            val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
-
-            if (boardBounds.contains(touchPos)) {
-                val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, boardSize)
-                if (playerTurn && !playerBoard) {
+                if (boardBounds.contains(touchPos)) {
+                    val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
                     if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        val result = opponent.board.shootTiles(
+                        val result = GSM.activeGame!!.opponent.board.shootTiles(
                             boardTouchPos,
                             player.equipmentSet.activeEquipment!!
                         )
@@ -136,13 +132,14 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
                     }
                 }
                 // TODO remove else if. Handles opponent's moves
-                else if (!playerTurn && playerBoard && opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                    if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
+                else if (!playerTurn && playerBoard && GSM.activeGame!!.opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
+                    if (GSM.activeGame!!.opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
+                        val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
                         val result = player.board.shootTiles(
                             boardTouchPos,
-                            opponent.equipmentSet.activeEquipment!!
+                                GSM.activeGame!!.opponent.equipmentSet.activeEquipment!!
                         )
-                        handleResultFromMove(result, opponent.equipmentSet.activeEquipment!!)
+                        handleResultFromMove(result, GSM.activeGame!!.opponent.equipmentSet.activeEquipment!!)
                     } else {
                         println("Has no more uses")
                     }

@@ -1,5 +1,6 @@
 package com.battleship.utility
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.battleship.model.ui.Background
@@ -118,9 +119,10 @@ object GUI {
         sizeX: Float,
         sizeY: Float,
         texturePath: String,
+        keepRatio: Boolean = false,
         onClick: () -> Unit
     ): GuiObject {
-        return GuiObject(posX, posY, sizeX, sizeY)
+        return GuiObject(posX, posY, sizeX, if (keepRatio) sizeX * (Gdx.graphics.width.toFloat() / Gdx.graphics.height.toFloat()) else sizeY)
             .with(Image(texturePath))
             .onClick(onClick)
     }

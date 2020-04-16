@@ -15,6 +15,10 @@ abstract class State(private val controller: FirebaseController) {
 
     abstract fun render()
 
+    open fun pause() {}
+
+    open fun resume() {}
+
     open fun dispose() {
         view.dispose()
     }

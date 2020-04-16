@@ -1,6 +1,6 @@
 package com.battleship.controller.state
 
-import com.battleship.GameStateManager
+import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.GUI
@@ -13,8 +13,13 @@ import com.battleship.view.View
 class MainMenuState(private val controller: FirebaseController) : GuiState(controller) {
 
     private val menuList = listOf(
-        Pair("Settings") { GameStateManager.set(SettingsState(controller)) },
-        Pair("Play") { GameStateManager.set(PreGameState(controller)) }
+            Pair("Create game as Olivia") {
+                GSM.userId = "zmWpyb8luZAMrBwzY97x"
+                controller.createGame(GSM.userId)
+            },
+            // Pair("Matchmaking") { GSM.set(MatchmakingState(controller)) },
+            Pair("Settings") { GSM.set(SettingsState(controller)) },
+            Pair("Play") { GSM.set(MatchmakingState(controller)) }
     )
 
     override val guiObjects: List<GuiObject> = menuList
@@ -37,7 +42,10 @@ class MainMenuState(private val controller: FirebaseController) : GuiState(contr
 
     override var view: View = BasicView()
 
-    override fun update(dt: Float) {}
+    override fun update(dt: Float) {
+        if (GSM.activeGame != null)
+            GSM.set(PreGameState(controller))
+    }
 
     override fun render() {
         view.render(title, *guiObjects.toTypedArray())
