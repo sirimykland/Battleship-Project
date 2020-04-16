@@ -69,19 +69,16 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         createGame()
         GSM.set(PreGameState(controller))
     }
-
     private val refreshButton = GUI.imageButton(
-        80f,
-        78f,
-        10f,
-        10f,
+        87f,
+        90f,
+        8f,
+        8f,
         "icons/refresh_black.png",
-        keepRatio = true
-    ) {
-        updateButtons()
-    }
-        .with(Background(color = Palette.WHITE))
-        .with(Border(color = Palette.BLACK, width = 3f))
+        onClick = {
+            updateButtons()
+        }
+    )
 
     override val guiObjects: List<GuiObject> = listOf(
         GUI.header("Choose opponent"),
@@ -112,21 +109,12 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
                 guiObject.hide()
             }
         }
-        println(playerButtons)
-        println(games)
-        if (index + itemsPerPage < games.size)
-            nextPageButton.show()
-        else
-            nextPageButton.hide()
 
-        if (index > 0)
-            previousPageButton.show()
-        else
-            previousPageButton.hide()
+        if (index + itemsPerPage < games.size) nextPageButton.show() else nextPageButton.hide()
+        if (index > 0) previousPageButton.show() else previousPageButton.hide()
     }
 
     private fun joinUserButton(index: Int): GuiObject {
-        println("userbutton $index")
         return GUI.textButton(
             10f,
             70f - index * 9f,
