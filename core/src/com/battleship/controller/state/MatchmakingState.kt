@@ -47,31 +47,16 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         updateButtons()
     }.hide()
 
-    private val usernameElement = if (GSM.username == "")
-        GUI.textButton(
-            10f,
-            5f,
-            40f,
-            7f,
-            "Select username",
-            font = Font.TINY_BLACK,
-            color = Palette.WHITE,
-            borderColor = Palette.BLACK
-        ) {
-            GSM.push(NameSelectionState(controller))
-        }
-    else
-        GUI.textBox(
-            5f,
-            5f,
-            40f,
-            7f,
-            GSM.username,
-            font = Font.TINY_BLACK,
-            color = Palette.WHITE,
-            borderColor = Palette.BLACK
-        )
-
+    private val userNameText = GUI.textBox(
+        5f,
+        2f,
+        90f,
+        10f,
+        GSM.username,
+        font = Font.MEDIUM_WHITE,
+        color = Palette.DARK_GREY,
+        borderColor = Palette.DARK_GREY
+    )
     private val createGameButton = GUI.textButton(
         55f,
         5f,
@@ -83,11 +68,6 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     ) {
         createGame()
         GSM.set(PreGameState(controller))
-    }.hide()
-
-    init {
-        if (GSM.username !== "")
-            createGameButton.show()
     }
 
     private val refreshButton = GUI.imageButton(
@@ -104,11 +84,11 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         .with(Border(color = Palette.BLACK, width = 3f))
 
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.header("Matchmaking"),
+        GUI.header("Choose opponent"),
         nextPageButton,
         previousPageButton,
         *playerButtons,
-        usernameElement,
+        userNameText,
         createGameButton,
         refreshButton,
         GUI.backButton { GSM.set(MainMenuState(controller)) }
@@ -117,16 +97,6 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     override fun create() {
         super.create()
         updateButtons()
-    }
-
-    override fun resume() {
-        if (GSM.username !== "") {
-            createGameButton.show()
-            usernameElement
-                .set(Text(GSM.username, Font.TINY_BLACK))
-                .noClick()
-        }
-        super.resume()
     }
 
     private fun updateButtons() {

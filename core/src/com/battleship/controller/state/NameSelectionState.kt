@@ -1,30 +1,26 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.battleship.GameStateManager
+import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
-import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
 class NameSelectionState(val controller: FirebaseController) : GuiState(controller) {
-    private var username = ""
+    private var username = GSM.username
 
     private val legalCharacters = "abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ1234567890"
 
     private val usernameDisplay = GUI.textBox(
         15f,
-        55f,
+        50f,
         70f,
         10f,
-        username,
-        font = Font.SMALL_BLACK,
-        color = Palette.WHITE,
-        borderColor = Palette.BLACK
+        username
     ).onKeyTyped { char ->
         when (char) {
             '\b' -> {
@@ -37,26 +33,24 @@ class NameSelectionState(val controller: FirebaseController) : GuiState(controll
         }
     }
 
-    private val submitButton = GUI.textButton(
-        25f, 35f, 50f, 15f, "Submit") {
-        complete()
-    }
+    private val submitButton = GUI.menuButton(25f, 25f, "Submit") { complete() }
 
     private fun complete() {
-        println("complete $username")
+        println("Added player $username")
         controller.addPlayer(username)
-        GameStateManager.pop()
+        GSM.push(MatchmakingState(controller))
     }
 
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.header("Choose a username"),
+        GUI.header("Choose username"),
         usernameDisplay,
-        submitButton
+        submitButton,
+        GUI.backButton { GSM.set(MainMenuState(controller)) }
     )
     override var view: View = BasicView()
 
     override fun update(dt: Float) {
-        usernameDisplay.set(Text(username, font = Font.SMALL_BLACK))
+        usernameDisplay.set(Text(username, font = Font.MEDIUM_BLACK))
     }
 
     override fun render() {
