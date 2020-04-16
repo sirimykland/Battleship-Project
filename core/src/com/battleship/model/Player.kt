@@ -1,9 +1,6 @@
 package com.battleship.model
 
-import com.battleship.model.equipment.BigEquipment
 import com.battleship.model.equipment.EquipmentSet
-import com.battleship.model.equipment.MetalDetector
-import com.battleship.model.equipment.Shovel
 
 class Player(var playerId: String = "", var playerName: String = "") {
     val boardSize: Int = 10
