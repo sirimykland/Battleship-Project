@@ -11,7 +11,7 @@ object GameStateManager {
     var userId = ""
     var activeGame: Game? = null
     var pendingGames = ArrayList<GameListObject>()
-    var first:Boolean = true
+    var first: Boolean = true
 
     private val states: Stack<State> = Stack()
 

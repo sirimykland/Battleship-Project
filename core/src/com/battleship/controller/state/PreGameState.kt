@@ -20,7 +20,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
 
     override fun create() {
         super.create()
-        if (GSM.first){
+        if (GSM.first) {
             println("---PREGAMESTATE---")
             GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDKEY, true)
             GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDCOIN, true)
@@ -28,7 +28,6 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
             controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.me.playerId)
             GSM.first = false
         }
-
     }
 
     private val readyButton = GUI.textButton(
