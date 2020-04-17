@@ -7,6 +7,7 @@ import com.battleship.model.GameListObject
 import com.battleship.model.Player
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.runBlocking
 
 object AndroidFirebase : FirebaseController {
@@ -26,6 +27,16 @@ object AndroidFirebase : FirebaseController {
                         }
                     }
         }
+    }
+
+    private var activeListener:  ListenerRegistration? = null
+        set(value) {
+            field?.remove()
+            field = value
+        }
+
+    override fun detachListener() {
+        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**
@@ -276,6 +287,10 @@ object AndroidFirebase : FirebaseController {
                             }
                             GSM.activeGame!!.isGameReady()
                         }
+                        if (treasures.size == 2 ){
+                            detachListener()
+                            addPlayListener(gameId)
+                        }
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -404,48 +419,75 @@ object AndroidFirebase : FirebaseController {
                             if (treasures.size <= 2 && GSM.activeGame!!.playersRegistered()) {
                                 Log.d("addGameListener", "Treasures not registered")
                                 getTreasures(gameId)
-                            } else {
-
-                                // Get the list of moves
-                                var moves = mutableListOf<Map<String, Any>>()
-                                if (snapshot.data?.get("moves") != null) {
-                                    moves = snapshot.data?.get("moves") as MutableList<Map<String, Any>>
-                                }
-
-                                val winner = snapshot.data?.get("winner")
-                                // If a winner has been set
-                                if (winner != "") {
-                                    Log.d("addGameListener", "The winner is $winner")
-                                    // TODO: Call function that should be called when a winner is registered
-                                    GSM.activeGame!!.winner = winner as String // or something
-                                }
-                                // If there is no winner, continue game
-                                else {
-                                    // If no moves has been made yet
-                                    if (moves.size == 0) {
-                                        Log.d("addGameListener", "No moves made yet")
-                                        // TODO: Call function that should be called when no moves is registered yet
-                                        // set game status to ready
-                                        GSM.activeGame!!.isGameReady()
-                                    } else {
-                                        // Get the last move
-                                        val lastMove = moves.get(moves.size - 1)
-                                        val game = GSM.activeGame!!
-                                        if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                                            Log.d("addGameListener", "Opponent made the last move")
-                                            GSM.activeGame!!.flipPlayer()
-                                        } else if (lastMove["playerId"]!!.equals(game.me.playerId)) {
-                                            Log.d("addGameListener", "You made the last move")
-                                            GSM.activeGame!!.flipPlayer()
-                                        }
-                                    }
-                                }
+                            }
+                            if (treasures.size == 2 ){
+                                detachListener()
+                                addPlayListener(gameId)
                             }
                         }
                     }
                 }
             } else {
                 Log.d("addGameListener", "no data")
+                // TODO: Error handling when the game object is found, but there is no data in it
+            }
+        }
+    }
+    override fun addPlayListener(gameId: String) {
+        val docRef = db.collection("games").document(gameId)
+        activeListener = docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w("addPlayListener", "Listener failed", e)
+                return@addSnapshotListener
+            }
+            if (snapshot != null && snapshot.exists()) {
+                val player1 = snapshot.data?.get("player1")
+                val player2 = snapshot.data?.get("player2")
+
+                if (player1 == "" || player2 == "") {
+                    Log.d("addPlayListener", "Opponent has drawn from the game")
+                    // TODO: Call function that should handle this
+                    detachListener()
+                }
+                // If there is an opponent in the game
+                else {
+                    // Get the list of moves
+                    var moves = mutableListOf<Map<String, Any>>()
+                    if (snapshot.data?.get("moves") != null) {
+                        moves = snapshot.data?.get("moves") as MutableList<Map<String, Any>>
+                    }
+
+                    val winner = snapshot.data?.get("winner")
+                    // If a winner has been set
+                    if (winner != "") {
+                        Log.d("addPlayListener", "The winner is $winner")
+                        // TODO: Call function that should be called when a winner is registered
+                        GSM.activeGame!!.winner = winner as String // or something
+                    }
+                    // If there is no winner, continue game
+                    else {
+                        // If no moves has been made yet
+                        if (moves.size == 0) {
+                            Log.d("addPlayListener", "No moves made yet")
+                            // TODO: Call function that should be called when no moves is registered yet
+                            // set game status to ready
+                            GSM.activeGame!!.isGameReady()
+                        } else {
+                            // Get the last move
+                            val lastMove = moves.get(moves.size - 1)
+                            val game = GSM.activeGame!!
+                            if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
+                                Log.d("addPlayListener", "Opponent made the last move")
+                                GSM.activeGame!!.flipPlayer()
+                            } else if (lastMove["playerId"]!!.equals(game.me.playerId)) {
+                                Log.d("addPlayListener", "You made the last move")
+                                GSM.activeGame!!.flipPlayer()
+                            }
+                        }
+                    }
+                }
+            } else {
+                Log.d("addPlayListener", "no data")
                 // TODO: Error handling when the game object is found, but there is no data in it
             }
         }

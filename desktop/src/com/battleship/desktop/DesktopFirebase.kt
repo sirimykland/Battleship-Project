@@ -6,10 +6,7 @@ import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import com.battleship.model.Player
 import com.google.auth.oauth2.GoogleCredentials
-import com.google.cloud.firestore.DocumentSnapshot
-import com.google.cloud.firestore.EventListener
-import com.google.cloud.firestore.Firestore
-import com.google.cloud.firestore.FirestoreException
+import com.google.cloud.firestore.*
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.FirestoreClient
@@ -48,6 +45,17 @@ object DesktopFirebase : FirebaseController {
 
         // Initialize database connection using the firebase app
         db = FirestoreClient.getFirestore()
+    }
+
+    private var activeListener: ListenerRegistration? = null
+        set(value) {
+            field?.remove()
+            field = value
+        }
+
+
+    override fun detachListener() {
+        activeListener?.remove()
     }
 
     /**
@@ -301,7 +309,7 @@ object DesktopFirebase : FirebaseController {
      */
     override fun addGameListener(gameId: String, playerId: String) {
         val docRef = db.collection("games").document(gameId)
-        docRef.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
+        activeListener = docRef.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
                 @Nullable snapshot: DocumentSnapshot?,
                 @Nullable e: FirestoreException?
@@ -310,16 +318,16 @@ object DesktopFirebase : FirebaseController {
                     System.err.println("Listen failed: $e")
                     return
                 }
-                println("Listening ...")
+                println("addGameListener: Listening ...")
                 if (snapshot != null && snapshot.exists()) {
                     val opponent = snapshot.data?.get("player2")
                     // If no opponent has joined yet
                     if (opponent == "") {
-                        println("Opponent not joined yet")
+                        println("addGameListener: Opponent not joined yet")
                     }
                     // If there is an opponent in the game
                     else {
-                        println("opponent id $opponent")
+                        println("addGameListener: opponent id $opponent")
                         if (GSM.activeGame!!.opponent.playerId == "") {
                             getOpponent(gameId)
                         } else {
@@ -329,21 +337,10 @@ object DesktopFirebase : FirebaseController {
                             if (treasures.size <= 2 && GSM.activeGame!!.playersRegistered()) {
                                 println("addGameListener:" + "Treasures not registered")
                                 getTreasures(gameId)
-                            } else {
-                                // Get the list of moves
-                                val moves = snapshot.data?.get("moves") as MutableList<Map<String, Any>>
-
-                                val winner = snapshot.data?.get("winner")
-                                // If a winner has been set
-                                if (winner != "") {
-                                    println("The winner is $winner")
-                                    GSM.activeGame!!.winner = winner as String
-                                }
-                                // If there is no winner, continue game
-                                else {
-                                    addMoveListener(gameId, playerId)
-                                    // remove this listener ? and only listen for moves
-                                }
+                            }
+                            if (treasures.size == 2 ){
+                                detachListener()
+                                addPlayListener(gameId)
                             }
                         }
                     }
@@ -356,9 +353,9 @@ object DesktopFirebase : FirebaseController {
         })
     }
 
-    fun addMoveListener(gameId: String, playerId: String) {
+    override fun addPlayListener(gameId: String) {
         val query = db.collection("games").document(gameId)
-        val moveListener = query.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
+        activeListener = query.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
                 @Nullable snapshot: DocumentSnapshot?,
                 @Nullable e: FirestoreException?
@@ -367,7 +364,7 @@ object DesktopFirebase : FirebaseController {
                     System.err.println("Listen failed: $e")
                     return
                 }
-                println("   MOVE LISTENER:")
+                println("addPlayListener: MOVE LISTENER:")
                 if (snapshot != null && snapshot.exists()) {
                     // Get the list of moves
                     val moves = snapshot.data?.get("moves") as MutableList<Map<String, Any>>
@@ -375,30 +372,30 @@ object DesktopFirebase : FirebaseController {
                     val winner = snapshot.data?.get("winner")
                     // If a winner has been set
                     if (winner != "") {
-                        println("The winner is $winner")
+                        println("addPlayListener: The winner is $winner")
                         GSM.activeGame!!.winner = winner as String
+                        detachListener()
                     }
                     // If there is no winner, continue game
                     else {
                         // If no moves has been made yet
                         if (moves.size == 0) {
-                            println("No moves made yet")
+                            println("addPlayListener: No moves made yet")
                         } else {
                             // Get the last move
                             val lastMove = moves.get(moves.size - 1)
                             // If the last move is performed by opponent
                             val game = GSM.activeGame!!
                             if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                                println("Motstander hadde siste trekk - din tur")
+                                println("addPlayListener: Motstander hadde siste trekk - din tur")
                                 GSM.activeGame!!.flipPlayer()
                             } else if (lastMove["playerId"]!!.equals(game.me.playerId)) {
-                                println("Du hadde siste trekk, vent")
+                                println("addPlayListener: Du hadde siste trekk, vent")
                                 GSM.activeGame!!.flipPlayer()
                             }
                         }
                     }
                 }
-                // If no data is found
                 else {
                     print("Current data: null")
                 }
