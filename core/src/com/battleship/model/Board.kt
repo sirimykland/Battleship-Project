@@ -234,6 +234,10 @@ class Board(val size: Int) : GameObject() {
                 (treasure["y"] as Number).toFloat()
             )
             rotate =
+                    if (treasure.containsKey("rotate")) {
+                        treasure["rotate"] as Boolean
+                    } else false
+
                 if (treasure.containsKey("rotate")) {
                     treasure["rotate"] as Boolean
                 } else false
@@ -248,7 +252,6 @@ class Board(val size: Int) : GameObject() {
                 TreasureType.GOLDKEY ->
                     GoldKey(position, rotate)
             }
-            // println("newtreasure: $newTreasure")
             newTreasures.add(newTreasure)
         }
         treasures = newTreasures

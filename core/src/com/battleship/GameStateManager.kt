@@ -11,6 +11,7 @@ object GameStateManager {
     var userId = ""
     var activeGame: Game? = null
     var pendingGames = ArrayList<GameListObject>()
+    var treasuresInitialized: Boolean = false
 
     private val states: Stack<State> = Stack()
 

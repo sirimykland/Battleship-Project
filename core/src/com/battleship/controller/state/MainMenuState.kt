@@ -14,7 +14,7 @@ class MainMenuState(private val controller: FirebaseController) : GuiState(contr
 
     private val menuList = listOf(
             Pair("Settings") { GSM.set(SettingsState(controller)) },
-            Pair("Play") { GSM.set(MatchmakingState(controller)) }
+            Pair("Play") { GSM.set(NameSelectionState(controller)) }
     )
 
     override val guiObjects: List<GuiObject> = menuList
@@ -38,8 +38,6 @@ class MainMenuState(private val controller: FirebaseController) : GuiState(contr
     override var view: View = BasicView()
 
     override fun update(dt: Float) {
-        if (GSM.activeGame != null)
-            GSM.set(PreGameState(controller))
     }
 
     override fun render() {
