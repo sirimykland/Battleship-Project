@@ -6,7 +6,11 @@ import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import com.battleship.model.Player
 import com.google.auth.oauth2.GoogleCredentials
-import com.google.cloud.firestore.*
+import com.google.cloud.firestore.DocumentSnapshot
+import com.google.cloud.firestore.EventListener
+import com.google.cloud.firestore.Firestore
+import com.google.cloud.firestore.FirestoreException
+import com.google.cloud.firestore.ListenerRegistration
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.FirestoreClient
@@ -52,7 +56,6 @@ object DesktopFirebase : FirebaseController {
             field?.remove()
             field = value
         }
-
 
     override fun detachListener() {
         activeListener?.remove()
@@ -338,7 +341,7 @@ object DesktopFirebase : FirebaseController {
                                 println("addGameListener:" + "Treasures not registered")
                                 getTreasures(gameId)
                             }
-                            if (treasures.size == 2 ){
+                            if (treasures.size == 2) {
                                 detachListener()
                                 addPlayListener(gameId)
                             }
@@ -395,8 +398,7 @@ object DesktopFirebase : FirebaseController {
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     print("Current data: null")
                 }
             }

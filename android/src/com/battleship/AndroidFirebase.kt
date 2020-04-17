@@ -29,7 +29,7 @@ object AndroidFirebase : FirebaseController {
         }
     }
 
-    private var activeListener:  ListenerRegistration? = null
+    private var activeListener: ListenerRegistration? = null
         set(value) {
             field?.remove()
             field = value
@@ -287,7 +287,7 @@ object AndroidFirebase : FirebaseController {
                             }
                             GSM.activeGame!!.isGameReady()
                         }
-                        if (treasures.size == 2 ){
+                        if (treasures.size == 2) {
                             detachListener()
                             addPlayListener(gameId)
                         }
@@ -420,7 +420,7 @@ object AndroidFirebase : FirebaseController {
                                 Log.d("addGameListener", "Treasures not registered")
                                 getTreasures(gameId)
                             }
-                            if (treasures.size == 2 ){
+                            if (treasures.size == 2) {
                                 detachListener()
                                 addPlayListener(gameId)
                             }
