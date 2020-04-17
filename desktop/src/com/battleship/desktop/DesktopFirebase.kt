@@ -390,10 +390,10 @@ object DesktopFirebase : FirebaseController {
                             val game = GSM.activeGame!!
                             if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
                                 println("Motstander hadde siste trekk - din tur")
-                                GSM.activeGame!!.flipPlayer()
-                            } else if (lastMove["playerId"]!!.equals(game.me.playerId)) {
+                                GSM.activeGame!!.switchTurn()
+                            } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
                                 println("Du hadde siste trekk, vent")
-                                GSM.activeGame!!.flipPlayer()
+                                GSM.activeGame!!.switchTurn()
                             }
                         }
                     }
