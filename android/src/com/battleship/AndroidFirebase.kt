@@ -7,6 +7,7 @@ import com.battleship.model.GameListObject
 import com.battleship.model.Player
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.runBlocking
 
 object AndroidFirebase : FirebaseController {
@@ -17,16 +18,22 @@ object AndroidFirebase : FirebaseController {
         // Sign in as an anonymous user to authorize, don't know if runBlocking actually works
         runBlocking {
             auth.signInAnonymously()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d("Login", "signInAnonymously successful")
-                    } else {
-                        // TODO: Handle exception, when this occurs you cannot access firebase
-                        Log.w("Login", "signInAnonymously failed", task.exception)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d("Login", "signInAnonymously successful")
+                        } else {
+                            // TODO: Handle exception, when this occurs you cannot access firebase
+                            Log.w("Login", "signInAnonymously failed", task.exception)
+                        }
                     }
-                }
         }
     }
+
+    private var activeListener: ListenerRegistration? = null
+        set(value) {
+            field?.remove()
+            field = value
+        }
 
     /**
      * NOT USED IN THE ACTUAL APP, CAN BE REMOVED
@@ -36,16 +43,16 @@ object AndroidFirebase : FirebaseController {
     override fun getPlayers() {
         val playerMap = mutableMapOf<String, String?>()
         db.collection("users").get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    Log.d("Player", "${document.id} => ${document.data}")
-                    playerMap[document.id] = document.getString("username")
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        Log.d("Player", "${document.id} => ${document.data}")
+                        playerMap[document.id] = document.getString("username")
+                    }
+                    // TODO IF USED IN APP: Add function here that stores players
                 }
-                // TODO IF USED IN APP: Add function here that stores players
-            }
-            .addOnFailureListener { exception ->
-                Log.w("Player", "Error getting documents: ", exception)
-            }
+                .addOnFailureListener { exception ->
+                    Log.w("Player", "Error getting documents: ", exception)
+                }
     }
 
     /**
@@ -384,7 +391,7 @@ object AndroidFirebase : FirebaseController {
      */
     override fun addGameListener(gameId: String, playerId: String) {
         val docRef = db.collection("games").document(gameId)
-        docRef.addSnapshotListener { snapshot, e ->
+        activeListener = docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w("addGameListener", "Listener failed", e)
                 return@addSnapshotListener
@@ -425,38 +432,7 @@ object AndroidFirebase : FirebaseController {
                                     GSM.activeGame!!.setGameReadyifReady()
                                 }
                             } else {
-                                // Get the list of moves
-                                var moves = mutableListOf<Map<String, Any>>()
-                                if (snapshot.data?.get("moves") != null) {
-                                    moves =
-                                        snapshot.data?.get("moves") as MutableList<Map<String, Any>>
-                                }
-
-                                val winner = snapshot.data?.get("winner")
-                                // If a winner has been set
-                                if (winner != "") {
-                                    Log.d("addGameListener", "The winner is $winner")
-                                    // TODO: Call function that should be called when a winner is registered
-                                    GSM.activeGame!!.winner = winner as String // or something
-                                }
-                                // If there is no winner, continue game
-                                else {
-                                    // If no moves has been made yet
-                                    if (moves.size == 0) {
-                                        Log.d("addGameListener", "No moves made yet")
-                                        GSM.activeGame!!.setGameReadyifReady()
-                                    } else {
-                                        // Get the last move
-                                        val lastMove = moves.get(moves.size - 1)
-                                        val game = GSM.activeGame!!
-                                        if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                                            println("----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
-                                            GSM.activeGame!!.registerMove(lastMove)
-                                        } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
-                                            println("----------------------PLAYER LAST MOVE----------------------- " + lastMove)
-                                        }
-                                    }
-                                }
+                                addPlayListener(gameId)
                             }
                         }
                     }
@@ -464,6 +440,53 @@ object AndroidFirebase : FirebaseController {
             } else
                 Log.d("addGameListener", "no data")
             // TODO: Error handling when the game object is found, but there is no data in it
+        }
+    }
+
+    override fun addPlayListener(gameId: String) {
+        val docRef = db.collection("games").document(gameId)
+        activeListener = docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w("addPlayListener", "Listener failed", e)
+                return@addSnapshotListener
+            }
+            if (snapshot != null && snapshot.exists()) {
+                Log.d("addPlayListener", "Game data: ${snapshot.data}")
+
+                var moves = mutableListOf<Map<String, Any>>()
+                if (snapshot.data?.get("moves") != null) {
+                    moves =
+                            snapshot.data?.get("moves") as MutableList<Map<String, Any>>
+                }
+
+                val winner = snapshot.data?.get("winner")
+                // If a winner has been set
+                if (winner != "") {
+                    Log.d("addPlayListener", "The winner is $winner")
+                    // TODO: Call function that should be called when a winner is registered
+                    GSM.activeGame!!.winner = winner as String // or something
+                }
+                // If there is no winner, continue game
+                else {
+                    // If no moves has been made yet
+                    if (moves.size == 0) {
+                        Log.d("addPlayListener", "No moves made yet")
+                        GSM.activeGame!!.setGameReadyifReady()
+                    } else {
+                        // Get the last move
+                        val lastMove = moves.get(moves.size - 1)
+                        val game = GSM.activeGame!!
+                        if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
+                            println("----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
+                            GSM.activeGame!!.registerMove(lastMove)
+                        } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
+                            println("----------------------PLAYER LAST MOVE----------------------- " + lastMove)
+                        }
+                    }
+                }
+            } else
+                Log.d("addPlayListener", "no data")
+                // TODO: Error handling when the game object is found, but there is no data in it
         }
     }
 }
