@@ -23,6 +23,9 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
 
     private var page: Int = 0
 
+    // temp
+    private var selectUsernameCallback = false
+
     private val nextPageButton = GUI.textButton(
         76f,
         14f,
@@ -53,7 +56,7 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
             5f,
             40f,
             7f,
-            "Select username",
+            if (GSM.username == "") "Select username" else GSM.username,
             font = Font.TINY_BLACK,
             color = Palette.WHITE,
             borderColor = Palette.BLACK
@@ -77,12 +80,13 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         5f,
         40f,
         7f,
-        "Create game",
+        "Create Game",
         color = Palette.GREEN,
         font = Font.TINY_BLACK
     ) {
         createGame()
-        GSM.set(PreGameState(controller))
+        // temporarily removed for bugfix in android
+        // GSM.set(PreGameState(controller))
     }.hide()
 
     init {
@@ -125,6 +129,7 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
             usernameElement
                 .set(Text(GSM.username, Font.TINY_BLACK))
                 .noClick()
+            selectUsernameCallback = true
         }
         super.resume()
     }
@@ -187,8 +192,12 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
             print(GSM.activeGame!!.gameId)
             GSM.set(PreGameState(controller))
         }
-        if (GSM.userId != "") {
+        if (GSM.username != "" && !selectUsernameCallback) {
             createGameButton.show()
+            usernameElement
+                .set(Text(GSM.username, Font.TINY_BLACK))
+                .noClick()
+            selectUsernameCallback = true
         }
     }
 
