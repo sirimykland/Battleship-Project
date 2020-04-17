@@ -1,12 +1,10 @@
 package com.battleship
 
 import android.util.Log
-import com.badlogic.gdx.math.Vector2
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import com.battleship.model.Player
-import com.battleship.model.equipment.Equipment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.runBlocking
@@ -270,18 +268,22 @@ object AndroidFirebase : FirebaseController {
                     // if (GSM.activeGame!!.me.playerId in treasures) treasures[GSM.activeGame!!.me.playerId]?.let { GSM.activeGame!!.me.board.setTreasuresList(it) }
                     val OplayerId = GSM.activeGame!!.opponent.playerId
                     if (OplayerId in treasures) {
-                        // println("yes1 it is in treasures")
+                        println("yes1 it is in treasures")
                         treasures[OplayerId]?.let {
                             GSM.activeGame!!.opponent.board.setTreasuresList(it)
                         }
-                        GSM.activeGame!!.isGameReady()
-                    } else if (treasures.containsKey(OplayerId)) {
-                        // println("yes2 it is in treasures")
+                        GSM.activeGame!!.setGameReadyifReady()
+                    }
+                    /*
+                    else if (treasures.containsKey(OplayerId)) {
+                        println("yes2 it is in treasures")
                         treasures[OplayerId]?.let {
                             GSM.activeGame!!.opponent.board.setTreasuresList(it)
                         }
                         GSM.activeGame!!.isGameReady()
                     }
+
+                     */
                 }
             }
             .addOnFailureListener { exception ->
@@ -305,6 +307,7 @@ object AndroidFirebase : FirebaseController {
                 db.collection("users").document(player2Id).get()
                     .addOnSuccessListener { document ->
                         GSM.activeGame!!.opponent.playerName = document.get("username") as String
+                        GSM.activeGame!!.setGameReadyifReady()
                     }.addOnFailureListener { exception ->
                         Log.w("getOpponent", exception)
                         // TODO: Add exception handling
@@ -396,7 +399,7 @@ object AndroidFirebase : FirebaseController {
                 }
                 // If there is an opponent in the game
                 else {
-                    println("opponent id $opponent")
+                    // println("opponent id $opponent")
                     if (GSM.activeGame!!.opponent.playerId == "") {
                         getOpponent(gameId)
                     } else {
@@ -407,11 +410,21 @@ object AndroidFirebase : FirebaseController {
                                 snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
 
                             // If there is not enough treasures registered
-                            if (treasures.size <= 2 && GSM.activeGame!!.playersRegistered()) {
+                            if (treasures.size < 2 && GSM.activeGame!!.isplayersRegistered()) {
                                 Log.d("addGameListener", "Treasures not registered")
+                                println("Size: " + treasures.size + " TESTING")
                                 getTreasures(gameId)
+                            }
+                            // If there is enough treasures registered in firebase but not in opponents board
+                            else if (treasures.size == 2 && !GSM.activeGame!!.isTreasuresRegistered()) {
+                                val OplayerId = GSM.activeGame!!.opponent.playerId
+                                if (OplayerId in treasures) {
+                                    treasures[OplayerId]?.let {
+                                        GSM.activeGame!!.opponent.board.setTreasuresList(it)
+                                    }
+                                    GSM.activeGame!!.setGameReadyifReady()
+                                }
                             } else {
-
                                 // Get the list of moves
                                 var moves = mutableListOf<Map<String, Any>>()
                                 if (snapshot.data?.get("moves") != null) {
@@ -431,37 +444,16 @@ object AndroidFirebase : FirebaseController {
                                     // If no moves has been made yet
                                     if (moves.size == 0) {
                                         Log.d("addGameListener", "No moves made yet")
-                                        // TODO: Call function that should be called when no moves is registered yet
-                                        // set game status to ready
-                                        GSM.activeGame!!.isGameReady()
+                                        GSM.activeGame!!.setGameReadyifReady()
                                     } else {
                                         // Get the last move
                                         val lastMove = moves.get(moves.size - 1)
                                         val game = GSM.activeGame!!
                                         if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                                            Log.d("addGameListener", "Opponent made the last move")
-                                            //GSM.activeGame!!.switchTurn()
                                             println("----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
-                                            var equipment: Equipment? = null
-                                            for (test in GSM.activeGame!!.opponent.equipmentSet.equipments) {
-                                                if (test.name == lastMove["weapon"]) {
-                                                    equipment = test
-                                                }
-                                            }
-
-                                            GSM.activeGame!!.registerMove(
-                                                Vector2(
-                                                    (lastMove["x"] as Number).toFloat(),
-                                                    (lastMove["y"] as Number).toFloat()
-                                                ),
-                                                equipment!!
-                                            )
+                                            GSM.activeGame!!.registerMove(lastMove)
                                         } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
                                             println("----------------------PLAYER LAST MOVE----------------------- " + lastMove)
-                                            Log.d("addGameListener", "You made the last move")
-                                            //GSM.activeGame!!.switchTurn()
-
-                                            // Håndteres lokalt?
                                         }
                                     }
                                 }
@@ -471,8 +463,7 @@ object AndroidFirebase : FirebaseController {
                 }
             } else
                 Log.d("addGameListener", "no data")
-                // TODO: Error handling when the game object is found, but there is no data in it
-            }
+            // TODO: Error handling when the game object is found, but there is no data in it
         }
     }
 }

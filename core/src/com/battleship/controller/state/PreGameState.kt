@@ -16,33 +16,43 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
         super.create()
         println("---PREGAMESTATE---")
         if (!GSM.treasuresInitialized) {
-            GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDKEY, true)
-            GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.GOLDCOIN, true)
-            GSM.activeGame!!.me.board.createAndPlaceTreasures(1, Treasure.TreasureType.TREASURECHEST, true)
-            controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.me.playerId)
+            GSM.activeGame!!.player.board.createAndPlaceTreasures(
+                1,
+                Treasure.TreasureType.GOLDKEY,
+                true
+            )
+            GSM.activeGame!!.player.board.createAndPlaceTreasures(
+                1,
+                Treasure.TreasureType.GOLDCOIN,
+                true
+            )
+            GSM.activeGame!!.player.board.createAndPlaceTreasures(
+                1,
+                Treasure.TreasureType.TREASURECHEST,
+                true
+            )
+            controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
             GSM.treasuresInitialized = true
         }
     }
 
     private val readyButton = GUI.textButton(
-            5f,
-            3f,
-            90f,
-            10f,
-            "Start Game",
-            onClick = {
-                val game = GSM.activeGame!!
-                println("gameready is: " + game.gameReady)
-                println("t: " + game.player.board.getTreasuresList())
-                controller.registerTreasures(
-                        game.gameId,
-                        game.player.playerId,
-                        game.player.board.getTreasuresList()
-                )
-                GSM.set(LoadingGameState(controller))
-            })
-
-    var guiTing: GuiObject = GuiObject(0f, 0f, 0f, 0f)
+        5f,
+        3f,
+        90f,
+        10f,
+        "Start Game",
+        onClick = {
+            val game = GSM.activeGame!!
+            println("gameready is: " + game.gameReady)
+            println("t: " + game.player.board.getTreasuresList())
+            controller.registerTreasures(
+                game.gameId,
+                game.player.playerId,
+                game.player.board.getTreasuresList()
+            )
+            GSM.set(LoadingGameState(controller))
+        })
 
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
@@ -57,8 +67,5 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     }
 
     override fun update(dt: Float) {
-
     }
-
-
 }

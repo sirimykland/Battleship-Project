@@ -19,14 +19,10 @@ import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
-import java.util.Timer
-import kotlin.concurrent.schedule
 
 class PlayState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     private var player: Player = GSM.activeGame!!.player
-    private var playerBoard: Boolean = false
-    private var newTurn: Boolean = false
 
     private val header = GUI.header("Your turn")
 
@@ -46,7 +42,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         8f,
         "icons/swap_horiz_white.png",
         onClick = {
-            playerBoard = !playerBoard
+            GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
         }
     )
     private val opponentsBoardText = GUI.textBox(
@@ -67,17 +63,19 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     override fun create() {
         super.create()
         print("---PLAYSTATE---")
+
         //controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
     }
 
     override fun render() {
         view.render(
             *guiObjects.toTypedArray(),
-            if (playerBoard) GSM.activeGame!!.player.board else GSM.activeGame!!.opponent.board
+            if (GSM.activeGame!!.playerBoard) GSM.activeGame!!.player.board else GSM.activeGame!!.opponent.board
         )
     }
 
     override fun update(dt: Float) {
+        updateBoardSwitching()
         handleInput()
         updateGUIObjects()
         updateHealth()
@@ -86,6 +84,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     private fun updateHealth() {
         player.updateHealth()
         GSM.activeGame!!.opponent.updateHealth()
+        /*
         if (player.health == 0) {
             println("Opponent won!")
             GSM.set(GameOverState(controller, false))
@@ -94,11 +93,13 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
             GSM.set(GameOverState(controller, true))
         }
+
+         */
     }
 
     private fun handleInput() {
         // Check if it is players turn and opponents board is showing.
-        if (GSM.activeGame!!.isPlayersTurn() && !playerBoard) {
+        if (GSM.activeGame!!.isPlayersTurn() && !GSM.activeGame!!.playerBoard) {
             if (Gdx.input.justTouched()) {
                 val touchX = Gdx.input.x.toFloat()
                 val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()
@@ -111,21 +112,25 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
                     val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
                     controller.makeMove(
                         GSM.activeGame!!.gameId,
-                        boardPos.x.toInt(),
-                        boardPos.y.toInt(),
+                        boardTouchPos.x.toInt(),
+                        boardTouchPos.y.toInt(),
                         GSM.activeGame!!.player.playerId,
                         GSM.activeGame!!.player.equipmentSet.activeEquipment!!.name
                     )
-                    val missed = GSM.activeGame!!.makeMove(boardTouchPos)
-                    // Check if player missed. If so switch board.
-                    if (missed) {
-                        playerBoard =! playerBoard
-                        Timer().schedule(500) {
-                            newTurn = true
-                        }
-                    }
+                    GSM.activeGame!!.makeMove(boardTouchPos)
                 }
             }
+        }
+    }
+
+    private fun updateBoardSwitching(){
+        // Auto switching of boards
+        if (GSM.activeGame!!.isPlayersTurn() && GSM.activeGame!!.playerBoard && GSM.activeGame!!.newTurn) {
+            GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
+            GSM.activeGame!!.newTurn = false
+        } else if (!GSM.activeGame!!.isPlayersTurn() && !GSM.activeGame!!.playerBoard && GSM.activeGame!!.newTurn) {
+            GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
+            GSM.activeGame!!.newTurn = false
         }
     }
 
@@ -143,7 +148,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             }
 
             // Hides and shows equipment buttons and opponent's board text
-            if (playerBoard) {
+            if (GSM.activeGame!!.playerBoard) {
                 button.hide()
                 opponentsBoardText.show()
             } else {
@@ -159,14 +164,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             header.set(Text("Waiting for opponent's move..."))
         }
 
-        // Auto switching of boards
-        if (GSM.activeGame!!.isPlayersTurn() && playerBoard && newTurn) {
-            playerBoard = !playerBoard
-            newTurn = false
-        } else if (!GSM.activeGame!!.isPlayersTurn() && !playerBoard && newTurn) {
-            playerBoard = !playerBoard
-            newTurn = false
-        }
+
     }
 
     private fun joinEquipmentButton(

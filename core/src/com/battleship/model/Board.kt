@@ -133,6 +133,7 @@ class Board(val size: Int) : GameObject() {
                 }
             }
         }
+        println("MOVE: pos = " + boardTouchPos + " equipment: " + equipment.name)
         return when {
             resultList.contains(Result.FOUND) -> {
                 println("Found")
@@ -234,13 +235,13 @@ class Board(val size: Int) : GameObject() {
                 (treasure["y"] as Number).toFloat()
             )
             rotate =
-                    if (treasure.containsKey("rotate")) {
-                        treasure["rotate"] as Boolean
-                    } else false
-
                 if (treasure.containsKey("rotate")) {
                     treasure["rotate"] as Boolean
                 } else false
+
+            if (treasure.containsKey("rotate")) {
+                treasure["rotate"] as Boolean
+            } else false
             // println("${treasure["type"]} - $position  - $rotate: ")
             // println("${treasure["type"]}: (${(treasure["type"]) == "Old stinking boot"})")
             // TODO this should be the actual enum types
