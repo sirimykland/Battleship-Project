@@ -185,7 +185,9 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         }
         if (GSM.activeGame != null) {
             print(GSM.activeGame!!.gameId)
-            GSM.set(PreGameState(controller))
+            if(GSM.activeGame!!.playersRegistered()) {
+                GSM.set(PreGameState(controller))
+            }
         }
         if (GSM.userId != "") {
             createGameButton.show()

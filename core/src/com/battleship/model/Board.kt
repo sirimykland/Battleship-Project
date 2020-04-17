@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.equipment.Equipment
+import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.GoldKey
 import com.battleship.model.treasures.Treasure
@@ -14,8 +15,10 @@ import com.battleship.model.treasures.TreasureChest
 import kotlin.random.Random
 
 class Board(val size: Int) : GameObject() {
-    var treasures: ArrayList<Treasure> = ArrayList() // TODO skal være private, men er gjort public for å unngå feilmeldinger midlertidig
+    var treasures: ArrayList<Treasure> =
+        ArrayList() // TODO skal være private, men er gjort public for å unngå feilmeldinger midlertidig
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
+    private var sound = SoundEffects()
 
     // Change all tiles to unopened state
     fun setTilesUnopened() {
@@ -62,7 +65,12 @@ class Board(val size: Int) : GameObject() {
         return true
     }
 
-    override fun draw(batch: SpriteBatch, shapeRenderer: ShapeRenderer, position: Vector2, dimension: Vector2) {
+    override fun draw(
+        batch: SpriteBatch,
+        shapeRenderer: ShapeRenderer,
+        position: Vector2,
+        dimension: Vector2
+    ) {
         var x = position.x
         var y = position.y
         val tileSize = dimension.x / size
@@ -79,10 +87,14 @@ class Board(val size: Int) : GameObject() {
                 } else {
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
                     when (value) {
-                        Tile.HIT -> shapeRenderer.color = Color(0.302f, 0.816f, 0.546f, 1f) // Success green
-                        Tile.MISS -> shapeRenderer.color = Color(0.961f, 0.298f, 0.298f, 1f) // Failure red
-                        Tile.NEAR -> shapeRenderer.color = Color(0.950f, 0.961f, 0.298f, 1f) // Near yellow
-                        Tile.UNOPENED -> shapeRenderer.color = Color(0.905f, 0.882f, 0.612f, 1f) // Sand/brown
+                        Tile.HIT -> shapeRenderer.color =
+                            Color(0.302f, 0.816f, 0.546f, 1f) // Success green
+                        Tile.MISS -> shapeRenderer.color =
+                            Color(0.961f, 0.298f, 0.298f, 1f) // Failure red
+                        Tile.NEAR -> shapeRenderer.color =
+                            Color(0.950f, 0.961f, 0.298f, 1f) // Near yellow
+                        Tile.UNOPENED -> shapeRenderer.color =
+                            Color(0.905f, 0.882f, 0.612f, 1f) // Sand/brown
                     }
                     shapeRenderer.rect(x, y, tileSize, tileSize)
                     shapeRenderer.end()
@@ -105,7 +117,7 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
-    fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): ArrayList<Result> {
+    fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): Boolean {
         val xSearchMin = boardTouchPos.x.toInt() - equipment.searchRadius
         val xSearchMax = boardTouchPos.x.toInt() + equipment.searchRadius + 1
         val ySearchMin = boardTouchPos.y.toInt() - equipment.searchRadius
@@ -121,8 +133,29 @@ class Board(val size: Int) : GameObject() {
                 }
             }
         }
-        // Returns a list of the results of all tiles explored
-        return resultList
+        return when {
+            resultList.contains(Result.FOUND) -> {
+                println("Found")
+                equipment.use()
+                false
+            }
+            resultList.contains(Result.HIT) -> {
+                println("Hit")
+                sound.playHit(0.8f)
+                equipment.use()
+                false
+            }
+            resultList.all { n -> n == Result.NOT_VALID } -> {
+                println("Not valid, try again")
+                false
+            }
+            else -> {
+                println("Missed")
+                equipment.playSound(0.8f)
+                equipment.use()
+                true
+            }
+        }
     }
 
     private fun exploreTile(pos: Vector2): Result {
@@ -197,12 +230,13 @@ class Board(val size: Int) : GameObject() {
 
         for (treasure in treasuresList.toMutableList()) {
             position = Vector2(
-                    (treasure["x"] as Number).toFloat(),
-                    (treasure["y"] as Number).toFloat())
+                (treasure["x"] as Number).toFloat(),
+                (treasure["y"] as Number).toFloat()
+            )
             rotate =
-                    if (treasure.containsKey("rotate")) {
-                        treasure["rotate"] as Boolean
-                    } else false
+                if (treasure.containsKey("rotate")) {
+                    treasure["rotate"] as Boolean
+                } else false
             // println("${treasure["type"]} - $position  - $rotate: ")
             // println("${treasure["type"]}: (${(treasure["type"]) == "Old stinking boot"})")
             // TODO this should be the actual enum types
