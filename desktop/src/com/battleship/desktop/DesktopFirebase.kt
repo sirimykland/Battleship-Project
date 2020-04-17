@@ -57,10 +57,6 @@ object DesktopFirebase : FirebaseController {
             field = value
         }
 
-    override fun detachListener() {
-        activeListener?.remove()
-    }
-
     /**
      * Get all the players registered in the database
      * @return a map containing user id and username
@@ -258,7 +254,7 @@ object DesktopFirebase : FirebaseController {
                     treasures[GSM.activeGame!!.opponent.playerId]?.let {
                         GSM.activeGame!!.opponent.board.setTreasuresList(it)
                     }
-                    GSM.activeGame!!.isGameReady()
+                    GSM.activeGame!!.setGameReadyifReady()
                 }
             // }
         } else {
@@ -337,12 +333,21 @@ object DesktopFirebase : FirebaseController {
                             // Get the field containing the treasures in the database
                             val treasures = snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
                             // If there is not enough treasures registered
-                            if (treasures.size <= 2 && GSM.activeGame!!.playersRegistered()) {
-                                println("addGameListener:" + "Treasures not registered")
+                            if (treasures.size < 2 && GSM.activeGame!!.isplayersRegistered()) {
+                                println("addGameListener: Treasures not registered")
+                                println("Size: " + treasures.size + " TESTING")
                                 getTreasures(gameId)
                             }
-                            if (treasures.size == 2) {
-                                detachListener()
+                            // If there is enough treasures registered in firebase but not in opponents board
+                            else if (treasures.size == 2 && !GSM.activeGame!!.isTreasuresRegistered()) {
+                                val OplayerId = GSM.activeGame!!.opponent.playerId
+                                if (OplayerId in treasures) {
+                                    treasures[OplayerId]?.let {
+                                        GSM.activeGame!!.opponent.board.setTreasuresList(it)
+                                    }
+                                    GSM.activeGame!!.setGameReadyifReady()
+                                }
+                            } else {
                                 addPlayListener(gameId)
                             }
                         }
@@ -369,32 +374,36 @@ object DesktopFirebase : FirebaseController {
                 }
                 println("addPlayListener: MOVE LISTENER:")
                 if (snapshot != null && snapshot.exists()) {
-                    // Get the list of moves
-                    val moves = snapshot.data?.get("moves") as MutableList<Map<String, Any>>
+                    println("addPlayListener: Game data: ${snapshot.data}")
+
+                    var moves = mutableListOf<Map<String, Any>>()
+                    if (snapshot.data?.get("moves") != null) {
+                        moves =
+                                snapshot.data?.get("moves") as MutableList<Map<String, Any>>
+                    }
 
                     val winner = snapshot.data?.get("winner")
                     // If a winner has been set
                     if (winner != "") {
                         println("addPlayListener: The winner is $winner")
-                        GSM.activeGame!!.winner = winner as String
-                        detachListener()
+                        // TODO: Call function that should be called when a winner is registered
+                        GSM.activeGame!!.winner = winner as String // or something
                     }
                     // If there is no winner, continue game
                     else {
                         // If no moves has been made yet
                         if (moves.size == 0) {
                             println("addPlayListener: No moves made yet")
+                            GSM.activeGame!!.setGameReadyifReady()
                         } else {
                             // Get the last move
                             val lastMove = moves.get(moves.size - 1)
-                            // If the last move is performed by opponent
                             val game = GSM.activeGame!!
                             if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                                println("Motstander hadde siste trekk - din tur")
-                                GSM.activeGame!!.switchTurn()
+                                println("----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
+                                GSM.activeGame!!.registerMove(lastMove)
                             } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
-                                println("Du hadde siste trekk, vent")
-                                GSM.activeGame!!.switchTurn()
+                                println("----------------------PLAYER LAST MOVE----------------------- " + lastMove)
                             }
                         }
                     }

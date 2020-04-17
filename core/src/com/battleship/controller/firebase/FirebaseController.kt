@@ -1,7 +1,6 @@
 package com.battleship.controller.firebase
 
 interface FirebaseController {
-    fun detachListener()
     fun getPlayers()
     fun addPlayer(username: String)
     fun createGame(userId: String)
