@@ -440,7 +440,7 @@ object AndroidFirebase : FirebaseController {
                                         if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
                                             Log.d("addGameListener", "Opponent made the last move")
                                             //GSM.activeGame!!.switchTurn()
-                                            println("----------------------LAST MOVE----------------------- " + lastMove)
+                                            println("----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
                                             var equipment: Equipment? = null
                                             for (test in GSM.activeGame!!.opponent.equipmentSet.equipments) {
                                                 if (test.name == lastMove["weapon"]) {
@@ -456,7 +456,7 @@ object AndroidFirebase : FirebaseController {
                                                 equipment!!
                                             )
                                         } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
-                                            println("----------------------LAST MOVE----------------------- " + lastMove)
+                                            println("----------------------PLAYER LAST MOVE----------------------- " + lastMove)
                                             Log.d("addGameListener", "You made the last move")
                                             //GSM.activeGame!!.switchTurn()
 
@@ -468,7 +468,7 @@ object AndroidFirebase : FirebaseController {
                         }
                     }
                 }
-            } else {
+            } else
                 Log.d("addGameListener", "no data")
                 // TODO: Error handling when the game object is found, but there is no data in it
             }
