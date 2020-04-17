@@ -2,16 +2,12 @@ package com.battleship.controller.state
 
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
-import com.battleship.model.ui.Background
-import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
-import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
-import java.lang.IllegalStateException
 
 class MatchmakingState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
