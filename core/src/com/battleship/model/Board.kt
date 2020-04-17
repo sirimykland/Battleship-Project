@@ -117,6 +117,16 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
+    fun revealBoard() {
+        tiles.forEachIndexed { i, arrayOfTiles ->
+            arrayOfTiles.forEachIndexed { j, tile ->
+                if (tile != Tile.HIT) {
+                    setTile(Vector2(i.toFloat(), j.toFloat()), Tile.MISS)
+                }
+            }
+        }
+    }
+
     fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): Boolean {
         val xSearchMin = boardTouchPos.x.toInt() - equipment.searchRadius
         val xSearchMax = boardTouchPos.x.toInt() + equipment.searchRadius + 1

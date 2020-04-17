@@ -45,7 +45,8 @@ class Game(val gameId: String) {
     fun makeMove(pos: Vector2) {
         if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
             val missed = opponent.board.shootTiles(pos, player.equipmentSet.activeEquipment!!)
-            handleResultFromMove(missed)
+            switchTurn(missed)
+            opponent.updateHealth()
         } else {
             println(player.equipmentSet.activeEquipment!!.name + " has No more uses")
         }
@@ -65,14 +66,11 @@ class Game(val gameId: String) {
             )
 
             val missed = player.board.shootTiles(pos, equipment)
-            handleResultFromMove(missed)
+            switchTurn(missed)
+            player.updateHealth()
         } else {
             println(opponent.equipmentSet.activeEquipment!!.name + " has No more uses")
         }
-    }
-
-    fun switchTurn() {
-        playerTurn = !playerTurn
     }
 
     fun isPlayersTurn(): Boolean {
@@ -93,9 +91,11 @@ class Game(val gameId: String) {
         println("treasures: o:" + (opponent.board.treasures) + " and m:" + (this.player.board.treasures))
     }
 
-    fun setGameReadyifReady() {
-        if (isplayersRegistered() && isTreasuresRegistered()) {
+    fun setGameReadyIfReady() {
+        if (isPlayersRegistered() && isTreasuresRegistered()) {
             gameReady = true
+            player.updateHealth()
+            opponent.updateHealth()
         }
     }
 
@@ -105,19 +105,34 @@ class Game(val gameId: String) {
         return ready
     }
 
-    fun isplayersRegistered(): Boolean {
+    fun isPlayersRegistered(): Boolean {
         val ready = player.playerId != "" && opponent.playerId != ""
         println("isplayersRegistered: $ready")
         return ready
     }
 
-    private fun handleResultFromMove(nextMove: Boolean) {
-        if (nextMove) {
-            switchTurn()
+    private fun switchTurn(switch: Boolean) {
+        if (switch) {
+            playerTurn = !playerTurn
             Timer().schedule(1000) {
                 newTurn = true
             }
         }
+    }
+
+    fun winner(): Boolean {
+        if (player.health == 0) {
+            println("opponent won")
+            player.board.revealBoard()
+            winner = opponent.playerName
+            return true
+        } else if (opponent.health == 0) {
+            println("player won")
+            opponent.board.revealBoard()
+            winner = player.playerName
+            return true
+        }
+        return false
     }
 
     override fun toString(): String {

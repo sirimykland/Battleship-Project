@@ -45,6 +45,18 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
         }
     )
+
+    private val leaveGameButton = GUI.textButton(
+        5f,
+        2f,
+        90f,
+        10f,
+        "Leave game",
+        onClick = {
+            GSM.set(MainMenuState(controller))
+        }
+    )
+
     private val opponentsBoardText = GUI.textBox(
         5f,
         2f,
@@ -57,14 +69,13 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     )
 
     override val guiObjects: List<GuiObject> = listOf(
-        *equipmentButtons, header, switchBoardButton, opponentsBoardText
+        *equipmentButtons, header, switchBoardButton, opponentsBoardText, leaveGameButton
     )
 
     override fun create() {
         super.create()
         print("---PLAYSTATE---")
-
-        // controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
+        leaveGameButton.hide()
     }
 
     override fun render() {
@@ -75,26 +86,22 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     }
 
     override fun update(dt: Float) {
-        updateBoardSwitching()
-        handleInput()
-        updateGUIObjects()
-        updateHealth()
+        if(GSM.activeGame!!.winner == ""){
+            updateGUIObjects()
+            handleInput()
+            updateBoardSwitching()
+            updateWinner()
+        }
     }
 
-    private fun updateHealth() {
-        player.updateHealth()
-        GSM.activeGame!!.opponent.updateHealth()
-        /*
-        if (player.health == 0) {
-            println("Opponent won!")
-            GSM.set(GameOverState(controller, false))
-        } else if (GSM.activeGame!!.opponent.health == 0) {
-            println("You won!")
-            controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
-            GSM.set(GameOverState(controller, true))
+    private fun updateWinner() {
+        if (GSM.activeGame!!.winner()) {
+            header.set(Text(GSM.activeGame!!.winner + " won!"))
+            for (btn in equipmentButtons) {
+                btn.hide()
+            }
+            leaveGameButton.show()
         }
-
-         */
     }
 
     private fun handleInput() {
