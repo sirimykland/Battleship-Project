@@ -129,6 +129,7 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
             usernameElement
                 .set(Text(GSM.username, Font.TINY_BLACK))
                 .noClick()
+            selectUsernameCallback = true
         }
         super.resume()
     }
