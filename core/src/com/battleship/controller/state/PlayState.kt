@@ -123,7 +123,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         }
     }
 
-    private fun updateBoardSwitching(){
+    private fun updateBoardSwitching() {
         // Auto switching of boards
         if (GSM.activeGame!!.isPlayersTurn() && GSM.activeGame!!.playerBoard && GSM.activeGame!!.newTurn) {
             GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
@@ -163,8 +163,6 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         } else {
             header.set(Text("Waiting for opponent's move..."))
         }
-
-
     }
 
     private fun joinEquipmentButton(
