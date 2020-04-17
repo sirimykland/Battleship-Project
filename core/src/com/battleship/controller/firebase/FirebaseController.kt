@@ -13,4 +13,5 @@ interface FirebaseController {
     fun makeMove(gameId: String, x: Int, y: Int, playerId: String, weapon: String)
     fun setWinner(userId: String, gameId: String)
     fun addGameListener(gameId: String, playerId: String)
+    fun addPlayListener(gameId: String)
 }

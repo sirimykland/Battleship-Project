@@ -5,10 +5,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
-import com.battleship.model.Board.Result
 import com.battleship.model.Player
-import com.battleship.model.equipment.Equipment
-import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -22,18 +19,10 @@ import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
 import com.battleship.utility.Palette
 import com.battleship.view.PlayView
 import com.battleship.view.View
-import java.util.Timer
-import kotlin.concurrent.schedule
 
 class PlayState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
-    // private var boardSize = 10
-    private var player: Player = GSM.activeGame!!.me
-    // private var opponent: Player = Player(boardSize)
-    private var playerBoard: Boolean = false
-    private var playerTurn: Boolean = true
-    private var newTurn: Boolean = false
-    private var sound = SoundEffects()
+    private var player: Player = GSM.activeGame!!.player
 
     private val header = GUI.header("Your turn")
 
@@ -53,7 +42,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         8f,
         "icons/swap_horiz_white.png",
         onClick = {
-            playerBoard = !playerBoard
+            GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
         }
     )
     private val opponentsBoardText = GUI.textBox(
@@ -74,23 +63,19 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     override fun create() {
         super.create()
         print("---PLAYSTATE---")
-    }
 
-    private fun headerText(): String {
-        if (GSM.activeGame!!.opponent.playerId == "") return "Waiting for opponent..."
-        else if (GSM.activeGame!!.isMyTurn()) return (GSM.activeGame!!.opponent.playerName + "'s Board")
-        return "Waiting for opponents turn"
+        // controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
     }
 
     override fun render() {
-        this.view.render(
-                GUI.header(headerText()),
-                *guiObjects.toTypedArray(),
-                GSM.activeGame!!.opponent.board,
-                GSM.activeGame!!.me.equipmentSet)
+        view.render(
+            *guiObjects.toTypedArray(),
+            if (GSM.activeGame!!.playerBoard) GSM.activeGame!!.player.board else GSM.activeGame!!.opponent.board
+        )
     }
 
     override fun update(dt: Float) {
+        updateBoardSwitching()
         handleInput()
         updateGUIObjects()
         updateHealth()
@@ -99,6 +84,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     private fun updateHealth() {
         player.updateHealth()
         GSM.activeGame!!.opponent.updateHealth()
+        /*
         if (player.health == 0) {
             println("Opponent won!")
             GSM.set(GameOverState(controller, false))
@@ -107,10 +93,13 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
             GSM.set(GameOverState(controller, true))
         }
+
+         */
     }
 
     private fun handleInput() {
-        if (GSM.activeGame!!.isMyTurn()) {
+        // Check if it is players turn and opponents board is showing.
+        if (GSM.activeGame!!.isPlayersTurn() && !GSM.activeGame!!.playerBoard) {
             if (Gdx.input.justTouched()) {
                 val touchX = Gdx.input.x.toFloat()
                 val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()
@@ -121,56 +110,27 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
                 if (boardBounds.contains(touchPos)) {
                     val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
-                    if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        val result = GSM.activeGame!!.opponent.board.shootTiles(
-                            boardTouchPos,
-                            player.equipmentSet.activeEquipment!!
-                        )
-                        handleResultFromMove(result, player.equipmentSet.activeEquipment!!)
-                    } else {
-                        println("Has no more uses")
-                    }
-                }
-                // TODO remove else if. Handles opponent's moves
-                else if (!playerTurn && playerBoard && GSM.activeGame!!.opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                    if (GSM.activeGame!!.opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
-                        val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
-                        val result = player.board.shootTiles(
-                            boardTouchPos,
-                                GSM.activeGame!!.opponent.equipmentSet.activeEquipment!!
-                        )
-                        handleResultFromMove(result, GSM.activeGame!!.opponent.equipmentSet.activeEquipment!!)
-                    } else {
-                        println("Has no more uses")
-                    }
+                    controller.makeMove(
+                        GSM.activeGame!!.gameId,
+                        boardTouchPos.x.toInt(),
+                        boardTouchPos.y.toInt(),
+                        GSM.activeGame!!.player.playerId,
+                        GSM.activeGame!!.player.equipmentSet.activeEquipment!!.name
+                    )
+                    GSM.activeGame!!.makeMove(boardTouchPos)
                 }
             }
         }
     }
 
-    private fun handleResultFromMove(resultList: ArrayList<Result>, equipment: Equipment) {
-        when {
-            resultList.contains(Result.FOUND) -> {
-                println("Found")
-                equipment.use()
-            }
-            resultList.contains(Result.HIT) -> {
-                println("Hit")
-                equipment.use()
-                sound.playHit(0.8f)
-            }
-            resultList.all { n -> n == Result.NOT_VALID } -> {
-                println("Not valid, try again")
-            }
-            else -> {
-                println("Missed")
-                equipment.use()
-                equipment.playSound(0.8f)
-                playerTurn = !playerTurn
-                Timer().schedule(2000) {
-                    newTurn = true
-                }
-            }
+    private fun updateBoardSwitching() {
+        // Auto switching of boards
+        if (GSM.activeGame!!.isPlayersTurn() && GSM.activeGame!!.playerBoard && GSM.activeGame!!.newTurn) {
+            GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
+            GSM.activeGame!!.newTurn = false
+        } else if (!GSM.activeGame!!.isPlayersTurn() && !GSM.activeGame!!.playerBoard && GSM.activeGame!!.newTurn) {
+            GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
+            GSM.activeGame!!.newTurn = false
         }
     }
 
@@ -188,7 +148,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             }
 
             // Hides and shows equipment buttons and opponent's board text
-            if (playerBoard) {
+            if (GSM.activeGame!!.playerBoard) {
                 button.hide()
                 opponentsBoardText.show()
             } else {
@@ -198,19 +158,10 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         }
 
         // Updates header text
-        if (playerTurn) {
+        if (GSM.activeGame!!.isPlayersTurn()) {
             header.set(Text("Your turn"))
         } else {
             header.set(Text("Waiting for opponent's move..."))
-        }
-
-        // Auto switching of boards
-        if (playerTurn && playerBoard && newTurn) {
-            playerBoard = !playerBoard
-            newTurn = false
-        } else if (!playerTurn && !playerBoard && newTurn) {
-            playerBoard = !playerBoard
-            newTurn = false
         }
     }
 
