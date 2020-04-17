@@ -64,7 +64,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         super.create()
         print("---PLAYSTATE---")
 
-        //controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
+        // controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
     }
 
     override fun render() {
