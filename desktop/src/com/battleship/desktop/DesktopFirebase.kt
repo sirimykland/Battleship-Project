@@ -390,11 +390,11 @@ object DesktopFirebase : FirebaseController {
                             // If the last move is performed by opponent
                             val game = GSM.activeGame!!
                             if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                                println("addPlayListener: Motstander hadde siste trekk - din tur")
-                                GSM.activeGame!!.flipPlayer()
-                            } else if (lastMove["playerId"]!!.equals(game.me.playerId)) {
-                                println("addPlayListener: Du hadde siste trekk, vent")
-                                GSM.activeGame!!.flipPlayer()
+                                println("Motstander hadde siste trekk - din tur")
+                                GSM.activeGame!!.switchTurn()
+                            } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
+                                println("Du hadde siste trekk, vent")
+                                GSM.activeGame!!.switchTurn()
                             }
                         }
                     }
