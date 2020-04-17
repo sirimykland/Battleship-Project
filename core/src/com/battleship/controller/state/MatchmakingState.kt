@@ -19,6 +19,9 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
 
     private var page: Int = 0
 
+    // temp
+    private var selectUsernameCallback = false
+
     private val nextPageButton = GUI.textButton(
         70f,
         19f,
@@ -49,7 +52,8 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         "Create new game"
     ) {
         createGame()
-        GSM.set(PreGameState(controller))
+        // temporarily removed for bugfix in android
+        // GSM.set(PreGameState(controller))
     }
 
     private val refreshButton = GUI.imageButton(
@@ -125,7 +129,7 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
             updateButtons()
         }
         if (GSM.activeGame != null) GSM.set(PreGameState(controller))
-        if (GSM.userId != "") createGameButton.show()
+        if (GSM.username != "" && !selectUsernameCallback) createGameButton.show()
     }
 
     override fun render() {

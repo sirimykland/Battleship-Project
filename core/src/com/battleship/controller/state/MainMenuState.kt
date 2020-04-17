@@ -38,8 +38,6 @@ class MainMenuState(private val controller: FirebaseController) : GuiState(contr
     override var view: View = BasicView()
 
     override fun update(dt: Float) {
-        if (GSM.activeGame != null)
-            GSM.set(PreGameState(controller))
     }
 
     override fun render() {
