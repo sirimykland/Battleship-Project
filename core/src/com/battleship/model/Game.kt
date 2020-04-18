@@ -120,7 +120,7 @@ class Game(val gameId: String) {
         }
     }
 
-    fun hasWinner(): Boolean {
+    fun updateWinner(): Boolean {
         if (player.health == 0) {
             println("opponent won")
             player.board.revealBoard()

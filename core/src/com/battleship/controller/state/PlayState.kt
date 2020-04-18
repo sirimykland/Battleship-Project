@@ -86,21 +86,17 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     }
 
     override fun update(dt: Float) {
-        if(GSM.activeGame!!.winner == ""){
-            updateGUIObjects()
-            handleInput()
-            updateBoardSwitching()
-            updateWinner()
-        }
-    }
-
-    private fun updateWinner() {
-        if (GSM.activeGame!!.hasWinner()) {
+        if (GSM.activeGame!!.winner != "") {
             header.set(Text(GSM.activeGame!!.winner + " won!"))
             for (btn in equipmentButtons) {
                 btn.hide()
             }
             leaveGameButton.show()
+        } else {
+            updateGUIObjects()
+            handleInput()
+            updateBoardSwitching()
+            GSM.activeGame!!.updateWinner()
         }
     }
 
