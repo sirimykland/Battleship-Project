@@ -79,12 +79,13 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     override fun create() {
         super.create()
         updateButtons()
+        controller.addPendingGamesListener()
     }
 
     private fun updateButtons() {
-        controller.getPendingGames()
-        games = GSM.pendingGames
-        print(games)
+        // controller.getPendingGames()
+        // games = GSM.pendingGames
+        // print(games)
         val index = page * itemsPerPage
         var loading = true
         playerButtons.forEachIndexed { i, guiObject ->

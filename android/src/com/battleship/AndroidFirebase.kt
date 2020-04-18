@@ -18,14 +18,14 @@ object AndroidFirebase : FirebaseController {
         // Sign in as an anonymous user to authorize, don't know if runBlocking actually works
         runBlocking {
             auth.signInAnonymously()
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d("Login", "signInAnonymously successful")
-                        } else {
-                            // TODO: Handle exception, when this occurs you cannot access firebase
-                            Log.w("Login", "signInAnonymously failed", task.exception)
-                        }
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("Login", "signInAnonymously successful")
+                    } else {
+                        // TODO: Handle exception, when this occurs you cannot access firebase
+                        Log.w("Login", "signInAnonymously failed", task.exception)
                     }
+                }
         }
     }
 
@@ -43,16 +43,16 @@ object AndroidFirebase : FirebaseController {
     override fun getPlayers() {
         val playerMap = mutableMapOf<String, String?>()
         db.collection("users").get()
-                .addOnSuccessListener { documents ->
-                    for (document in documents) {
-                        Log.d("Player", "${document.id} => ${document.data}")
-                        playerMap[document.id] = document.getString("username")
-                    }
-                    // TODO IF USED IN APP: Add function here that stores players
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    Log.d("Player", "${document.id} => ${document.data}")
+                    playerMap[document.id] = document.getString("username")
                 }
-                .addOnFailureListener { exception ->
-                    Log.w("Player", "Error getting documents: ", exception)
-                }
+                // TODO IF USED IN APP: Add function here that stores players
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Player", "Error getting documents: ", exception)
+            }
     }
 
     /**
@@ -154,11 +154,76 @@ object AndroidFirebase : FirebaseController {
             }
     }
 
+    override fun addPendingGamesListener() {
+        val pendingGames = ArrayList<GameListObject>()
+        activeListener =
+            db.collection("games").whereEqualTo("player2", "").addSnapshotListener { documents, e ->
+                if (e != null) {
+                    Log.w("addPendingGamesListener", "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+                Log.d("addPendingGamesListener", "Found documents containing pending games")
+                var documentsCompleted = 0
+                for (doc in documents!!) {
+                    val playerId: String = doc.getString("player1") as String
+                    val gameId = doc.id
+                    if (playerId != "") {
+                        pendingGames.add(
+                            GameListObject(
+                                gameId,
+                                playerId,
+                                "Testname"
+                            )
+                        )
+                        documentsCompleted++
+                        if (documentsCompleted == documents.size()) {
+                            println("-------------------------------- " + pendingGames.toString())
+                            GSM.pendingGames = pendingGames
+                        }
+                        // This call get the username of the player registered under player1
+                        /*
+                        db.collection("users").document(playerId).get()
+                            .addOnSuccessListener { documentReference ->
+                                val username = documentReference.get("username")
+                                val gameId = doc.id
+                                Log.d(
+                                    "getPendingGames",
+                                    "game found with id=$gameId and " +
+                                        "user=$username"
+                                )
+                                if (username != null) {
+                                    pendingGames.add(
+                                        GameListObject(
+                                            gameId,
+                                            playerId,
+                                            username as String
+                                        )
+                                    )
+                                }
+                                documentsCompleted++
+                                if (documentsCompleted == documents.size()) {
+                                    println("-------------------------------- " + pendingGames.toString())
+                                    GSM.pendingGames = pendingGames
+                                }
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.w("getPendingGames", exception)
+                                // TODO: Add exception handling, could not find player
+                            }
+
+                         */
+                    }
+                }
+
+            }
+
+    }
+
     /**
      * Function getting all games where there is currently only one player
      */
+    /*
     override fun getPendingGames() {
-
         val pendingGames = ArrayList<GameListObject>()
         //  This call get all games where no player2 i registered
         db.collection("games").whereEqualTo("player2", "").get()
@@ -208,6 +273,8 @@ object AndroidFirebase : FirebaseController {
                 // TODO: Add exception handling, could not find games
             }
     }
+
+     */
 
     /**
      * Add userId to a specific game
@@ -456,7 +523,7 @@ object AndroidFirebase : FirebaseController {
                 var moves = mutableListOf<Map<String, Any>>()
                 if (snapshot.data?.get("moves") != null) {
                     moves =
-                            snapshot.data?.get("moves") as MutableList<Map<String, Any>>
+                        snapshot.data?.get("moves") as MutableList<Map<String, Any>>
                 }
 
                 val winner = snapshot.data?.get("winner")
@@ -486,7 +553,7 @@ object AndroidFirebase : FirebaseController {
                 }
             } else
                 Log.d("addPlayListener", "no data")
-                // TODO: Error handling when the game object is found, but there is no data in it
+            // TODO: Error handling when the game object is found, but there is no data in it
         }
     }
 }
