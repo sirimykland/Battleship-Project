@@ -6,7 +6,7 @@ import com.battleship.model.equipment.Equipment
 import java.util.Timer
 import kotlin.concurrent.schedule
 
-class Game(val gameId: String) {
+class Game(val gameId: String) : GameObject() {
     var winner: String = ""
     var player: Player = Player()
     var opponent: Player = Player()
@@ -123,14 +123,13 @@ class Game(val gameId: String) {
     fun updateWinner(): Boolean {
         if (player.health == 0) {
             println("opponent won")
-            player.board.revealBoard()
+            //player.board.revealBoard()
             winner = opponent.playerName
             return true
         } else if (opponent.health == 0) {
             println("player won")
-            opponent.board.revealBoard()
+            //opponent.board.revealBoard()
             winner = player.playerName
-
             return true
         }
         return false
