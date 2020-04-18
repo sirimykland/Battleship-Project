@@ -69,8 +69,15 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         borderColor = Palette.DARK_GREY
     )
 
+    private val gameOverDialog = GUI.dialog(
+            "Some text",
+            listOf(
+                    Pair("Main menu", { GSM.set(MainMenuState(controller)) }),
+                    Pair("Play again", { GSM.set(MatchmakingState(controller)) }))
+    )
+
     override val guiObjects: List<GuiObject> = listOf(
-        *equipmentButtons, header, switchBoardButton, opponentsBoardText, leaveGameButton
+        *equipmentButtons, header, switchBoardButton, opponentsBoardText, *gameOverDialog, leaveGameButton
     )
 
     override fun create() {

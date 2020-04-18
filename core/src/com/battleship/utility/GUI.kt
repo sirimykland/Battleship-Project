@@ -126,4 +126,26 @@ object GUI {
             .with(Image(texturePath))
             .onClick(onClick)
     }
+
+    fun dialog(
+        text: String,
+        buttons: List<Pair<String, () -> Unit>>
+    ): Array<GuiObject> {
+        val dialogComponents = ArrayList<GuiObject>()
+        dialogComponents.add(textBox(10f, 40f, 80f, 20f, text)
+                .hide())
+
+        val number = buttons.size
+        buttons.forEachIndexed { index, btn ->
+            dialogComponents.add(
+                    GuiObject(10f + (80f / number) * index, 30f, 80f / number, 10f)
+                            .with(Background(Palette.LIGHT_GREY))
+                            .with(Border(Palette.BLACK))
+                            .with(Text(btn.first, Font.MEDIUM_BLACK))
+                            .onClick(btn.second)
+                            .hide()
+                            )
+        }
+        return dialogComponents.toTypedArray()
+    }
 }
