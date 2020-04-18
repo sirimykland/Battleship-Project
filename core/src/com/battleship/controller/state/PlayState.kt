@@ -43,9 +43,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         8f,
         8f,
         "icons/swap_horiz_white.png",
-        onClick = {
-            GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
-        }
+        onClick = { GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard }
     )
 
     private val mainMenuButton = GUI.textButton(
@@ -137,6 +135,8 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         } else if(gameOver && GSM.activeGame!!.playerBoard) {
             header.set(Text("Your board"))
         }
+        println("Active game: ${GSM.activeGame}")
+        println("Active game board: ${GSM.activeGame!!.playerBoard}")
     }
 
     private fun handleInput() {
