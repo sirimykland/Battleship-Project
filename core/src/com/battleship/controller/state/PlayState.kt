@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Player
+import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -23,6 +24,7 @@ import com.battleship.view.View
 class PlayState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     private var player: Player = GSM.activeGame!!.player
+    private var sound = SoundEffects()
 
     private val header = GUI.header("Your turn")
 
@@ -87,9 +89,11 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         /*
         if (player.health == 0) {
             println("Opponent won!")
+            sound.playLosing(1.0f)
             GSM.set(GameOverState(controller, false))
         } else if (GSM.activeGame!!.opponent.health == 0) {
             println("You won!")
+            sound.playVictory(1.0f)
             controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
             GSM.set(GameOverState(controller, true))
         }
