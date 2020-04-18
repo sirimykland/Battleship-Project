@@ -95,7 +95,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     }
 
     private fun updateWinner() {
-        if (GSM.activeGame!!.winner()) {
+        if (GSM.activeGame!!.hasWinner()) {
             header.set(Text(GSM.activeGame!!.winner + " won!"))
             for (btn in equipmentButtons) {
                 btn.hide()
