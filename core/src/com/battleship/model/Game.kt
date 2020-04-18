@@ -130,6 +130,7 @@ class Game(val gameId: String) {
             println("player won")
             opponent.board.revealBoard()
             winner = player.playerName
+
             return true
         }
         return false

@@ -52,10 +52,11 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         90f,
         10f,
         "Leave game",
+        font = Font.MEDIUM_BLACK,
         onClick = {
             GSM.set(MainMenuState(controller))
         }
-    )
+    ).hide()
 
     private val opponentsBoardText = GUI.textBox(
         5f,
@@ -75,7 +76,6 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     override fun create() {
         super.create()
         print("---PLAYSTATE---")
-        leaveGameButton.hide()
     }
 
     override fun render() {
@@ -92,6 +92,8 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
                 btn.hide()
             }
             leaveGameButton.show()
+            // Save winner to Firebase
+            controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
         } else {
             updateGUIObjects()
             handleInput()

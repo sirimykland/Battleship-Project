@@ -80,7 +80,7 @@ class Board(val size: Int) : GameObject() {
             for (value in row) {
                 if (value == Tile.PREGAME) {
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
-                    Gdx.gl.glLineWidth(3f)
+                    Gdx.gl.glLineWidth(5f)
                     shapeRenderer.color = Color.DARK_GRAY
                     shapeRenderer.rect(x, y, tileSize, tileSize)
                     shapeRenderer.end()
