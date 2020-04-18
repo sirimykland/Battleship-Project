@@ -56,15 +56,20 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         borderColor = Palette.DARK_GREY
     )
 
+    private val gameOverDialog = GUI.dialog(
+            "Some text",
+            listOf(
+                    Pair("Main menu", { GSM.set(MainMenuState(controller)) }),
+                    Pair("Play again", { GSM.set(MatchmakingState(controller)) }))
+    )
+
     override val guiObjects: List<GuiObject> = listOf(
-        *equipmentButtons, header, switchBoardButton, opponentsBoardText
+        *equipmentButtons, header, switchBoardButton, opponentsBoardText, *gameOverDialog
     )
 
     override fun create() {
         super.create()
         print("---PLAYSTATE---")
-
-        // controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
     }
 
     override fun render() {
@@ -84,17 +89,17 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     private fun updateHealth() {
         player.updateHealth()
         GSM.activeGame!!.opponent.updateHealth()
-        /*
+
         if (player.health == 0) {
-            println("Opponent won!")
-            GSM.set(GameOverState(controller, false))
+            controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
         } else if (GSM.activeGame!!.opponent.health == 0) {
             println("You won!")
             controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
             GSM.set(GameOverState(controller, true))
+            gameOverDialog.forEachIndexed { index, guiObject ->
+                guiObject.show()
+            }
         }
-
-         */
     }
 
     private fun handleInput() {
