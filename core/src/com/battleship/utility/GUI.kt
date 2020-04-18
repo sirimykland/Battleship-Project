@@ -143,7 +143,8 @@ object GUI {
                             .with(Border(Palette.BLACK))
                             .with(Text(btn.first, Font.MEDIUM_BLACK))
                             .onClick(btn.second)
-                            .hide())
+                            .hide()
+                            )
         }
         return dialogComponents.toTypedArray()
     }
