@@ -100,6 +100,6 @@ abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject
     }
 
     override fun toString(): String {
-        return "Ship(pos=$position, rotate=$rotate, name='$name')"
+        return "Treasure(pos=$position, rotate=$rotate, name='$name')"
     }
 }

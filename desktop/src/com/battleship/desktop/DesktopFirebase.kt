@@ -220,7 +220,7 @@ object DesktopFirebase : FirebaseController {
         val game = query.get()
 
         if (game.exists()) {
-            val player2Id: String = game.get("player2") as String
+            val player2Id: String = game.get("player2Id") as String
 
             GSM.activeGame!!.opponent.playerId = player2Id
             GSM.activeGame!!.opponent.playerName = db.collection("users").document(player2Id).get().get().get("username").toString()
@@ -297,7 +297,6 @@ object DesktopFirebase : FirebaseController {
 
     /**
      * Function adding listener to a specific game
-     * TODO: Replace println with functionality connected to the cases
      * TODO: Add exception handling
      * @param gameId the id of the game document
      * @param playerId the id of the player
@@ -313,45 +312,36 @@ object DesktopFirebase : FirebaseController {
                     System.err.println("Listen failed: $e")
                     return
                 }
-                println("addGameListener: Listening ...")
+
                 if (snapshot != null && snapshot.exists()) {
-                    val opponent = snapshot.data?.get("player2")
+                    val player2Id = snapshot.data?.get("player2Id") as String
                     // If no opponent has joined yet
-                    if (opponent == "") {
-                        println("addGameListener: Opponent not joined yet")
-                    }
-                    // If there is an opponent in the game
-                    else {
-                        println("addGameListener: opponent id $opponent")
-                        if (GSM.activeGame!!.opponent.playerId == "") {
-                            getOpponent(gameId)
-                        } else {
-                            // Get the field containing the treasures in the database
-                            val treasures = snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
-                            // If there is not enough treasures registered
-                            if (treasures.size < 2 && GSM.activeGame!!.isplayersRegistered()) {
-                                println("addGameListener: Treasures not registered")
-                                println("Size: " + treasures.size + " TESTING")
-                                getTreasures(gameId)
-                            }
-                            // If there is enough treasures registered in firebase but not in opponents board
-                            else if (treasures.size == 2 && !GSM.activeGame!!.isTreasuresRegistered()) {
-                                val OplayerId = GSM.activeGame!!.opponent.playerId
-                                if (OplayerId in treasures) {
-                                    treasures[OplayerId]?.let {
-                                        GSM.activeGame!!.opponent.board.setTreasuresList(it)
+                    if (player2Id != "") {
+                        val game = GSM.activeGame!!
+                        if (game.opponent.playerId == "") {
+                            val player2Name = snapshot.data?.get("player2Name") as String
+                            game.opponent = Player(player2Id, player2Name)
+                        }
+                        // Get the field containing the treasures in the database
+                        val treasures =
+                            snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>?
+                        if (treasures != null) {
+                            println("$player2Id, ${treasures.keys}")
+                            if (player2Id in treasures.keys) {
+                                treasures[player2Id]?.let {
+                                    Gdx.app.postRunnable {
+                                        game.opponent.board.setTreasuresList(it)
                                     }
-                                    GSM.activeGame!!.setGameReadyifReady()
                                 }
-                            } else {
+                                game.setGameReadyifReady()
+                            }
+                            game.setGameReadyifReady()
+                            if (game.gameReady) {
                                 addPlayListener(gameId)
                             }
                         }
+                        game.setGameReadyifReady()
                     }
-                }
-                // If no data is found
-                else {
-                    print("Current data: null")
                 }
             }
         })

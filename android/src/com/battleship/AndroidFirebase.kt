@@ -259,7 +259,7 @@ object AndroidFirebase : FirebaseController {
                         GSM.activeGame!!.setGameReadyifReady()
                     } else {
                         // Get the field containing the treasures in the database
-                        var treasures: MutableMap<String, List<Map<String, Any>>>
+                        val treasures: MutableMap<String, List<Map<String, Any>>>
                         if (snapshot.data?.get("treasures") != null) {
                             treasures =
                                 snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>

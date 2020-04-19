@@ -225,33 +225,28 @@ class Board(val size: Int) : GameObject() {
      */
     fun setTreasuresList(treasuresList: List<Map<String, Any>>) {
         val newTreasures = ArrayList<Treasure>()
-        lateinit var newTreasure: Treasure
-        lateinit var position: Vector2
-        var rotate = true
 
-        for (treasure in treasuresList.toMutableList()) {
-            position = Vector2(
+        for (treasure in treasuresList) {
+            val position = Vector2(
                 (treasure["x"] as Number).toFloat(),
                 (treasure["y"] as Number).toFloat()
             )
-            rotate =
+            val rotate =
                 if (treasure.containsKey("rotate")) {
                     treasure["rotate"] as Boolean
                 } else false
-
-            if (treasure.containsKey("rotate")) {
-                treasure["rotate"] as Boolean
-            } else false
-            // println("${treasure["type"]} - $position  - $rotate: ")
-            // println("${treasure["type"]}: (${(treasure["type"]) == "Old stinking boot"})")
             // TODO this should be the actual enum types
-            newTreasure = when (TreasureType.valueOf(treasure["type"] as String)) {
-                TreasureType.GOLDCOIN ->
+            val type = treasure["type"] as String
+            val newTreasure = when (TreasureType.valueOf(type)) {
+                TreasureType.GOLDCOIN -> {
                     GoldCoin(position, rotate)
-                TreasureType.TREASURECHEST ->
-                    TreasureChest(position, rotate)
-                TreasureType.GOLDKEY ->
+                }
+                TreasureType.GOLDKEY -> {
                     GoldKey(position, rotate)
+                }
+                TreasureType.TREASURECHEST -> {
+                    TreasureChest(position, rotate)
+                }
             }
             newTreasures.add(newTreasure)
         }

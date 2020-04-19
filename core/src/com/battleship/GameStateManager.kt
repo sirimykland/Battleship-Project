@@ -35,6 +35,7 @@ object GameStateManager {
     }
 
     fun set(state: State) {
+        println("setting ${state.javaClass}")
         states.pop().dispose()
         states.push(state)
         create()
