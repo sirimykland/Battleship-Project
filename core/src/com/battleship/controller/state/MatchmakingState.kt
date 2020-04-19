@@ -12,7 +12,6 @@ import com.battleship.view.View
 class MatchmakingState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private val itemsPerPage = 7
-    var games = GSM.pendingGames
 
     private val playerButtons: Array<GuiObject> =
         arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
@@ -83,15 +82,12 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     }
 
     private fun updateButtons() {
-        // controller.getPendingGames()
-        // games = GSM.pendingGames
-        // print(games)
         val index = page * itemsPerPage
         var loading = true
         playerButtons.forEachIndexed { i, guiObject ->
             val j = index + i
-            if (j < games.size) {
-                guiObject.set(Text("Join ${games[j].playerName}'s game", font = Font.MEDIUM_BLACK))
+            if (j < GSM.pendingGames.size) {
+                guiObject.set(Text("Join ${GSM.pendingGames[j].playerName}'s game", font = Font.MEDIUM_BLACK))
                 loading = false
                 guiObject.show()
             } else {
@@ -102,7 +98,7 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         if (loading) header.set(Text("Loading available opponents...", font = Font.MEDIUM_WHITE))
         else header.set(Text("Choose your opponent ${GSM.username}", font = Font.MEDIUM_WHITE))
 
-        if (index + itemsPerPage < games.size) nextPageButton.show() else nextPageButton.hide()
+        if (index + itemsPerPage < GSM.pendingGames.size) nextPageButton.show() else nextPageButton.hide()
         if (index > 0) previousPageButton.show() else previousPageButton.hide()
     }
 
@@ -115,20 +111,17 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
             "Loading user"
         ) {
             val i = (page * itemsPerPage) + index
-            if (GSM.userId !== "") controller.joinGame(GSM.pendingGames[i].gameId, GSM.userId)
+            if (GSM.userId !== "") controller.joinGame(GSM.pendingGames[i].gameId, GSM.userId, GSM.username)
         }
     }
 
     private fun createGame() {
-        if (GSM.userId !== "") controller.createGame(GSM.userId)
-        else print("Can't create game, user has not been created")
+        println("Create game pressed")
+        controller.createGame(GSM.userId, GSM.username)
     }
 
     override fun update(dt: Float) {
-        if (!games.containsAll(GSM.pendingGames)) { // O(n²) hver frame er kanskje mye å be om?
-            games = GSM.pendingGames
-            updateButtons()
-        }
+        updateButtons()
         if (GSM.activeGame != null) GSM.set(PreGameState(controller))
         if (GSM.username != "" && !selectUsernameCallback) createGameButton.show()
     }

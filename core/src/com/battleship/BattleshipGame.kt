@@ -20,7 +20,7 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
             music?.volume = 0.2f
             music?.play()
         }
-
+        controller.addPendingGamesListener()
         GSM.push(MainMenuState(controller))
     }
 

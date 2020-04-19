@@ -4,16 +4,22 @@ import com.battleship.controller.state.State
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import java.util.Stack
-import kotlin.collections.ArrayList
 
 object GameStateManager {
     var username = ""
-    var userId = ""
+    var userId = getRandomString(15)
     var activeGame: Game? = null
     var pendingGames = ArrayList<GameListObject>()
     var treasuresInitialized: Boolean = false
 
     private val states: Stack<State> = Stack()
+
+    private fun getRandomString(length: Int): String {
+        val allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        return (1..length)
+            .map { allowedChars.random() }
+            .joinToString("")
+    }
 
     fun push(state: State) {
         if (states.size > 0)

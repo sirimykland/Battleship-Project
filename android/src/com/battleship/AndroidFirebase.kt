@@ -13,6 +13,11 @@ import kotlinx.coroutines.runBlocking
 object AndroidFirebase : FirebaseController {
     private val db = FirebaseFirestore.getInstance()
     private var auth = FirebaseAuth.getInstance()
+    private var activeListener: ListenerRegistration? = null
+        set(value) {
+            field?.remove()
+            field = value
+        }
 
     init {
         // Sign in as an anonymous user to authorize, don't know if runBlocking actually works
@@ -29,65 +34,18 @@ object AndroidFirebase : FirebaseController {
         }
     }
 
-    private var activeListener: ListenerRegistration? = null
-        set(value) {
-            field?.remove()
-            field = value
-        }
-
-    /**
-     * NOT USED IN THE ACTUAL APP, CAN BE REMOVED
-     * Get all the players registered in the database
-     * @return a map containing user id and username
-     */
-    override fun getPlayers() {
-        val playerMap = mutableMapOf<String, String?>()
-        db.collection("users").get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    Log.d("Player", "${document.id} => ${document.data}")
-                    playerMap[document.id] = document.getString("username")
-                }
-                // TODO IF USED IN APP: Add function here that stores players
-            }
-            .addOnFailureListener { exception ->
-                Log.w("Player", "Error getting documents: ", exception)
-            }
-    }
-
-    /**
-     * Register new player in the db
-     * @param username the username wanted
-     */
-    override fun addPlayer(username: String) {
-        // Add the data to a Map for pushing to db
-        val data = mutableMapOf<String, Any>()
-        data["username"] = username
-
-        // Push to db
-        db.collection("users").add(data)
-            .addOnSuccessListener { documentReference ->
-                val userId = documentReference.id
-                Log.d("addPlayer", "player added with id=$userId")
-                // TODO: Call some function that saves player id for later use
-                GSM.userId = userId
-                GSM.username = username
-            }
-            .addOnFailureListener { exception ->
-                Log.w("addPlayer", exception)
-                // TODO: Add exception handling
-            }
-    }
-
     /**
      * Start new game
      * @param userId the id of the user setting up the game
+     * @param userName the name of the user setting up the game
      */
-    override fun createGame(userId: String) {
+    override fun createGame(userId: String, userName: String) {
         // Set up game data
         val data = mutableMapOf<String, Any>()
-        data["player1"] = userId
-        data["player2"] = ""
+        data["player1Id"] = userId
+        data["player1Name"] = userName
+        data["player2Id"] = ""
+        data["player2Name"] = ""
         data["winner"] = ""
         data["moves"] = mutableListOf<Map<String, Any>>()
         data["treasures"] = mutableMapOf<String, List<Map<String, Any>>>()
@@ -96,7 +54,9 @@ object AndroidFirebase : FirebaseController {
             .addOnSuccessListener { documentReference ->
                 val gameId = documentReference.id
                 Log.d("createGame", "created game with id=$gameId")
-                setGame(gameId)
+                GSM.activeGame = Game(gameId)
+                val player1 = Player(userId, userName)
+                GSM.activeGame!!.setPlayers(player1, Player())
             }
             .addOnFailureListener { exception ->
                 Log.w("createGame", exception)
@@ -105,194 +65,75 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * Get the treasures in a game
-     * @param gameId the id of the game
-     * @return a map containing a list of treasures per user
-     * @return a Game object containing game and player
+     * Add userId to a specific game
+     * @param gameId the id of the game document
+     * @param userId the id of the user that should be added
+     * @param userId the name of the user that should be added
      */
-    override fun setGame(gameId: String) {
+    override fun joinGame(gameId: String, userId: String, userName: String) {
+        // Add the data to the game document
         GSM.activeGame = Game(gameId)
-        db.collection("games").document(gameId).get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    Log.d("setGame", "game set with id=${document.id}")
-                    val player1Id: String = document.getString("player1") as String
-                    val player1: Player = Player(player1Id, "Unknown")
 
-                    val player2Id: String = document.getString("player2") as String
-                    val player2: Player =
-                        if (player2Id != "")
-                            Player(player2Id, "Unknown")
-                        else Player()
-                    GSM.activeGame!!.setPlayers(player1, player2)
+        val docRef = db.collection("games").document(gameId)
+        db.runBatch { batch ->
+            batch.update(docRef, "player2Id", userId)
+            batch.update(docRef, "player2Name", userName)
+        }.addOnSuccessListener {
+            Log.d("joinGame", "Updated successfully")
+            db.collection("games").document(gameId).get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        Log.d("joinGame", "game set with id=${document.id}")
+                        val player1Id: String = document.getString("player1Id") as String
+                        val player1Name: String = document.getString("player1Name") as String
+                        val player1: Player = Player(player1Id, player1Name)
 
-                    for (p in listOf(GSM.activeGame!!.player, GSM.activeGame!!.opponent)) {
-                        if (p.playerId != "") {
-                            // This call get the username of the player registered under player1
-                            db.collection("users").document(p.playerId).get()
-                                .addOnSuccessListener { documentReference ->
-                                    val username = documentReference.get("username")
-                                    Log.d(
-                                        "setGame",
-                                        "user set with id=${p.playerId} and " + "user=$username"
-                                    )
-                                    if (username != null) {
-                                        p.playerName = username as String
-                                    }
-                                }
-                                .addOnFailureListener { exception ->
-                                    Log.w("setGame", exception)
-                                    // TODO: Add exception handling, could not find player
-                                }
-                        }
+                        val player2Id: String = document.getString("player2Id") as String
+                        val player2Name: String = document.getString("player2Name") as String
+                        val player2: Player =
+                            if (player2Id != "" && player2Name != "")
+                                Player(player2Id, player2Name)
+                            else Player()
+                        GSM.activeGame!!.setPlayers(player1, player2)
                     }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("setGame", exception)
-                // TODO: Add exception handling, could not find games
-            }
+                .addOnFailureListener { exception ->
+                    Log.w("setGame", exception)
+                    // TODO: Add exception handling, could not find games
+                }
+        }.addOnFailureListener { exception ->
+            Log.w("joinGame", exception)
+            // TODO: Add exception handling
+        }
     }
 
     override fun addPendingGamesListener() {
         val pendingGames = ArrayList<GameListObject>()
         activeListener =
-            db.collection("games").whereEqualTo("player2", "").addSnapshotListener { documents, e ->
-                if (e != null) {
-                    Log.w("addPendingGamesListener", "Listen failed.", e)
-                    return@addSnapshotListener
-                }
-                Log.d("addPendingGamesListener", "Found documents containing pending games")
-                var documentsCompleted = 0
-                for (doc in documents!!) {
-                    val playerId: String = doc.getString("player1") as String
-                    val gameId = doc.id
-                    if (playerId != "") {
-                        pendingGames.add(
-                            GameListObject(
-                                gameId,
-                                playerId,
-                                "Testname"
-                            )
-                        )
-                        documentsCompleted++
-                        if (documentsCompleted == documents.size()) {
-                            println("-------------------------------- " + pendingGames.toString())
-                            GSM.pendingGames = pendingGames
-                        }
-                        // This call get the username of the player registered under player1
-                        /*
-                        db.collection("users").document(playerId).get()
-                            .addOnSuccessListener { documentReference ->
-                                val username = documentReference.get("username")
-                                val gameId = doc.id
-                                Log.d(
-                                    "getPendingGames",
-                                    "game found with id=$gameId and " +
-                                        "user=$username"
+            db.collection("games").whereEqualTo("player2Name", "")
+                .addSnapshotListener { documents, e ->
+                    if (e != null) {
+                        Log.w("addPendingGamesListener", "Listen failed.", e)
+                        return@addSnapshotListener
+                    }
+                    Log.d("addPendingGamesListener", "Found documents containing pending games")
+                    for (doc in documents!!) {
+                        val player1Id: String = doc.getString("player1Id") as String
+                        val player1Name: String = doc.getString("player1Name") as String
+                        val gameId = doc.id
+                        if (player1Id != "") {
+                            pendingGames.add(
+                                GameListObject(
+                                    gameId,
+                                    player1Id,
+                                    player1Name
                                 )
-                                if (username != null) {
-                                    pendingGames.add(
-                                        GameListObject(
-                                            gameId,
-                                            playerId,
-                                            username as String
-                                        )
-                                    )
-                                }
-                                documentsCompleted++
-                                if (documentsCompleted == documents.size()) {
-                                    println("-------------------------------- " + pendingGames.toString())
-                                    GSM.pendingGames = pendingGames
-                                }
-                            }
-                            .addOnFailureListener { exception ->
-                                Log.w("getPendingGames", exception)
-                                // TODO: Add exception handling, could not find player
-                            }
-
-                         */
-                    }
-                }
-
-            }
-
-    }
-
-    /**
-     * Function getting all games where there is currently only one player
-     */
-    /*
-    override fun getPendingGames() {
-        val pendingGames = ArrayList<GameListObject>()
-        //  This call get all games where no player2 i registered
-        db.collection("games").whereEqualTo("player2", "").get()
-            .addOnSuccessListener { documents ->
-                if (documents != null) {
-                    var documentsCompleted = 0
-                    for (document in documents) {
-                        Log.d("getPendingGames", "game found with id=${document.id}")
-                        val playerId: String = document.getString("player1") as String
-                        if (playerId != "") {
-                            // This call get the username of the player registered under player1
-                            db.collection("users").document(playerId).get()
-                                .addOnSuccessListener { documentReference ->
-                                    val username = documentReference.get("username")
-                                    val gameId = document.id
-                                    Log.d(
-                                        "getPendingGames",
-                                        "game found with id=$gameId and " +
-                                            "user=$username"
-                                    )
-                                    if (username != null) {
-                                        pendingGames.add(
-                                            GameListObject(
-                                                gameId,
-                                                playerId,
-                                                username as String
-                                            )
-                                        )
-                                    }
-                                    documentsCompleted++
-                                    if (documentsCompleted == documents.size()) {
-                                        Log.d("getPendingGames", "all complete")
-                                        GSM.pendingGames = pendingGames
-                                    }
-                                    Log.d("getpendingGames", GSM.pendingGames.toString())
-                                }
-                                .addOnFailureListener { exception ->
-                                    Log.w("getPendingGames", exception)
-                                    // TODO: Add exception handling, could not find player
-                                }
+                            )
                         }
                     }
+                    println("Pending games: $pendingGames")
+                    GSM.pendingGames = pendingGames
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("getPendingGames", exception)
-                // TODO: Add exception handling, could not find games
-            }
-    }
-
-     */
-
-    /**
-     * Add userId to a specific game
-     * @param gameId the id of the game document
-     * @param userId the id of the user that should be added
-     */
-    override fun joinGame(gameId: String, userId: String) {
-        // Add the data to the game document
-        db.collection("games").document(gameId).update("player2", userId)
-            .addOnSuccessListener {
-                Log.d("joinGame", "Updated successfully")
-                // TODO: Call some function that should be triggered when you joined successfully
-                setGame(gameId)
-            }
-            .addOnFailureListener { exception ->
-                Log.w("joinGame", exception)
-                // TODO: Add exception handling
-            }
     }
 
     /**
@@ -327,73 +168,6 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * Get the treasure in a game
-     * @param gameId the id of the game
-     * @return a map containing a list of treasure per user
-     */
-    override fun getTreasures(gameId: String) {
-        db.collection("games").document(gameId).get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    val treasures = document.get("treasures") as Map<String, List<Map<String, Any>>>
-                    Log.d("getTreasures", "successful! $treasures")
-                    // TODO: Call function that stores the treasures
-                    // GSM.activeGame!!.setTreasures(treasures as Map<String, List<Map<String, Any>>>)
-                    // if (GSM.activeGame!!.me.playerId in treasures) treasures[GSM.activeGame!!.me.playerId]?.let { GSM.activeGame!!.me.board.setTreasuresList(it) }
-                    val OplayerId = GSM.activeGame!!.opponent.playerId
-                    if (OplayerId in treasures) {
-                        println("yes1 it is in treasures")
-                        treasures[OplayerId]?.let {
-                            GSM.activeGame!!.opponent.board.setTreasuresList(it)
-                        }
-                        GSM.activeGame!!.setGameReadyifReady()
-                    }
-                    /*
-                    else if (treasures.containsKey(OplayerId)) {
-                        println("yes2 it is in treasures")
-                        treasures[OplayerId]?.let {
-                            GSM.activeGame!!.opponent.board.setTreasuresList(it)
-                        }
-                        GSM.activeGame!!.isGameReady()
-                    }
-
-                     */
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("getTreasures", exception)
-                // TODO: Add exception handling
-            }
-    }
-
-    /**
-     * Get the ships in a game
-     * @param gameId the id of the game
-     * @return a Game object containing game and player
-     */
-    override fun getOpponent(gameId: String) {
-        db.collection("games").document(gameId).get()
-            .addOnSuccessListener { document ->
-                val player2Id = document.get("player2")
-                Log.d("getOpponent", "successful! $player2Id")
-                // TODO: Call function that stores the treasures
-                GSM.activeGame!!.opponent.playerId = player2Id as String
-                db.collection("users").document(player2Id).get()
-                    .addOnSuccessListener { document ->
-                        GSM.activeGame!!.opponent.playerName = document.get("username") as String
-                        GSM.activeGame!!.setGameReadyifReady()
-                    }.addOnFailureListener { exception ->
-                        Log.w("getOpponent", exception)
-                        // TODO: Add exception handling
-                    }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("getOpponent", exception)
-                // TODO: Add exception handling
-            }
-    }
-
-    /**
      * Registers the move
      * @param gameId the id of the game document
      * @param x x coordinate of move
@@ -420,8 +194,7 @@ object AndroidFirebase : FirebaseController {
                 // Push the list of moves to the database
                 db.collection("games").document(gameId).update("moves", moves)
                     .addOnSuccessListener {
-                        Log.d("makeMove", "move made")
-                        // TODO: Call function that should be called when move is made
+                        Log.d("makeMove", "move made successfully")
                     }
                     .addOnFailureListener { exception ->
                         Log.w("makeMove", exception)
@@ -465,29 +238,37 @@ object AndroidFirebase : FirebaseController {
             }
             if (snapshot != null && snapshot.exists()) {
                 Log.d("addGameListener", "Game data: ${snapshot.data}")
-                val opponent = snapshot.data?.get("player2")
+                val opponent = snapshot.data?.get("player2Id")
                 // If no opponent has joined yet
                 if (opponent == "") {
                     Log.d("addGameListener", "Opponent not joined yet")
-                    // TODO: Call function that should be called when no player has joined yet
                 }
                 // If there is an opponent in the game
                 else {
-                    // println("opponent id $opponent")
                     if (GSM.activeGame!!.opponent.playerId == "") {
-                        getOpponent(gameId)
+                        Log.d("addGameListener", "Opponent joined and registered")
+                        val player2Id = snapshot.data?.get("player2Id") as String
+                        val player2Name = snapshot.data?.get("player2Name") as String
+                        GSM.activeGame!!.opponent.playerId = player2Id
+                        GSM.activeGame!!.opponent.playerName = player2Name
+                        GSM.activeGame!!.setGameReadyifReady()
                     } else {
                         // Get the field containing the treasures in the database
-                        var treasures = mutableMapOf<String, List<Map<String, Any>>>()
+                        var treasures: MutableMap<String, List<Map<String, Any>>>
                         if (snapshot.data?.get("treasures") != null) {
                             treasures =
                                 snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
 
                             // If there is not enough treasures registered
                             if (treasures.size < 2 && GSM.activeGame!!.isplayersRegistered()) {
-                                Log.d("addGameListener", "Treasures not registered")
-                                println("Size: " + treasures.size + " TESTING")
-                                getTreasures(gameId)
+                                Log.d("addGameListener", "opponent's treasures registered")
+                                val OplayerId = GSM.activeGame!!.opponent.playerId
+                                if (OplayerId in treasures) {
+                                    treasures[OplayerId]?.let {
+                                        GSM.activeGame!!.opponent.board.setTreasuresList(it)
+                                    }
+                                    GSM.activeGame!!.setGameReadyifReady()
+                                }
                             }
                             // If there is enough treasures registered in firebase but not in opponents board
                             else if (treasures.size == 2 && !GSM.activeGame!!.isTreasuresRegistered()) {

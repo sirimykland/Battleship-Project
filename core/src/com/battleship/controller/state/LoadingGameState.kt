@@ -31,7 +31,6 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     }
 
     override fun update(dt: Float) {
-        // println("PLAYER: " + GSM.activeGame!!.player.board.treasures.size + " ----- OPPONENT: " + GSM.activeGame!!.opponent.board.treasures.size)
         GSM.activeGame!!.setGameReadyifReady()
         if (GSM.activeGame!!.gameReady) {
             println("GAME is READY: " + GSM.activeGame!!.gameReady)
