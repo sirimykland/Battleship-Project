@@ -50,5 +50,8 @@ object GameStateManager {
     fun render() {
         states.peek().render()
     }
+    fun resetGame() {
+        activeGame = null
+    }
 }
 typealias GSM = GameStateManager

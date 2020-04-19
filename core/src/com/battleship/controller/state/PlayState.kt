@@ -55,7 +55,9 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         "Main menu",
         onClick = {
             print("Main menu clicked")
-            GSM.set(MainMenuState(controller)) }
+            GSM.resetGame()
+            GSM.set(MainMenuState(controller))
+        }
     ).hide()
 
     private val newGameButton = GUI.textButton(
@@ -66,6 +68,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         "Play another game",
         onClick = {
             print("Play another game clicked")
+            GSM.resetGame()
             GSM.set(MatchmakingState(controller))
         }
     ).hide()
