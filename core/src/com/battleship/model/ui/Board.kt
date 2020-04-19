@@ -117,7 +117,7 @@ class Board(val size: Int) : GameObject() {
     }
 
     fun revealTreasures() {
-        treasures.forEach {treasure -> treasure.revealed = true }
+        treasures.forEach { treasure -> treasure.revealed = true }
     }
 
     fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): Boolean {

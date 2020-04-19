@@ -103,7 +103,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         gameOver = GSM.activeGame!!.winner != ""
 
         if (gameOver) {
-            if (winningRenders < 2 ) winningRenders++
+            if (winningRenders < 2) winningRenders++
             updateGUIObjectsGameOver()
             gameOverDialog.forEachIndexed() { i, element ->
                 if (i == 0 && GSM.activeGame!!.youWon)
@@ -112,7 +112,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
                     element.set(Text("Sorry, you lost :(", font = Font.LARGE_WHITE))
             }
 
-            if(winningRenders == 1) { // First game over render
+            if (winningRenders == 1) { // First game over render
                 // Save winner to Firebase
                 controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
                 showDialog = true
@@ -171,7 +171,6 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             if (equipment.active) eqButton.set(Border(Palette.GREEN))
             else eqButton.set(Border(Palette.BLACK))
 
-
             // Show equipment buttons only if you are viewing your own board and it's your turn
             if (!GSM.activeGame!!.playerBoard && GSM.activeGame!!.isPlayersTurn()) eqButton.show()
             else eqButton.hide()
@@ -186,7 +185,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     }
 
     private fun updateGUIObjectsGameOver() {
-        equipmentButtons.forEach { button -> button.hide()}
+        equipmentButtons.forEach { button -> button.hide() }
         opponentsBoardText.hide()
         if (GSM.activeGame!!.playerBoard) {
             header.set(Text("Your board"))
@@ -197,7 +196,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         mainMenuButton.show()
         newGameButton.show()
 
-        if(showDialog) {
+        if (showDialog) {
             gameOverDialog.forEach { guiObject -> guiObject.show() }
         } else {
             gameOverDialog.forEach { guiObject -> guiObject.hide() }

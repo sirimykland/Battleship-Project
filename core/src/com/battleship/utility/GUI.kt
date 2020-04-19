@@ -133,7 +133,7 @@ object GUI {
         }
         return dialogComponents.toTypedArray()
     }
-    fun dialogBackground() : GuiObject {
+    fun dialogBackground(): GuiObject {
         return GuiObject(0f, 0f, 100f, 100f)
             .with(Background(Palette.BLACK))
     }
