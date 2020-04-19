@@ -110,7 +110,7 @@ object AndroidFirebase : FirebaseController {
     override fun addPendingGamesListener() {
         val pendingGames = ArrayList<GameListObject>()
         activeListener =
-            db.collection("games").whereEqualTo("player2Name", "")
+            db.collection("games").whereEqualTo("player2Name", "").whereEqualTo("player2Id", "")
                 .addSnapshotListener { documents, e ->
                     if (e != null) {
                         Log.w("addPendingGamesListener", "Listen failed.", e)
