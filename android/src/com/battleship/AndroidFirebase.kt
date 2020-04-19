@@ -251,7 +251,7 @@ object AndroidFirebase : FirebaseController {
                         val player2Name = snapshot.data?.get("player2Name") as String
                         GSM.activeGame!!.opponent.playerId = player2Id
                         GSM.activeGame!!.opponent.playerName = player2Name
-                        GSM.activeGame!!.setGameReadyifReady()
+                        GSM.activeGame!!.setGameReadyIfReady()
                     } else {
                         // Get the field containing the treasures in the database
                         var treasures: MutableMap<String, List<Map<String, Any>>>
@@ -260,14 +260,14 @@ object AndroidFirebase : FirebaseController {
                                 snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
 
                             // If there is not enough treasures registered
-                            if (treasures.size < 2 && GSM.activeGame!!.isplayersRegistered()) {
+                            if (treasures.size < 2 && GSM.activeGame!!.isPlayersRegistered()) {
                                 Log.d("addGameListener", "opponent's treasures registered")
                                 val OplayerId = GSM.activeGame!!.opponent.playerId
                                 if (OplayerId in treasures) {
                                     treasures[OplayerId]?.let {
                                         GSM.activeGame!!.opponent.board.setTreasuresList(it)
                                     }
-                                    GSM.activeGame!!.setGameReadyifReady()
+                                    GSM.activeGame!!.setGameReadyIfReady()
                                 }
                             }
                             // If there is enough treasures registered in firebase but not in opponents board
