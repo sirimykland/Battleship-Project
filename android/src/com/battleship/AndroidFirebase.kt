@@ -1,6 +1,7 @@
 package com.battleship
 
 import android.util.Log
+import com.badlogic.gdx.Gdx
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
@@ -39,7 +40,7 @@ object AndroidFirebase : FirebaseController {
      * @param userId the id of the user setting up the game
      * @param userName the name of the user setting up the game
      */
-    override fun createGame(userId: String, userName: String) {
+    override fun createGame(userId: String, userName: String, callback: (game: Game) -> Unit) {
         // Set up game data
         val data = mutableMapOf<String, Any>()
         data["player1Id"] = userId
@@ -54,9 +55,10 @@ object AndroidFirebase : FirebaseController {
             .addOnSuccessListener { documentReference ->
                 val gameId = documentReference.id
                 Log.d("createGame", "created game with id=$gameId")
-                GSM.activeGame = Game(gameId)
+                val game = Game(gameId)
                 val player1 = Player(userId, userName)
-                GSM.activeGame!!.setPlayers(player1, Player())
+                game.setPlayers(player1, Player())
+                Gdx.app.postRunnable { callback(game) }
             }
             .addOnFailureListener { exception ->
                 Log.w("createGame", exception)
@@ -70,9 +72,9 @@ object AndroidFirebase : FirebaseController {
      * @param userId the id of the user that should be added
      * @param userId the name of the user that should be added
      */
-    override fun joinGame(gameId: String, userId: String, userName: String) {
+    override fun joinGame(gameId: String, userId: String, userName: String, callback: (game: Game) -> Unit) {
         // Add the data to the game document
-        GSM.activeGame = Game(gameId)
+        val game = Game(gameId)
 
         val docRef = db.collection("games").document(gameId)
         db.runBatch { batch ->
@@ -86,7 +88,7 @@ object AndroidFirebase : FirebaseController {
                         Log.d("joinGame", "game set with id=${document.id}")
                         val player1Id: String = document.getString("player1Id") as String
                         val player1Name: String = document.getString("player1Name") as String
-                        val player1: Player = Player(player1Id, player1Name)
+                        val player1 = Player(player1Id, player1Name)
 
                         val player2Id: String = document.getString("player2Id") as String
                         val player2Name: String = document.getString("player2Name") as String
@@ -94,7 +96,8 @@ object AndroidFirebase : FirebaseController {
                             if (player2Id != "" && player2Name != "")
                                 Player(player2Id, player2Name)
                             else Player()
-                        GSM.activeGame!!.setPlayers(player1, player2)
+                        game.setPlayers(player1, player2)
+                        callback(game)
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -107,11 +110,11 @@ object AndroidFirebase : FirebaseController {
         }
     }
 
-    override fun addPendingGamesListener() {
-        val pendingGames = ArrayList<GameListObject>()
+    override fun addPendingGamesListener(callback: (pendingGames: ArrayList<GameListObject>) -> Unit) {
         activeListener =
             db.collection("games").whereEqualTo("player2Name", "").whereEqualTo("player2Id", "")
                 .addSnapshotListener { documents, e ->
+                    val pendingGames = ArrayList<GameListObject>()
                     if (e != null) {
                         Log.w("addPendingGamesListener", "Listen failed.", e)
                         return@addSnapshotListener
@@ -132,7 +135,9 @@ object AndroidFirebase : FirebaseController {
                         }
                     }
                     println("Pending games: $pendingGames")
-                    GSM.pendingGames = pendingGames
+                    Gdx.app.postRunnable {
+                        callback(pendingGames)
+                    }
                 }
     }
 
