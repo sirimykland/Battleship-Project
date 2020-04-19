@@ -39,21 +39,6 @@ object GUI {
             .with(Text(text, font))
     }
 
-    fun button(
-        posX: Float,
-        posY: Float,
-        sizeX: Float,
-        sizeY: Float,
-        color: TextureRegion = Palette.LIGHT_GREY,
-        borderColor: TextureRegion = Palette.DARK_GREY,
-        onClick: () -> Unit
-    ): GuiObject {
-        return GuiObject(posX, posY, sizeX, sizeY)
-            .with(Background(color))
-            .with(Border(borderColor))
-            .onClick(onClick)
-    }
-
     fun textButton(
         posX: Float,
         posY: Float,

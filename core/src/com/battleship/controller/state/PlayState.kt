@@ -53,9 +53,8 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         42.5f,
         10f,
         "Main menu",
-        font = Font.MEDIUM_BLACK,
         onClick = {
-            println("Main menu clicked")
+            print("Main menu clicked")
             GSM.set(MainMenuState(controller)) }
     ).hide()
 
@@ -65,9 +64,8 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         42.5f,
         10f,
         "Play another game",
-        font = Font.MEDIUM_BLACK,
         onClick = {
-            println("Play another game clicked")
+            print("Play another game clicked")
             GSM.set(MatchmakingState(controller))
         }
     ).hide()
@@ -77,7 +75,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         2f,
         90f,
         10f,
-        "Opponent's board",
+        "${GSM.activeGame!!.opponent.playerName}'s board",
         font = Font.MEDIUM_WHITE,
         color = Palette.DARK_GREY,
         borderColor = Palette.DARK_GREY
@@ -88,11 +86,10 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             listOf(Pair("Dismiss", { showDialog = false }))
     )
 
-    private val dialogBackground = GUI.dialogBackground().hide()
-
     override val guiObjects: List<GuiObject> = listOf(
         header, switchBoardButton, *equipmentButtons, opponentsBoardText, mainMenuButton,
         newGameButton, *gameOverDialog
+
     )
 
     override fun render() {
