@@ -3,10 +3,12 @@ package com.battleship.model
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.model.equipment.Equipment
+import com.sun.org.apache.xpath.internal.operations.Bool
 import java.util.Timer
 import kotlin.concurrent.schedule
 
 class Game(val gameId: String) : GameObject() {
+    var youWon: Boolean = false
     var winner: String = ""
     var player: Player = Player()
     var opponent: Player = Player()
@@ -100,7 +102,7 @@ class Game(val gameId: String) : GameObject() {
     }
 
     fun isTreasuresRegistered(): Boolean {
-        val ready = !player.board.treasures.isEmpty() && !opponent.board.treasures.isEmpty()
+        val ready = player.board.treasures.isNotEmpty() && opponent.board.treasures.isNotEmpty()
         println("isTreasuresRegistered: $ready")
         return ready
     }
@@ -120,19 +122,17 @@ class Game(val gameId: String) : GameObject() {
         }
     }
 
-    fun updateWinner(): Boolean {
-        if (player.health == 0) {
-            println("opponent won")
-            //player.board.revealBoard()
+    fun updateWinner() {
+        if (player.health == 0) { // Opponent won!
+            player.board.revealTreasures()
+            opponent.board.revealTreasures()
             winner = opponent.playerName
-            return true
-        } else if (opponent.health == 0) {
-            println("player won")
-            //opponent.board.revealBoard()
+        } else if (opponent.health == 0) { // You won!
+            youWon = true
+            player.board.revealTreasures()
+            opponent.board.revealTreasures()
             winner = player.playerName
-            return true
         }
-        return false
     }
 
     override fun toString(): String {
