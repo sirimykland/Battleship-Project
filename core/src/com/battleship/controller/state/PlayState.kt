@@ -79,13 +79,6 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     }
 
     override fun update(dt: Float) {
-        /* Oold
-        updateBoardSwitching()
-        handleInput()
-        updateGUIObjects()
-        updateHealth()
-        */
-
         gameOver = GSM.activeGame!!.winner != ""
 
         if (gameOver) {
@@ -121,9 +114,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             println("You won!")
             controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
             GSM.set(GameOverState(controller, true))
-            gameOverDialog.forEachIndexed { index, guiObject ->
-                guiObject.show()
-            }
+            gameOverDialog.forEach { guiObject -> guiObject.show() }
         }
     }
 
