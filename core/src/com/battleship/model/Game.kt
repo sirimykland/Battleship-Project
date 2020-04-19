@@ -14,6 +14,7 @@ class Game(val gameId: String) {
     var gameReady = false
     var playerBoard: Boolean = false
     var newTurn: Boolean = false
+    var youWon: Boolean = false
 
     constructor(gameId: String, player1: Player, player2: Player = Player()) : this(gameId) {
         if (player1.playerId == GSM.userId) {
@@ -96,11 +97,13 @@ class Game(val gameId: String) {
     fun setGameReadyifReady() {
         if (isplayersRegistered() && isTreasuresRegistered()) {
             gameReady = true
+            player.updateHealth()
+            opponent.updateHealth()
         }
     }
 
     fun isTreasuresRegistered(): Boolean {
-        val ready = !player.board.treasures.isEmpty() && !opponent.board.treasures.isEmpty()
+        val ready = player.board.treasures.isNotEmpty() && opponent.board.treasures.isNotEmpty()
         println("isTreasuresRegistered: $ready")
         return ready
     }
@@ -117,6 +120,19 @@ class Game(val gameId: String) {
             Timer().schedule(1000) {
                 newTurn = true
             }
+        }
+    }
+
+    fun updateWinner() {
+        if (player.health == 0) { // Opponent won!
+            player.board.revealTreasures()
+            opponent.board.revealTreasures()
+            winner = opponent.playerName
+        } else if (opponent.health == 0) { // You won!
+            youWon = true
+            player.board.revealTreasures()
+            opponent.board.revealTreasures()
+            winner = player.playerName
         }
     }
 

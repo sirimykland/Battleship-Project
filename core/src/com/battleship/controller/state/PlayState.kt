@@ -23,6 +23,9 @@ import com.battleship.view.View
 class PlayState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     private var player: Player = GSM.activeGame!!.player
+    private var gameOver: Boolean = false
+    private var showDialog: Boolean = false
+    private var winningRenders: Int = 0
 
     private val header = GUI.header("Your turn")
 
@@ -41,9 +44,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         8f,
         8f,
         "icons/swap_horiz_white.png",
-        onClick = {
-            GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
-        }
+        onClick = { GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard }
     )
     private val opponentsBoardText = GUI.textBox(
         5f,
