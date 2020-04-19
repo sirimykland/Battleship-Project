@@ -13,7 +13,8 @@ import com.battleship.view.View
 class NameSelectionState(val controller: FirebaseController) : GuiState(controller) {
     private var username = GSM.username
 
-    private val legalCharacters = "abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ1234567890"
+    private val legalCharacters =
+        "abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ1234567890"
 
     private val usernameDisplay = GUI.textBox(
         15f,
@@ -23,7 +24,8 @@ class NameSelectionState(val controller: FirebaseController) : GuiState(controll
         username
     ).onKeyTyped { char ->
         when (char) {
-            '\b' -> username = if (username.isNotEmpty()) username.substring(0, username.length - 1) else username
+            '\b' -> username =
+                if (username.isNotEmpty()) username.substring(0, username.length - 1) else username
             '\r', '\n' -> complete()
             in legalCharacters -> username += char
         }
@@ -33,8 +35,8 @@ class NameSelectionState(val controller: FirebaseController) : GuiState(controll
 
     private fun complete() {
         if (username != "") {
-            controller.addPlayer(username)
-            GSM.push(MatchmakingState(controller))
+            GSM.username = username
+            GSM.set(MatchmakingState(controller))
         }
     }
 
