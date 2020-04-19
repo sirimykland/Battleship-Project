@@ -78,7 +78,6 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     override fun create() {
         super.create()
         updateButtons()
-        controller.addPendingGamesListener()
     }
 
     private fun updateButtons() {
