@@ -54,7 +54,6 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         10f,
         "Main menu",
         onClick = {
-            print("Main menu clicked")
             GSM.resetGame()
             GSM.set(MainMenuState(controller))
         }
@@ -67,7 +66,6 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         10f,
         "Play another game",
         onClick = {
-            print("Play another game clicked")
             GSM.resetGame()
             GSM.set(MatchmakingState(controller))
         }
@@ -92,7 +90,6 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     override val guiObjects: List<GuiObject> = listOf(
         header, switchBoardButton, *equipmentButtons, opponentsBoardText, mainMenuButton,
         newGameButton, *gameOverDialog
-
     )
 
     override fun render() {
