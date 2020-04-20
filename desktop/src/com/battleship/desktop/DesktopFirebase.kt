@@ -152,7 +152,7 @@ object DesktopFirebase : FirebaseController {
         db.collection("games").document(gameId).update("player2Id", userId)
         db.collection("games").document(gameId).update("player2Name", userName)
         val game = setGame(gameId)
-        callback(game)
+        Gdx.app.postRunnable { callback(game) }
     }
 
     /**
