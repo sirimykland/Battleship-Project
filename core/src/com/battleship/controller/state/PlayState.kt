@@ -52,24 +52,24 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         2f,
         42.5f,
         10f,
-        "Main menu",
-        onClick = {
-            GSM.resetGame()
-            GSM.set(MainMenuState(controller))
-        }
-    ).hide()
+        "Main menu"
+    ) {
+        GSM.resetGame()
+        GSM.set(MainMenuState(controller))
+    }
+        .hide()
 
     private val newGameButton = GUI.textButton(
         52.5f,
         2f,
         42.5f,
         10f,
-        "Find new game",
-        onClick = {
-            GSM.resetGame()
-            GSM.set(MatchmakingState(controller))
-        }
-    ).hide()
+        "Find new game"
+    ) {
+        GSM.resetGame()
+        GSM.set(MatchmakingState(controller))
+    }
+        .hide()
 
     private val opponentsBoardText = GUI.textBox(
         5f,
@@ -83,8 +83,8 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     ).hide()
 
     private val gameOverDialog = GUI.dialog(
-            "Some text",
-            listOf(Pair("Dismiss", { showDialog = false }))
+        "Some text",
+        listOf(Pair("Dismiss", { showDialog = false }))
     )
 
     override val guiObjects: List<GuiObject> = listOf(

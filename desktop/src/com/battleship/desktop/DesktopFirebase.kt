@@ -267,7 +267,7 @@ object DesktopFirebase : FirebaseController {
      * @param y y coordinate of
      * @param playerId player making the move
      */
-    override fun makeMove(gameId: String, x: Int, y: Int, playerId: String, weapon: String) {
+    override fun registerMove(gameId: String, x: Int, y: Int, playerId: String, weapon: String) {
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
@@ -333,16 +333,20 @@ object DesktopFirebase : FirebaseController {
                                 treasures[opponentId]?.let {
                                     Gdx.app.postRunnable {
                                         game.opponent.board.setTreasuresList(it)
+                                        game.setGameReadyIfReady()
+                                        if (game.gameReady) {
+                                            addPlayListener(gameId)
+                                        }
                                     }
                                 }
-                                game.setGameReadyifReady()
+                                game.setGameReadyIfReady()
                             }
-                            game.setGameReadyifReady()
+                            game.setGameReadyIfReady()
                             if (game.gameReady) {
                                 addPlayListener(gameId)
                             }
                         }
-                        game.setGameReadyifReady()
+                        game.setGameReadyIfReady()
                     }
                 }
             }

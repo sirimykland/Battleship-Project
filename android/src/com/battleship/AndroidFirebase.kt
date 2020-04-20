@@ -91,7 +91,6 @@ object AndroidFirebase : FirebaseController {
             player2 = Player(player2Id, player2Name)
         }.addOnSuccessListener {
             // Creates a new game and registers player1 and player2
-            game = Game(gameId)
             game.setPlayers(player1, player2)
             Log.d("joinGame", "Joined " + player1.playerName + "'s game successfully!")
             callback(game)
