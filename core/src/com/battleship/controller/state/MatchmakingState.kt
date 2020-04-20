@@ -51,8 +51,6 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         "Create new game"
     ) {
         createGame()
-        // temporarily removed for bugfix in android
-        // GSM.set(PreGameState(controller))
     }
 
     private val refreshButton = GUI.imageButton(
@@ -77,8 +75,10 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
 
     override fun create() {
         super.create()
-        updateButtons()
-        controller.addPendingGamesListener()
+        controller.addPendingGamesListener { pendingGames ->
+            GSM.pendingGames = pendingGames
+            updateButtons()
+        }
     }
 
     private fun updateButtons() {
@@ -111,19 +111,24 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
             "Loading user"
         ) {
             val i = (page * itemsPerPage) + index
-            if (GSM.userId !== "") controller.joinGame(GSM.pendingGames[i].gameId, GSM.userId, GSM.username)
+            if (GSM.userId !== "") {
+                controller.joinGame(GSM.pendingGames[i].gameId, GSM.userId, GSM.username) { game ->
+                    GSM.activeGame = game
+                    GSM.set(PreGameState(controller))
+                }
+            }
         }
     }
 
     private fun createGame() {
         println("Create game pressed")
-        controller.createGame(GSM.userId, GSM.username)
+        controller.createGame(GSM.userId, GSM.username) { game ->
+            GSM.activeGame = game
+            GSM.set(PreGameState(controller))
+        }
     }
 
     override fun update(dt: Float) {
-        updateButtons()
-        if (GSM.activeGame != null) GSM.set(PreGameState(controller))
-        if (GSM.username != "" && !selectUsernameCallback) createGameButton.show()
     }
 
     override fun render() {

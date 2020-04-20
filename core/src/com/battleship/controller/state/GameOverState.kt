@@ -10,19 +10,12 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the game over screen
  */
-class GameOverState(private val controller: FirebaseController, win: Boolean) : GuiState(controller) {
+class GameOverState(private val controller: FirebaseController) : GuiState(controller) {
     private val menuList = listOf(
         Pair("Main Menu") { GSM.set(MainMenuState(controller)) },
         Pair("Play Again") { GSM.set(PreGameState(controller)) }
     )
-    var winString = ""
-        init {
-            if (win) {
-                winString = "You won the game!"
-            } else {
-                winString = "You lost the game..."
-            }
-    }
+
     override val guiObjects: List<GuiObject> = listOf(
         GUI.menuButton(
             25f,
@@ -37,7 +30,7 @@ class GameOverState(private val controller: FirebaseController, win: Boolean) : 
             onClick = { GSM.set(MatchmakingState(controller)) }
         ),
         GUI.header(
-            winString
+            GSM.activeGame!!.winner + " won!"
         )
     )
 

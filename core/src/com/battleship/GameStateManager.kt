@@ -10,7 +10,6 @@ object GameStateManager {
     var userId = getRandomString(15)
     var activeGame: Game? = null
     var pendingGames = ArrayList<GameListObject>()
-    var treasuresInitialized: Boolean = false
 
     private val states: Stack<State> = Stack()
 
@@ -35,6 +34,7 @@ object GameStateManager {
     }
 
     fun set(state: State) {
+        println("setting ${state.javaClass}")
         states.pop().dispose()
         states.push(state)
         create()
@@ -50,6 +50,9 @@ object GameStateManager {
 
     fun render() {
         states.peek().render()
+    }
+    fun resetGame() {
+        activeGame = null
     }
 }
 typealias GSM = GameStateManager
