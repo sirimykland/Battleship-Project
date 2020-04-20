@@ -86,7 +86,6 @@ object AndroidFirebase : FirebaseController {
             transaction.update(docRef, "player2Id", player2Id)
             transaction.update(docRef, "player2Name", player2Name)
             player2 = Player(player2Id, player2Name)
-
         }.addOnSuccessListener {
             // Creates a new game and registers player1 and player2
             GSM.activeGame = Game(gameId)
@@ -150,7 +149,6 @@ object AndroidFirebase : FirebaseController {
             // Update treasures
             dbTreasures[playerId] = treasures
             transaction.update(docRef, "treasures", dbTreasures)
-
         }.addOnSuccessListener {
             Log.d("registerTreasures", "Treasures registered successfully!")
         }.addOnFailureListener { e ->
@@ -171,7 +169,7 @@ object AndroidFirebase : FirebaseController {
      * @param equipment The equipment used by the player
      */
     override fun registerMove(gameId: String, x: Int, y: Int, playerId: String, equipment: String) {
-        val docRef =  db.collection("games").document(gameId)
+        val docRef = db.collection("games").document(gameId)
         db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
 
@@ -194,7 +192,6 @@ object AndroidFirebase : FirebaseController {
         }.addOnSuccessListener {
             Log.d("registerMove", "Move registered successfully!")
         }.addOnFailureListener { e -> Log.w("registerMove", "Move registration failed!", e) }
-
     }
 
     /**
