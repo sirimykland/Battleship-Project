@@ -109,10 +109,10 @@ object AndroidFirebase : FirebaseController {
             // val playerLeftId: String = snapshot.getString("player2Id") as String
             // println("PlayerLeftId: " + playerLeftId)
             // val player2Id: String = snapshot.getString("player2Id") as String
-            transaction.update(docRef,"playerLeft", playerId)
+            transaction.update(docRef, "playerLeft", playerId)
         }.addOnSuccessListener {
             Log.d("leaveGame", "Player left game successfully")
-            Gdx.app.postRunnable {callback()}
+            Gdx.app.postRunnable { callback() }
         }.addOnFailureListener { e ->
             // TODO: Add exception handling, could not find games
             Log.d("leaveGame", "Player left game failed")
@@ -254,7 +254,7 @@ object AndroidFirebase : FirebaseController {
                 // If no opponent has joined yet
                 if (opponent == "") {
                     Log.d("addGameListener", "Opponent not joined yet")
-                } else if (playerLeft != ""){
+                } else if (playerLeft != "") {
                     println("Opponent left firebase")
                     GSM.activeGame!!.opponentLeft = true
                 }
