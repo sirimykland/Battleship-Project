@@ -142,7 +142,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
                 if (boardBounds.contains(touchPos)) {
                     val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
-                    controller.makeMove(
+                    controller.registerMove(
                         GSM.activeGame!!.gameId,
                         boardTouchPos.x.toInt(),
                         boardTouchPos.y.toInt(),

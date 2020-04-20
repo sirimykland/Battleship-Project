@@ -166,40 +166,35 @@ object AndroidFirebase : FirebaseController {
      * Registers the move
      * @param gameId the id of the game document
      * @param x x coordinate of move
-     * @param y y coordinate of
+     * @param y y coordinate of move
      * @param playerId player making the move
+     * @param equipment The equipment used by the player
      */
-    override fun makeMove(gameId: String, x: Int, y: Int, playerId: String, weapon: String) {
-        // Get the document for the game using the id of the document
-        db.collection("games").document(gameId).get()
-            .addOnSuccessListener { document ->
-                // Saving existing moves
-                var moves = mutableListOf<Map<String, Any>>()
-                if (document.get("moves") != null) {
-                    moves = document.get("moves") as MutableList<Map<String, Any>>
-                }
-                // Making a map for the new move
-                val data = mutableMapOf<String, Any>()
-                data["x"] = x
-                data["y"] = y
-                data["playerId"] = playerId
-                data["weapon"] = weapon
-                // Add the move to the list of existing moves
-                moves.add(data)
-                // Push the list of moves to the database
-                db.collection("games").document(gameId).update("moves", moves)
-                    .addOnSuccessListener {
-                        Log.d("makeMove", "move made successfully")
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w("makeMove", exception)
-                        // TODO: Add exception handling, could not push data to db
-                    }
+    override fun registerMove(gameId: String, x: Int, y: Int, playerId: String, equipment: String) {
+        val docRef =  db.collection("games").document(gameId)
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            // Get moves
+            var moves = mutableListOf<Map<String, Any>>()
+            if (snapshot.get("moves") != null) {
+                moves = snapshot.get("moves") as MutableList<Map<String, Any>>
             }
-            .addOnFailureListener { exception ->
-                Log.w("makeMove", exception)
-                // TODO: Add exception handling, could not find game document
-            }
+
+            // add new move
+            val data = mutableMapOf<String, Any>()
+            data["x"] = x
+            data["y"] = y
+            data["playerId"] = playerId
+            data["weapon"] = equipment
+            moves.add(data)
+
+            // Update move
+            transaction.update(docRef, "moves", moves)
+        }.addOnSuccessListener {
+            Log.d("registerMove", "Move registered successfully!")
+        }.addOnFailureListener { e -> Log.w("registerMove", "Move registration failed!", e) }
+
     }
 
     /**
