@@ -65,45 +65,36 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * Add userId to a specific game
+     * Add a player to a specific game
      * @param gameId the id of the game document
-     * @param userId the id of the user that should be added
-     * @param userId the name of the user that should be added
+     * @param player2Id the id of the player that should be added
+     * @param player2Name the name of the player that should be added
      */
-    override fun joinGame(gameId: String, userId: String, userName: String) {
-        // Add the data to the game document
-        GSM.activeGame = Game(gameId)
-
+    override fun joinGame(gameId: String, player2Id: String, player2Name: String) {
         val docRef = db.collection("games").document(gameId)
-        db.runBatch { batch ->
-            batch.update(docRef, "player2Id", userId)
-            batch.update(docRef, "player2Name", userName)
-        }.addOnSuccessListener {
-            Log.d("joinGame", "Updated successfully")
-            db.collection("games").document(gameId).get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        Log.d("joinGame", "game set with id=${document.id}")
-                        val player1Id: String = document.getString("player1Id") as String
-                        val player1Name: String = document.getString("player1Name") as String
-                        val player1: Player = Player(player1Id, player1Name)
+        var player1 = Player()
+        var player2 = Player()
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
 
-                        val player2Id: String = document.getString("player2Id") as String
-                        val player2Name: String = document.getString("player2Name") as String
-                        val player2: Player =
-                            if (player2Id != "" && player2Name != "")
-                                Player(player2Id, player2Name)
-                            else Player()
-                        GSM.activeGame!!.setPlayers(player1, player2)
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("setGame", exception)
-                    // TODO: Add exception handling, could not find games
-                }
-        }.addOnFailureListener { exception ->
-            Log.w("joinGame", exception)
-            // TODO: Add exception handling
+            // Get player1
+            val player1Id: String = snapshot.getString("player1Id") as String
+            val player1Name: String = snapshot.getString("player1Name") as String
+            player1 = Player(player1Id, player1Name)
+
+            // Set player2
+            transaction.update(docRef, "player2Id", player2Id)
+            transaction.update(docRef, "player2Name", player2Name)
+            player2 = Player(player2Id, player2Name)
+
+        }.addOnSuccessListener {
+            // Creates a new game and registers player1 and player2
+            GSM.activeGame = Game(gameId)
+            GSM.activeGame!!.setPlayers(player1, player2)
+            Log.d("joinGame", "Joined "  + player1.playerName +"'s game successfully!")
+        }.addOnFailureListener { e ->
+            // TODO: Add exception handling, could not find games
+            Log.w("joinGame", "Transaction Joined game failed!", e)
         }
     }
 
