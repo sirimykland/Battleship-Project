@@ -62,7 +62,7 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     private fun updateHeaderText() {
         if (GSM.activeGame!!.opponent.playerId == "")
             header.set(Text("Waiting for opponent to join...", font = Font.MEDIUM_WHITE))
-        else if (GSM.activeGame!!.opponent.board.treasures.isEmpty())
+        else if (GSM.activeGame!!.opponent.board.isTreasureListEmpty())
             header.set(Text("Waiting for ${GSM.activeGame!!.opponent.playerName} to register treasures...", font = Font.MEDIUM_WHITE))
     }
 
