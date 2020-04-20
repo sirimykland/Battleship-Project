@@ -93,7 +93,7 @@ object AndroidFirebase : FirebaseController {
             // Creates a new game and registers player1 and player2
             game.setPlayers(player1, player2)
             Log.d("joinGame", "Joined " + player1.playerName + "'s game successfully!")
-            callback(game)
+            Gdx.app.postRunnable { callback(game) }
         }.addOnFailureListener { e ->
             // TODO: Add exception handling, could not find games
             Log.w("joinGame", "Transaction Joined game failed!", e)
