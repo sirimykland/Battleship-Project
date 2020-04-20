@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Player
+import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -101,15 +102,20 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
     override fun update(dt: Float) {
         gameOver = GSM.activeGame!!.winner != ""
+        var alreadyPlayed: Boolean = false
 
         if (gameOver) {
             if (winningRenders < 2) winningRenders++
             updateGUIObjectsGameOver()
             gameOverDialog.forEachIndexed() { i, element ->
-                if (i == 0 && GSM.activeGame!!.youWon)
+                if (i == 0 && GSM.activeGame!!.youWon) {
+                    SoundEffects.playVictory(0.6f)
                     element.set(Text("Congratulations, you won!", font = Font.LARGE_WHITE))
-                else if (i == 0 && !GSM.activeGame!!.youWon)
+                }
+                else if (i == 0 && !GSM.activeGame!!.youWon) {
                     element.set(Text("Sorry, you lost :(", font = Font.LARGE_WHITE))
+                    SoundEffects.playLosing(0.6f)
+                }
             }
 
             if (winningRenders == 1) { // First game over render
