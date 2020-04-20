@@ -82,6 +82,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         gameOver = GSM.activeGame!!.winner != ""
 
         if (gameOver) {
+            println("gameOver!")
             if (winningRenders < 2 ) winningRenders++
             updateGUIObjectsGameOver()
             gameOverDialog.forEachIndexed() { i, element ->
