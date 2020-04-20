@@ -24,26 +24,27 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
         return "null"
     }
 
+    private fun leaveGame() {
+        controller.leaveGame(GSM.activeGame!!.gameId, GSM.userId) {
+            GSM.resetGame()
+            controller.addPendingGamesListener { pendingGames ->
+                GSM.pendingGames = pendingGames
+            }
+            GSM.set(MainMenuState(controller))
+        }
+    }
+
     private val opponentLeftDialog = GUI.dialog(
         "${GSM.activeGame!!.opponent.playerName} left the game before registering treasures.",
         listOf(Pair("Find new game", {
             showDialog = false
-            // TODO: Add some controller/game logic here?
-            GSM.set(MatchmakingState(controller))
+            leaveGame()
         }))
     )
 
     override val guiObjects: List<GuiObject> = listOf(
         GUI.header(headerText()),
-        GUI.backButton {
-            controller.leaveGame(GSM.activeGame!!.gameId, GSM.userId) {
-                GSM.resetGame()
-                controller.addPendingGamesListener { pendingGames ->
-                    GSM.pendingGames = pendingGames
-                }
-                GSM.set(MainMenuState(controller))
-            }
-        },
+        GUI.backButton { leaveGame() },
         *opponentLeftDialog
     )
 
