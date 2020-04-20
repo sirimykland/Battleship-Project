@@ -3,6 +3,9 @@ package com.battleship.model.equipment
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 
+/**
+ *  Inherits behavior from [Equipment]
+ */
 class BigEquipment : Equipment() {
     override var searchRadius: Int = 1
     override var uses: Int = 10
