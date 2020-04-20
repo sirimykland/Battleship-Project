@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Player
-import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -24,7 +23,9 @@ import com.battleship.view.View
 class PlayState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     private var player: Player = GSM.activeGame!!.player
-    private var sound = SoundEffects()
+    private var gameOver: Boolean = false
+    private var showDialog: Boolean = false
+    private var winningRenders: Int = 0
 
     private val header = GUI.header("Your turn")
 
@@ -43,65 +44,89 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         8f,
         8f,
         "icons/swap_horiz_white.png",
-        onClick = {
-            GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
-        }
+        onClick = { GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard }
     )
+
+    private val mainMenuButton = GUI.textButton(
+        5f,
+        2f,
+        42.5f,
+        10f,
+        "Main menu"
+    ) {
+        GSM.resetGame()
+        GSM.set(MainMenuState(controller))
+    }
+        .hide()
+
+    private val newGameButton = GUI.textButton(
+        52.5f,
+        2f,
+        42.5f,
+        10f,
+        "Find new game"
+    ) {
+        GSM.resetGame()
+        GSM.set(MatchmakingState(controller))
+    }
+        .hide()
+
     private val opponentsBoardText = GUI.textBox(
         5f,
         2f,
         90f,
         10f,
-        "Opponent's board",
+        "${GSM.activeGame!!.opponent.playerName}'s board",
         font = Font.MEDIUM_WHITE,
         color = Palette.DARK_GREY,
         borderColor = Palette.DARK_GREY
+    ).hide()
+
+    private val gameOverDialog = GUI.dialog(
+        "Some text",
+        listOf(Pair("Dismiss", { showDialog = false }))
     )
 
     override val guiObjects: List<GuiObject> = listOf(
-        *equipmentButtons, header, switchBoardButton, opponentsBoardText
+        header, switchBoardButton, *equipmentButtons, opponentsBoardText, mainMenuButton,
+        newGameButton, *gameOverDialog
     )
-
-    override fun create() {
-        super.create()
-        print("---PLAYSTATE---")
-
-        // controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
-    }
 
     override fun render() {
         view.render(
-            *guiObjects.toTypedArray(),
-            if (GSM.activeGame!!.playerBoard) GSM.activeGame!!.player.board else GSM.activeGame!!.opponent.board
+            if (GSM.activeGame!!.playerBoard) GSM.activeGame!!.player.board else GSM.activeGame!!.opponent.board,
+            *guiObjects.toTypedArray()
         )
     }
 
     override fun update(dt: Float) {
-        updateBoardSwitching()
-        handleInput()
-        updateGUIObjects()
-        updateHealth()
-    }
+        gameOver = GSM.activeGame!!.winner != ""
 
-    private fun updateHealth() {
-        player.updateHealth()
-        GSM.activeGame!!.opponent.updateHealth()
-        /*
-        if (player.health == 0) {
-            println("Opponent won!")
-            sound.playLosing(1.0f)
-            GSM.set(GameOverState(controller, false))
-        } else if (GSM.activeGame!!.opponent.health == 0) {
-            println("You won!")
-            sound.playVictory(1.0f)
-            controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
-            GSM.set(GameOverState(controller, true))
+        if (gameOver) {
+            if (winningRenders < 2) winningRenders++
+            updateGUIObjectsGameOver()
+            gameOverDialog.forEachIndexed() { i, element ->
+                if (i == 0 && GSM.activeGame!!.youWon)
+                    element.set(Text("Congratulations, you won!", font = Font.LARGE_WHITE))
+                else if (i == 0 && !GSM.activeGame!!.youWon)
+                    element.set(Text("Sorry, you lost :(", font = Font.LARGE_WHITE))
+            }
+
+            if (winningRenders == 1) { // First game over render
+                // Save winner to Firebase
+                controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
+                showDialog = true
+            }
+        } else {
+            autoBoardSwitching()
+            updateGUIObjectsInGame()
+            handleBoardInput()
+            // Update game status in GameStateManager
+            GSM.activeGame!!.updateWinner()
         }
-
-         */
     }
 
-    private fun handleInput() {
+    private fun handleBoardInput() {
         // Check if it is players turn and opponents board is showing.
         if (GSM.activeGame!!.isPlayersTurn() && !GSM.activeGame!!.playerBoard) {
             if (Gdx.input.justTouched()) {
@@ -114,7 +139,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
                 if (boardBounds.contains(touchPos)) {
                     val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
-                    controller.makeMove(
+                    controller.registerMove(
                         GSM.activeGame!!.gameId,
                         boardTouchPos.x.toInt(),
                         boardTouchPos.y.toInt(),
@@ -127,8 +152,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         }
     }
 
-    private fun updateBoardSwitching() {
-        // Auto switching of boards
+    private fun autoBoardSwitching() {
         if (GSM.activeGame!!.isPlayersTurn() && GSM.activeGame!!.playerBoard && GSM.activeGame!!.newTurn) {
             GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
             GSM.activeGame!!.newTurn = false
@@ -138,34 +162,44 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         }
     }
 
-    private fun updateGUIObjects() {
-        equipmentButtons.forEachIndexed { i, _ ->
-            val button = equipmentButtons[i]
+    private fun updateGUIObjectsInGame() {
+        equipmentButtons.forEachIndexed { i, eqButton ->
             val equipment = player.equipmentSet.equipments[i]
 
             // Updates text and border of equipment buttons
-            button.set(Text(equipment.name + " x " + equipment.uses, Font.SMALL_BLACK))
-            if (equipment.active) {
-                button.set(Border(Palette.GREEN))
-            } else {
-                button.set(Border(Palette.BLACK))
-            }
+            eqButton.set(Text(equipment.name + " x " + equipment.uses, Font.SMALL_BLACK))
+            if (equipment.active) eqButton.set(Border(Palette.GREEN))
+            else eqButton.set(Border(Palette.BLACK))
 
-            // Hides and shows equipment buttons and opponent's board text
-            if (GSM.activeGame!!.playerBoard) {
-                button.hide()
-                opponentsBoardText.show()
-            } else {
-                button.show()
-                opponentsBoardText.hide()
-            }
+            // Show equipment buttons only if you are viewing your own board and it's your turn
+            if (!GSM.activeGame!!.playerBoard && GSM.activeGame!!.isPlayersTurn()) eqButton.show()
+            else eqButton.hide()
+        }
+        // Updates header text
+        if (GSM.activeGame!!.isPlayersTurn()) header.set(Text("Your turn"))
+        else header.set(Text("Waiting for ${GSM.activeGame!!.opponent.playerName}'s move..."))
+
+        // Show/hide opponents bord text
+        if (GSM.activeGame!!.playerBoard) opponentsBoardText.show()
+        else opponentsBoardText.hide()
+    }
+
+    private fun updateGUIObjectsGameOver() {
+        equipmentButtons.forEach { button -> button.hide() }
+        opponentsBoardText.hide()
+        if (GSM.activeGame!!.playerBoard) {
+            header.set(Text("Your board"))
+        } else {
+            header.set(Text("${GSM.activeGame!!.opponent.playerName}'s board"))
         }
 
-        // Updates header text
-        if (GSM.activeGame!!.isPlayersTurn()) {
-            header.set(Text("Your turn"))
+        mainMenuButton.show()
+        newGameButton.show()
+
+        if (showDialog) {
+            gameOverDialog.forEach { guiObject -> guiObject.show() }
         } else {
-            header.set(Text("Waiting for opponent's move..."))
+            gameOverDialog.forEach { guiObject -> guiObject.hide() }
         }
     }
 
@@ -184,7 +218,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             equipment.name + " x " + equipment.uses,
             borderColor = if (equipment.active) Palette.GREEN else Palette.DARK_GREY,
             onClick = { player.equipmentSet.activeEquipment = equipment },
-            font = Font.SMALL_BLACK
+            font = Font.MEDIUM_BLACK
         )
     }
 }
