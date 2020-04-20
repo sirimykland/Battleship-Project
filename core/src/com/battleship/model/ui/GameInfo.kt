@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 import com.battleship.model.Player
 
-// TODO make this a list of GUI Elements to display player data in a "table view"
+// TODO: Delete this class?
 class GameInfo(var player: Player) : GameObject() {
 
     override fun draw(batch: SpriteBatch, shapeRenderer: ShapeRenderer, position: Vector2, dimension: Vector2) {

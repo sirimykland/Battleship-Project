@@ -3,8 +3,8 @@ package com.battleship.controller.input
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.math.Vector2
-import com.battleship.model.Board
 import com.battleship.model.treasures.Treasure
+import com.battleship.model.ui.Board
 import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
