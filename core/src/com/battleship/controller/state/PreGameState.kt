@@ -11,6 +11,8 @@ import com.battleship.view.View
 
 class PreGameState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
+    var showDialog: Boolean = false
+    var opponentLeftRenders: Int = 0
 
     override fun create() {
         super.create()
@@ -50,7 +52,17 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
                 game.player.board.getTreasuresList()
             )
             GSM.set(LoadingGameState(controller))
-        })
+        }
+    )
+
+    private val opponentLeftDialog = GUI.dialog(
+        "${GSM.activeGame!!.opponent.playerName} left the game.",
+        listOf(Pair("Find new game", {
+            showDialog = false
+            // TODO: Add some controller/game logic here?
+            GSM.set(MatchmakingState(controller))
+        }))
+    )
 
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
@@ -70,5 +82,12 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     }
 
     override fun update(dt: Float) {
+        if (GSM.activeGame!!.opponentLeft) {
+            if (opponentLeftRenders < 2) opponentLeftRenders++
+            if (opponentLeftRenders == 1) showDialog = true // First opponent left render
+        }
+
+        if (showDialog) opponentLeftDialog.forEach { guiObject -> guiObject.show() }
+        else opponentLeftDialog.forEach { guiObject -> guiObject.hide() }
     }
 }

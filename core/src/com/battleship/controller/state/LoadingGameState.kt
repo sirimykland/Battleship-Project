@@ -28,7 +28,7 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
         "${GSM.activeGame!!.opponent.playerName} left the game before registering treasures.",
         listOf(Pair("Find new game", {
             showDialog = false
-            // TODO: Add some controller logic here?
+            // TODO: Add some controller/game logic here?
             GSM.set(MatchmakingState(controller))
         }))
     )
@@ -57,9 +57,7 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
 
         if (GSM.activeGame!!.opponentLeft) {
             if (opponentLeftRenders < 2) opponentLeftRenders++
-
-            // First opponent left render, show GUI dialog
-            if (opponentLeftRenders == 1) showDialog = true
+            if (opponentLeftRenders == 1) showDialog = true // First opponent left render
         }
 
         if (showDialog) opponentLeftDialog.forEach { guiObject -> guiObject.show() }
