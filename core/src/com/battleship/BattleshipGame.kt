@@ -20,7 +20,9 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
             music?.volume = 0.2f
             music?.play()
         }
-        controller.addPendingGamesListener()
+        controller.addPendingGamesListener { pendingGames ->
+            GSM.pendingGames = pendingGames
+        }
         GSM.push(MainMenuState(controller))
     }
 

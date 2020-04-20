@@ -108,7 +108,7 @@ class Game(val gameId: String) : GameObject() {
 
     fun isPlayersRegistered(): Boolean {
         val ready = player.playerId != "" && opponent.playerId != ""
-        println("isplayersRegistered: $ready")
+        // println("isplayersRegistered: $ready")
         return ready
     }
 
@@ -135,6 +135,6 @@ class Game(val gameId: String) : GameObject() {
     }
 
     override fun toString(): String {
-        return "Game( gameReady=$gameReady, opponent=$opponent, playersTurn='$playerTurn')"
+        return "Game( gameReady=$gameReady, player= $player, opponent=$opponent, playersTurn='$playerTurn')"
     }
 }

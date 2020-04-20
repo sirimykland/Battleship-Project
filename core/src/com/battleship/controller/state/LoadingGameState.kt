@@ -23,7 +23,10 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
 
     override val guiObjects: List<GuiObject> = listOf(
         GUI.header(headerText()),
-        GUI.backButton { GSM.set(MainMenuState(controller)) }
+        GUI.backButton { GSM.set(MainMenuState(controller)) },
+        GuiObject(0f, 0f, 100f, 100f).onClick {
+            println(GSM.activeGame)
+        }
     )
 
     override fun render() {

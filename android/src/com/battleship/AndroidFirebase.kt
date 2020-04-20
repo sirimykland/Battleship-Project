@@ -1,6 +1,7 @@
 package com.battleship
 
 import android.util.Log
+import com.badlogic.gdx.Gdx
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
@@ -39,7 +40,7 @@ object AndroidFirebase : FirebaseController {
      * @param userId the id of the user setting up the game
      * @param userName the name of the user setting up the game
      */
-    override fun createGame(userId: String, userName: String) {
+    override fun createGame(userId: String, userName: String, callback: (game: Game) -> Unit) {
         // Set up game data
         val data = mutableMapOf<String, Any>()
         data["player1Id"] = userId
@@ -54,9 +55,10 @@ object AndroidFirebase : FirebaseController {
             .addOnSuccessListener { documentReference ->
                 val gameId = documentReference.id
                 Log.d("createGame", "created game with id=$gameId")
-                GSM.activeGame = Game(gameId)
+                val game = Game(gameId)
                 val player1 = Player(userId, userName)
-                GSM.activeGame!!.setPlayers(player1, Player())
+                game.setPlayers(player1, Player())
+                Gdx.app.postRunnable { callback(game) }
             }
             .addOnFailureListener { exception ->
                 Log.w("createGame", exception)
@@ -70,7 +72,8 @@ object AndroidFirebase : FirebaseController {
      * @param player2Id the id of the player that should be added
      * @param player2Name the name of the player that should be added
      */
-    override fun joinGame(gameId: String, player2Id: String, player2Name: String) {
+    override fun joinGame(gameId: String, player2Id: String, player2Name: String, callback: (game: Game) -> Unit) {
+        val game = Game(gameId)
         val docRef = db.collection("games").document(gameId)
         var player1 = Player()
         var player2 = Player()
@@ -88,20 +91,20 @@ object AndroidFirebase : FirebaseController {
             player2 = Player(player2Id, player2Name)
         }.addOnSuccessListener {
             // Creates a new game and registers player1 and player2
-            GSM.activeGame = Game(gameId)
-            GSM.activeGame!!.setPlayers(player1, player2)
+            game.setPlayers(player1, player2)
             Log.d("joinGame", "Joined " + player1.playerName + "'s game successfully!")
+            callback(game)
         }.addOnFailureListener { e ->
             // TODO: Add exception handling, could not find games
             Log.w("joinGame", "Transaction Joined game failed!", e)
         }
     }
 
-    override fun addPendingGamesListener() {
-        val pendingGames = ArrayList<GameListObject>()
+    override fun addPendingGamesListener(callback: (pendingGames: ArrayList<GameListObject>) -> Unit) {
         activeListener =
             db.collection("games").whereEqualTo("player2Name", "").whereEqualTo("player2Id", "")
                 .addSnapshotListener { documents, e ->
+                    val pendingGames = ArrayList<GameListObject>()
                     if (e != null) {
                         Log.w("addPendingGamesListener", "Listen failed.", e)
                         return@addSnapshotListener
@@ -122,7 +125,9 @@ object AndroidFirebase : FirebaseController {
                         }
                     }
                     println("Pending games: $pendingGames")
-                    GSM.pendingGames = pendingGames
+                    Gdx.app.postRunnable {
+                        callback(pendingGames)
+                    }
                 }
     }
 
@@ -241,7 +246,7 @@ object AndroidFirebase : FirebaseController {
                         GSM.activeGame!!.setGameReadyIfReady()
                     } else {
                         // Get the field containing the treasures in the database
-                        var treasures: MutableMap<String, List<Map<String, Any>>>
+                        val treasures: MutableMap<String, List<Map<String, Any>>>
                         if (snapshot.data?.get("treasures") != null) {
                             treasures =
                                 snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
