@@ -53,7 +53,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     )
 
     private val opponentLeftDialog = GUI.dialog(
-        "${GSM.activeGame!!.opponent.playerName} left the game.",
+        "Your opponent left the game...",
         listOf(Pair("Find new game", {
             showDialog = false
             leaveGame()

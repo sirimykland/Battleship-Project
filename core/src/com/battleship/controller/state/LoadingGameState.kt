@@ -27,7 +27,7 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     }
 
     private val opponentLeftDialog = GUI.dialog(
-        "${GSM.activeGame!!.opponent.playerName} left the game before registering treasures.",
+        "Your opponent left the game before registering treasures...",
         listOf(Pair("Find new game", {
             showDialog = false
             leaveGame()
