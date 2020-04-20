@@ -119,7 +119,6 @@ object AndroidFirebase : FirebaseController {
             }
 
         }.addOnSuccessListener {
-            // Creates a new game and registers player1 and player2
             Log.d("leaveGame", "Player left game successfully")
             Gdx.app.postRunnable {callback()}
         }.addOnFailureListener { e ->
