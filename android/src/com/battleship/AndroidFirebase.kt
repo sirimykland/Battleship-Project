@@ -106,18 +106,10 @@ object AndroidFirebase : FirebaseController {
         db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
 
-            val playerLeftId: String = snapshot.getString("player2Id") as String
-            val player2Id: String = snapshot.getString("player2Id") as String
-
-            if(playerLeftId == "" && player2Id != ""){  // No one has left the game and there is a player2 registered
-                // Update playerLeft field
-                transaction.update(docRef,"playerLeft", playerId)
-            }else if(playerLeftId != ""){ // Another player has left the game. Deletes game.
-                transaction.delete(docRef)
-            }else{
-                transaction.delete(docRef)
-            }
-
+            // val playerLeftId: String = snapshot.getString("player2Id") as String
+            // println("PlayerLeftId: " + playerLeftId)
+            // val player2Id: String = snapshot.getString("player2Id") as String
+            transaction.update(docRef,"playerLeft", playerId)
         }.addOnSuccessListener {
             Log.d("leaveGame", "Player left game successfully")
             Gdx.app.postRunnable {callback()}
