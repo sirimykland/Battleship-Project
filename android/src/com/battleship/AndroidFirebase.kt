@@ -91,7 +91,7 @@ object AndroidFirebase : FirebaseController {
             // Creates a new game and registers player1 and player2
             GSM.activeGame = Game(gameId)
             GSM.activeGame!!.setPlayers(player1, player2)
-            Log.d("joinGame", "Joined "  + player1.playerName +"'s game successfully!")
+            Log.d("joinGame", "Joined " + player1.playerName + "'s game successfully!")
         }.addOnFailureListener { e ->
             // TODO: Add exception handling, could not find games
             Log.w("joinGame", "Transaction Joined game failed!", e)
@@ -130,32 +130,36 @@ object AndroidFirebase : FirebaseController {
     /**
      * Registers the treasures on the board for a given user
      * @param gameId the id of the game document
-     * @param userId the id of the user owning the treasure
+     * @param playerId the id of the player owning the treasure
      * @param treasures list containing the treasures that should be added, each described using a map
      */
     override fun registerTreasures(
         gameId: String,
-        userId: String,
+        playerId: String,
         treasures: List<Map<String, Any>>
     ) {
-        db.collection("games").document(gameId).get()
-            .addOnSuccessListener { document ->
-                val dbTreasures =
-                    document.get("treasures") as MutableMap<String, List<Map<String, Any>>>
-                dbTreasures[userId] = treasures
-                db.collection("games").document(gameId).update("treasures", dbTreasures)
-                    .addOnSuccessListener {
-                        Log.d("registerTreasures", "treasures registered")
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w("registerTreasures", exception)
-                        // TODO: Add exception handling
-                    }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("registerTreasures", exception)
-                // TODO: Add exception handling
-            }
+        val docRef = db.collection("games").document(gameId)
+
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            // Get treasures
+            val dbTreasures =
+                snapshot.get("treasures") as MutableMap<String, List<Map<String, Any>>>
+
+            // Update treasures
+            dbTreasures[playerId] = treasures
+            transaction.update(docRef, "treasures", dbTreasures)
+
+        }.addOnSuccessListener {
+            Log.d("registerTreasures", "Treasures registered successfully!")
+        }.addOnFailureListener { e ->
+            Log.w(
+                "registerTreasures",
+                "Treasures registration failed!",
+                e
+            )
+        }
     }
 
     /**
