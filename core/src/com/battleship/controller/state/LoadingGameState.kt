@@ -23,9 +23,14 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
 
     override val guiObjects: List<GuiObject> = listOf(
         GUI.header(headerText()),
-        GUI.backButton { GSM.set(MainMenuState(controller)) },
-        GuiObject(0f, 0f, 100f, 100f).onClick {
-            println(GSM.activeGame)
+        GUI.backButton {
+            controller.leaveGame(GSM.activeGame!!.gameId, GSM.userId) {
+                GSM.resetGame()
+                controller.addPendingGamesListener { pendingGames ->
+                    GSM.pendingGames = pendingGames
+                }
+                GSM.set(MainMenuState(controller))
+            }
         }
     )
 
@@ -34,6 +39,7 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     }
 
     override fun update(dt: Float) {
+        println("Opponent left the game: " + GSM.activeGame!!.opponentLeft)
         if (GSM.activeGame!!.gameReady) {
             GSM.set(PlayState(controller))
         }

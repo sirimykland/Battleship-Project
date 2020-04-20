@@ -15,6 +15,7 @@ class Game(val gameId: String) : GameObject() {
     var gameReady = false
     var playerBoard: Boolean = false
     var newTurn: Boolean = false
+    var opponentLeft: Boolean = false
 
     constructor(gameId: String, player1: Player, player2: Player = Player()) : this(gameId) {
         if (player1.playerId == GSM.userId) {
