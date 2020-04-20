@@ -6,7 +6,7 @@ import com.battleship.model.equipment.Equipment
 import java.util.Timer
 import kotlin.concurrent.schedule
 
-class Game(val gameId: String) : GameObject() {
+class Game(val gameId: String) {
     var youWon: Boolean = false
     var winner: String = ""
     var player: Player = Player()

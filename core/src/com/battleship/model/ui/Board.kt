@@ -212,7 +212,7 @@ class Board(val size: Int) : GameObject() {
         return health
     }
     fun isTreasureListEmpty(): Boolean {
-        return  treasures.isEmpty()
+        return treasures.isEmpty()
     }
 
     /**
