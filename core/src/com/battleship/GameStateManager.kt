@@ -35,7 +35,6 @@ object GameStateManager {
     }
 
     fun create() {
-        print("User id $userId")
         states.peek().create()
     }
 
