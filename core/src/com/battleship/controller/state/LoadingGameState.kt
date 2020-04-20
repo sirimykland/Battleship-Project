@@ -54,8 +54,9 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     }
 
     override fun update(dt: Float) {
-        println("Opponent left the game: " + GSM.activeGame!!.opponentLeft)
-
+        println("Loading Opponent left: ${GSM.activeGame!!.opponentLeft}")
+        println("Loading Show dialog: $showDialog")
+        println("Loading OpponentLeftRenders: $opponentLeftRenders")
         if (GSM.activeGame!!.opponentLeft) {
             if (opponentLeftRenders < 2) opponentLeftRenders++
             if (opponentLeftRenders == 1) showDialog = true // First opponent left render

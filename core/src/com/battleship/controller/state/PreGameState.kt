@@ -68,12 +68,16 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
         GUI.header("Place treasures"),
         GUI.backButton { leaveGame() },
         GuiObject(0f, 0f, 0f, 0f)
-            .listen(TreasureHandler(GSM.activeGame!!.player.board))
+            .listen(TreasureHandler(GSM.activeGame!!.player.board)),
+        *opponentLeftDialog
     )
 
     private fun leaveGame() {
         controller.leaveGame(GSM.activeGame!!.gameId, GSM.userId) {
             GSM.resetGame()
+            controller.addPendingGamesListener { pendingGames ->
+                GSM.pendingGames = pendingGames
+            }
             GSM.set(MainMenuState(controller))
         }
     }
@@ -83,6 +87,9 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     }
 
     override fun update(dt: Float) {
+        println("Pre-game Opponent left: ${GSM.activeGame!!.opponentLeft}")
+        println("Pre-game Show dialog: $showDialog")
+        println("Pre-game OpponentLeftRenders: $opponentLeftRenders")
         if (GSM.activeGame!!.opponentLeft) {
             if (opponentLeftRenders < 2) opponentLeftRenders++
             if (opponentLeftRenders == 1) showDialog = true // First opponent left render

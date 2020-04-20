@@ -262,7 +262,8 @@ object AndroidFirebase : FirebaseController {
                 // If no opponent has joined yet
                 if (opponent == "") {
                     Log.d("addGameListener", "Opponent not joined yet")
-                }else if(playerLeft != ""){
+                } else if (playerLeft != ""){
+                    println("Opponent left firebase")
                     GSM.activeGame!!.opponentLeft = true
                 }
                 // If there is an opponent in the game
