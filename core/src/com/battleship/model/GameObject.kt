@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 
 /**
- * Abstract class member used within drawable models
+ * Abstract class used within drawable models
  */
 abstract class GameObject {
 
