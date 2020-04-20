@@ -64,7 +64,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         2f,
         42.5f,
         10f,
-        "Play another game",
+        "Find new game",
         onClick = {
             GSM.resetGame()
             GSM.set(MatchmakingState(controller))
