@@ -326,9 +326,10 @@ object DesktopFirebase : FirebaseController {
                         val treasures =
                             snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>?
                         if (treasures != null) {
-                            println("$player2Id, ${treasures.keys}")
-                            if (player2Id in treasures.keys) {
-                                treasures[player2Id]?.let {
+                            val opponentId = game.opponent.playerId
+                            println("$opponentId, ${treasures.keys}")
+                            if (opponentId in treasures.keys) {
+                                treasures[opponentId]?.let {
                                     Gdx.app.postRunnable {
                                         game.opponent.board.setTreasuresList(it)
                                     }
