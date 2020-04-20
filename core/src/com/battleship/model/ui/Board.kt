@@ -16,13 +16,16 @@ import com.battleship.model.treasures.TreasureChest
 import kotlin.random.Random
 
 class Board(val size: Int) : GameObject() {
-    var treasures: ArrayList<Treasure> = ArrayList() // TODO: Set private!
+    private var treasures: ArrayList<Treasure> = ArrayList()
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
     private var sound = SoundEffects()
 
     // Change all tiles to unopened state
     fun setTilesUnopened() {
         tiles = Array(size) { Array(size) { Tile.UNOPENED } }
+    }
+    fun clearTreasures() {
+        treasures.clear()
     }
 
     fun createAndPlaceTreasures(quantity: Int, type: TreasureType, revealed: Boolean) {
@@ -207,6 +210,9 @@ class Board(val size: Int) : GameObject() {
             health += treasure.health
         }
         return health
+    }
+    fun isTreasureListEmpty(): Boolean {
+        return  treasures.isEmpty()
     }
 
     /**

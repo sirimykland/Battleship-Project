@@ -16,18 +16,6 @@ class Game(val gameId: String) : GameObject() {
     var playerBoard: Boolean = false
     var newTurn: Boolean = false
 
-    constructor(gameId: String, player1: Player, player2: Player = Player()) : this(gameId) {
-        if (player1.playerId == GSM.userId) {
-            this.player = player1
-            this.opponent = player2
-            this.playerTurn = false
-        } else {
-            this.player = player2
-            this.opponent = player1
-            this.playerTurn = true
-        }
-    }
-
     fun setPlayers(player1: Player, player2: Player = Player()) {
         if (player1.playerId == GSM.userId) {
             this.player = player1
@@ -79,8 +67,6 @@ class Game(val gameId: String) : GameObject() {
     }
 
     fun setTreasures(treasures: Map<String, List<Map<String, Any>>>) {
-        println("input param: $treasures")
-        println("is not empty?" + (treasures.isNotEmpty()))
         if (player.playerId in treasures) treasures[player.playerId]?.let {
             player.board.setTreasuresList(
                 it
@@ -89,7 +75,6 @@ class Game(val gameId: String) : GameObject() {
         if (opponent.playerId in treasures) {
             treasures[opponent.playerId]?.let { opponent.board.setTreasuresList(it) }
         }
-        println("treasures: o:" + (opponent.board.treasures) + " and m:" + (this.player.board.treasures))
     }
 
     fun setGameReadyIfReady() {
@@ -101,7 +86,7 @@ class Game(val gameId: String) : GameObject() {
     }
 
     fun isTreasuresRegistered(): Boolean {
-        val ready = player.board.treasures.isNotEmpty() && opponent.board.treasures.isNotEmpty()
+        val ready = !player.board.isTreasureListEmpty() && !opponent.board.isTreasureListEmpty()
         println("isTreasuresRegistered: $ready")
         return ready
     }
