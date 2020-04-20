@@ -16,7 +16,6 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
 
     override fun create() {
         super.create()
-        println("---PREGAMESTATE---")
         GSM.activeGame!!.player.board.treasures.clear()
         GSM.activeGame!!.player.board.createAndPlaceTreasures(
             1,
@@ -44,8 +43,6 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
         "Start Game",
         onClick = {
             val game = GSM.activeGame!!
-            println("gameready is: " + game.gameReady)
-            println("t: " + game.player.board.getTreasuresList())
             controller.registerTreasures(
                 game.gameId,
                 game.player.playerId,
@@ -83,13 +80,10 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     }
 
     override fun render() {
-        this.view.render(*guiObjects.toTypedArray(), GSM.activeGame!!.player.board)
+        this.view.render(GSM.activeGame!!.player.board, *guiObjects.toTypedArray())
     }
 
     override fun update(dt: Float) {
-        println("Pre-game Opponent left: ${GSM.activeGame!!.opponentLeft}")
-        println("Pre-game Show dialog: $showDialog")
-        println("Pre-game OpponentLeftRenders: $opponentLeftRenders")
         if (GSM.activeGame!!.opponentLeft) {
             if (opponentLeftRenders < 2) opponentLeftRenders++
             if (opponentLeftRenders == 1) showDialog = true // First opponent left render

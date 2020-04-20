@@ -3,6 +3,8 @@ package com.battleship.controller.state
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
+import com.battleship.model.ui.Text
+import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.view.PlayView
 import com.battleship.view.View
@@ -12,17 +14,7 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     var showDialog: Boolean = false
     var opponentLeftRenders: Int = 0
 
-    override fun create() {
-        super.create()
-        println("---LOADINGSTATE---")
-    }
-
-    private fun headerText(): String {
-        if (GSM.activeGame!!.opponent.playerId == "") return "Waiting for opponent to join..."
-        else if (GSM.activeGame!!.opponent.board.treasures.isEmpty())
-            return "Opponent joined! Waiting for ${GSM.activeGame!!.opponent.playerName} to register treasures..."
-        return "null"
-    }
+    private val header: GuiObject = GUI.header("Waiting for opponent to join...")
 
     private fun leaveGame() {
         controller.leaveGame(GSM.activeGame!!.gameId, GSM.userId) {
@@ -43,7 +35,7 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     )
 
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.header(headerText()),
+        header,
         GUI.backButton { leaveGame() },
         *opponentLeftDialog
     )
@@ -54,18 +46,24 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
     }
 
     override fun update(dt: Float) {
-        println("Loading Opponent left: ${GSM.activeGame!!.opponentLeft}")
-        println("Loading Show dialog: $showDialog")
-        println("Loading OpponentLeftRenders: $opponentLeftRenders")
         if (GSM.activeGame!!.opponentLeft) {
             if (opponentLeftRenders < 2) opponentLeftRenders++
             if (opponentLeftRenders == 1) showDialog = true // First opponent left render
         }
-
         if (showDialog) opponentLeftDialog.forEach { guiObject -> guiObject.show() }
         else opponentLeftDialog.forEach { guiObject -> guiObject.hide() }
 
+        // Game is ready!
         if (GSM.activeGame!!.gameReady) GSM.set(PlayState(controller))
+
+        updateHeaderText()
+    }
+
+    private fun updateHeaderText() {
+        if (GSM.activeGame!!.opponent.playerId == "")
+            header.set(Text("Waiting for opponent to join...", font = Font.MEDIUM_WHITE))
+        else if (GSM.activeGame!!.opponent.board.treasures.isEmpty())
+            header.set(Text("Waiting for ${GSM.activeGame!!.opponent.playerName} to register treasures...", font = Font.MEDIUM_WHITE))
     }
 
     override fun dispose() {
