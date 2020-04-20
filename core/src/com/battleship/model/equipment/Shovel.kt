@@ -3,6 +3,9 @@ package com.battleship.model.equipment
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 
+/**
+ *  Inherits behavior from [Equipment]
+ */
 class Shovel : Equipment() {
     override var searchRadius: Int = 0
     override var uses: Int = 100
