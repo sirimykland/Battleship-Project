@@ -4,6 +4,10 @@ import com.badlogic.gdx.audio.Sound
 import com.battleship.BattleshipGame
 import com.battleship.model.GameObject
 
+/**
+ * Abstract class of type [GameObject]
+ * with general implementation for behavior
+ */
 abstract class Equipment : GameObject() {
     abstract var searchRadius: Int
     abstract var uses: Int
