@@ -6,7 +6,8 @@ import com.battleship.model.equipment.Equipment
 import java.util.Timer
 import kotlin.concurrent.schedule
 
-class Game(val gameId: String) {
+class Game(val gameId: String) : GameObject() {
+    var youWon: Boolean = false
     var winner: String = ""
     var player: Player = Player()
     var opponent: Player = Player()
@@ -45,7 +46,8 @@ class Game(val gameId: String) {
     fun makeMove(pos: Vector2) {
         if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
             val missed = opponent.board.shootTiles(pos, player.equipmentSet.activeEquipment!!)
-            handleResultFromMove(missed)
+            switchTurn(missed)
+            opponent.updateHealth()
         } else {
             println(player.equipmentSet.activeEquipment!!.name + " has No more uses")
         }
@@ -65,14 +67,11 @@ class Game(val gameId: String) {
             )
 
             val missed = player.board.shootTiles(pos, equipment)
-            handleResultFromMove(missed)
+            switchTurn(missed)
+            player.updateHealth()
         } else {
             println(opponent.equipmentSet.activeEquipment!!.name + " has No more uses")
         }
-    }
-
-    fun switchTurn() {
-        playerTurn = !playerTurn
     }
 
     fun isPlayersTurn(): Boolean {
@@ -93,30 +92,45 @@ class Game(val gameId: String) {
         println("treasures: o:" + (opponent.board.treasures) + " and m:" + (this.player.board.treasures))
     }
 
-    fun setGameReadyifReady() {
-        if (isplayersRegistered() && isTreasuresRegistered()) {
+    fun setGameReadyIfReady() {
+        if (isPlayersRegistered() && isTreasuresRegistered()) {
             gameReady = true
+            player.updateHealth()
+            opponent.updateHealth()
         }
     }
 
     fun isTreasuresRegistered(): Boolean {
-        val ready = !player.board.treasures.isEmpty() && !opponent.board.treasures.isEmpty()
+        val ready = player.board.treasures.isNotEmpty() && opponent.board.treasures.isNotEmpty()
         println("isTreasuresRegistered: $ready")
         return ready
     }
 
-    fun isplayersRegistered(): Boolean {
+    fun isPlayersRegistered(): Boolean {
         val ready = player.playerId != "" && opponent.playerId != ""
         println("isplayersRegistered: $ready")
         return ready
     }
 
-    private fun handleResultFromMove(nextMove: Boolean) {
-        if (nextMove) {
-            switchTurn()
+    private fun switchTurn(switch: Boolean) {
+        if (switch) {
+            playerTurn = !playerTurn
             Timer().schedule(1000) {
                 newTurn = true
             }
+        }
+    }
+
+    fun updateWinner() {
+        if (player.health == 0) { // Opponent won!
+            player.board.revealTreasures()
+            opponent.board.revealTreasures()
+            winner = opponent.playerName
+        } else if (opponent.health == 0) { // You won!
+            youWon = true
+            player.board.revealTreasures()
+            opponent.board.revealTreasures()
+            winner = player.playerName
         }
     }
 

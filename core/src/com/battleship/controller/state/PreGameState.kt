@@ -15,25 +15,23 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     override fun create() {
         super.create()
         println("---PREGAMESTATE---")
-        if (!GSM.treasuresInitialized) {
-            GSM.activeGame!!.player.board.createAndPlaceTreasures(
-                1,
-                Treasure.TreasureType.GOLDKEY,
-                true
-            )
-            GSM.activeGame!!.player.board.createAndPlaceTreasures(
-                1,
-                Treasure.TreasureType.GOLDCOIN,
-                true
-            )
-            GSM.activeGame!!.player.board.createAndPlaceTreasures(
-                1,
-                Treasure.TreasureType.TREASURECHEST,
-                true
-            )
-            controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
-            GSM.treasuresInitialized = true
-        }
+        GSM.activeGame!!.player.board.treasures.clear()
+        GSM.activeGame!!.player.board.createAndPlaceTreasures(
+            1,
+            Treasure.TreasureType.GOLDKEY,
+            true
+        )
+        GSM.activeGame!!.player.board.createAndPlaceTreasures(
+            1,
+            Treasure.TreasureType.GOLDCOIN,
+            true
+        )
+        GSM.activeGame!!.player.board.createAndPlaceTreasures(
+            1,
+            Treasure.TreasureType.TREASURECHEST,
+            true
+        )
+        controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
     }
 
     private val readyButton = GUI.textButton(
@@ -57,7 +55,10 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
         GUI.header("Place treasures"),
-        GUI.backButton { GSM.set(MainMenuState(controller)) },
+        GUI.backButton {
+            GSM.resetGame()
+            GSM.set(MainMenuState(controller))
+        },
         GuiObject(0f, 0f, 0f, 0f)
             .listen(TreasureHandler(GSM.activeGame!!.player.board))
     )

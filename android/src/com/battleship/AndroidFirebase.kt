@@ -65,45 +65,35 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * Add userId to a specific game
+     * Add a player to a specific game
      * @param gameId the id of the game document
-     * @param userId the id of the user that should be added
-     * @param userId the name of the user that should be added
+     * @param player2Id the id of the player that should be added
+     * @param player2Name the name of the player that should be added
      */
-    override fun joinGame(gameId: String, userId: String, userName: String) {
-        // Add the data to the game document
-        GSM.activeGame = Game(gameId)
-
+    override fun joinGame(gameId: String, player2Id: String, player2Name: String) {
         val docRef = db.collection("games").document(gameId)
-        db.runBatch { batch ->
-            batch.update(docRef, "player2Id", userId)
-            batch.update(docRef, "player2Name", userName)
-        }.addOnSuccessListener {
-            Log.d("joinGame", "Updated successfully")
-            db.collection("games").document(gameId).get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        Log.d("joinGame", "game set with id=${document.id}")
-                        val player1Id: String = document.getString("player1Id") as String
-                        val player1Name: String = document.getString("player1Name") as String
-                        val player1: Player = Player(player1Id, player1Name)
+        var player1 = Player()
+        var player2 = Player()
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
 
-                        val player2Id: String = document.getString("player2Id") as String
-                        val player2Name: String = document.getString("player2Name") as String
-                        val player2: Player =
-                            if (player2Id != "" && player2Name != "")
-                                Player(player2Id, player2Name)
-                            else Player()
-                        GSM.activeGame!!.setPlayers(player1, player2)
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("setGame", exception)
-                    // TODO: Add exception handling, could not find games
-                }
-        }.addOnFailureListener { exception ->
-            Log.w("joinGame", exception)
-            // TODO: Add exception handling
+            // Get player1
+            val player1Id: String = snapshot.getString("player1Id") as String
+            val player1Name: String = snapshot.getString("player1Name") as String
+            player1 = Player(player1Id, player1Name)
+
+            // Set player2
+            transaction.update(docRef, "player2Id", player2Id)
+            transaction.update(docRef, "player2Name", player2Name)
+            player2 = Player(player2Id, player2Name)
+        }.addOnSuccessListener {
+            // Creates a new game and registers player1 and player2
+            GSM.activeGame = Game(gameId)
+            GSM.activeGame!!.setPlayers(player1, player2)
+            Log.d("joinGame", "Joined " + player1.playerName + "'s game successfully!")
+        }.addOnFailureListener { e ->
+            // TODO: Add exception handling, could not find games
+            Log.w("joinGame", "Transaction Joined game failed!", e)
         }
     }
 
@@ -139,72 +129,69 @@ object AndroidFirebase : FirebaseController {
     /**
      * Registers the treasures on the board for a given user
      * @param gameId the id of the game document
-     * @param userId the id of the user owning the treasure
+     * @param playerId the id of the player owning the treasure
      * @param treasures list containing the treasures that should be added, each described using a map
      */
     override fun registerTreasures(
         gameId: String,
-        userId: String,
+        playerId: String,
         treasures: List<Map<String, Any>>
     ) {
-        db.collection("games").document(gameId).get()
-            .addOnSuccessListener { document ->
-                val dbTreasures =
-                    document.get("treasures") as MutableMap<String, List<Map<String, Any>>>
-                dbTreasures[userId] = treasures
-                db.collection("games").document(gameId).update("treasures", dbTreasures)
-                    .addOnSuccessListener {
-                        Log.d("registerTreasures", "treasures registered")
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w("registerTreasures", exception)
-                        // TODO: Add exception handling
-                    }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("registerTreasures", exception)
-                // TODO: Add exception handling
-            }
+        val docRef = db.collection("games").document(gameId)
+
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            // Get treasures
+            val dbTreasures =
+                snapshot.get("treasures") as MutableMap<String, List<Map<String, Any>>>
+
+            // Update treasures
+            dbTreasures[playerId] = treasures
+            transaction.update(docRef, "treasures", dbTreasures)
+        }.addOnSuccessListener {
+            Log.d("registerTreasures", "Treasures registered successfully!")
+        }.addOnFailureListener { e ->
+            Log.w(
+                "registerTreasures",
+                "Treasures registration failed!",
+                e
+            )
+        }
     }
 
     /**
      * Registers the move
      * @param gameId the id of the game document
      * @param x x coordinate of move
-     * @param y y coordinate of
+     * @param y y coordinate of move
      * @param playerId player making the move
+     * @param equipment The equipment used by the player
      */
-    override fun makeMove(gameId: String, x: Int, y: Int, playerId: String, weapon: String) {
-        // Get the document for the game using the id of the document
-        db.collection("games").document(gameId).get()
-            .addOnSuccessListener { document ->
-                // Saving existing moves
-                var moves = mutableListOf<Map<String, Any>>()
-                if (document.get("moves") != null) {
-                    moves = document.get("moves") as MutableList<Map<String, Any>>
-                }
-                // Making a map for the new move
-                val data = mutableMapOf<String, Any>()
-                data["x"] = x
-                data["y"] = y
-                data["playerId"] = playerId
-                data["weapon"] = weapon
-                // Add the move to the list of existing moves
-                moves.add(data)
-                // Push the list of moves to the database
-                db.collection("games").document(gameId).update("moves", moves)
-                    .addOnSuccessListener {
-                        Log.d("makeMove", "move made successfully")
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w("makeMove", exception)
-                        // TODO: Add exception handling, could not push data to db
-                    }
+    override fun registerMove(gameId: String, x: Int, y: Int, playerId: String, equipment: String) {
+        val docRef = db.collection("games").document(gameId)
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            // Get moves
+            var moves = mutableListOf<Map<String, Any>>()
+            if (snapshot.get("moves") != null) {
+                moves = snapshot.get("moves") as MutableList<Map<String, Any>>
             }
-            .addOnFailureListener { exception ->
-                Log.w("makeMove", exception)
-                // TODO: Add exception handling, could not find game document
-            }
+
+            // add new move
+            val data = mutableMapOf<String, Any>()
+            data["x"] = x
+            data["y"] = y
+            data["playerId"] = playerId
+            data["weapon"] = equipment
+            moves.add(data)
+
+            // Update move
+            transaction.update(docRef, "moves", moves)
+        }.addOnSuccessListener {
+            Log.d("registerMove", "Move registered successfully!")
+        }.addOnFailureListener { e -> Log.w("registerMove", "Move registration failed!", e) }
     }
 
     /**
@@ -251,7 +238,7 @@ object AndroidFirebase : FirebaseController {
                         val player2Name = snapshot.data?.get("player2Name") as String
                         GSM.activeGame!!.opponent.playerId = player2Id
                         GSM.activeGame!!.opponent.playerName = player2Name
-                        GSM.activeGame!!.setGameReadyifReady()
+                        GSM.activeGame!!.setGameReadyIfReady()
                     } else {
                         // Get the field containing the treasures in the database
                         var treasures: MutableMap<String, List<Map<String, Any>>>
@@ -260,14 +247,14 @@ object AndroidFirebase : FirebaseController {
                                 snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>
 
                             // If there is not enough treasures registered
-                            if (treasures.size < 2 && GSM.activeGame!!.isplayersRegistered()) {
+                            if (treasures.size < 2 && GSM.activeGame!!.isPlayersRegistered()) {
                                 Log.d("addGameListener", "opponent's treasures registered")
                                 val OplayerId = GSM.activeGame!!.opponent.playerId
                                 if (OplayerId in treasures) {
                                     treasures[OplayerId]?.let {
                                         GSM.activeGame!!.opponent.board.setTreasuresList(it)
                                     }
-                                    GSM.activeGame!!.setGameReadyifReady()
+                                    GSM.activeGame!!.setGameReadyIfReady()
                                 }
                             }
                             // If there is enough treasures registered in firebase but not in opponents board
@@ -277,7 +264,7 @@ object AndroidFirebase : FirebaseController {
                                     treasures[OplayerId]?.let {
                                         GSM.activeGame!!.opponent.board.setTreasuresList(it)
                                     }
-                                    GSM.activeGame!!.setGameReadyifReady()
+                                    GSM.activeGame!!.setGameReadyIfReady()
                                 }
                             } else {
                                 addPlayListener(gameId)
@@ -319,7 +306,7 @@ object AndroidFirebase : FirebaseController {
                     // If no moves has been made yet
                     if (moves.size == 0) {
                         Log.d("addPlayListener", "No moves made yet")
-                        GSM.activeGame!!.setGameReadyifReady()
+                        GSM.activeGame!!.setGameReadyIfReady()
                     } else {
                         // Get the last move
                         val lastMove = moves.get(moves.size - 1)
