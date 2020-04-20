@@ -141,7 +141,7 @@ abstract class Treasure(var position: Vector2, private val rotate: Boolean = fal
      *
      * @return tiles: ArrayList<Vector2> - list of grid coordinates
      */
-    fun getTreasureTiles(): {
+    fun getTreasureTiles(): ArrayList<Vector2> {
         val tiles = ArrayList<Vector2>()
         for (i in 1 until dimension.x.toInt() + 1) {
             val x = position.x.toInt() + i - 1
