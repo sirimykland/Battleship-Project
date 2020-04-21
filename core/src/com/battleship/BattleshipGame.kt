@@ -17,9 +17,8 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
         var music: Music? = null
         var soundOn: Boolean = true
     }
-
+    
     override fun create() {
-
         if (Gdx.files.internal("audio/music.mp3").exists()) {
             music = Gdx.audio.newMusic(Gdx.files.internal("audio/music.mp3"))
             music?.isLooping = true
@@ -35,7 +34,10 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
         } else {
             GSM.push(MainMenuState(controller))
         }
-
+        controller.addPendingGamesListener { pendingGames ->
+            GSM.pendingGames = pendingGames
+        }
+        GSM.push(MainMenuState(controller))
     }
 
     override fun dispose() {

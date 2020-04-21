@@ -4,14 +4,13 @@ import com.battleship.controller.state.State
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import java.util.Stack
-import kotlin.collections.ArrayList
+import java.util.UUID
 
 object GameStateManager {
     var username = ""
-    var userId = ""
+    var userId: String = UUID.randomUUID().toString() //
     var activeGame: Game? = null
     var pendingGames = ArrayList<GameListObject>()
-    var treasuresInitialized: Boolean = false
 
     private val states: Stack<State> = Stack()
 
@@ -29,6 +28,7 @@ object GameStateManager {
     }
 
     fun set(state: State) {
+        println("setting ${state.javaClass}")
         states.pop().dispose()
         states.push(state)
         create()
@@ -44,6 +44,9 @@ object GameStateManager {
 
     fun render() {
         states.peek().render()
+    }
+    fun resetGame() {
+        activeGame = null
     }
 }
 typealias GSM = GameStateManager
