@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.model.equipment.Equipment
 import com.battleship.model.soundeffects.SoundEffects
-import java.util.*
+import java.util.Timer
 import kotlin.concurrent.schedule
 
 class Game(val gameId: String) {
