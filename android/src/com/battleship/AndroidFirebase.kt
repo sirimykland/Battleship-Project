@@ -73,7 +73,12 @@ object AndroidFirebase : FirebaseController {
      * @param player2Id the id of the player that should be added
      * @param player2Name the name of the player that should be added
      */
-    override fun joinGame(gameId: String, player2Id: String, player2Name: String, callback: (game: Game) -> Unit) {
+    override fun joinGame(
+        gameId: String,
+        player2Id: String,
+        player2Name: String,
+        callback: (game: Game) -> Unit
+    ) {
         val game = Game(gameId)
         val docRef = db.collection("games").document(gameId)
         var player1 = Player()
@@ -337,7 +342,8 @@ object AndroidFirebase : FirebaseController {
                         GSM.activeGame!!.setGameReadyIfReady()
                     } else {
                         // Get the last move
-                        val lastMove = moves.get(moves.size - 1) val game = GSM.activeGame!!
+                        val lastMove = moves.get(moves.size - 1)
+                        val game = GSM.activeGame!!
                         if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
                             println("----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
                             GSM.activeGame!!.registerMove(lastMove)
