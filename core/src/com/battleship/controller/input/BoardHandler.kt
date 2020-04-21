@@ -12,7 +12,7 @@ import com.battleship.utility.GdxGraphicsUtil.boardWidth
 
 class BoardHandler(private val controller: FirebaseController, val isGameOver: () -> Boolean) : InputAdapter() {
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        if (!isGameOver()) {
+        if (GSM.activeGame!!.isPlayersTurn() && !GSM.activeGame!!.playerBoard && !isGameOver()) {
             val touchPos = Vector2(screenX.toFloat(), Gdx.graphics.height - screenY.toFloat())
 
             val boardWidth = Gdx.graphics.boardWidth()
