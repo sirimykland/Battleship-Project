@@ -15,6 +15,7 @@ class Game(val gameId: String) {
     var gameReady = false
     var playerBoard: Boolean = false
     var newTurn: Boolean = false
+    var opponentLeft: Boolean = false
 
     fun setPlayers(player1: Player, player2: Player = Player()) {
         if (player1.playerId == GSM.userId) {

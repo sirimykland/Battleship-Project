@@ -8,14 +8,11 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 import com.battleship.model.equipment.EquipmentSet
 import com.battleship.model.ui.Board
-import com.battleship.model.ui.GameInfo
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.utility.GdxGraphicsUtil.equipmentSetPosition
 import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
-import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
-import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
 
 class PlayView : View() {
     private val background = Sprite(Texture("images/background.png"))
@@ -41,12 +38,6 @@ class PlayView : View() {
                     batch,
                     Gdx.graphics.equipmentSetPosition(),
                     Gdx.graphics.equipmentSetSize()
-                )
-                is GameInfo -> obj.draw(
-                    batch,
-                    shapeRenderer,
-                    Gdx.graphics.gameInfoPosition(),
-                    Gdx.graphics.gameInfoSize()
                 )
                 is GuiObject -> {
                     batch.begin()
