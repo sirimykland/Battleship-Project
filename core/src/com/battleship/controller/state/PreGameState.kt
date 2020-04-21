@@ -17,6 +17,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     override fun create() {
         super.create()
         GSM.activeGame!!.player.board.clearTreasures()
+        //Bug related to tresures here.
         GSM.activeGame!!.player.board.createAndPlaceTreasures(
             1,
             Treasure.TreasureType.GOLDKEY,

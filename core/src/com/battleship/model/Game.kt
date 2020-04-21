@@ -3,7 +3,8 @@ package com.battleship.model
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.model.equipment.Equipment
-import java.util.Timer
+import com.battleship.model.soundeffects.SoundEffects
+import java.util.*
 import kotlin.concurrent.schedule
 
 class Game(val gameId: String) {
@@ -112,11 +113,13 @@ class Game(val gameId: String) {
             player.board.revealTreasures()
             opponent.board.revealTreasures()
             winner = opponent.playerName
+            SoundEffects.playLosing(0.6f)
         } else if (opponent.health == 0) { // You won!
             youWon = true
             player.board.revealTreasures()
             opponent.board.revealTreasures()
             winner = player.playerName
+            SoundEffects.playVictory(0.4f)
         }
     }
 
