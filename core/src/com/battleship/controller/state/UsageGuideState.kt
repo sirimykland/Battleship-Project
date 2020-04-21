@@ -63,7 +63,7 @@ class UsageGuideState(private val controller: FirebaseController) : GuiState(con
             updateButtons()
         }
     }
-    
+
     private val previousPageButton = GUI.textButton(
         4.6875f,
         3.75f,
