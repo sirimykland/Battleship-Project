@@ -167,6 +167,7 @@ object DesktopFirebase : FirebaseController {
         userId: String,
         treasures: List<Map<String, Any>>
     ) {
+        println("registerTreasures: $gameId, $userId, $treasures")
         val query = db.collection("games").document(gameId).get()
         val game = query.get()
         if (game.exists()) {
