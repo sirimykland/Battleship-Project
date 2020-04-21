@@ -6,13 +6,11 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
-import com.battleship.model.Game
-import com.battleship.model.ui.Board
 import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
 
-class BoardHandler(private val controller : FirebaseController) : InputAdapter() {
+class BoardHandler(private val controller: FirebaseController) : InputAdapter() {
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val touchPos = Vector2(screenX.toFloat(), Gdx.graphics.height - screenY.toFloat())
 

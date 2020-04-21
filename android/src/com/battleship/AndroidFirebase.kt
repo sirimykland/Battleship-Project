@@ -337,8 +337,7 @@ object AndroidFirebase : FirebaseController {
                         GSM.activeGame!!.setGameReadyIfReady()
                     } else {
                         // Get the last move
-                        val lastMove = moves.get(moves.size - 1)
-                        val game = GSM.activeGame!!
+                        val lastMove = moves.get(moves.size - 1) val game = GSM.activeGame!!
                         if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
                             println("----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
                             GSM.activeGame!!.registerMove(lastMove)

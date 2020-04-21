@@ -1,21 +1,16 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.input.BoardHandler
-import com.battleship.controller.input.TreasureHandler
 import com.battleship.model.Player
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
-import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
-import com.battleship.utility.GdxGraphicsUtil.boardPosition
-import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.utility.GdxGraphicsUtil.equipmentSetPosition
 import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
 import com.battleship.utility.Palette
@@ -123,39 +118,11 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         } else {
             autoBoardSwitching()
             updateGUIObjectsInGame()
-            // handleBoardInput()
+            // TODO Should stop listen to BoardHandler here
             // Update game status in GameStateManager
             GSM.activeGame!!.updateWinner()
         }
     }
-    /*
-    private fun handleBoardInput() {
-        // Check if it is players turn and opponents board is showing.
-        if (GSM.activeGame!!.isPlayersTurn() && !GSM.activeGame!!.playerBoard) {
-            if (Gdx.input.justTouched()) {
-                val touchX = Gdx.input.x.toFloat()
-                val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()
-                val touchPos = Vector2(touchX, touchY)
-
-                val boardWidth = Gdx.graphics.boardWidth()
-                val boardPos = Gdx.graphics.boardPosition()
-                val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
-
-                if (boardBounds.contains(touchPos)) {
-                    val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
-                    controller.registerMove(
-                        GSM.activeGame!!.gameId,
-                        boardTouchPos.x.toInt(),
-                        boardTouchPos.y.toInt(),
-                        GSM.activeGame!!.player.playerId,
-                        GSM.activeGame!!.player.equipmentSet.activeEquipment!!.name
-                    )
-                    GSM.activeGame!!.makeMove(boardTouchPos)
-                }
-            }
-        }
-    }
-    */
 
     private fun autoBoardSwitching() {
         if (GSM.activeGame!!.isPlayersTurn() && GSM.activeGame!!.playerBoard && GSM.activeGame!!.newTurn) {
