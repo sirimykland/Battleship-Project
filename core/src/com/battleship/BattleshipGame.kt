@@ -17,7 +17,7 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
         var music: Music? = null
         var soundOn: Boolean = true
     }
-    
+
     override fun create() {
         if (Gdx.files.internal("audio/music.mp3").exists()) {
             music = Gdx.audio.newMusic(Gdx.files.internal("audio/music.mp3"))
@@ -27,9 +27,9 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
         }
         prefs = Gdx.app.getPreferences("firsttimeopen")
         print(prefs)
-        if (prefs.getBoolean("lock",true) ) {
-            prefs.putBoolean("lock", false);
-            prefs.flush();
+        if (prefs.getBoolean("lock", true)) {
+            prefs.putBoolean("lock", false)
+            prefs.flush()
             GSM.push(UsageGuideState(controller))
         } else {
             GSM.push(MainMenuState(controller))

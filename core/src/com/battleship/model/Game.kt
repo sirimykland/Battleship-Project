@@ -3,7 +3,7 @@ package com.battleship.model
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.model.equipment.Equipment
-import java.util.Timer
+import java.util.*
 import kotlin.concurrent.schedule
 
 class Game(val gameId: String) {
