@@ -92,7 +92,9 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         mainMenuButton,
         newGameButton,
         *gameOverDialog,
-        GUI.listener("boardHandler", BoardHandler(controller))
+        GUI.listener("boardHandler", BoardHandler(controller) {
+            gameOver
+        })
     )
 
     override fun render() {
