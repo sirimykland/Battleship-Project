@@ -1,13 +1,12 @@
 package com.battleship.model.ui
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.battleship.BattleshipGame
-import com.battleship.controller.input.ButtonHandler
+import com.battleship.controller.input.ClickHandler
 import com.battleship.controller.input.KeyboardHandler
 import com.battleship.model.GameObject
 import com.battleship.model.soundeffects.SoundEffects
@@ -89,16 +88,18 @@ class GuiObject(
     }
 
     fun onClick(onClick: () -> Unit): GuiObject {
-        val listener = ButtonHandler(
+        val listener = ClickHandler(
             position.cpy().scl(Gdx.graphics.width / 100f, Gdx.graphics.height / 100f),
             size.cpy().scl(Gdx.graphics.width / 100f, Gdx.graphics.height / 100f)
         ) {
-            if (!hidden) {
+            if (!this.hidden) {
                 if (BattleshipGame.soundOn) {
                     sound.playClick(4.0f)
                 }
                 onClick()
+                return@ClickHandler true
             }
+            return@ClickHandler false
         }
         listen("onClick", listener)
         return this
@@ -114,7 +115,7 @@ class GuiObject(
         return this
     }
 
-    fun listen(key: String, listener: InputAdapter): GuiObject {
+    fun listen(key: String, listener: InputProcessor): GuiObject {
         if (hasListener(key)) {
             throw IllegalStateException("This GuiObject already has a listener assigned with key '$key'")
         }
