@@ -4,11 +4,10 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
-import com.battleship.BattleshipGame
 import com.battleship.controller.input.ButtonHandler
 import com.battleship.controller.input.KeyboardHandler
 import com.battleship.model.GameObject
-import com.battleship.model.soundeffects.SoundEffects
+import com.battleship.utility.SoundEffects
 
 class GuiObject(
     val position: Vector2,
@@ -19,7 +18,6 @@ class GuiObject(
     var listener: InputAdapter = InputAdapter()
     var hasListener: Boolean = false
     var hidden: Boolean = false
-
 
     fun hide(): GuiObject {
         hidden = true
@@ -79,9 +77,7 @@ class GuiObject(
             size.cpy().scl(Gdx.graphics.width / 100f, Gdx.graphics.height / 100f)
         ) {
             if (!hidden) {
-                if (BattleshipGame.soundOn) {
-                    SoundEffects.playClick(4.0f)
-                }
+                SoundEffects.playClick()
                 onClick()
             }
         }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.state.MainMenuState
 import com.battleship.utility.Font
+import com.battleship.utility.SoundEffects
 
 class BattleshipGame(private val controller: FirebaseController) : Game() {
     companion object {
@@ -28,6 +29,7 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
 
     override fun dispose() {
         Font.dispose()
+        SoundEffects.dispose()
     }
 
     override fun render() {
