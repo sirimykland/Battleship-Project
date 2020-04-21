@@ -65,7 +65,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
         GUI.header("Place treasures"),
         GUI.backButton { leaveGame() },
         GuiObject(0f, 0f, 0f, 0f)
-            .listen(TreasureHandler(GSM.activeGame!!.player.board)),
+            .listen("treasureHandler", TreasureHandler(GSM.activeGame!!.player.board)),
         *opponentLeftDialog
     )
 

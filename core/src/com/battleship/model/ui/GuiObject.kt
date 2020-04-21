@@ -2,6 +2,8 @@ package com.battleship.model.ui
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
+import com.badlogic.gdx.InputMultiplexer
+import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.battleship.BattleshipGame
@@ -17,11 +19,25 @@ class GuiObject(
 ) : GameObject() {
     constructor(posX: Float, posY: Float, sizeX: Float, sizeY: Float) : this(Vector2(posX, posY), Vector2(sizeX, sizeY))
     private val parts: MutableList<GuiElement> = mutableListOf()
-    var listener: InputAdapter = InputAdapter()
-    var hasListener: Boolean = false
+
+    private val listenerMap: MutableMap<String, InputProcessor> = mutableMapOf()
+    val listener: InputProcessor
+        get() {
+            return InputMultiplexer(*listenerMap.toList().map { it.second }.toTypedArray())
+        }
+
+    val hasListener: Boolean
+        get() {
+            return listenerMap.isNotEmpty()
+        }
+
     var hidden: Boolean = false
     var sound: SoundEffects =
         SoundEffects()
+
+    fun hasListener(key: String): Boolean {
+        return listenerMap.keys.contains(key)
+    }
 
     fun hide(): GuiObject {
         hidden = true
@@ -73,10 +89,7 @@ class GuiObject(
     }
 
     fun onClick(onClick: () -> Unit): GuiObject {
-        if (hasListener) {
-            throw IllegalStateException("This GuiObject already has a listener assigned")
-        }
-        listener = ButtonHandler(
+        val listener = ButtonHandler(
             position.cpy().scl(Gdx.graphics.width / 100f, Gdx.graphics.height / 100f),
             size.cpy().scl(Gdx.graphics.width / 100f, Gdx.graphics.height / 100f)
         ) {
@@ -87,37 +100,33 @@ class GuiObject(
                 onClick()
             }
         }
-        hasListener = true
+        listen("onClick", listener)
         return this
     }
 
-    fun noClick(): GuiObject {
-        if (hasListener && listener is ButtonHandler) {
-            listener = InputAdapter()
-            return this
-        }
-        throw IllegalStateException("This GuiObject has no onClick listener to remove")
-    }
-
     fun onKeyTyped(onKeyTyped: (char: Char) -> Unit): GuiObject {
-        if (hasListener) {
-            throw IllegalStateException("This GuiObject already has a listener assigned")
-        }
-        listener = KeyboardHandler { char ->
+        val listener = KeyboardHandler { char ->
             if (!hidden) {
                 onKeyTyped(char)
             }
         }
-        hasListener = true
+        listen("onKeyTyped", listener)
         return this
     }
 
-    fun listen(listener: InputAdapter): GuiObject {
-        if (hasListener) {
-            throw IllegalStateException("This GuiObject already has a listener assigned")
+    fun listen(key: String, listener: InputAdapter): GuiObject {
+        if (hasListener(key)) {
+            throw IllegalStateException("This GuiObject already has a listener assigned with key '$key'")
         }
-        this.listener = listener
-        hasListener = true
+        listenerMap[key] = listener
+        return this
+    }
+
+    fun removeListener(key: String): GuiObject {
+        if (!hasListener(key)) {
+            throw IllegalStateException("This GuiObject does not have a listener assigned with key '$key'")
+        }
+        listenerMap.remove(key)
         return this
     }
 

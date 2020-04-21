@@ -85,9 +85,15 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     )
 
     override val guiObjects: List<GuiObject> = listOf(
-        header, switchBoardButton, *equipmentButtons, opponentsBoardText, mainMenuButton,
-        newGameButton, *gameOverDialog, GuiObject(0f, 0f, 0f, 0f)
-            .listen(BoardHandler(controller))
+        header,
+        switchBoardButton,
+        *equipmentButtons,
+        opponentsBoardText,
+        mainMenuButton,
+        newGameButton,
+        *gameOverDialog,
+        GuiObject(0f, 0f, 0f, 0f)
+            .listen("boardHandler", BoardHandler(controller))
     )
 
     override fun render() {
