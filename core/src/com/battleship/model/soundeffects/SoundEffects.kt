@@ -27,7 +27,7 @@ object SoundEffects {
     }
 
     fun playVictory(volume: Float) {
-        if (BattleshipGame.soundOn && !alreadyPlayed)  {
+        if (BattleshipGame.soundOn && !alreadyPlayed) {
             victory.play(volume)
             alreadyPlayed = true
         }

@@ -20,7 +20,6 @@ class GuiObject(
     var hasListener: Boolean = false
     var hidden: Boolean = false
 
-
     fun hide(): GuiObject {
         hidden = true
         return this

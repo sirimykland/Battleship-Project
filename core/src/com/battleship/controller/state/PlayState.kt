@@ -111,8 +111,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
                 if (i == 0 && GSM.activeGame!!.youWon) {
                     SoundEffects.playVictory(0.6f)
                     element.set(Text("Congratulations, you won!", font = Font.LARGE_WHITE))
-                }
-                else if (i == 0 && !GSM.activeGame!!.youWon) {
+                } else if (i == 0 && !GSM.activeGame!!.youWon) {
                     element.set(Text("Sorry, you lost :(", font = Font.LARGE_WHITE))
                     SoundEffects.playLosing(0.6f)
                 }
