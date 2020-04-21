@@ -73,6 +73,7 @@ object DesktopFirebase : FirebaseController {
         data["winner"] = ""
         data["moves"] = mutableListOf<Map<String, Any>>()
         data["treasures"] = mutableMapOf<String, List<Map<String, Any>>>()
+        data["playerLeft"] = ""
 
         val res = db.collection("games").add(data)
         val gameId = res.get().id
@@ -296,6 +297,11 @@ object DesktopFirebase : FirebaseController {
         // TODO: Call function that should handle what happens when a winner is set
     }
 
+    override fun leaveGame(gameId: String, playerId: String, callback: () -> Unit) {
+        db.collection("games").document(gameId).update("playerLeft", playerId)
+        Gdx.app.postRunnable { callback() }
+    }
+
     /**
      * Function adding listener to a specific game
      * TODO: Add exception handling
@@ -317,6 +323,10 @@ object DesktopFirebase : FirebaseController {
                 if (snapshot != null && snapshot.exists()) {
                     val player2Id = snapshot.data?.get("player2Id") as String
                     // If no opponent has joined yet
+                    if (snapshot.data?.get("playerLeft") != "") {
+                        println("Opponent left firebase")
+                        GSM.activeGame!!.opponentLeft = true
+                    }
                     if (player2Id != "") {
                         val game = GSM.activeGame!!
                         if (game.opponent.playerId == "") {

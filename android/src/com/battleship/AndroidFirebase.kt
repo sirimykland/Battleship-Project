@@ -50,6 +50,7 @@ object AndroidFirebase : FirebaseController {
         data["winner"] = ""
         data["moves"] = mutableListOf<Map<String, Any>>()
         data["treasures"] = mutableMapOf<String, List<Map<String, Any>>>()
+        data["playerLeft"] = ""
 
         db.collection("games").add(data)
             .addOnSuccessListener { documentReference ->
@@ -72,7 +73,12 @@ object AndroidFirebase : FirebaseController {
      * @param player2Id the id of the player that should be added
      * @param player2Name the name of the player that should be added
      */
-    override fun joinGame(gameId: String, player2Id: String, player2Name: String, callback: (game: Game) -> Unit) {
+    override fun joinGame(
+        gameId: String,
+        player2Id: String,
+        player2Name: String,
+        callback: (game: Game) -> Unit
+    ) {
         val game = Game(gameId)
         val docRef = db.collection("games").document(gameId)
         var player1 = Player()
@@ -97,6 +103,24 @@ object AndroidFirebase : FirebaseController {
         }.addOnFailureListener { e ->
             // TODO: Add exception handling, could not find games
             Log.w("joinGame", "Transaction Joined game failed!", e)
+        }
+    }
+
+    override fun leaveGame(gameId: String, playerId: String, callback: () -> Unit) {
+        val docRef = db.collection("games").document(gameId)
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            // val playerLeftId: String = snapshot.getString("player2Id") as String
+            // println("PlayerLeftId: " + playerLeftId)
+            // val player2Id: String = snapshot.getString("player2Id") as String
+            transaction.update(docRef, "playerLeft", playerId)
+        }.addOnSuccessListener {
+            Log.d("leaveGame", "Player left game successfully")
+            Gdx.app.postRunnable { callback() }
+        }.addOnFailureListener { e ->
+            // TODO: Add exception handling, could not find games
+            Log.d("leaveGame", "Player left game failed")
         }
     }
 
@@ -231,9 +255,13 @@ object AndroidFirebase : FirebaseController {
             if (snapshot != null && snapshot.exists()) {
                 Log.d("addGameListener", "Game data: ${snapshot.data}")
                 val opponent = snapshot.data?.get("player2Id")
+                val playerLeft = snapshot.data?.get("playerLeft")
                 // If no opponent has joined yet
                 if (opponent == "") {
                     Log.d("addGameListener", "Opponent not joined yet")
+                } else if (playerLeft != "") {
+                    println("Opponent left firebase")
+                    GSM.activeGame!!.opponentLeft = true
                 }
                 // If there is an opponent in the game
                 else {

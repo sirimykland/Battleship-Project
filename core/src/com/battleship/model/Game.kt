@@ -3,6 +3,7 @@ package com.battleship.model
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.model.equipment.Equipment
+import com.battleship.model.soundeffects.SoundEffects
 import java.util.Timer
 import kotlin.concurrent.schedule
 
@@ -15,6 +16,7 @@ class Game(val gameId: String) {
     var gameReady = false
     var playerBoard: Boolean = false
     var newTurn: Boolean = false
+    var opponentLeft: Boolean = false
 
     fun setPlayers(player1: Player, player2: Player = Player()) {
         if (player1.playerId == GSM.userId) {
@@ -111,11 +113,13 @@ class Game(val gameId: String) {
             player.board.revealTreasures()
             opponent.board.revealTreasures()
             winner = opponent.playerName
+            SoundEffects.playLosing(0.6f)
         } else if (opponent.health == 0) { // You won!
             youWon = true
             player.board.revealTreasures()
             opponent.board.revealTreasures()
             winner = player.playerName
+            SoundEffects.playVictory(0.4f)
         }
     }
 
