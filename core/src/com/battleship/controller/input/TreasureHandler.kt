@@ -58,6 +58,9 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
             if (newTreasurePos.x + activeTreasure!!.dimension.x <= board.size && newTreasurePos.x >= 0) {
                 if (newTreasurePos.y + activeTreasure!!.dimension.y <= board.size && newTreasurePos.y >= 0) {
                     activeTreasure!!.updatePosition(newTreasurePos)
+                    if (!Gdx.input.isTouched) {
+                        activeTreasure!!.playSound(0.8f)
+                    }
                 }
             }
         }
