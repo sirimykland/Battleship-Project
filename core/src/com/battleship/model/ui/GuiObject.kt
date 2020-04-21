@@ -9,7 +9,6 @@ import com.battleship.controller.input.ButtonHandler
 import com.battleship.controller.input.KeyboardHandler
 import com.battleship.model.GameObject
 import com.battleship.model.soundeffects.SoundEffects
-import java.lang.IllegalStateException
 
 class GuiObject(
     val position: Vector2,
@@ -20,8 +19,6 @@ class GuiObject(
     var listener: InputAdapter = InputAdapter()
     var hasListener: Boolean = false
     var hidden: Boolean = false
-    var sound: SoundEffects =
-        SoundEffects()
 
     fun hide(): GuiObject {
         hidden = true
@@ -82,7 +79,7 @@ class GuiObject(
         ) {
             if (!hidden) {
                 if (BattleshipGame.soundOn) {
-                    sound.playClick(4.0f)
+                    SoundEffects.playClick(4.0f)
                 }
                 onClick()
             }
