@@ -13,37 +13,41 @@ import com.battleship.view.View
 class NameSelectionState(val controller: FirebaseController) : GuiState(controller) {
     private var username = GSM.username
 
-    private val legalCharacters = "abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ1234567890"
+    private val legalCharacters =
+        "abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ1234567890"
 
     private val usernameDisplay = GUI.textBox(
         15f,
-        50f,
+        75f,
         70f,
         10f,
         username
     ).onKeyTyped { char ->
         when (char) {
-            '\b' -> username = if (username.isNotEmpty()) username.substring(0, username.length - 1) else username
+            '\b' -> username =
+                if (username.isNotEmpty()) username.substring(0, username.length - 1) else username
             '\r', '\n' -> complete()
             in legalCharacters -> username += char
         }
     }
 
-
-    private val submitButton = GUI.menuButton(25f, 25f, "Submit") { complete() }
+    private val submitButton = GUI.menuButton(25f, 50f, "Continue") { complete() }
 
     private fun complete() {
         if (username != "") {
-            controller.addPlayer(username)
-            GSM.push(MatchmakingState(controller))
+            GSM.username = username
+            GSM.set(MatchmakingState(controller))
         }
     }
 
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.header("Choose username"),
+        GUI.header("Choose your username"),
         usernameDisplay,
         submitButton,
-        GUI.backButton { GSM.set(MainMenuState(controller)) }
+        GUI.backButton { GSM.set(MainMenuState(controller)) },
+        GuiObject(15f, 75f, 70f, 10f).onClick {
+            Gdx.input.setOnscreenKeyboardVisible(true)
+        }
     )
     override var view: View = BasicView()
 

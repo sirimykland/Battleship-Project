@@ -11,29 +11,28 @@ import com.battleship.view.View
 
 class PreGameState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
+    var showDialog: Boolean = false
+    var opponentLeftRenders: Int = 0
 
     override fun create() {
         super.create()
-        println("---PREGAMESTATE---")
-        if (!GSM.treasuresInitialized) {
-            GSM.activeGame!!.player.board.createAndPlaceTreasures(
-                1,
-                Treasure.TreasureType.GOLDKEY,
-                true
-            )
-            GSM.activeGame!!.player.board.createAndPlaceTreasures(
-                1,
-                Treasure.TreasureType.GOLDCOIN,
-                true
-            )
-            GSM.activeGame!!.player.board.createAndPlaceTreasures(
-                1,
-                Treasure.TreasureType.TREASURECHEST,
-                true
-            )
-            controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
-            GSM.treasuresInitialized = true
-        }
+        GSM.activeGame!!.player.board.clearTreasures()
+        GSM.activeGame!!.player.board.createAndPlaceTreasures(
+            1,
+            Treasure.TreasureType.GOLDKEY,
+            true
+        )
+        GSM.activeGame!!.player.board.createAndPlaceTreasures(
+            1,
+            Treasure.TreasureType.GOLDCOIN,
+            true
+        )
+        GSM.activeGame!!.player.board.createAndPlaceTreasures(
+            1,
+            Treasure.TreasureType.TREASURECHEST,
+            true
+        )
+        controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
     }
 
     private val readyButton = GUI.textButton(
@@ -44,28 +43,53 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
         "Start Game",
         onClick = {
             val game = GSM.activeGame!!
-            println("gameready is: " + game.gameReady)
-            println("t: " + game.player.board.getTreasuresList())
             controller.registerTreasures(
                 game.gameId,
                 game.player.playerId,
                 game.player.board.getTreasuresList()
             )
             GSM.set(LoadingGameState(controller))
-        })
+        }
+    )
+
+    private val opponentLeftDialog = GUI.dialog(
+        "Your opponent left the game...",
+        listOf(Pair("Find new game", {
+            showDialog = false
+            leaveGame()
+        }))
+    )
 
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
         GUI.header("Place treasures"),
-        GUI.backButton { GSM.set(MainMenuState(controller)) },
+        GUI.backButton { leaveGame() },
         GuiObject(0f, 0f, 0f, 0f)
-            .listen(TreasureHandler(GSM.activeGame!!.player.board))
+            .listen(TreasureHandler(GSM.activeGame!!.player.board)),
+        *opponentLeftDialog
     )
 
+    private fun leaveGame() {
+        controller.leaveGame(GSM.activeGame!!.gameId, GSM.userId) {
+            GSM.resetGame()
+            controller.addPendingGamesListener { pendingGames ->
+                GSM.pendingGames = pendingGames
+            }
+            GSM.set(MainMenuState(controller))
+        }
+    }
+
     override fun render() {
-        this.view.render(*guiObjects.toTypedArray(), GSM.activeGame!!.player.board)
+        this.view.render(GSM.activeGame!!.player.board, *guiObjects.toTypedArray())
     }
 
     override fun update(dt: Float) {
+        if (GSM.activeGame!!.opponentLeft) {
+            if (opponentLeftRenders < 2) opponentLeftRenders++
+            if (opponentLeftRenders == 1) showDialog = true // First opponent left render
+        }
+
+        if (showDialog) opponentLeftDialog.forEach { guiObject -> guiObject.show() }
+        else opponentLeftDialog.forEach { guiObject -> guiObject.hide() }
     }
 }

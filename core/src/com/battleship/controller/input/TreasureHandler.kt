@@ -3,8 +3,8 @@ package com.battleship.controller.input
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.math.Vector2
-import com.battleship.model.Board
 import com.battleship.model.treasures.Treasure
+import com.battleship.model.ui.Board
 import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
@@ -14,7 +14,6 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
     private var oldPosition: Vector2? = null
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        println("touchdown")
         val touchPos = Vector2(screenX.toFloat(), Gdx.graphics.height - screenY.toFloat())
         val boardWidth = Gdx.graphics.boardWidth()
         val boardPos = Gdx.graphics.boardPosition()

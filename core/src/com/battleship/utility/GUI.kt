@@ -39,21 +39,6 @@ object GUI {
             .with(Text(text, font))
     }
 
-    fun button(
-        posX: Float,
-        posY: Float,
-        sizeX: Float,
-        sizeY: Float,
-        color: TextureRegion = Palette.LIGHT_GREY,
-        borderColor: TextureRegion = Palette.DARK_GREY,
-        onClick: () -> Unit
-    ): GuiObject {
-        return GuiObject(posX, posY, sizeX, sizeY)
-            .with(Background(color))
-            .with(Border(borderColor))
-            .onClick(onClick)
-    }
-
     fun textButton(
         posX: Float,
         posY: Float,
@@ -125,5 +110,27 @@ object GUI {
         return GuiObject(posX, posY, sizeX, if (keepRatio) sizeX * (Gdx.graphics.width.toFloat() / Gdx.graphics.height.toFloat()) else sizeY)
             .with(Image(texturePath))
             .onClick(onClick)
+    }
+
+    fun dialog(
+        text: String,
+        buttons: List<Pair<String, () -> Unit>>
+    ): Array<GuiObject> {
+        val dialogComponents = ArrayList<GuiObject>()
+        dialogComponents.add(textBox(10f, 40.5f, 80f, 15f, text,
+            color = Palette.DARK_GREY, font = Font.LARGE_WHITE).hide())
+
+        val numberOfButtons = buttons.size
+        buttons.forEachIndexed { index, btn ->
+            dialogComponents.add(
+                GuiObject(10f + (80f / numberOfButtons) * index, 30f, 80f / numberOfButtons, 10f)
+                    .with(Background(Palette.LIGHT_GREY))
+                    .with(Border(Palette.BLACK))
+                    .with(Text(btn.first, Font.MEDIUM_BLACK))
+                    .onClick(btn.second)
+                    .hide()
+            )
+        }
+        return dialogComponents.toTypedArray()
     }
 }
