@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.battleship.BattleshipGame
 
-class SoundEffects {
+object SoundEffects {
 
     var hit: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/hit_sound.mp3"))
     var victory: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/victory_sound.mp3"))
