@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
+import com.battleship.controller.input.BoardHandler
+import com.battleship.controller.input.TreasureHandler
 import com.battleship.model.Player
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
@@ -89,7 +91,8 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
     override val guiObjects: List<GuiObject> = listOf(
         header, switchBoardButton, *equipmentButtons, opponentsBoardText, mainMenuButton,
-        newGameButton, *gameOverDialog
+        newGameButton, *gameOverDialog, GuiObject(0f, 0f, 0f, 0f)
+            .listen(BoardHandler(controller))
     )
 
     override fun render() {
@@ -120,12 +123,12 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         } else {
             autoBoardSwitching()
             updateGUIObjectsInGame()
-            handleBoardInput()
+            // handleBoardInput()
             // Update game status in GameStateManager
             GSM.activeGame!!.updateWinner()
         }
     }
-
+    /*
     private fun handleBoardInput() {
         // Check if it is players turn and opponents board is showing.
         if (GSM.activeGame!!.isPlayersTurn() && !GSM.activeGame!!.playerBoard) {
@@ -133,6 +136,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
                 val touchX = Gdx.input.x.toFloat()
                 val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()
                 val touchPos = Vector2(touchX, touchY)
+
                 val boardWidth = Gdx.graphics.boardWidth()
                 val boardPos = Gdx.graphics.boardPosition()
                 val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
@@ -151,6 +155,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             }
         }
     }
+    */
 
     private fun autoBoardSwitching() {
         if (GSM.activeGame!!.isPlayersTurn() && GSM.activeGame!!.playerBoard && GSM.activeGame!!.newTurn) {
