@@ -12,14 +12,10 @@ import com.battleship.view.View
 class MatchmakingState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private val itemsPerPage = 7
+    private var page: Int = 0
 
     private val playerButtons: Array<GuiObject> =
         arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
-
-    private var page: Int = 0
-
-    // temp
-    private var selectUsernameCallback = false
 
     private val nextPageButton = GUI.textButton(
         70f,
@@ -86,7 +82,12 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         playerButtons.forEachIndexed { i, guiObject ->
             val j = index + i
             if (j < GSM.pendingGames.size) {
-                guiObject.set(Text("Join ${GSM.pendingGames[j].playerName}'s game", font = Font.MEDIUM_BLACK))
+                guiObject.set(
+                    Text(
+                        "Join ${GSM.pendingGames[j].playerName}'s game",
+                        font = Font.MEDIUM_BLACK
+                    )
+                )
                 guiObject.show()
             } else {
                 guiObject.hide()
@@ -116,15 +117,13 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     }
 
     private fun createGame() {
-        println("Create game pressed")
         controller.createGame(GSM.userId, GSM.username) { game ->
             GSM.activeGame = game
             GSM.set(PreGameState(controller))
         }
     }
 
-    override fun update(dt: Float) {
-    }
+    override fun update(dt: Float) {}
 
     override fun render() {
         this.view.render(*guiObjects.toTypedArray())
