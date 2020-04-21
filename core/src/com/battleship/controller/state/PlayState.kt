@@ -101,6 +101,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         gameOver = GSM.activeGame!!.winner != ""
 
         if (gameOver) {
+            // TODO Should stop listen to BoardHandler here
             if (winningRenders < 2) winningRenders++
             updateGUIObjectsGameOver()
             gameOverDialog.forEachIndexed() { i, element ->
@@ -118,7 +119,6 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         } else {
             autoBoardSwitching()
             updateGUIObjectsInGame()
-            // TODO Should stop listen to BoardHandler here
             // Update game status in GameStateManager
             GSM.activeGame!!.updateWinner()
         }
