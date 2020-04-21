@@ -12,22 +12,24 @@ import com.battleship.utility.GdxGraphicsUtil.boardWidth
 
 class BoardHandler(private val controller: FirebaseController) : InputAdapter() {
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        val touchPos = Vector2(screenX.toFloat(), Gdx.graphics.height - screenY.toFloat())
+        if (GSM.activeGame!!.isPlayersTurn() && !GSM.activeGame!!.playerBoard) {
+            val touchPos = Vector2(screenX.toFloat(), Gdx.graphics.height - screenY.toFloat())
 
-        val boardWidth = Gdx.graphics.boardWidth()
-        val boardPos = Gdx.graphics.boardPosition()
-        val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
+            val boardWidth = Gdx.graphics.boardWidth()
+            val boardPos = Gdx.graphics.boardPosition()
+            val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
 
-        if (boardBounds.contains(touchPos)) {
-            val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
-            controller.registerMove(
-                GSM.activeGame!!.gameId,
-                boardTouchPos.x.toInt(),
-                boardTouchPos.y.toInt(),
-                GSM.activeGame!!.player.playerId,
-                GSM.activeGame!!.player.equipmentSet.activeEquipment!!.name
-            )
-            GSM.activeGame!!.makeMove(boardTouchPos)
+            if (boardBounds.contains(touchPos)) {
+                val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
+                controller.registerMove(
+                    GSM.activeGame!!.gameId,
+                    boardTouchPos.x.toInt(),
+                    boardTouchPos.y.toInt(),
+                    GSM.activeGame!!.player.playerId,
+                    GSM.activeGame!!.player.equipmentSet.activeEquipment!!.name
+                )
+                GSM.activeGame!!.makeMove(boardTouchPos)
+            }
         }
 
         return false
