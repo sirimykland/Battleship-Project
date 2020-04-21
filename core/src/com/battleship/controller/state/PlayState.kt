@@ -106,16 +106,16 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
     override fun update(dt: Float) {
         gameOver = GSM.activeGame!!.winner != ""
-
         if (gameOver) {
             // TODO Should stop listen to BoardHandler here
             if (winningRenders < 2) winningRenders++
             updateGUIObjectsGameOver()
             gameOverDialog.forEachIndexed() { i, element ->
-                if (i == 0 && GSM.activeGame!!.youWon)
+                if (i == 0 && GSM.activeGame!!.youWon) {
                     element.set(Text("Congratulations, you won!", font = Font.LARGE_WHITE))
-                else if (i == 0 && !GSM.activeGame!!.youWon)
+                } else if (i == 0 && !GSM.activeGame!!.youWon) {
                     element.set(Text("Sorry, you lost :(", font = Font.LARGE_WHITE))
+                }
             }
 
             if (winningRenders == 1) { // First game over render

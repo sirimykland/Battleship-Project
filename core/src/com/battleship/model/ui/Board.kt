@@ -18,8 +18,6 @@ import kotlin.random.Random
 class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
-    private var sound = SoundEffects()
-
     // Change all tiles to unopened state
     fun setTilesUnopened() {
         tiles = Array(size) { Array(size) { Tile.UNOPENED } }
@@ -147,7 +145,7 @@ class Board(val size: Int) : GameObject() {
             }
             resultList.contains(Result.HIT) -> {
                 println("Hit")
-                sound.playHit(0.8f)
+                SoundEffects.playHit(0.8f)
                 equipment.use()
                 false
             }
