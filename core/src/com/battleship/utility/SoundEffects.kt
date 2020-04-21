@@ -11,9 +11,17 @@ object SoundEffects {
     private val losing: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/losing_sound.mp3"))
     private val click: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/click_sound.mp3"))
 
-    val METAL_DETECTOR: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/radar_sound.mp3"))
-    val BIG_EQUIPMENT: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_sound.mp3"))
+    val METALDETECTOR: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/radar_sound.mp3"))
+    val BIGEQUIPMENT: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_sound.mp3"))
     val SHOVEL: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/dirt_sound.mp3"))
+
+    val GOLDCOIN: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/coin_sound.mp3"))
+    val GOLDKEY: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/key_sound.mp3"))
+    val TREASURECHEST: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/chest_sound.mp3"))
+
+    fun load() {
+        println("SFX Loaded")
+    }
 
     fun playHit(volume: Float = 0.8f) {
         play(hit, volume)
@@ -39,7 +47,9 @@ object SoundEffects {
     }
 
     fun dispose() {
-        listOf(hit, victory, losing, click, METAL_DETECTOR, BIG_EQUIPMENT, SHOVEL).forEach {
+        listOf(hit, victory, losing, click,
+            METALDETECTOR, BIGEQUIPMENT, SHOVEL,
+            GOLDCOIN, GOLDKEY, TREASURECHEST).forEach {
             it.dispose()
         }
     }

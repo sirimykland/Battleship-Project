@@ -27,6 +27,10 @@ object Palette {
     val LIGHT_SAND = TextureRegion(Texture("colors/light_sand.png"), 1, 1, 1, 1)
     val DARK_SAND = TextureRegion(Texture("colors/dark_sand.png"), 1, 1, 1, 1)
 
+    fun load() {
+        println("Palette Loaded")
+    }
+
     fun dispose() {
         texture.dispose()
     }

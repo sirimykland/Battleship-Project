@@ -174,7 +174,7 @@ class Board(val size: Int) : GameObject() {
             setTile(pos, Tile.HIT)
             treasure.takeDamage()
             if (treasure.found()) {
-                treasure.playSound(0.8f)
+                treasure.playSound()
                 Result.FOUND
             } else {
                 Result.HIT
