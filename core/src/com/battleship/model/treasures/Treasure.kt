@@ -4,8 +4,8 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
-import com.battleship.BattleshipGame
 import com.battleship.model.GameObject
+import com.battleship.utility.SoundEffects
 
 abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject() {
     abstract var dimension: Vector2
@@ -17,11 +17,8 @@ abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject
     private var padding = 3
     var revealed = false
 
-    fun playSound(volume: Float) {
-        if (BattleshipGame.soundOn) {
-            sound.stop()
-            sound.play(volume)
-        }
+    fun playSound(volume: Float = 0.8f) {
+        SoundEffects.play(sound, volume)
     }
 
     enum class TreasureType {
@@ -42,7 +39,7 @@ abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject
         return false
     }
 
-    fun takeDamage() {
+    fun takeDamage() { 0.8f
         health--
     }
 
