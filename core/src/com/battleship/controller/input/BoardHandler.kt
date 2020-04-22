@@ -10,9 +10,9 @@ import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
 
-class BoardHandler(private val controller: FirebaseController) : InputAdapter() {
+class BoardHandler(private val controller: FirebaseController, val isGameOver: () -> Boolean) : InputAdapter() {
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        if (GSM.activeGame!!.isPlayersTurn() && !GSM.activeGame!!.playerBoard) {
+        if (GSM.activeGame!!.isPlayersTurn() && !GSM.activeGame!!.playerBoard && !isGameOver()) {
             val touchPos = Vector2(screenX.toFloat(), Gdx.graphics.height - screenY.toFloat())
 
             val boardWidth = Gdx.graphics.boardWidth()
@@ -31,7 +31,6 @@ class BoardHandler(private val controller: FirebaseController) : InputAdapter() 
                 GSM.activeGame!!.makeMove(boardTouchPos)
             }
         }
-
         return false
     }
 }
