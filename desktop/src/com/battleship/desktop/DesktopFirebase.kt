@@ -138,7 +138,6 @@ object DesktopFirebase : FirebaseController {
         // Add the data to the game document
         db.collection("games").document(gameId).update("player2Id", userId)
         db.collection("games").document(gameId).update("player2Name", userName)
-
         val game = Game(gameId)
         val query = db.collection("games").document(gameId).get()
         val doc = query.get()
@@ -148,7 +147,7 @@ object DesktopFirebase : FirebaseController {
             val player1Name: String = doc.getString("player1Name") as String
             val player1 = Player(player1Id, player1Name)
             val player2 = Player(userId, userName)
-
+            Gdx.app.log("joinGame", "$player1, $player2")
             game.setPlayers(player1, player2)
         } else {
             Gdx.app.log("setGame", "Failed to set Game!")
@@ -251,8 +250,9 @@ object DesktopFirebase : FirebaseController {
                     }
                     if (player2Id != "") {
                         val game = GSM.activeGame!!
-                        if (game.opponent.playerId == "") {
+                        if (game.opponent.playerId == "" || game.opponent.playerName == "") {
                             val player2Name = snapshot.data?.get("player2Name") as String
+                            Gdx.app.log("gameListener", "$game, $player2Id, $player2Name")
                             game.opponent = Player(player2Id, player2Name)
                         }
                         // Get the field containing the treasures in the database
