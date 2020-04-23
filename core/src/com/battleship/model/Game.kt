@@ -113,9 +113,7 @@ class Game(val gameId: String) {
      * @return Boolean
      */
     fun isTreasuresRegistered(): Boolean {
-        val ready = !player.board.isTreasureListEmpty() && !opponent.board.isTreasureListEmpty()
-        println("isTreasuresRegistered: $ready")
-        return ready
+        return !player.board.isTreasureListEmpty() && !opponent.board.isTreasureListEmpty()
     }
 
     /**

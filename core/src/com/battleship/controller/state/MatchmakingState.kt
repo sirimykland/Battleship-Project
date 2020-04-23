@@ -109,8 +109,13 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
             val i = (page * itemsPerPage) + index
             if (GSM.userId !== "") {
                 controller.joinGame(GSM.pendingGames[i].gameId, GSM.userId, GSM.username) { game ->
-                    GSM.activeGame = game
-                    GSM.set(PreGameState(controller))
+                    if (game != null) {
+                        GSM.activeGame = game
+                        GSM.set(PreGameState(controller))
+                    } else {
+                        GSM.resetGame()
+                        GSM.set(MainMenuState(controller))
+                    }
                 }
             }
         }
@@ -118,8 +123,13 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
 
     private fun createGame() {
         controller.createGame(GSM.userId, GSM.username) { game ->
-            GSM.activeGame = game
-            GSM.set(PreGameState(controller))
+            if (game != null) {
+                GSM.activeGame = game
+                GSM.set(PreGameState(controller))
+            } else {
+                GSM.resetGame()
+                GSM.set(MainMenuState(controller))
+            }
         }
     }
 
