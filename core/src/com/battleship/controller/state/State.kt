@@ -6,6 +6,7 @@ import com.battleship.view.View
 /**
  * Abstract state class declaring common functions and variables
  */
+// TODO Siri
 abstract class State(private val controller: FirebaseController) {
     abstract var view: View
 

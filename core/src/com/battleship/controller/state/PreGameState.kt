@@ -8,7 +8,7 @@ import com.battleship.model.ui.GuiObject
 import com.battleship.utility.GUI
 import com.battleship.view.PlayView
 import com.battleship.view.View
-
+// TODO Siri
 class PreGameState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     var showDialog: Boolean = false

@@ -9,7 +9,7 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
-
+// TODO Karl
 class NameSelectionState(val controller: FirebaseController) : GuiState(controller) {
     private var username = GSM.username
 

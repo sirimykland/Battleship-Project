@@ -8,7 +8,7 @@ import com.battleship.model.ui.Board
 import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-
+// TODO Henrik
 class TreasureHandler(private val board: Board) : InputAdapter() {
     private var activeTreasure: Treasure? = null
     private var oldPosition: Vector2? = null

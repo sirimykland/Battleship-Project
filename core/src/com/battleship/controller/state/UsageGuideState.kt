@@ -13,6 +13,7 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the help menu
  */
+// TODO Mats T
 class UsageGuideState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private var pageIndex: Int = 0

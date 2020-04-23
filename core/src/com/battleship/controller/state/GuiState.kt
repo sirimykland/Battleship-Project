@@ -9,6 +9,7 @@ import com.battleship.model.ui.GuiObject
 /**
  * Abstract state class declaring functions and variables for GUI states
  */
+// TODO Karl
 abstract class GuiState(controller: FirebaseController) : State(controller) {
     abstract val guiObjects: List<GuiObject>
     private var multiplexer: InputMultiplexer = InputMultiplexer()

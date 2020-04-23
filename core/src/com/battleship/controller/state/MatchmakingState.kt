@@ -8,7 +8,7 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
-
+// TODO Karl
 class MatchmakingState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private val itemsPerPage = 7
