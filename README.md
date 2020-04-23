@@ -112,4 +112,6 @@ This collection will contain one document for each game with a randomly generate
 
 *Example data from a test game*:
 
-![Firebase example data](https://i.imgur.com/M3pwjP1.png)
+![Firebase example data overall](https://i.imgur.com/M3pwjP1.png)
+![Firebase example data moves](https://i.imgur.com/mPaTFkr.png)
+![Firebase example data treasures](https://i.imgur.com/NKaW0fT.png)
