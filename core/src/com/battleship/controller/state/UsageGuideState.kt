@@ -31,11 +31,11 @@ class UsageGuideState(private val controller: FirebaseController,
     )
 
     private val imagePaths: List<String> = listOf(
-        "images/usageGuide/page1New.png",
-        "images/usageGuide/page2New.png",
-        "images/usageGuide/page3New.png",
-        "images/usageGuide/page4New.png",
-        "images/usageGuide/page5New.png"
+        "images/usageGuide/firstPage.png",
+        "images/usageGuide/secondPage.png",
+        "images/usageGuide/thirdPage.png",
+        "images/usageGuide/fourthPage.png",
+        "images/usageGuide/fifthPage.png"
     )
 
     private var currentImage: GuiObject =
