@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.runBlocking
-
+// TODO Henrik
 object AndroidFirebase : FirebaseController {
     private val db = FirebaseFirestore.getInstance()
     private var auth = FirebaseAuth.getInstance()

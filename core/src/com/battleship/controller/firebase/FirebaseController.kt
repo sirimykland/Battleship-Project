@@ -2,7 +2,7 @@ package com.battleship.controller.firebase
 
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
-
+// TODO Henrik
 interface FirebaseController {
     fun createGame(userId: String, userName: String, callback: (game: Game) -> Unit)
     fun joinGame(gameId: String, userId: String, userName: String, callback: (game: Game) -> Unit)

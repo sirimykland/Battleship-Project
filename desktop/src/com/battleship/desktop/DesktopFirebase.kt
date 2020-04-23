@@ -23,6 +23,7 @@ import java.io.FileInputStream
  * Class used to setup the database connection
  * declared as object to make it a singleton
  */
+// TODO Karl
 object DesktopFirebase : FirebaseController {
     // The URL of the firebase project
     private const val firebaseUrl = "https://battleshipz.firebaseio.com"
