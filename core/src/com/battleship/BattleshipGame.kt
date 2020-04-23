@@ -36,7 +36,7 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
         if (prefs.getBoolean("lock", true)) {
             prefs.putBoolean("lock", false)
             prefs.flush()
-            GSM.push(UsageGuideState(controller))
+            GSM.push(UsageGuideState(controller, true))
         } else {
             GSM.push(MainMenuState(controller))
         }

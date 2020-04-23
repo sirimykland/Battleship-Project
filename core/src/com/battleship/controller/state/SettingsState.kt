@@ -16,7 +16,7 @@ import com.battleship.view.View
 class SettingsState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private var musicButton: GuiObject = GUI.menuButton(
-        23.44f,
+        25f,
         62.5f,
         "Music off",
         onClick = {
@@ -27,7 +27,7 @@ class SettingsState(private val controller: FirebaseController) : GuiState(contr
         }
     )
     private var soundButton: GuiObject = GUI.menuButton(
-        23.44f,
+        25f,
         43.75f,
         "Sound Effects off",
         onClick = {
@@ -39,10 +39,10 @@ class SettingsState(private val controller: FirebaseController) : GuiState(contr
         musicButton,
         soundButton,
         GUI.menuButton(
-            23.44f,
+            25f,
             25f,
             "Usage guide",
-            onClick = { GameStateManager.set(UsageGuideState(controller)) }
+            onClick = { GameStateManager.set(UsageGuideState(controller, false)) }
         ),
 
         GUI.text(
