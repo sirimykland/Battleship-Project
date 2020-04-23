@@ -5,21 +5,15 @@ import com.battleship.controller.state.State
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import java.util.Stack
+import java.util.UUID
 
 object GameStateManager {
     var username = ""
-    var userId = getRandomString(15)
+    var userId: String = UUID.randomUUID().toString() //
     var activeGame: Game? = null
     var pendingGames = ArrayList<GameListObject>()
 
     private val states: Stack<State> = Stack()
-
-    private fun getRandomString(length: Int): String {
-        val allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-        return (1..length)
-            .map { allowedChars.random() }
-            .joinToString("")
-    }
 
     fun push(state: State) {
         if (states.size > 0)
@@ -35,7 +29,6 @@ object GameStateManager {
     }
 
     fun set(state: State) {
-        println("setting ${state.javaClass}")
         states.pop().dispose()
         states.push(state)
         create()

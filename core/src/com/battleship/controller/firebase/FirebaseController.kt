@@ -12,4 +12,5 @@ interface FirebaseController {
     fun addPendingGamesListener(callback: (pendingGames: ArrayList<GameListObject>) -> Unit)
     fun addGameListener(gameId: String, playerId: String)
     fun addPlayListener(gameId: String)
+    fun leaveGame(gameId: String, playerId: String, callback: () -> Unit)
 }

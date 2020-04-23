@@ -1,6 +1,7 @@
 package com.battleship.utility
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.battleship.model.ui.Background
@@ -134,22 +135,15 @@ object GUI {
         return dialogComponents.toTypedArray()
     }
 
-    fun errorDialog(
-            text: String,
-            button: Pair<String, () -> Unit>
-    ): Array<GuiObject> {
-        val dialogComponents = ArrayList<GuiObject>()
-        dialogComponents.add(textBox(10f, 40.5f, 80f, 15f, text,
-                color = Palette.DARK_GREY, font = Font.LARGE_WHITE).hide())
-        dialogComponents.add(
-                GuiObject(10f, 30f, 80f, 10f)
-                        .with(Background(Palette.LIGHT_GREY))
-                        .with(Border(Palette.BLACK))
-                        .with(Text(button.first, Font.MEDIUM_BLACK))
-                        .onClick(button.second)
-                        .show()
-        )
-
-        return dialogComponents.toTypedArray()
+    fun listener(
+        key: String,
+        listener: InputProcessor,
+        posX: Float = 0f,
+        posY: Float = 0f,
+        sizeX: Float = 100f,
+        sizeY: Float = 100f
+    ): GuiObject {
+        return GuiObject(posX, posY, sizeX, sizeY)
+            .listen(key, listener)
     }
 }
