@@ -64,7 +64,7 @@ object DesktopFirebase : FirebaseController {
      * Start new game
      * @param userId the id of the user setting up the game
      */
-    override fun createGame(userId: String, userName: String, callback: (game: Game) -> Unit) {
+    override fun createGame(userId: String, userName: String, callback: (game: Game?) -> Unit) {
         // Set up game data
         val data = mutableMapOf<String, Any>()
         data["player1Id"] = userId
@@ -82,8 +82,10 @@ object DesktopFirebase : FirebaseController {
         val player1 = Player(userId, userName)
         val player2 = Player()
         game.setPlayers(player1, player2)
-
-        Gdx.app.postRunnable { callback(game) }
+        Gdx.app.postRunnable {
+            if (gameId == "") callback(null)
+            else callback(game)
+        }
     }
 
     /**
@@ -132,7 +134,7 @@ object DesktopFirebase : FirebaseController {
      * @param gameId the id of the game document
      * @param userId the id of the user that should be added
      */
-    override fun joinGame(gameId: String, userId: String, userName: String, callback: (game: Game) -> Unit) {
+    override fun joinGame(gameId: String, userId: String, userName: String, callback: (game: Game?) -> Unit) {
         // Add the data to the game document
         db.collection("games").document(gameId).update("player2Id", userId)
         db.collection("games").document(gameId).update("player2Name", userName)
@@ -150,8 +152,7 @@ object DesktopFirebase : FirebaseController {
             game.setPlayers(player1, player2)
         } else {
             Gdx.app.log("setGame", "Failed to set Game!")
-            GSM.resetGame()
-            GSM.set(MainMenuState(this))
+            Gdx.app.postRunnable { callback(null) }
         }
         Gdx.app.postRunnable { callback(game) }
     }
@@ -175,8 +176,10 @@ object DesktopFirebase : FirebaseController {
             db.collection("games").document(gameId).update("treasures", dbTreasures)
         } else {
             Gdx.app.log("registerTreasures", "Failed to register Treasures!")
-            GSM.resetGame()
-            GSM.set(MainMenuState(this))
+            Gdx.app.postRunnable {
+                GSM.resetGame()
+                GSM.set(MainMenuState(this))
+            }
         }
     }
 
@@ -201,8 +204,10 @@ object DesktopFirebase : FirebaseController {
             db.collection("games").document(gameId).update("moves", moves)
         } else {
             Gdx.app.log("registerMove", "Failed to register move!")
-            GSM.resetGame()
-            GSM.set(MainMenuState(this))
+            Gdx.app.postRunnable {
+                GSM.resetGame()
+                GSM.set(MainMenuState(this))
+            }
         }
     }
 
