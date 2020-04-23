@@ -33,10 +33,12 @@ TODO: Insert description - see implementation document
 
 ### Logical View
 TODO: Insert new logical view
+
 ![Logical View ](https://i.imgur.com/XQyIilb.png)
 
 ### Development View
 TODO: Insert new dev view
+
 ![Development View ](https://i.imgur.com/ENkQcNF.png)
 
 ### Version Control: Git
@@ -118,12 +120,10 @@ This collection will contain one document for each game with a randomly generate
 
 ![Firebase example data overall](https://i.imgur.com/M3pwjP1.png)
 
-*Moves*:
-
-![Firebase example data moves](https://i.imgur.com/mPaTFkr.png)
-+++
-
 *Treasures*:
 
 ![Firebase example data treasures](https://i.imgur.com/NKaW0fT.png)
-+++
+
+*Moves*:
+
+![Firebase example data moves](https://i.imgur.com/mPaTFkr.png)
