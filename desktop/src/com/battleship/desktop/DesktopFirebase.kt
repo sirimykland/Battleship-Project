@@ -19,7 +19,6 @@ import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.FirestoreClient
 import com.google.firebase.database.annotations.Nullable
 import java.io.FileInputStream
-import java.util.logging.Logger
 
 /**
  * Class used to setup the database connection
@@ -276,6 +275,8 @@ object DesktopFirebase : FirebaseController {
                         }
                         game.setGameReadyIfReady()
                     }
+                } else {
+                    Gdx.app.log("addGameListener","Current data: null")
                 }
             }
         })
@@ -292,10 +293,8 @@ object DesktopFirebase : FirebaseController {
                     Gdx.app.log("addPlayListener","Listen failed:" , e)
                     return
                 }
-                println("addPlayListener: MOVE LISTENER:")
+                Gdx.app.log("addPlayListener","MOVE LISTENER:")
                 if (snapshot != null && snapshot.exists()) {
-                    println("addPlayListener: Game data: ${snapshot.data}")
-
                     var moves = mutableListOf<Map<String, Any>>()
                     if (snapshot.data?.get("moves") != null) {
                         moves =
@@ -305,15 +304,14 @@ object DesktopFirebase : FirebaseController {
                     val winner = snapshot.data?.get("winner")
                     // If a winner has been set
                     if (winner != "") {
-                        println("addPlayListener: The winner is $winner")
-                        // TODO: Call function that should be called when a winner is registered
+                        Gdx.app.log("addPlayListener","The winner is $winner")
                         GSM.activeGame!!.winner = winner as String // or something
                     }
                     // If there is no winner, continue game
                     else {
                         // If no moves has been made yet
                         if (moves.size == 0) {
-                            println("addPlayListener: No moves made yet")
+                            Gdx.app.log("addPlayListener","No moves made yet")
                             GSM.activeGame!!.setGameReadyIfReady()
                         } else {
                             // Get the last move
@@ -328,7 +326,7 @@ object DesktopFirebase : FirebaseController {
                         }
                     }
                 } else {
-                    print("Current data: null")
+                    Gdx.app.log("addPlayListener","Current data: null")
                 }
             }
         })
