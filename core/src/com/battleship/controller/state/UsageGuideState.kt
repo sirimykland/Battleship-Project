@@ -17,20 +17,20 @@ class UsageGuideState(private val controller: FirebaseController) : GuiState(con
     override var view: View = BasicView()
     private var pageIndex: Int = 0
 
-    // TODO: Update this with real description when game is more completed
     private val descriptions: List<String> = listOf(
-        "First page, bla bla bla",
-        "Second page, bla bla bla",
-        "Third page, bla bla bla",
-        "Fourth page, bla bla bla"
+        "Choose a username",
+        "Select opponent to play against or create a new game",
+        "Place your treasures by dragging them to their desired position",
+        "Wait for your opponent to get ready",
+        "Play the game!"
     )
 
-    // TODO: Update this with real screenshots from the game when it is more completed
     private val imagePaths: List<String> = listOf(
-        "helpGuide/page1.png",
-        "helpGuide/page2.png",
-        "helpGuide/page3.png",
-        "helpGuide/page4.png"
+        "images/usageGuide/page1.png",
+        "images/usageGuide/page2.png",
+        "images/usageGuide/page3.png",
+        "images/usageGuide/page4.png",
+        "images/usageGuide/page5.png"
     )
 
     private var currentDescription: GuiObject = GUI.text(
