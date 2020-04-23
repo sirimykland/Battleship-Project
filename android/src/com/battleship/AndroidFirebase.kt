@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.state.MainMenuState
 import com.battleship.model.Game
-import com.battleship.model.GameListObject
+import com.battleship.model.PendingGame
 import com.battleship.model.Player
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -132,11 +132,11 @@ object AndroidFirebase : FirebaseController {
         }
     }
 
-    override fun addPendingGamesListener(callback: (pendingGames: ArrayList<GameListObject>) -> Unit) {
+    override fun addPendingGamesListener(callback: (pendingGames: ArrayList<PendingGame>) -> Unit) {
         activeListener =
             db.collection("games").whereEqualTo("player2Name", "").whereEqualTo("player2Id", "")
                 .addSnapshotListener { documents, e ->
-                    val pendingGames = ArrayList<GameListObject>()
+                    val pendingGames = ArrayList<PendingGame>()
                     if (e != null) {
                         Log.w("addPendingGamesListener", "Listen failed.", e)
                         return@addSnapshotListener
@@ -144,11 +144,12 @@ object AndroidFirebase : FirebaseController {
                     Log.d("addPendingGamesListener", "Found documents containing pending games")
                     for (doc in documents!!) {
                         val player1Id: String = doc.getString("player1Id") as String
+                        if (player1Id == GSM.userId) continue
                         val player1Name: String = doc.getString("player1Name") as String
                         val gameId = doc.id
                         if (player1Id != "") {
                             pendingGames.add(
-                                GameListObject(
+                                PendingGame(
                                     gameId,
                                     player1Id,
                                     player1Name

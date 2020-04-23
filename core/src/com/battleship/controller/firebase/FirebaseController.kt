@@ -1,7 +1,7 @@
 package com.battleship.controller.firebase
 
 import com.battleship.model.Game
-import com.battleship.model.GameListObject
+import com.battleship.model.PendingGame
 
 interface FirebaseController {
     fun createGame(userId: String, userName: String, callback: (game: Game?) -> Unit)
@@ -9,7 +9,7 @@ interface FirebaseController {
     fun registerTreasures(gameId: String, userId: String, treasures: List<Map<String, Any>>)
     fun registerMove(gameId: String, x: Int, y: Int, playerId: String, equipment: String)
     fun setWinner(userId: String, gameId: String)
-    fun addPendingGamesListener(callback: (pendingGames: ArrayList<GameListObject>) -> Unit)
+    fun addPendingGamesListener(callback: (pendingGames: ArrayList<PendingGame>) -> Unit)
     fun addGameListener(gameId: String, playerId: String)
     fun addPlayListener(gameId: String)
     fun leaveGame(gameId: String, playerId: String, callback: () -> Unit)

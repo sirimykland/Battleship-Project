@@ -2,15 +2,15 @@ package com.battleship
 
 import com.battleship.controller.state.State
 import com.battleship.model.Game
-import com.battleship.model.GameListObject
+import com.battleship.model.PendingGame
 import java.util.Stack
 import java.util.UUID
 
 object GameStateManager {
     var username = ""
-    var userId: String = UUID.randomUUID().toString() //
+    val userId: String = UUID.randomUUID().toString() //
     var activeGame: Game? = null
-    var pendingGames = ArrayList<GameListObject>()
+    var pendingGames = ArrayList<PendingGame>()
 
     private val states: Stack<State> = Stack()
 
