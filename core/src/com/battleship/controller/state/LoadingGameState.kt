@@ -64,9 +64,4 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
         else if (GSM.activeGame!!.opponent.board.isTreasureListEmpty())
             header.set(Text("Waiting for ${GSM.activeGame!!.opponent.playerName} to register treasures...", font = Font.MEDIUM_WHITE))
     }
-
-    override fun dispose() {
-        super.dispose()
-        // controller.detachGameListener(GSM.activeGame!!.gameId)
-    }
 }

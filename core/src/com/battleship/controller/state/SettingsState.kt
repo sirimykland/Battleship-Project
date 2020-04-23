@@ -65,6 +65,9 @@ class SettingsState(private val controller: FirebaseController) : GuiState(contr
         GUI.backButton { GameStateManager.set(MainMenuState(controller)) }
     )
 
+    /**
+     * Called once when the State is first initialized.
+     */
     override fun create() {
         super.create()
         updateButtons()

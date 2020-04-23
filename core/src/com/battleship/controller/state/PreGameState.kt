@@ -14,6 +14,11 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
     var showDialog: Boolean = false
     var opponentLeftRenders: Int = 0
 
+    /**
+     * Called once when the State is first initialized.
+     * Initializes the player with some treasures
+     * and starts listening for database changes
+     */
     override fun create() {
         super.create()
         GSM.activeGame!!.player.board.clearTreasures()

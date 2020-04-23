@@ -14,6 +14,9 @@ abstract class GuiState(controller: FirebaseController) : State(controller) {
     abstract val guiObjects: List<GuiObject>
     private var multiplexer: InputMultiplexer = InputMultiplexer()
 
+    /**
+     * Called once when the State is first initialized.
+     */
     override fun create() {
         Gdx.input.inputProcessor =
             InputMultiplexer(*guiObjects.filter { it.hasListener }.map { it.listener }

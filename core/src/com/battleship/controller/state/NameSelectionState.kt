@@ -58,11 +58,17 @@ class NameSelectionState(val controller: FirebaseController) : GuiState(controll
         this.view.render(*guiObjects.toTypedArray())
     }
 
+    /**
+     * Called once when the State is first initialized.
+     */
     override fun create() {
         super.create()
         Gdx.input.setOnscreenKeyboardVisible(true)
     }
 
+    /**
+     * Called once when the State is destroyed.
+     */
     override fun dispose() {
         super.dispose()
         Gdx.input.setOnscreenKeyboardVisible(false)

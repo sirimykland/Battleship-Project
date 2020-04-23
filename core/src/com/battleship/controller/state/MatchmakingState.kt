@@ -69,6 +69,10 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         GUI.backButton { GSM.set(NameSelectionState(controller)) }
     )
 
+    /**
+     * Called once when the State is first initialized.
+     * Adds listener for changes in available games
+     */
     override fun create() {
         super.create()
         controller.addPendingGamesListener { pendingGames ->
