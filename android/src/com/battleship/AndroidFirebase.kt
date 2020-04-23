@@ -66,6 +66,8 @@ object AndroidFirebase : FirebaseController {
                 val errorCode = (e as FirebaseFirestoreException).code
                 val errorMessage = e.message
                 Log.w("createGame", "Failed to create game! $errorCode - $errorMessage", e)
+                GSM.resetGame()
+                GSM.set(MainMenuState(this))
             }
     }
 
@@ -106,6 +108,8 @@ object AndroidFirebase : FirebaseController {
             val errorCode = (e as FirebaseFirestoreException).code
             val errorMessage = e.message
             Log.w("joinGame", "Transaction Joined game failed! $errorCode - $errorMessage: ", e)
+            GSM.resetGame()
+            GSM.set(MainMenuState(this))
         }
     }
 
@@ -125,6 +129,8 @@ object AndroidFirebase : FirebaseController {
             val errorCode = (e as FirebaseFirestoreException).code
             val errorMessage = e.message
             Log.w("leaveGame", "Player left game failed! $errorCode - $errorMessage: ", e)
+            GSM.resetGame()
+            GSM.set(MainMenuState(this))
         }
     }
 
@@ -188,6 +194,8 @@ object AndroidFirebase : FirebaseController {
             val errorCode = (e as FirebaseFirestoreException).code
             val errorMessage = e.message
             Log.w("registerTreasures", "Treasures registration failed! $errorCode - $errorMessage: ", e)
+            GSM.resetGame()
+            GSM.set(MainMenuState(this))
         }
     }
 
@@ -245,6 +253,8 @@ object AndroidFirebase : FirebaseController {
                 val errorCode = (e as FirebaseFirestoreException).code
                 val errorMessage = e.message
                 Log.w("setWinner", "Failed to set Winner! $errorCode - $errorMessage: ", e)
+                GSM.resetGame()
+                GSM.set(MainMenuState(this))
             }
     }
 
