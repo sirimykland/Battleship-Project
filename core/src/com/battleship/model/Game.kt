@@ -96,23 +96,6 @@ class Game(val gameId: String) {
     }
 
     /**
-     * Set TreasureList of player objects
-     *
-     * @param treasures: Map<String, List<Map<String, Any>>>
-     */
-    // TODO slette?
-    fun setTreasures(treasures: Map<String, List<Map<String, Any>>>) {
-        if (player.playerId in treasures) treasures[player.playerId]?.let {
-            player.board.setTreasuresList(
-                it
-            )
-        }
-        if (opponent.playerId in treasures) {
-            treasures[opponent.playerId]?.let { opponent.board.setTreasuresList(it) }
-        }
-    }
-
-    /**
      * Changes the state of the game if both players are registered and
      * has a non-empty list of treasures
      */
