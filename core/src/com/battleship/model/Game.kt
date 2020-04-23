@@ -43,10 +43,9 @@ class Game(val gameId: String) {
     }
 
     fun registerMove(move: Map<String, Any>) {
-        var equipment: Equipment = opponent.equipmentSet.activeEquipment!!
         for (eq in GSM.activeGame!!.opponent.equipmentSet.equipments) {
             if (eq.name == move["weapon"]) {
-                equipment = eq
+                opponent.equipmentSet.activeEquipment = eq
             }
         }
         if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
@@ -55,7 +54,7 @@ class Game(val gameId: String) {
                 (move["y"] as Number).toFloat()
             )
 
-            val missed = player.board.shootTiles(pos, equipment)
+            val missed = player.board.shootTiles(pos,  opponent.equipmentSet.activeEquipment!!)
             switchTurn(missed)
             player.updateHealth()
         } else {
