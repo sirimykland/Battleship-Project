@@ -9,7 +9,7 @@ import com.battleship.controller.input.ClickHandler
 import com.battleship.controller.input.KeyboardHandler
 import com.battleship.model.GameObject
 import com.battleship.utility.SoundEffects
-
+// TODO Karl
 class GuiObject(
     val position: Vector2,
     val size: Vector2

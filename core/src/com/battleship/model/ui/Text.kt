@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Align
 import com.battleship.utility.Font
-
+// TODO Karl
 class Text(
     private val text: String,
     private val font: BitmapFont = Font.SMALL_WHITE,

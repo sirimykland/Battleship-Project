@@ -14,7 +14,7 @@ import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.treasures.TreasureChest
 import com.battleship.utility.SoundEffects
 import kotlin.random.Random
-
+// TODO Henrik
 class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }

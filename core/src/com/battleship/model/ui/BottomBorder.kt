@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.battleship.utility.Palette
-
+// TODO Karl
 class BottomBorder(
     private val color: TextureRegion = Palette.WHITE,
     private val widthBottom: Float = 1f
