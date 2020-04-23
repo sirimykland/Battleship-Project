@@ -14,6 +14,7 @@ import com.battleship.utility.GUI
 import com.battleship.utility.GdxGraphicsUtil.equipmentSetPosition
 import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
 import com.battleship.utility.Palette
+import com.battleship.utility.SoundEffects
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
@@ -21,8 +22,8 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     override var view: View = PlayView()
     private var player: Player = GSM.activeGame!!.player
     private var gameOver: Boolean = false
-    private var showDialog: Boolean = false
     private var winningRenders: Int = 0
+    private var gameOverRendered: Boolean = false
 
     private val header = GUI.header("Your turn")
 
@@ -81,13 +82,20 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
     private val gameOverDialog = GUI.dialog(
         "Some text",
-        listOf(Pair("Dismiss", { showDialog = false }))
+        listOf(Pair("Dismiss", { toggleDialog(show = false) }))
     )
 
     override val guiObjects: List<GuiObject> = listOf(
-        header, switchBoardButton, *equipmentButtons, opponentsBoardText, mainMenuButton,
-        newGameButton, *gameOverDialog, GuiObject(0f, 0f, 0f, 0f)
-            .listen(BoardHandler(controller))
+        header,
+        switchBoardButton,
+        *equipmentButtons,
+        opponentsBoardText,
+        mainMenuButton,
+        newGameButton,
+        *gameOverDialog,
+        GUI.listener("boardHandler", BoardHandler(controller) {
+            gameOver
+        })
     )
 
     override fun render() {
@@ -99,22 +107,20 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
     override fun update(dt: Float) {
         gameOver = GSM.activeGame!!.winner != ""
-
         if (gameOver) {
-            // TODO Should stop listen to BoardHandler here
-            if (winningRenders < 2) winningRenders++
-            updateGUIObjectsGameOver()
-            gameOverDialog.forEachIndexed() { i, element ->
-                if (i == 0 && GSM.activeGame!!.youWon)
-                    element.set(Text("Congratulations, you won!", font = Font.LARGE_WHITE))
-                else if (i == 0 && !GSM.activeGame!!.youWon)
-                    element.set(Text("Sorry, you lost :(", font = Font.LARGE_WHITE))
-            }
-
-            if (winningRenders == 1) { // First game over render
-                // Save winner to Firebase
+            // only run once when game is over
+            if (!gameOverRendered) {
+                updateGUIObjectsGameOver()
+                if (GSM.activeGame!!.youWon) {
+                    gameOverDialog[0].set(Text("Congratulations, you won!", font = Font.LARGE_WHITE))
+                    SoundEffects.playVictory()
+                } else {
+                    gameOverDialog[0].set(Text("Sorry, you lost :(", font = Font.LARGE_WHITE))
+                    SoundEffects.playLosing()
+                }
                 controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
-                showDialog = true
+                toggleDialog(show = true)
+                gameOverRendered = true
             }
         } else {
             autoBoardSwitching()
@@ -156,6 +162,10 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         else opponentsBoardText.hide()
     }
 
+    private fun toggleDialog(show: Boolean) {
+        gameOverDialog.forEach { guiObject -> if (show) guiObject.show() else guiObject.hide() }
+    }
+
     private fun updateGUIObjectsGameOver() {
         equipmentButtons.forEach { button -> button.hide() }
         opponentsBoardText.hide()
@@ -167,12 +177,6 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
         mainMenuButton.show()
         newGameButton.show()
-
-        if (showDialog) {
-            gameOverDialog.forEach { guiObject -> guiObject.show() }
-        } else {
-            gameOverDialog.forEach { guiObject -> guiObject.hide() }
-        }
     }
 
     private fun joinEquipmentButton(

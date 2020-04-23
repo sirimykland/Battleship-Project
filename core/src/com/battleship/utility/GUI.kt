@@ -1,6 +1,7 @@
 package com.battleship.utility
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.battleship.model.ui.Background
@@ -132,5 +133,17 @@ object GUI {
             )
         }
         return dialogComponents.toTypedArray()
+    }
+
+    fun listener(
+        key: String,
+        listener: InputProcessor,
+        posX: Float = 0f,
+        posY: Float = 0f,
+        sizeX: Float = 100f,
+        sizeY: Float = 100f
+    ): GuiObject {
+        return GuiObject(posX, posY, sizeX, sizeY)
+            .listen(key, listener)
     }
 }

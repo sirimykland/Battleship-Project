@@ -29,6 +29,8 @@ class NameSelectionState(val controller: FirebaseController) : GuiState(controll
             '\r', '\n' -> complete()
             in legalCharacters -> username += char
         }
+    }.onClick {
+        Gdx.input.setOnscreenKeyboardVisible(true)
     }
 
     private val submitButton = GUI.menuButton(25f, 50f, "Continue") { complete() }
@@ -44,10 +46,7 @@ class NameSelectionState(val controller: FirebaseController) : GuiState(controll
         GUI.header("Choose your username"),
         usernameDisplay,
         submitButton,
-        GUI.backButton { GSM.set(MainMenuState(controller)) },
-        GuiObject(15f, 75f, 70f, 10f).onClick {
-            Gdx.input.setOnscreenKeyboardVisible(true)
-        }
+        GUI.backButton { GSM.set(MainMenuState(controller)) }
     )
     override var view: View = BasicView()
 

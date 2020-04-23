@@ -7,19 +7,17 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 import com.battleship.model.equipment.Equipment
-import com.battleship.model.soundeffects.SoundEffects
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.GoldKey
 import com.battleship.model.treasures.Treasure
 import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.treasures.TreasureChest
+import com.battleship.utility.SoundEffects
 import kotlin.random.Random
 
 class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
-    private var sound = SoundEffects()
-
     // Change all tiles to unopened state
     fun setTilesUnopened() {
         tiles = Array(size) { Array(size) { Tile.UNOPENED } }
@@ -147,7 +145,7 @@ class Board(val size: Int) : GameObject() {
             }
             resultList.contains(Result.HIT) -> {
                 println("Hit")
-                sound.playHit(0.8f)
+                SoundEffects.playHit()
                 equipment.use()
                 false
             }
@@ -157,7 +155,7 @@ class Board(val size: Int) : GameObject() {
             }
             else -> {
                 println("Missed")
-                equipment.playSound(0.8f)
+                equipment.playSound()
                 equipment.use()
                 true
             }
@@ -176,7 +174,7 @@ class Board(val size: Int) : GameObject() {
             setTile(pos, Tile.HIT)
             treasure.takeDamage()
             if (treasure.found()) {
-                treasure.playSound(0.8f)
+                treasure.playSound()
                 Result.FOUND
             } else {
                 Result.HIT
