@@ -241,7 +241,7 @@ object DesktopFirebase : FirebaseController {
                     val player2Id = snapshot.data?.get("player2Id") as String
                     // If no opponent has joined yet
                     if (snapshot.data?.get("playerLeft") != "") {
-                        println("Opponent left firebase")
+                        Gdx.app.log("addGameListener","Opponent left firebase")
                         GSM.activeGame!!.opponentLeft = true
                     }
                     if (player2Id != "") {
@@ -255,7 +255,7 @@ object DesktopFirebase : FirebaseController {
                             snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>?
                         if (treasures != null) {
                             val opponentId = game.opponent.playerId
-                            println("$opponentId, ${treasures.keys}")
+                            Gdx.app.log("addGameListener","$opponentId, ${treasures.keys}")
                             if (opponentId in treasures.keys) {
                                 treasures[opponentId]?.let {
                                     Gdx.app.postRunnable {
@@ -318,10 +318,10 @@ object DesktopFirebase : FirebaseController {
                             val lastMove = moves.get(moves.size - 1)
                             val game = GSM.activeGame!!
                             if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                                println("----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
+                                Gdx.app.log("addPlayListener","----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
                                 GSM.activeGame!!.registerMove(lastMove)
                             } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
-                                println("----------------------PLAYER LAST MOVE----------------------- " + lastMove)
+                                Gdx.app.log("addPlayListener","----------------------PLAYER LAST MOVE----------------------- " + lastMove)
                             }
                         }
                     }
