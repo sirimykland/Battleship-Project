@@ -33,7 +33,6 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
         }
         prefs = Gdx.app.getPreferences("firsttimeopen")
         prefs.putBoolean("lock", true)
-        print("prefs: " + prefs.getBoolean("lock", true))
         if (prefs.getBoolean("lock", true)) {
             prefs.putBoolean("lock", false)
             prefs.flush()
