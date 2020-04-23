@@ -119,7 +119,6 @@ object AndroidFirebase : FirebaseController {
             val snapshot = transaction.get(docRef)
 
             // val playerLeftId: String = snapshot.getString("player2Id") as String
-            // println("PlayerLeftId: " + playerLeftId)
             // val player2Id: String = snapshot.getString("player2Id") as String
             transaction.update(docRef, "playerLeft", playerId)
         }.addOnSuccessListener {
@@ -158,7 +157,7 @@ object AndroidFirebase : FirebaseController {
                             )
                         }
                     }
-                    println("Pending games: $pendingGames")
+                    Log.d("addPendingGamesListener","Pending games: $pendingGames")
                     Gdx.app.postRunnable {
                         callback(pendingGames)
                     }
@@ -278,7 +277,7 @@ object AndroidFirebase : FirebaseController {
                 if (opponent == "") {
                     Log.d("addGameListener", "Opponent not joined yet")
                 } else if (playerLeft != "") {
-                    println("Opponent left firebase")
+                    Log.d("addGameListener","Opponent left firebase")
                     GSM.activeGame!!.opponentLeft = true
                 }
                 // If there is an opponent in the game
@@ -361,10 +360,10 @@ object AndroidFirebase : FirebaseController {
                         val lastMove = moves.get(moves.size - 1)
                         val game = GSM.activeGame!!
                         if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                            println("----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
+                            Log.d("addPlayListener","----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
                             GSM.activeGame!!.registerMove(lastMove)
                         } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
-                            println("----------------------PLAYER LAST MOVE----------------------- " + lastMove)
+                            Log.d("addPlayListener","----------------------PLAYER LAST MOVE----------------------- " + lastMove)
                         }
                     }
                 }
