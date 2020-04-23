@@ -23,18 +23,19 @@ that the ship has been eliminated. The first player to eliminate all the opposin
 the game.
 
 ![Screenshot from http://en.battleship-game.org/](https://i.imgur.com/VNyLuF0.png)
+TODO: Add new screenshots
 
-To add something new to the game, power-ups will be added to both ships and shots.
-Suggestions for these power-ups are shots that hit more than one square, or specific
-squares on a ship that automatically eliminates it. An economic system where the players
-add ships and weaponry based on a budget is also being considered.
+### Our take on the concept
+TODO: Insert description - see implementation document
 
 ## Development
 
 ### Logical View
+TODO: Insert new logical view
 ![Logical View ](https://i.imgur.com/XQyIilb.png)
 
 ### Development View
+TODO: Insert new dev view
 ![Development View ](https://i.imgur.com/ENkQcNF.png)
 
 ### Version Control: Git
@@ -92,7 +93,7 @@ Go to <kbd>File</kbd> -> <kbd>Settings...</kbd> -> <kbd>Editor</kbd>
 Another option is to install [ktlint](https://ktlint.github.io/) and run ```ktlint -F``` from the command line.
 
 ### Database
-The project uses Cloud Firestore to store imporant game data which is structured in the following manner: 
+The project uses [Firebase Cloud Firestore](https://firebase.google.com/docs/firestore) to store imporant game data which is structured in the following manner: 
 
 #### Games collection
 This collection will contain one document for each game with a randomly generated ID. Each document created using the application currently contain the following fields: 
