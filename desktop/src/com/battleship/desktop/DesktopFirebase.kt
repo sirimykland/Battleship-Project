@@ -225,7 +225,7 @@ object DesktopFirebase : FirebaseController {
      * @param gameId the id of the game document
      * @param playerId the id of the player
      */
-    override fun addGameListener(gameId: String, playerId: String) {
+    override fun addGameListener(gameId: String, playerId: String, firebaseController: FirebaseController) {
         val docRef = db.collection("games").document(gameId)
         activeListener = docRef.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
@@ -234,6 +234,8 @@ object DesktopFirebase : FirebaseController {
             ) {
                 if (e != null) {
                     Gdx.app.log("addGameListener","Listen failed:" , e)
+                    GSM.resetGame()
+                    GSM.set(MainMenuState(firebaseController))
                     return
                 }
 
@@ -262,7 +264,7 @@ object DesktopFirebase : FirebaseController {
                                         game.opponent.board.setTreasuresList(it)
                                         game.setGameReadyIfReady()
                                         if (game.gameReady) {
-                                            addPlayListener(gameId)
+                                            addPlayListener(gameId,firebaseController)
                                         }
                                     }
                                 }
@@ -270,19 +272,21 @@ object DesktopFirebase : FirebaseController {
                             }
                             game.setGameReadyIfReady()
                             if (game.gameReady) {
-                                addPlayListener(gameId)
+                                addPlayListener(gameId, firebaseController)
                             }
                         }
                         game.setGameReadyIfReady()
                     }
                 } else {
                     Gdx.app.log("addGameListener","Current data: null")
+                    GSM.resetGame()
+                    GSM.set(MainMenuState(firebaseController))
                 }
             }
         })
     }
 
-    override fun addPlayListener(gameId: String) {
+    override fun addPlayListener(gameId: String, firebaseController: FirebaseController) {
         val query = db.collection("games").document(gameId)
         activeListener = query.addSnapshotListener(object : EventListener<DocumentSnapshot?> {
             override fun onEvent(
@@ -291,6 +295,8 @@ object DesktopFirebase : FirebaseController {
             ) {
                 if (e != null) {
                     Gdx.app.log("addPlayListener","Listen failed:" , e)
+                    GSM.resetGame()
+                    GSM.set(MainMenuState(firebaseController))
                     return
                 }
                 Gdx.app.log("addPlayListener","MOVE LISTENER:")
@@ -327,6 +333,8 @@ object DesktopFirebase : FirebaseController {
                     }
                 } else {
                     Gdx.app.log("addPlayListener","Current data: null")
+                    GSM.resetGame()
+                    GSM.set(MainMenuState(firebaseController))
                 }
             }
         })

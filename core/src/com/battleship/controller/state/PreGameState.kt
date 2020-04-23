@@ -32,7 +32,7 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
             Treasure.TreasureType.TREASURECHEST,
             true
         )
-        controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId)
+        controller.addGameListener(GSM.activeGame!!.gameId, GSM.activeGame!!.player.playerId, controller)
     }
 
     private val readyButton = GUI.textButton(
