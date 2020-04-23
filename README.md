@@ -119,7 +119,11 @@ This collection will contain one document for each game with a randomly generate
 ![Firebase example data overall](https://i.imgur.com/M3pwjP1.png)
 
 *Moves*:
+
 ![Firebase example data moves](https://i.imgur.com/mPaTFkr.png)
++++
 
 *Treasures*:
+
 ![Firebase example data treasures](https://i.imgur.com/NKaW0fT.png)
++++
