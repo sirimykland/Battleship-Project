@@ -10,7 +10,7 @@ import com.battleship.utility.SoundEffects
 /**
  * Abstract class for treasures inheriting from [GameObject].
  *
- * @constructor:
+ * @constructor
  * @property position: Vector2 - position of treasure on board grid
  * @property rotate: Boolean - describes if treasure is rotated, default: false
  */

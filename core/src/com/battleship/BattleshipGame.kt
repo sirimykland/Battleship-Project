@@ -13,7 +13,7 @@ import com.battleship.utility.TextureLibrary
 /**
  * Main class for BattleshipGame. Inherits behaviour LibGdx's from [Game].
  *
- * @constructor:
+ * @constructor
  * @property controller: FirebaseController - position of treasure on board grid
  */
 class BattleshipGame(private val controller: FirebaseController) : Game() {

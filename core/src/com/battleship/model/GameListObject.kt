@@ -3,7 +3,7 @@ package com.battleship.model
 /**
  * open class for Game list objects of available games
  *
- * @constructor:
+ * @constructor
  * @property gameId: String
  * @property playerId: String
  * @property playerName: String

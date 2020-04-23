@@ -5,7 +5,7 @@ import com.badlogic.gdx.InputAdapter
 /**
  * Click handler class inheriting from [InputAdapter].
  *
- * @constructor:
+ * @constructor
  * @property onClick: (c: Char) -> Unit
  */
 class KeyboardHandler(val onClick: (c: Char) -> Unit) : InputAdapter() {

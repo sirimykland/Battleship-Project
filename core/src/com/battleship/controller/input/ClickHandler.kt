@@ -8,7 +8,7 @@ import com.battleship.utility.RectangleUtil
 /**
  * Click handler class inheriting from [InputAdapter].
  *
- * @constructor:
+ * @constructor
  * @property position: Vector2
  * @property size: Vector2
  * @property onClick: () -> Boolean
