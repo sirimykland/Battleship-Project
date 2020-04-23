@@ -1,5 +1,5 @@
 # Battleship-Project
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat)](https://github.com/sirimykland/Battleship-Project/blob/master/LICENCE)
 
 ### Version Control: Git
 You'll need to familiarie yourself with the basics in order to work with, and contribute to this project.
