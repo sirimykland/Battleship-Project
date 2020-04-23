@@ -100,7 +100,7 @@ object DesktopFirebase : FirebaseController {
                 @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
-                    Gdx.app.log("addPendingGamesListener","Listen failed:" , e)
+                    Gdx.app.log("addPendingGamesListener", "Listen failed:", e)
                     return
                 }
                 if (snapshot != null) {
@@ -233,7 +233,7 @@ object DesktopFirebase : FirebaseController {
                 @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
-                    Gdx.app.log("addGameListener","Listen failed:" , e)
+                    Gdx.app.log("addGameListener", "Listen failed:", e)
                     return
                 }
 
@@ -241,7 +241,7 @@ object DesktopFirebase : FirebaseController {
                     val player2Id = snapshot.data?.get("player2Id") as String
                     // If no opponent has joined yet
                     if (snapshot.data?.get("playerLeft") != "") {
-                        Gdx.app.log("addGameListener","Opponent left firebase")
+                        Gdx.app.log("addGameListener", "Opponent left firebase")
                         GSM.activeGame!!.opponentLeft = true
                     }
                     if (player2Id != "") {
@@ -255,7 +255,7 @@ object DesktopFirebase : FirebaseController {
                             snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>?
                         if (treasures != null) {
                             val opponentId = game.opponent.playerId
-                            Gdx.app.log("addGameListener","$opponentId, ${treasures.keys}")
+                            Gdx.app.log("addGameListener", "$opponentId, ${treasures.keys}")
                             if (opponentId in treasures.keys) {
                                 treasures[opponentId]?.let {
                                     Gdx.app.postRunnable {
@@ -276,7 +276,7 @@ object DesktopFirebase : FirebaseController {
                         game.setGameReadyIfReady()
                     }
                 } else {
-                    Gdx.app.log("addGameListener","Current data: null")
+                    Gdx.app.log("addGameListener", "Current data: null")
                 }
             }
         })
@@ -290,10 +290,10 @@ object DesktopFirebase : FirebaseController {
                 @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
-                    Gdx.app.log("addPlayListener","Listen failed:" , e)
+                    Gdx.app.log("addPlayListener", "Listen failed:", e)
                     return
                 }
-                Gdx.app.log("addPlayListener","MOVE LISTENER:")
+                Gdx.app.log("addPlayListener", "MOVE LISTENER:")
                 if (snapshot != null && snapshot.exists()) {
                     var moves = mutableListOf<Map<String, Any>>()
                     if (snapshot.data?.get("moves") != null) {
@@ -304,29 +304,29 @@ object DesktopFirebase : FirebaseController {
                     val winner = snapshot.data?.get("winner")
                     // If a winner has been set
                     if (winner != "") {
-                        Gdx.app.log("addPlayListener","The winner is $winner")
+                        Gdx.app.log("addPlayListener", "The winner is $winner")
                         GSM.activeGame!!.winner = winner as String // or something
                     }
                     // If there is no winner, continue game
                     else {
                         // If no moves has been made yet
                         if (moves.size == 0) {
-                            Gdx.app.log("addPlayListener","No moves made yet")
+                            Gdx.app.log("addPlayListener", "No moves made yet")
                             GSM.activeGame!!.setGameReadyIfReady()
                         } else {
                             // Get the last move
                             val lastMove = moves.get(moves.size - 1)
                             val game = GSM.activeGame!!
                             if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                                Gdx.app.log("addPlayListener","----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
+                                Gdx.app.log("addPlayListener", "----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
                                 GSM.activeGame!!.registerMove(lastMove)
                             } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
-                                Gdx.app.log("addPlayListener","----------------------PLAYER LAST MOVE----------------------- " + lastMove)
+                                Gdx.app.log("addPlayListener", "----------------------PLAYER LAST MOVE----------------------- " + lastMove)
                             }
                         }
                     }
                 } else {
-                    Gdx.app.log("addPlayListener","Current data: null")
+                    Gdx.app.log("addPlayListener", "Current data: null")
                 }
             }
         })

@@ -157,7 +157,7 @@ object AndroidFirebase : FirebaseController {
                             )
                         }
                     }
-                    Log.d("addPendingGamesListener","Pending games: $pendingGames")
+                    Log.d("addPendingGamesListener", "Pending games: $pendingGames")
                     Gdx.app.postRunnable {
                         callback(pendingGames)
                     }
@@ -171,9 +171,9 @@ object AndroidFirebase : FirebaseController {
      * @param treasures list containing the treasures that should be added, each described using a map
      */
     override fun registerTreasures(
-            gameId: String,
-            userId: String,
-            treasures: List<Map<String, Any>>
+        gameId: String,
+        userId: String,
+        treasures: List<Map<String, Any>>
     ) {
         val docRef = db.collection("games").document(gameId)
 
@@ -277,7 +277,7 @@ object AndroidFirebase : FirebaseController {
                 if (opponent == "") {
                     Log.d("addGameListener", "Opponent not joined yet")
                 } else if (playerLeft != "") {
-                    Log.d("addGameListener","Opponent left firebase")
+                    Log.d("addGameListener", "Opponent left firebase")
                     GSM.activeGame!!.opponentLeft = true
                 }
                 // If there is an opponent in the game
@@ -360,10 +360,10 @@ object AndroidFirebase : FirebaseController {
                         val lastMove = moves.get(moves.size - 1)
                         val game = GSM.activeGame!!
                         if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                            Log.d("addPlayListener","----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
+                            Log.d("addPlayListener", "----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
                             GSM.activeGame!!.registerMove(lastMove)
                         } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
-                            Log.d("addPlayListener","----------------------PLAYER LAST MOVE----------------------- " + lastMove)
+                            Log.d("addPlayListener", "----------------------PLAYER LAST MOVE----------------------- " + lastMove)
                         }
                     }
                 }
