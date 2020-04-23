@@ -100,7 +100,7 @@ class Game(val gameId: String) {
      *
      * @param treasures: Map<String, List<Map<String, Any>>>
      */
-    //TODO slette?
+    // TODO slette?
     fun setTreasures(treasures: Map<String, List<Map<String, Any>>>) {
         if (player.playerId in treasures) treasures[player.playerId]?.let {
             player.board.setTreasuresList(

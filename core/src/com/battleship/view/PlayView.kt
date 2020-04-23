@@ -14,9 +14,22 @@ import com.battleship.utility.GdxGraphicsUtil.equipmentSetPosition
 import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
 import com.battleship.utility.TextureLibrary
 
+/**
+ * Subclass of [View] that renderes gui and game objects to screen
+ */
 class PlayView : View() {
-    private val background = Sprite(TextureLibrary.BACKGROUND)
+    private val background = Sprite(TextureLibrary.BACKGROUND) // TODO flytte til View
 
+    /**
+     * Renders game and gui related such as text, buttons, board, etc.
+     * Objects are drawn onto the screen using the gameobjects' draw method.
+     * The individual draw methods are provided with parameters such as
+     * SpritBatch, SpriteRendrer, position and size. The parameters size
+     * and position are relevant in size to the screen rendered on.
+     *
+     * @param gameObjects: GameObject - variable length of drawable
+     * objects to render
+     */
     override fun render(vararg gameObjects: GameObject) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
