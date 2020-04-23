@@ -8,5 +8,5 @@ class Dynamite : Equipment() {
     override var uses: Int = 1
     override var name: String = "Dynamite"
     override var active: Boolean = false
-    override var sound: Sound = SoundEffects.BIGEQUIPMENT
+    override var sound: Sound = SoundEffects.DYNAMITE
 }
