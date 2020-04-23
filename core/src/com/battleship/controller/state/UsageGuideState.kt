@@ -111,6 +111,9 @@ class UsageGuideState(private val controller: FirebaseController) : GuiState(con
     override fun update(dt: Float) {
     }
 
+    /**
+     * Called when the State should render itself.
+     */
     override fun render() {
         view.render(*guiObjects.toTypedArray())
     }

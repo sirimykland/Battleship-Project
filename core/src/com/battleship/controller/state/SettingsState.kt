@@ -91,6 +91,9 @@ class SettingsState(private val controller: FirebaseController) : GuiState(contr
         updateButtons()
     }
 
+    /**
+     * Called when the State should render itself.
+     */
     override fun render() {
         view.render(*guiObjects.toTypedArray())
     }

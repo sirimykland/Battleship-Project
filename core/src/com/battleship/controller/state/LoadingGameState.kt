@@ -40,6 +40,9 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
         *opponentLeftDialog
     )
 
+    /**
+     * Called when the State should render itself.
+     */
     override fun render() {
         this.view.render(*guiObjects.toTypedArray())
     }

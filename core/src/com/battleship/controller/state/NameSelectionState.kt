@@ -54,6 +54,9 @@ class NameSelectionState(val controller: FirebaseController) : GuiState(controll
         usernameDisplay.set(Text(username, font = Font.MEDIUM_BLACK))
     }
 
+    /**
+     * Called when the State should render itself.
+     */
     override fun render() {
         this.view.render(*guiObjects.toTypedArray())
     }

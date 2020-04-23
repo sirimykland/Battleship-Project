@@ -98,6 +98,9 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         })
     )
 
+    /**
+     * Called when the State should render itself.
+     */
     override fun render() {
         view.render(
             if (GSM.activeGame!!.playerBoard) GSM.activeGame!!.player.board else GSM.activeGame!!.opponent.board,

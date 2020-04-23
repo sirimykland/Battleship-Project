@@ -83,6 +83,9 @@ class PreGameState(private val controller: FirebaseController) : GuiState(contro
         }
     }
 
+    /**
+     * Called when the State should render itself.
+     */
     override fun render() {
         this.view.render(GSM.activeGame!!.player.board, *guiObjects.toTypedArray())
     }

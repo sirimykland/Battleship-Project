@@ -38,9 +38,11 @@ class MainMenuState(private val controller: FirebaseController) : GuiState(contr
 
     override var view: View = BasicView()
 
-    override fun update(dt: Float) {
-    }
+    override fun update(dt: Float) {}
 
+    /**
+     * Called when the State should render itself.
+     */
     override fun render() {
         view.render(title, *guiObjects.toTypedArray())
     }

@@ -139,6 +139,9 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
 
     override fun update(dt: Float) {}
 
+    /**
+     * Called when the State should render itself.
+     */
     override fun render() {
         this.view.render(*guiObjects.toTypedArray())
     }
