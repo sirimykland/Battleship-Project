@@ -66,11 +66,11 @@ abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject
         dimension.y = temp
     }
 
-    override fun draw(batch: SpriteBatch, boardPos: Vector2, dimension: Vector2) {
+    override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
         if (found() || revealed) {
 
-            val xPos = boardPos.x + dimension.x * position.x + padding
-            val yPos = boardPos.y + dimension.y * position.y + padding
+            val xPos = position.x + dimension.x * this.position.x + padding
+            val yPos = position.y + dimension.y * this.position.y + padding
             val width = this.dimension.x * dimension.x - (padding * 2)
             val height = this.dimension.y * dimension.y - (padding * 2)
 

@@ -22,7 +22,6 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     override var view: View = PlayView()
     private var player: Player = GSM.activeGame!!.player
     private var gameOver: Boolean = false
-    private var winningRenders: Int = 0
     private var gameOverRendered: Boolean = false
 
     private val header = GUI.header("Your turn")
