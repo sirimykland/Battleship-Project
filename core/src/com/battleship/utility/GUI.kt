@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.battleship.controller.input.BackButtonHandler
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.BottomBorder
@@ -86,6 +87,7 @@ object GUI {
         return GuiObject(0.15f, 90f, 10f, 8f)
             .with(Image("icons/round_arrow_back_white.png"))
             .onClick(onClick)
+            .listen("onAndroidBack", BackButtonHandler(onClick))
     }
 
     fun image(
