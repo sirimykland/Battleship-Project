@@ -2,7 +2,6 @@ package com.battleship.model
 
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
-import com.battleship.model.equipment.Equipment
 import java.util.Timer
 import kotlin.concurrent.schedule
 
@@ -54,7 +53,7 @@ class Game(val gameId: String) {
                 (move["y"] as Number).toFloat()
             )
 
-            val missed = player.board.shootTiles(pos,  opponent.equipmentSet.activeEquipment!!)
+            val missed = player.board.shootTiles(pos, opponent.equipmentSet.activeEquipment!!)
             switchTurn(missed)
             player.updateHealth()
         } else {
