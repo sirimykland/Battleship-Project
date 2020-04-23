@@ -56,8 +56,12 @@ class UsageGuideState(private val controller: FirebaseController) : GuiState(con
         10f,
         "Next"
     ) {
-        pageIndex++
-        updateButtons()
+        if (pageIndex == imagePaths.size - 1) {
+            GameStateManager.set(MainMenuState(controller))
+        } else {
+            pageIndex++
+            updateButtons()
+        }
     }
 
     private val previousPageButton = GUI.textButton(
@@ -89,12 +93,10 @@ class UsageGuideState(private val controller: FirebaseController) : GuiState(con
      * Decide which buttons to show and update image and text
      */
     private fun updateButtons() {
-        if (pageIndex < imagePaths.size - 1) {
-            nextPageButton.show()
-        } else {
-            nextPageButton.hide()
-        }
-
+        if (pageIndex == imagePaths.size - 1)
+            nextPageButton.set(Text("Finish", Font.MEDIUM_BLACK))
+        else
+            nextPageButton.set(Text("Next", Font.MEDIUM_BLACK))
         if (pageIndex > 0)
             previousPageButton.show()
         else
