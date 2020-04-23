@@ -3,6 +3,7 @@ package com.battleship.desktop
 import com.badlogic.gdx.Gdx
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
+import com.battleship.controller.state.MainMenuState
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import com.battleship.model.Player
@@ -18,6 +19,7 @@ import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.FirestoreClient
 import com.google.firebase.database.annotations.Nullable
 import java.io.FileInputStream
+import java.util.logging.Logger
 
 /**
  * Class used to setup the database connection
@@ -99,7 +101,7 @@ object DesktopFirebase : FirebaseController {
                 @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
-                    System.err.println("Listen failed: $e")
+                    Gdx.app.log("addPendingGamesListener","Listen failed:" , e)
                     return
                 }
                 if (snapshot != null) {
@@ -127,27 +129,6 @@ object DesktopFirebase : FirebaseController {
     }
 
     /**
-     * Gets username from a registered player
-     * @param userId the id of the user that should be added
-     * @return a player object
-     */
-    private fun getUser(userId: String): Player {
-        val docRef = db.collection("users").document(userId).get()
-        val user = docRef.get()
-
-        if (user.exists()) {
-            val username: String = user.get("username") as String
-            if (username != "") {
-                return Player(userId, username)
-            }
-            return Player(userId, "Unknown")
-        } else {
-            // Add error handling
-            throw error("Something went wrong when getting user")
-        }
-    }
-
-    /**
      * Add userId to a specific game
      * @param gameId the id of the game document
      * @param userId the id of the user that should be added
@@ -169,7 +150,9 @@ object DesktopFirebase : FirebaseController {
 
             game.setPlayers(player1, player2)
         } else {
-            throw error("Something went wrong when setting the Game")
+            Gdx.app.log("setGame", "Failed to set Game!")
+            GSM.resetGame()
+            GSM.set(MainMenuState(this))
         }
         Gdx.app.postRunnable { callback(game) }
     }
@@ -192,58 +175,9 @@ object DesktopFirebase : FirebaseController {
             dbTreasures[userId] = treasures
             db.collection("games").document(gameId).update("treasures", dbTreasures)
         } else {
-            // TODO: Add exception handling
-            println("Something went wrong when registering treasures")
-        }
-    }
-
-    /**
-     * Get the ships in a game
-     * @param gameId the id of the game
-     * @return a Game object containing game and player
-     */
-    private fun getOpponent(gameId: String) {
-        val query = db.collection("games").document(gameId).get()
-        val game = query.get()
-
-        if (game.exists()) {
-            val player2Id: String = game.get("player2Id") as String
-
-            GSM.activeGame!!.opponent.playerId = player2Id
-            GSM.activeGame!!.opponent.playerName =
-                db.collection("users").document(player2Id).get().get().get("username").toString()
-            println("opponent name: " + GSM.activeGame!!.opponent.playerName)
-        } else {
-            throw error("Something went wrong when fetching the Game")
-        }
-    }
-
-    /**
-     * get the treasures from firebase and stores them in a game
-     * @param gameId the id of the game
-     * @return a map containing a list of treasures per user
-     */
-    private fun getTreasures(gameId: String) {
-        val query = db.collection("games").document(gameId).get()
-        val game = query.get()
-        if (game.exists()) {
-            val treasures = game.get("treasures") as MutableMap<String, List<Map<String, Any>>>
-            // val treasureO = treasures[GSM.activeGame!!.opponent.playerId]
-            // if (treasures != null) {
-            // GSM.activeGame!!.setTreasures(treasures)
-            /* if (GSM.activeGame!!.me.playerId in treasures) {
-                treasures[GSM.activeGame!!.me.playerId]?.let { GSM.activeGame!!.me.board.setTreasuresList(it) }
-            } */
-            if (GSM.activeGame!!.opponent.playerId in treasures) {
-                treasures[GSM.activeGame!!.opponent.playerId]?.let {
-                    GSM.activeGame!!.opponent.board.setTreasuresList(it)
-                }
-                GSM.activeGame!!.setGameReadyIfReady()
-            }
-            // }
-        } else {
-            // TODO: Add error handling
-            throw error("Something went wrong when fetching treasures")
+            Gdx.app.log("registerTreasures", "Failed to register Treasures!")
+            GSM.resetGame()
+            GSM.set(MainMenuState(this))
         }
     }
 
@@ -266,10 +200,10 @@ object DesktopFirebase : FirebaseController {
             data["weapon"] = weapon
             moves.add(data)
             db.collection("games").document(gameId).update("moves", moves)
-            // TODO: Call function that handles what should happen after move is made
         } else {
-            // TODO: Add exception handling
-            println("Something went wrong when making move")
+            Gdx.app.log("registerMove", "Failed to register move!")
+            GSM.resetGame()
+            GSM.set(MainMenuState(this))
         }
     }
 
@@ -280,7 +214,6 @@ object DesktopFirebase : FirebaseController {
      */
     override fun setWinner(userId: String, gameId: String) {
         db.collection("games").document(gameId).update("winner", userId)
-        // TODO: Call function that should handle what happens when a winner is set
     }
 
     override fun leaveGame(gameId: String, playerId: String, callback: () -> Unit) {
@@ -290,7 +223,6 @@ object DesktopFirebase : FirebaseController {
 
     /**
      * Function adding listener to a specific game
-     * TODO: Add exception handling
      * @param gameId the id of the game document
      * @param playerId the id of the player
      */
@@ -302,7 +234,7 @@ object DesktopFirebase : FirebaseController {
                 @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
-                    System.err.println("Listen failed: $e")
+                    Gdx.app.log("addGameListener","Listen failed:" , e)
                     return
                 }
 
@@ -357,7 +289,7 @@ object DesktopFirebase : FirebaseController {
                 @Nullable e: FirestoreException?
             ) {
                 if (e != null) {
-                    System.err.println("Listen failed: $e")
+                    Gdx.app.log("addPlayListener","Listen failed:" , e)
                     return
                 }
                 println("addPlayListener: MOVE LISTENER:")
