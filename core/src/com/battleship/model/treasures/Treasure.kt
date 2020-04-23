@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
+import com.battleship.utility.SoundEffects
 
 /**
  * Abstract class for treasures inheriting from [GameObject].
