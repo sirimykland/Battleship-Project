@@ -23,7 +23,7 @@ that the ship has been eliminated. The first player to eliminate all the opposin
 the game.
 
 ![Your board in-game](https://i.imgur.com/K6zs2lP.png)
-![Opponent's board in-game](https://i.imgur.com/0SjzwUQ.png)
+![Opponent's board in-game](https://i.imgur.com/yvsQeFR.png)
 
 
 ### Our take on the concept
@@ -110,5 +110,6 @@ This collection will contain one document for each game with a randomly generate
     - **x:** the x-coordinate of the move
     - **y:** the y-coordinate of the move
 
-Example data:
+*Example data from a test game*:
+
 ![Firebase example data](https://i.imgur.com/M3pwjP1.png)
