@@ -1,8 +1,8 @@
 package com.battleship.model.equipment
 
 import com.badlogic.gdx.audio.Sound
-import com.battleship.BattleshipGame
 import com.battleship.model.GameObject
+import com.battleship.utility.SoundEffects
 
 /**
  * Abstract class of type [GameObject]
@@ -36,10 +36,7 @@ abstract class Equipment : GameObject() {
      *
      * @param volume of the sound
      */
-    fun playSound(volume: Float) {
-        if (BattleshipGame.soundOn) {
-            sound.stop()
-            sound.play(volume)
-        }
+    fun playSound(volume: Float = 0.8f) {
+        SoundEffects.play(sound, volume)
     }
 }

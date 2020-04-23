@@ -1,7 +1,7 @@
 package com.battleship.model.equipment
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
+import com.battleship.utility.SoundEffects
 
 /**
  *  Inherits behavior from [Equipment]
@@ -11,5 +11,5 @@ class MetalDetector : Equipment() {
     override var uses: Int = 1
     override var name: String = "Metal detector"
     override var active: Boolean = false
-    override var sound: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/radar_sound.mp3"))
+    override var sound: Sound = SoundEffects.METALDETECTOR
 }

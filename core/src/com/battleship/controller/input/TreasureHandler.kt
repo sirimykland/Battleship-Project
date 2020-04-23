@@ -25,6 +25,7 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
         val treasure = board.getTreasureByPosition(treasurePos)
         if (treasure != null) {
             activeTreasure = treasure
+            activeTreasure!!.playSound()
             oldPosition = activeTreasure!!.position
         }
         return false
@@ -32,6 +33,7 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
 
     override fun touchUp(x: Int, y: Int, pointer: Int, button: Int): Boolean {
         if (activeTreasure != null) {
+
             // Check if new position is validated. Goes back to old position if not.
             if (!board.validateTreasurePosition(activeTreasure)) {
                 activeTreasure!!.updatePosition(oldPosition!!)

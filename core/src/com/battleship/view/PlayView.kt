@@ -2,23 +2,20 @@ package com.battleship.view
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 import com.battleship.model.equipment.EquipmentSet
 import com.battleship.model.ui.Board
-import com.battleship.model.ui.GameInfo
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.utility.GdxGraphicsUtil.equipmentSetPosition
 import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
-import com.battleship.utility.GdxGraphicsUtil.gameInfoPosition
-import com.battleship.utility.GdxGraphicsUtil.gameInfoSize
+import com.battleship.utility.TextureLibrary
 
 class PlayView : View() {
-    private val background = Sprite(Texture("images/background.png"))
+    private val background = Sprite(TextureLibrary.BACKGROUND)
 
     override fun render(vararg gameObjects: GameObject) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
@@ -41,12 +38,6 @@ class PlayView : View() {
                     batch,
                     Gdx.graphics.equipmentSetPosition(),
                     Gdx.graphics.equipmentSetSize()
-                )
-                is GameInfo -> obj.draw(
-                    batch,
-                    shapeRenderer,
-                    Gdx.graphics.gameInfoPosition(),
-                    Gdx.graphics.gameInfoSize()
                 )
                 is GuiObject -> {
                     batch.begin()

@@ -1,22 +1,20 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
+import com.battleship.controller.input.BoardHandler
 import com.battleship.model.Player
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
-import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
-import com.battleship.utility.GdxGraphicsUtil.boardPosition
-import com.battleship.utility.GdxGraphicsUtil.boardWidth
 import com.battleship.utility.GdxGraphicsUtil.equipmentSetPosition
 import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
 import com.battleship.utility.Palette
+import com.battleship.utility.SoundEffects
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
@@ -24,8 +22,8 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     override var view: View = PlayView()
     private var player: Player = GSM.activeGame!!.player
     private var gameOver: Boolean = false
-    private var showDialog: Boolean = false
     private var winningRenders: Int = 0
+    private var gameOverRendered: Boolean = false
 
     private val header = GUI.header("Your turn")
 
@@ -84,12 +82,20 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
     private val gameOverDialog = GUI.dialog(
         "Some text",
-        listOf(Pair("Dismiss", { showDialog = false }))
+        listOf(Pair("Dismiss", { toggleDialog(show = false) }))
     )
 
     override val guiObjects: List<GuiObject> = listOf(
-        header, switchBoardButton, *equipmentButtons, opponentsBoardText, mainMenuButton,
-        newGameButton, *gameOverDialog
+        header,
+        switchBoardButton,
+        *equipmentButtons,
+        opponentsBoardText,
+        mainMenuButton,
+        newGameButton,
+        *gameOverDialog,
+        GUI.listener("boardHandler", BoardHandler(controller) {
+            gameOver
+        })
     )
 
     override fun render() {
@@ -101,54 +107,26 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
     override fun update(dt: Float) {
         gameOver = GSM.activeGame!!.winner != ""
-
         if (gameOver) {
-            if (winningRenders < 2) winningRenders++
-            updateGUIObjectsGameOver()
-            gameOverDialog.forEachIndexed() { i, element ->
-                if (i == 0 && GSM.activeGame!!.youWon)
-                    element.set(Text("Congratulations, you won!", font = Font.LARGE_WHITE))
-                else if (i == 0 && !GSM.activeGame!!.youWon)
-                    element.set(Text("Sorry, you lost :(", font = Font.LARGE_WHITE))
-            }
-
-            if (winningRenders == 1) { // First game over render
-                // Save winner to Firebase
+            // only run once when game is over
+            if (!gameOverRendered) {
+                updateGUIObjectsGameOver()
+                if (GSM.activeGame!!.youWon) {
+                    gameOverDialog[0].set(Text("Congratulations, you won!", font = Font.LARGE_WHITE))
+                    SoundEffects.playVictory()
+                } else {
+                    gameOverDialog[0].set(Text("Sorry, you lost :(", font = Font.LARGE_WHITE))
+                    SoundEffects.playLosing()
+                }
                 controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
-                showDialog = true
+                toggleDialog(show = true)
+                gameOverRendered = true
             }
         } else {
             autoBoardSwitching()
             updateGUIObjectsInGame()
-            handleBoardInput()
             // Update game status in GameStateManager
             GSM.activeGame!!.updateWinner()
-        }
-    }
-
-    private fun handleBoardInput() {
-        // Check if it is players turn and opponents board is showing.
-        if (GSM.activeGame!!.isPlayersTurn() && !GSM.activeGame!!.playerBoard) {
-            if (Gdx.input.justTouched()) {
-                val touchX = Gdx.input.x.toFloat()
-                val touchY = Gdx.graphics.height - Gdx.input.y.toFloat()
-                val touchPos = Vector2(touchX, touchY)
-                val boardWidth = Gdx.graphics.boardWidth()
-                val boardPos = Gdx.graphics.boardPosition()
-                val boardBounds = Rectangle(boardPos.x, boardPos.y, boardWidth, boardWidth)
-
-                if (boardBounds.contains(touchPos)) {
-                    val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, 10)
-                    controller.registerMove(
-                        GSM.activeGame!!.gameId,
-                        boardTouchPos.x.toInt(),
-                        boardTouchPos.y.toInt(),
-                        GSM.activeGame!!.player.playerId,
-                        GSM.activeGame!!.player.equipmentSet.activeEquipment!!.name
-                    )
-                    GSM.activeGame!!.makeMove(boardTouchPos)
-                }
-            }
         }
     }
 
@@ -184,6 +162,10 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         else opponentsBoardText.hide()
     }
 
+    private fun toggleDialog(show: Boolean) {
+        gameOverDialog.forEach { guiObject -> if (show) guiObject.show() else guiObject.hide() }
+    }
+
     private fun updateGUIObjectsGameOver() {
         equipmentButtons.forEach { button -> button.hide() }
         opponentsBoardText.hide()
@@ -195,12 +177,6 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
         mainMenuButton.show()
         newGameButton.show()
-
-        if (showDialog) {
-            gameOverDialog.forEach { guiObject -> guiObject.show() }
-        } else {
-            gameOverDialog.forEach { guiObject -> guiObject.hide() }
-        }
     }
 
     private fun joinEquipmentButton(

@@ -73,10 +73,15 @@ object DesktopFirebase : FirebaseController {
         data["winner"] = ""
         data["moves"] = mutableListOf<Map<String, Any>>()
         data["treasures"] = mutableMapOf<String, List<Map<String, Any>>>()
+        data["playerLeft"] = ""
 
         val res = db.collection("games").add(data)
         val gameId = res.get().id
-        val game = setGame(gameId)
+        val game = Game(gameId)
+        val player1 = Player(userId, userName)
+        val player2 = Player()
+        game.setPlayers(player1, player2)
+
         Gdx.app.postRunnable { callback(game) }
     }
 
@@ -151,8 +156,22 @@ object DesktopFirebase : FirebaseController {
         // Add the data to the game document
         db.collection("games").document(gameId).update("player2Id", userId)
         db.collection("games").document(gameId).update("player2Name", userName)
-        val game = setGame(gameId)
-        callback(game)
+
+        val game = Game(gameId)
+        val query = db.collection("games").document(gameId).get()
+        val doc = query.get()
+
+        if (doc.exists()) {
+            val player1Id: String = doc.getString("player1Id") as String
+            val player1Name: String = doc.getString("player1Name") as String
+            val player1 = Player(player1Id, player1Name)
+            val player2 = Player(userId, userName)
+
+            game.setPlayers(player1, player2)
+        } else {
+            throw error("Something went wrong when setting the Game")
+        }
+        Gdx.app.postRunnable { callback(game) }
     }
 
     /**
@@ -175,38 +194,6 @@ object DesktopFirebase : FirebaseController {
         } else {
             // TODO: Add exception handling
             println("Something went wrong when registering treasures")
-        }
-    }
-
-    /**
-     * Get the treasures in a game
-     * @param gameId the id of the game
-     * @return a map containing a list of treasures per user
-     * @return a Game object containing game and player
-     */
-    private fun setGame(gameId: String): Game {
-        val game = Game(gameId)
-        val query = db.collection("games").document(gameId).get()
-        val doc = query.get()
-
-        if (doc.exists()) {
-            println(doc)
-            val player1Id: String = doc.getString("player1Id") as String
-            val player1Name: String = doc.getString("player1Name") as String
-            val player1 = Player(player1Id, player1Name)
-
-            val player2Id: String = doc.getString("player2Id") as String
-            val player2Name: String = doc.getString("player2Name") as String
-            val player2: Player =
-                if (player2Id != "" && player2Name != "")
-                    Player(player2Id, player2Name)
-                else Player()
-
-            game.setPlayers(player1, player2)
-            println("setGame: $game")
-            return game
-        } else {
-            throw error("Something went wrong when setting the Game")
         }
     }
 
@@ -296,6 +283,11 @@ object DesktopFirebase : FirebaseController {
         // TODO: Call function that should handle what happens when a winner is set
     }
 
+    override fun leaveGame(gameId: String, playerId: String, callback: () -> Unit) {
+        db.collection("games").document(gameId).update("playerLeft", playerId)
+        Gdx.app.postRunnable { callback() }
+    }
+
     /**
      * Function adding listener to a specific game
      * TODO: Add exception handling
@@ -317,6 +309,10 @@ object DesktopFirebase : FirebaseController {
                 if (snapshot != null && snapshot.exists()) {
                     val player2Id = snapshot.data?.get("player2Id") as String
                     // If no opponent has joined yet
+                    if (snapshot.data?.get("playerLeft") != "") {
+                        println("Opponent left firebase")
+                        GSM.activeGame!!.opponentLeft = true
+                    }
                     if (player2Id != "") {
                         val game = GSM.activeGame!!
                         if (game.opponent.playerId == "") {

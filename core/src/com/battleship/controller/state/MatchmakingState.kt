@@ -12,14 +12,10 @@ import com.battleship.view.View
 class MatchmakingState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private val itemsPerPage = 7
+    private var page: Int = 0
 
     private val playerButtons: Array<GuiObject> =
         arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
-
-    private var page: Int = 0
-
-    // temp
-    private var selectUsernameCallback = false
 
     private val nextPageButton = GUI.textButton(
         70f,
@@ -83,20 +79,20 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
 
     private fun updateButtons() {
         val index = page * itemsPerPage
-        var loading = true
         playerButtons.forEachIndexed { i, guiObject ->
             val j = index + i
             if (j < GSM.pendingGames.size) {
-                guiObject.set(Text("Join ${GSM.pendingGames[j].playerName}'s game", font = Font.MEDIUM_BLACK))
-                loading = false
+                guiObject.set(
+                    Text(
+                        "Join ${GSM.pendingGames[j].playerName}'s game",
+                        font = Font.MEDIUM_BLACK
+                    )
+                )
                 guiObject.show()
             } else {
                 guiObject.hide()
             }
         }
-
-        if (loading) header.set(Text("Loading available opponents...", font = Font.MEDIUM_WHITE))
-        else header.set(Text("Choose your opponent ${GSM.username}", font = Font.MEDIUM_WHITE))
 
         if (index + itemsPerPage < GSM.pendingGames.size) nextPageButton.show() else nextPageButton.hide()
         if (index > 0) previousPageButton.show() else previousPageButton.hide()
@@ -121,15 +117,13 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     }
 
     private fun createGame() {
-        println("Create game pressed")
         controller.createGame(GSM.userId, GSM.username) { game ->
             GSM.activeGame = game
             GSM.set(PreGameState(controller))
         }
     }
 
-    override fun update(dt: Float) {
-    }
+    override fun update(dt: Float) {}
 
     override fun render() {
         this.view.render(*guiObjects.toTypedArray())

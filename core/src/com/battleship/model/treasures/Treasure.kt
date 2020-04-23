@@ -4,7 +4,6 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
-import com.battleship.BattleshipGame
 import com.battleship.model.GameObject
 
 /**
@@ -29,11 +28,8 @@ abstract class Treasure(var position: Vector2, private val rotate: Boolean = fal
      *
      * @param volume: Float - the volume of the sound played
      */
-    fun playSound(volume: Float) {
-        if (BattleshipGame.soundOn) {
-            sound.stop()
-            sound.play(volume)
-        }
+    fun playSound(volume: Float = 0.8f) {
+        SoundEffects.play(sound, volume)
     }
 
     /**

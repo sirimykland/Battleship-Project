@@ -22,6 +22,10 @@ object Font {
     val SMALL_BLACK = BitmapFont(Gdx.files.internal("font/small_black.fnt")) // 20px
     val TINY_BLACK = BitmapFont(Gdx.files.internal("font/tiny_black.fnt")) // 12px
 
+    fun load() {
+        println("Fonts Loaded")
+    }
+
     fun dispose() {
         listOf(XXL_WHITE, XL_WHITE, XXL_BLACK, XL_BLACK, LARGE_BLACK, LARGE_WHITE, MEDIUM_WHITE, MEDIUM_BLACK,
             SMALL_WHITE, SMALL_BLACK, TINY_BLACK, TINY_WHITE).forEach {

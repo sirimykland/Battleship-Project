@@ -1,7 +1,7 @@
 package com.battleship.model.equipment
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
+import com.battleship.utility.SoundEffects
 
 /**
  *  Inherits behavior from [Equipment]
@@ -11,5 +11,5 @@ class BigEquipment : Equipment() {
     override var uses: Int = 10
     override var name: String = "Big equipment"
     override var active: Boolean = false
-    override var sound: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_sound.mp3"))
+    override var sound: Sound = SoundEffects.BIGEQUIPMENT
 }
