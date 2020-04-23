@@ -47,19 +47,19 @@ class SettingsState(private val controller: FirebaseController) : GuiState(contr
 
         GUI.text(
             3f,
-            10f,
+            5f,
             94f,
-            11.25f,
+            10f,
             "Made by group 12",
-            Font.SMALL_BLACK
+            Font.MEDIUM_BLACK
         ),
         GUI.text(
             3f,
-            5f,
+            2f,
             94f,
-            11.25f,
-            "v0.2.0",
-            Font.SMALL_BLACK
+            10f,
+            "v1.0.0",
+            Font.MEDIUM_BLACK
         ),
         GUI.backButton { GameStateManager.set(MainMenuState(controller)) }
     )
