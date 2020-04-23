@@ -3,11 +3,13 @@ package com.battleship
 import android.util.Log
 import com.badlogic.gdx.Gdx
 import com.battleship.controller.firebase.FirebaseController
+import com.battleship.controller.state.MainMenuState
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import com.battleship.model.Player
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.runBlocking
 
@@ -28,7 +30,6 @@ object AndroidFirebase : FirebaseController {
                     if (task.isSuccessful) {
                         Log.d("Login", "signInAnonymously successful")
                     } else {
-                        // TODO: Handle exception, when this occurs you cannot access firebase
                         Log.w("Login", "signInAnonymously failed", task.exception)
                     }
                 }
@@ -40,7 +41,7 @@ object AndroidFirebase : FirebaseController {
      * @param userId the id of the user setting up the game
      * @param userName the name of the user setting up the game
      */
-    override fun createGame(userId: String, userName: String, callback: (game: Game) -> Unit) {
+    override fun createGame(userId: String, userName: String, callback: (game: Game?) -> Unit) {
         // Set up game data
         val data = mutableMapOf<String, Any>()
         data["player1Id"] = userId
@@ -61,23 +62,27 @@ object AndroidFirebase : FirebaseController {
                 game.setPlayers(player1, Player())
                 Gdx.app.postRunnable { callback(game) }
             }
-            .addOnFailureListener { exception ->
-                Log.w("createGame", exception)
-                // TODO: Add exception handling
+            .addOnFailureListener { e ->
+                val errorCode = (e as FirebaseFirestoreException).code
+                val errorMessage = e.message
+                Log.w("createGame", "Failed to create game! $errorCode - $errorMessage", e)
+                Gdx.app.postRunnable {
+                    callback(null)
+                }
             }
     }
 
     /**
      * Add a player to a specific game
      * @param gameId the id of the game document
-     * @param player2Id the id of the player that should be added
-     * @param player2Name the name of the player that should be added
+     * @param userId the id of the player that should be added
+     * @param userName the name of the player that should be added
      */
     override fun joinGame(
         gameId: String,
-        player2Id: String,
-        player2Name: String,
-        callback: (game: Game) -> Unit
+        userId: String,
+        userName: String,
+        callback: (game: Game?) -> Unit
     ) {
         val game = Game(gameId)
         val docRef = db.collection("games").document(gameId)
@@ -92,17 +97,19 @@ object AndroidFirebase : FirebaseController {
             player1 = Player(player1Id, player1Name)
 
             // Set player2
-            transaction.update(docRef, "player2Id", player2Id)
-            transaction.update(docRef, "player2Name", player2Name)
-            player2 = Player(player2Id, player2Name)
+            transaction.update(docRef, "player2Id", userId)
+            transaction.update(docRef, "player2Name", userName)
+            player2 = Player(userId, userName)
         }.addOnSuccessListener {
             // Creates a new game and registers player1 and player2
             game.setPlayers(player1, player2)
             Log.d("joinGame", "Joined " + player1.playerName + "'s game successfully!")
             Gdx.app.postRunnable { callback(game) }
         }.addOnFailureListener { e ->
-            // TODO: Add exception handling, could not find games
-            Log.w("joinGame", "Transaction Joined game failed!", e)
+            val errorCode = (e as FirebaseFirestoreException).code
+            val errorMessage = e.message
+            Log.w("joinGame", "Transaction Joined game failed! $errorCode - $errorMessage: ", e)
+            Gdx.app.postRunnable { callback(null) }
         }
     }
 
@@ -112,15 +119,16 @@ object AndroidFirebase : FirebaseController {
             val snapshot = transaction.get(docRef)
 
             // val playerLeftId: String = snapshot.getString("player2Id") as String
-            // println("PlayerLeftId: " + playerLeftId)
             // val player2Id: String = snapshot.getString("player2Id") as String
             transaction.update(docRef, "playerLeft", playerId)
         }.addOnSuccessListener {
             Log.d("leaveGame", "Player left game successfully")
             Gdx.app.postRunnable { callback() }
         }.addOnFailureListener { e ->
-            // TODO: Add exception handling, could not find games
-            Log.d("leaveGame", "Player left game failed")
+            val errorCode = (e as FirebaseFirestoreException).code
+            val errorMessage = e.message
+            Log.w("leaveGame", "Player left game failed! $errorCode - $errorMessage: ", e)
+            Gdx.app.postRunnable { callback() }
         }
     }
 
@@ -148,7 +156,7 @@ object AndroidFirebase : FirebaseController {
                             )
                         }
                     }
-                    println("Pending games: $pendingGames")
+                    Log.d("addPendingGamesListener", "Pending games: $pendingGames")
                     Gdx.app.postRunnable {
                         callback(pendingGames)
                     }
@@ -158,14 +166,10 @@ object AndroidFirebase : FirebaseController {
     /**
      * Registers the treasures on the board for a given user
      * @param gameId the id of the game document
-     * @param playerId the id of the player owning the treasure
+     * @param userId the id of the player owning the treasure
      * @param treasures list containing the treasures that should be added, each described using a map
      */
-    override fun registerTreasures(
-        gameId: String,
-        playerId: String,
-        treasures: List<Map<String, Any>>
-    ) {
+    override fun registerTreasures(gameId: String, userId: String, treasures: List<Map<String, Any>>) {
         val docRef = db.collection("games").document(gameId)
 
         db.runTransaction { transaction ->
@@ -176,16 +180,18 @@ object AndroidFirebase : FirebaseController {
                 snapshot.get("treasures") as MutableMap<String, List<Map<String, Any>>>
 
             // Update treasures
-            dbTreasures[playerId] = treasures
+            dbTreasures[userId] = treasures
             transaction.update(docRef, "treasures", dbTreasures)
         }.addOnSuccessListener {
             Log.d("registerTreasures", "Treasures registered successfully!")
         }.addOnFailureListener { e ->
-            Log.w(
-                "registerTreasures",
-                "Treasures registration failed!",
-                e
-            )
+            val errorCode = (e as FirebaseFirestoreException).code
+            val errorMessage = e.message
+            Log.w("registerTreasures", "Treasures registration failed! $errorCode - $errorMessage: ", e)
+            Gdx.app.postRunnable {
+                GSM.resetGame()
+                GSM.set(MainMenuState(this))
+            }
         }
     }
 
@@ -220,7 +226,15 @@ object AndroidFirebase : FirebaseController {
             transaction.update(docRef, "moves", moves)
         }.addOnSuccessListener {
             Log.d("registerMove", "Move registered successfully!")
-        }.addOnFailureListener { e -> Log.w("registerMove", "Move registration failed!", e) }
+        }.addOnFailureListener { e ->
+            val errorCode = (e as FirebaseFirestoreException).code
+            val errorMessage = e.message
+            Log.w("registerMove", "Move registration failed! $errorCode - $errorMessage: ", e)
+            Gdx.app.postRunnable {
+                GSM.resetGame()
+                GSM.set(MainMenuState(this))
+            }
+        }
     }
 
     /**
@@ -232,11 +246,13 @@ object AndroidFirebase : FirebaseController {
         db.collection("games").document(gameId).update("winner", userId)
             .addOnSuccessListener {
                 Log.d("setWinner", "success")
-                // TODO: Call function that handles what should happen after a player won
             }
-            .addOnFailureListener { exception ->
-                Log.w("setWinner", exception)
-                // TODO: Add exception handling
+            .addOnFailureListener { e ->
+                val errorCode = (e as FirebaseFirestoreException).code
+                val errorMessage = e.message
+                Log.w("setWinner", "Failed to set Winner! $errorCode - $errorMessage: ", e)
+                GSM.resetGame()
+                GSM.set(MainMenuState(this))
             }
     }
 
@@ -260,7 +276,7 @@ object AndroidFirebase : FirebaseController {
                 if (opponent == "") {
                     Log.d("addGameListener", "Opponent not joined yet")
                 } else if (playerLeft != "") {
-                    println("Opponent left firebase")
+                    Log.d("addGameListener", "Opponent left firebase")
                     GSM.activeGame!!.opponentLeft = true
                 }
                 // If there is an opponent in the game
@@ -307,7 +323,6 @@ object AndroidFirebase : FirebaseController {
                 }
             } else
                 Log.d("addGameListener", "no data")
-            // TODO: Error handling when the game object is found, but there is no data in it
         }
     }
 
@@ -331,7 +346,6 @@ object AndroidFirebase : FirebaseController {
                 // If a winner has been set
                 if (winner != "") {
                     Log.d("addPlayListener", "The winner is $winner")
-                    // TODO: Call function that should be called when a winner is registered
                     GSM.activeGame!!.winner = winner as String // or something
                 }
                 // If there is no winner, continue game
@@ -345,16 +359,15 @@ object AndroidFirebase : FirebaseController {
                         val lastMove = moves.get(moves.size - 1)
                         val game = GSM.activeGame!!
                         if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                            println("----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
+                            Log.d("addPlayListener", "----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
                             GSM.activeGame!!.registerMove(lastMove)
                         } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
-                            println("----------------------PLAYER LAST MOVE----------------------- " + lastMove)
+                            Log.d("addPlayListener", "----------------------PLAYER LAST MOVE----------------------- " + lastMove)
                         }
                     }
                 }
             } else
                 Log.d("addPlayListener", "no data")
-            // TODO: Error handling when the game object is found, but there is no data in it
         }
     }
 }
