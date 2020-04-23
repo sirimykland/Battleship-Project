@@ -3,7 +3,7 @@ package com.battleship
 import android.util.Log
 import com.badlogic.gdx.Gdx
 import com.battleship.controller.firebase.FirebaseController
-import com.battleship.controller.firebase.FirebaseExceptionHandler
+import com.battleship.controller.state.MainMenuState
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
 import com.battleship.model.Player
@@ -21,7 +21,6 @@ object AndroidFirebase : FirebaseController {
             field?.remove()
             field = value
         }
-    var exceptionMessage: FirebaseExceptionHandler? = null
 
     init {
         // Sign in as an anonymous user to authorize, don't know if runBlocking actually works
@@ -31,7 +30,6 @@ object AndroidFirebase : FirebaseController {
                     if (task.isSuccessful) {
                         Log.d("Login", "signInAnonymously successful")
                     } else {
-                        // TODO: Handle exception, when this occurs you cannot access firebase
                         Log.w("Login", "signInAnonymously failed", task.exception)
                     }
                 }
@@ -64,12 +62,10 @@ object AndroidFirebase : FirebaseController {
                 game.setPlayers(player1, Player())
                 Gdx.app.postRunnable { callback(game) }
             }
-            .addOnFailureListener { exception ->
-                Log.w("createGame", exception)
-                val errorCode = (exception as FirebaseFirestoreException).code
-                val errorMessage = exception.message
-                Log.d("createGame", "$errorCode - $errorMessage")
-                exceptionMessage = FirebaseExceptionHandler(errorCode.toString(), errorMessage.toString())
+            .addOnFailureListener { e ->
+                val errorCode = (e as FirebaseFirestoreException).code
+                val errorMessage = e.message
+                Log.w("createGame", "Failed to create game! $errorCode - $errorMessage", e)
             }
     }
 
@@ -107,11 +103,9 @@ object AndroidFirebase : FirebaseController {
             Log.d("joinGame", "Joined " + player1.playerName + "'s game successfully!")
             Gdx.app.postRunnable { callback(game) }
         }.addOnFailureListener { e ->
-            Log.w("joinGame", "Transaction Joined game failed!", e)
             val errorCode = (e as FirebaseFirestoreException).code
             val errorMessage = e.message
-            Log.d("joinGame", "$errorCode - $errorMessage")
-            exceptionMessage = FirebaseExceptionHandler(errorCode.toString(), errorMessage.toString())
+            Log.w("joinGame", "Transaction Joined game failed! $errorCode - $errorMessage: ", e)
         }
     }
 
@@ -128,8 +122,9 @@ object AndroidFirebase : FirebaseController {
             Log.d("leaveGame", "Player left game successfully")
             Gdx.app.postRunnable { callback() }
         }.addOnFailureListener { e ->
-            // TODO: Add exception handling, could not find games
-            Log.d("leaveGame", "Player left game failed")
+            val errorCode = (e as FirebaseFirestoreException).code
+            val errorMessage = e.message
+            Log.w("leaveGame", "Player left game failed! $errorCode - $errorMessage: ", e)
         }
     }
 
@@ -190,15 +185,9 @@ object AndroidFirebase : FirebaseController {
         }.addOnSuccessListener {
             Log.d("registerTreasures", "Treasures registered successfully!")
         }.addOnFailureListener { e ->
-            Log.w(
-                "registerTreasures",
-                "Treasures registration failed!",
-                e
-            )
             val errorCode = (e as FirebaseFirestoreException).code
             val errorMessage = e.message
-            Log.d("registerTreasures", "$errorCode - $errorMessage")
-            exceptionMessage = FirebaseExceptionHandler(errorCode.toString(), errorMessage.toString())
+            Log.w("registerTreasures", "Treasures registration failed! $errorCode - $errorMessage: ", e)
         }
     }
 
@@ -234,11 +223,11 @@ object AndroidFirebase : FirebaseController {
         }.addOnSuccessListener {
             Log.d("registerMove", "Move registered successfully!")
         }.addOnFailureListener { e ->
-            Log.w("registerMove", "Move registration failed!", e)
             val errorCode = (e as FirebaseFirestoreException).code
             val errorMessage = e.message
-            Log.w("registerMove", "$errorCode - $errorMessage")
-            exceptionMessage = FirebaseExceptionHandler(errorCode.toString(), errorMessage.toString())
+            Log.w("registerMove", "Move registration failed! $errorCode - $errorMessage: ", e)
+            GSM.resetGame()
+            GSM.set(MainMenuState(this))
         }
     }
 
@@ -251,14 +240,11 @@ object AndroidFirebase : FirebaseController {
         db.collection("games").document(gameId).update("winner", userId)
             .addOnSuccessListener {
                 Log.d("setWinner", "success")
-                // TODO: Call function that handles what should happen after a player won
             }
             .addOnFailureListener { e ->
-                Log.w("setWinner", e)
                 val errorCode = (e as FirebaseFirestoreException).code
                 val errorMessage = e.message
-                Log.w("setWinner", "$errorCode - $errorMessage")
-                exceptionMessage = FirebaseExceptionHandler(errorCode.toString(), errorMessage.toString())
+                Log.w("setWinner", "Failed to set Winner! $errorCode - $errorMessage: ", e)
             }
     }
 
@@ -352,7 +338,6 @@ object AndroidFirebase : FirebaseController {
                 // If a winner has been set
                 if (winner != "") {
                     Log.d("addPlayListener", "The winner is $winner")
-                    // TODO: Call function that should be called when a winner is registered
                     GSM.activeGame!!.winner = winner as String // or something
                 }
                 // If there is no winner, continue game
@@ -375,7 +360,6 @@ object AndroidFirebase : FirebaseController {
                 }
             } else
                 Log.d("addPlayListener", "no data")
-                // TODO: Error handling when the game object is found, but there is no data in it
         }
     }
 }

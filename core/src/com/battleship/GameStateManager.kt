@@ -1,6 +1,5 @@
 package com.battleship
 
-import com.battleship.controller.firebase.FirebaseExceptionHandler
 import com.battleship.controller.state.State
 import com.battleship.model.Game
 import com.battleship.model.GameListObject
@@ -32,10 +31,6 @@ object GameStateManager {
         states.pop().dispose()
         states.push(state)
         create()
-    }
-
-    fun peek(): State {
-        return states.peek()
     }
 
     fun create() {
