@@ -108,6 +108,11 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         )
     }
 
+    /**
+     * Updates as often as the game renders itself.
+     *
+     * @param dt: Float - delta time since last call
+     */
     override fun update(dt: Float) {
         gameOver = GSM.activeGame!!.winner != ""
         if (gameOver) {

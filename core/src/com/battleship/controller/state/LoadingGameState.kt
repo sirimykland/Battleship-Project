@@ -47,6 +47,11 @@ class LoadingGameState(private var controller: FirebaseController) : GuiState(co
         this.view.render(*guiObjects.toTypedArray())
     }
 
+    /**
+     * Updates as often as the game renders itself.
+     *
+     * @param dt: Float - delta time since last call
+     */
     override fun update(dt: Float) {
         if (GSM.activeGame!!.opponentLeft) {
             if (opponentLeftRenders < 2) opponentLeftRenders++

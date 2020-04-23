@@ -108,8 +108,7 @@ class UsageGuideState(private val controller: FirebaseController) : GuiState(con
         currentImage.set(Image(imagePaths[pageIndex]))
     }
 
-    override fun update(dt: Float) {
-    }
+    override fun update(dt: Float) {}
 
     /**
      * Called when the State should render itself.

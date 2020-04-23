@@ -50,6 +50,11 @@ class NameSelectionState(val controller: FirebaseController) : GuiState(controll
     )
     override var view: View = BasicView()
 
+    /**
+     * Updates as often as the game renders itself.
+     *
+     * @param dt: Float - delta time since last call
+     */
     override fun update(dt: Float) {
         usernameDisplay.set(Text(username, font = Font.MEDIUM_BLACK))
     }

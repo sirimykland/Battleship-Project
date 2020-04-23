@@ -87,6 +87,11 @@ class SettingsState(private val controller: FirebaseController) : GuiState(contr
             soundButton.set(Text("Sound on", Font.MEDIUM_BLACK))
     }
 
+    /**
+     * Updates as often as the game renders itself.
+     *
+     * @param dt: Float - delta time since last call
+     */
     override fun update(dt: Float) {
         updateButtons()
     }
