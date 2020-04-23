@@ -10,7 +10,7 @@ interface FirebaseController {
     fun registerMove(gameId: String, x: Int, y: Int, playerId: String, equipment: String)
     fun setWinner(userId: String, gameId: String)
     fun addPendingGamesListener(callback: (pendingGames: ArrayList<GameListObject>) -> Unit)
-    fun addGameListener(gameId: String, playerId: String,firebaseController: FirebaseController)
-    fun addPlayListener(gameId: String, firebaseController: FirebaseController)
+    fun addGameListener(gameId: String, playerId: String)
+    fun addPlayListener(gameId: String)
     fun leaveGame(gameId: String, playerId: String, callback: () -> Unit)
 }

@@ -262,7 +262,7 @@ object AndroidFirebase : FirebaseController {
      * @param gameId the id of the game document
      * @param playerId the id of the player
      */
-    override fun addGameListener(gameId: String, playerId: String, firebaseController: FirebaseController) {
+    override fun addGameListener(gameId: String, playerId: String) {
         val docRef = db.collection("games").document(gameId)
         activeListener = docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
@@ -317,7 +317,7 @@ object AndroidFirebase : FirebaseController {
                                     GSM.activeGame!!.setGameReadyIfReady()
                                 }
                             } else {
-                                addPlayListener(gameId,firebaseController)
+                                addPlayListener(gameId)
                             }
                         }
                     }
@@ -327,13 +327,11 @@ object AndroidFirebase : FirebaseController {
         }
     }
 
-    override fun addPlayListener(gameId: String, firebaseController: FirebaseController) {
+    override fun addPlayListener(gameId: String) {
         val docRef = db.collection("games").document(gameId)
         activeListener = docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w("addPlayListener", "Listener failed", e)
-                GSM.resetGame()
-                GSM.set(MainMenuState(firebaseController))
                 return@addSnapshotListener
             }
             if (snapshot != null && snapshot.exists()) {
