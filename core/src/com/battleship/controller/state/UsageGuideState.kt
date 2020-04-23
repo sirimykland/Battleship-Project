@@ -1,9 +1,7 @@
 package com.battleship.controller.state
 
-import com.badlogic.gdx.Gdx
 import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FirebaseController
-import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Image
 import com.battleship.model.ui.Text
@@ -16,8 +14,10 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the help menu
  */
-class UsageGuideState(private val controller: FirebaseController,
-                      private val firstimeOpen: Boolean = false) : GuiState(controller) {
+class UsageGuideState(
+    private val controller: FirebaseController,
+    private val firstimeOpen: Boolean = false
+) : GuiState(controller) {
 
     override var view: View = BasicView()
     private var pageIndex: Int = 0
@@ -86,7 +86,7 @@ class UsageGuideState(private val controller: FirebaseController,
         GUI.backButton { GameStateManager.set(SettingsState(controller)) }
 
     override val guiObjects: List<GuiObject> = listOf(
-        if(firstimeOpen) GUI.header("Welcome!") else GUI.header("Usage guide") ,
+        if (firstimeOpen) GUI.header("Welcome!") else GUI.header("Usage guide"),
         nextPageButton,
         previousPageButton,
         currentDescription,
