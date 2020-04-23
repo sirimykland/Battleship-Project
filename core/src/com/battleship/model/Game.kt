@@ -43,13 +43,13 @@ class Game(val gameId: String) {
     }
 
     fun registerMove(move: Map<String, Any>) {
-        if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
-            var equipment: Equipment = opponent.equipmentSet.activeEquipment!!
-            for (eq in GSM.activeGame!!.opponent.equipmentSet.equipments) {
-                if (eq.name == move["weapon"]) {
-                    equipment = eq
-                }
+        var equipment: Equipment = opponent.equipmentSet.activeEquipment!!
+        for (eq in GSM.activeGame!!.opponent.equipmentSet.equipments) {
+            if (eq.name == move["weapon"]) {
+                equipment = eq
             }
+        }
+        if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
             val pos = Vector2(
                 (move["x"] as Number).toFloat(),
                 (move["y"] as Number).toFloat()
