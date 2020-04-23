@@ -23,11 +23,18 @@ abstract class GuiState(controller: FirebaseController) : State(controller) {
                 .toTypedArray())
     }
 
+    /**
+     * Called when the State is paused, usually when it's not active or visible on-screen.
+     * Is also paused before state is destroyed.
+     */
     override fun pause() {
         Gdx.input.inputProcessor = InputMultiplexer()
         super.pause()
     }
 
+    /**
+     * Called when the State is resumed from a paused state, usually when it regains focus.
+     */
     override fun resume() {
         Gdx.input.inputProcessor =
             InputMultiplexer(*guiObjects.filter { it.hasListener }.map { it.listener }
@@ -35,6 +42,9 @@ abstract class GuiState(controller: FirebaseController) : State(controller) {
         super.resume()
     }
 
+    /**
+     * Called once when the State is destroyed.
+     */
     override fun dispose() {
         super.dispose()
         Gdx.input.inputProcessor = null
