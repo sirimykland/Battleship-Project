@@ -103,15 +103,23 @@ This collection will contain one document for each game with a randomly generate
 - **player2Id:** The ID of player 2. 
 - **player2Name:** The name of player 2.
 - **playerLeft:** An ID of a player who has left the game before it ended. 
-- **treasures:** A map with the userId as key and a list of ships as value.
 - **winner:** The winner of the game.
+- **treasures:** A map with the userId as key and a list of treasures as value:
+    - **rotate:** Boolean signalling if the treasure is rotated or not in the view.
+    - **type:** Which type of treasure this is.
+    - **x:** The x-coordinate where the treasure is located.
+    - **y:** The y-coordinate where the treasure is located.
 - **moves:** A list of maps, where each map contain the following information about the move: 
-    - **playerId:** the ID of player who made the move
-    - **x:** the x-coordinate of the move
-    - **y:** the y-coordinate of the move
+    - **playerId:** The ID of player who made the move
+    - **x:** The x-coordinate of the move
+    - **y:** The y-coordinate of the move
 
-*Example data from a test game*:
+##### Example data from a test game:
 
 ![Firebase example data overall](https://i.imgur.com/M3pwjP1.png)
+
+*Moves*:
 ![Firebase example data moves](https://i.imgur.com/mPaTFkr.png)
+
+*Treasures*:
 ![Firebase example data treasures](https://i.imgur.com/NKaW0fT.png)
