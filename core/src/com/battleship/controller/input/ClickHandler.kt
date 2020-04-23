@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.utility.RectangleUtil
 
 /**
- * Click handler class ineeriting from [InputAdapter].
+ * Click handler class inheriting from [InputAdapter].
  *
  * @constructor:
  * @property position: Vector2
