@@ -32,7 +32,8 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
             music?.volume = 0.2f
         }
         prefs = Gdx.app.getPreferences("firsttimeopen")
-        print(prefs)
+        prefs.putBoolean("lock", true)
+        print("prefs: " + prefs.getBoolean("lock", true))
         if (prefs.getBoolean("lock", true)) {
             prefs.putBoolean("lock", false)
             prefs.flush()
@@ -43,7 +44,6 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
         controller.addPendingGamesListener { pendingGames ->
             GSM.pendingGames = pendingGames
         }
-        GSM.push(MainMenuState(controller))
         music?.play()
     }
 
