@@ -3,7 +3,7 @@ package com.battleship.model.equipment
 import com.badlogic.gdx.audio.Sound
 import com.battleship.utility.SoundEffects
 
-class BigEquipment : Equipment() {
+class Dynamite : Equipment() {
     override var searchRadius: Int = 1
     override var uses: Int = 1
     override var name: String = "Dynamite"
