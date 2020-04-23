@@ -22,8 +22,9 @@ of the opponent’s fleet. When all the squares of a ship are shot, the shooter 
 that the ship has been eliminated. The first player to eliminate all the opposing ships wins
 the game.
 
-![Screenshot from http://en.battleship-game.org/](https://i.imgur.com/VNyLuF0.png)
-TODO: Add new screenshots
+![Your board in-game](https://i.imgur.com/K6zs2lP.png)
+![Opponent's board in-game](https://i.imgur.com/0SjzwUQ.png)
+
 
 ### Our take on the concept
 TODO: Insert description - see implementation document
@@ -57,7 +58,7 @@ Feature branches should not exist in `origin` for very long. They should be merg
 - Branches from: `master`
 - Must merge back into: `master`
 
-### Hotfix Branches: `hotfix_*`
+#### Hotfix Branches: `hotfix_*`
 
 Hotfix branches arise from the necessity to act immediately upon an undesired state of the master branch. When a critical bug must be resolved immediately, a `hotfix` branch must be branched from the current `master`.
 
@@ -108,3 +109,6 @@ This collection will contain one document for each game with a randomly generate
     - **playerId:** the ID of player who made the move
     - **x:** the x-coordinate of the move
     - **y:** the y-coordinate of the move
+
+Example data:
+![Firebase example data](https://i.imgur.com/M3pwjP1.png)
