@@ -12,7 +12,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.runBlocking
-// TODO Henrik
+
+
+/**
+ * Implements behavior from [FirebaseController]
+ *
+ * Class used to setup the database connection
+ * declared as object to make it a singleton
+ */
 object AndroidFirebase : FirebaseController {
     private val db = FirebaseFirestore.getInstance()
     private var auth = FirebaseAuth.getInstance()
@@ -23,7 +30,6 @@ object AndroidFirebase : FirebaseController {
         }
 
     init {
-        // Sign in as an anonymous user to authorize, don't know if runBlocking actually works
         runBlocking {
             auth.signInAnonymously()
                 .addOnCompleteListener { task ->
@@ -37,9 +43,7 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * Start new game
-     * @param userId the id of the user setting up the game
-     * @param userName the name of the user setting up the game
+     * @inheritDoc
      */
     override fun createGame(userId: String, userName: String, callback: (game: Game?) -> Unit) {
         // Set up game data
@@ -73,10 +77,7 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * Add a player to a specific game
-     * @param gameId the id of the game document
-     * @param userId the id of the player that should be added
-     * @param userName the name of the player that should be added
+     * @inheritDoc
      */
     override fun joinGame(
         gameId: String,
@@ -113,6 +114,9 @@ object AndroidFirebase : FirebaseController {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     override fun leaveGame(gameId: String, playerId: String, callback: () -> Unit) {
         val docRef = db.collection("games").document(gameId)
         db.runTransaction { transaction ->
@@ -132,6 +136,9 @@ object AndroidFirebase : FirebaseController {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     override fun addPendingGamesListener(callback: (pendingGames: ArrayList<GameListObject>) -> Unit) {
         activeListener =
             db.collection("games").whereEqualTo("player2Name", "").whereEqualTo("player2Id", "")
@@ -164,10 +171,7 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * Registers the treasures on the board for a given user
-     * @param gameId the id of the game document
-     * @param userId the id of the player owning the treasure
-     * @param treasures list containing the treasures that should be added, each described using a map
+     * @inheritDoc
      */
     override fun registerTreasures(gameId: String, userId: String, treasures: List<Map<String, Any>>) {
         val docRef = db.collection("games").document(gameId)
@@ -196,12 +200,7 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * Registers the move
-     * @param gameId the id of the game document
-     * @param x x coordinate of move
-     * @param y y coordinate of move
-     * @param playerId player making the move
-     * @param equipment The equipment used by the player
+     * @inheritDoc
      */
     override fun registerMove(gameId: String, x: Int, y: Int, playerId: String, equipment: String) {
         val docRef = db.collection("games").document(gameId)
@@ -238,11 +237,9 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * Set the winner of the game
-     * @param userId the id of the winner
-     * @param gameId the id of the game document
+     * @inheritDoc
      */
-    override fun setWinner(userId: String, gameId: String) {
+    override fun setWinner(gameId: String, userId: String) {
         db.collection("games").document(gameId).update("winner", userId)
             .addOnSuccessListener {
                 Log.d("setWinner", "success")
@@ -257,7 +254,7 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * Function adding listener to a specific game
+     * Function adding listener to a specific game. Listening to when players joins and register treasures.
      * @param gameId the id of the game document
      * @param playerId the id of the player
      */
@@ -326,6 +323,9 @@ object AndroidFirebase : FirebaseController {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     override fun addPlayListener(gameId: String) {
         val docRef = db.collection("games").document(gameId)
         activeListener = docRef.addSnapshotListener { snapshot, e ->

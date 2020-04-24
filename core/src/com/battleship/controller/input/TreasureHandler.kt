@@ -8,11 +8,26 @@ import com.battleship.model.ui.Board
 import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
-// TODO Henrik
+
+/**
+ * Inherits behavior from [InputAdapter]
+ * Class used to handle the moving of treasures in PreGameState
+ * @constructor
+ * @property board: Board - The board to be handled
+ */
 class TreasureHandler(private val board: Board) : InputAdapter() {
     private var activeTreasure: Treasure? = null
     private var oldPosition: Vector2? = null
 
+    /**
+     * Called when the screen was touched or a mouse button was pressed.
+     * Makes the treasure touched the activeTreasure and stores it original position to oldPosition.
+     * @param screenX - The x coordinate, origin is in the upper left corner
+     * @param screenY - The y coordinate, origin is in the upper left corner
+     * @param pointer - the pointer for the event.
+     * @param button - the button
+     * @return whether the input was processed
+     */
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val touchPos = Vector2(screenX.toFloat(), Gdx.graphics.height - screenY.toFloat())
         val boardWidth = Gdx.graphics.boardWidth()
@@ -31,6 +46,15 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
         return false
     }
 
+    /**
+     * Called when a finger was lifted or a mouse button was released.
+     * Updates the activesTreasures position if it is valid. If not move it back to oldPosition
+     * @param x - The x coordinate, origin is in the upper left corner
+     * @param y - The y coordinate, origin is in the upper left corner
+     * @param pointer - the pointer for the event.
+     * @param button - the button
+     * @return whether the input was processed
+     */
     override fun touchUp(x: Int, y: Int, pointer: Int, button: Int): Boolean {
         if (activeTreasure != null) {
 
@@ -44,6 +68,14 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
         return false
     }
 
+    /**
+     * Called when a finger or the mouse was dragged.
+     * Updates the activesTreasures position.
+     * @param x - The x coordinate, origin is in the upper left corner
+     * @param y - The y coordinate, origin is in the upper left corner
+     * @param pointer - the pointer for the event.
+     * @return whether the input was processed
+     */
     override fun touchDragged(x: Int, y: Int, pointer: Int): Boolean {
         if (activeTreasure != null) {
             val boardWidth = Gdx.graphics.boardWidth()
