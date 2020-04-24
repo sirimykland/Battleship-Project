@@ -281,12 +281,12 @@ object AndroidFirebase : FirebaseController {
                 }
                 // If there is an opponent in the game
                 else {
-                    if (GSM.activeGame!!.opponent.playerId == "") {
+                    val player2Id = snapshot.data?.get("player2Id") as String
+                    val player2Name = snapshot.data?.get("player2Name") as String
+                    if (GSM.activeGame!!.opponent.playerId == "" && player2Id != "") {
                         Log.d("addGameListener", "Opponent joined and registered")
-                        val player2Id = snapshot.data?.get("player2Id") as String
-                        val player2Name = snapshot.data?.get("player2Name") as String
-                        GSM.activeGame!!.opponent.playerId = player2Id
-                        GSM.activeGame!!.opponent.playerName = player2Name
+
+                        GSM.activeGame!!.opponent = Player(player2Id, player2Name)
                         GSM.activeGame!!.setGameReadyIfReady()
                     } else {
                         // Get the field containing the treasures in the database

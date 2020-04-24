@@ -12,7 +12,7 @@ object SoundEffects {
     private val click: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/click_sound.mp3"))
 
     val METALDETECTOR: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/radar_sound.mp3"))
-    val BIGEQUIPMENT: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_sound.mp3"))
+    val DYNAMITE: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_sound.mp3"))
     val SHOVEL: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/dirt_sound.mp3"))
 
     val GOLDCOIN: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/coin_sound.mp3"))
@@ -48,7 +48,7 @@ object SoundEffects {
 
     fun dispose() {
         listOf(hit, victory, losing, click,
-            METALDETECTOR, BIGEQUIPMENT, SHOVEL,
+            METALDETECTOR, DYNAMITE, SHOVEL,
             GOLDCOIN, GOLDKEY, TREASURECHEST).forEach {
             it.dispose()
         }
