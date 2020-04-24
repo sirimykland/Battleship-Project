@@ -1,7 +1,7 @@
 package com.battleship.controller.firebase
 
 import com.battleship.model.Game
-import com.battleship.model.GameListObject
+import com.battleship.model.PendingGame
 
 /**
  * Interface for firebase functionality
@@ -56,6 +56,7 @@ interface FirebaseController {
      * @param userId the id of the player that won
      */
     fun setWinner(userId: String, gameId: String)
+    fun addPendingGamesListener(callback: (pendingGames: ArrayList<PendingGame>) -> Unit)
 
     /**
      * Method adding listener to all games where player2 is empty.

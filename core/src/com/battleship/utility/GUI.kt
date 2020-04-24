@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.battleship.controller.input.BackButtonHandler
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.Border
 import com.battleship.model.ui.BottomBorder
@@ -86,6 +87,7 @@ object GUI {
         return GuiObject(0.15f, 90f, 10f, 8f)
             .with(Image("icons/round_arrow_back_white.png"))
             .onClick(onClick)
+            .listen("onAndroidBack", BackButtonHandler(onClick))
     }
 
     fun image(
@@ -118,6 +120,14 @@ object GUI {
         buttons: List<Pair<String, () -> Unit>>
     ): Array<GuiObject> {
         val dialogComponents = ArrayList<GuiObject>()
+        dialogComponents.add(GuiObject(0f, 0f, 100f, 88f)
+            .with(Background(Palette.GREY_TRANSPARENT))
+            .onClick {
+                println("Stopping propagation")
+            }
+            .hide()
+        )
+
         dialogComponents.add(textBox(10f, 40.5f, 80f, 15f, text,
             color = Palette.DARK_GREY, font = Font.LARGE_WHITE).hide())
 

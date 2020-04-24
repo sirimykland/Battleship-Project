@@ -26,7 +26,7 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
     ) {
         page++
         updateButtons()
-    }
+    }.hide()
 
     private val previousPageButton = GUI.textButton(
         10f,
@@ -66,6 +66,7 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
      */
     override fun create() {
         super.create()
+        updateButtons()
         controller.addPendingGamesListener { pendingGames ->
             GSM.pendingGames = pendingGames
             updateButtons()
@@ -114,6 +115,7 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
                 }
             }
         }
+            .hide()
     }
 
     private fun createGame() {

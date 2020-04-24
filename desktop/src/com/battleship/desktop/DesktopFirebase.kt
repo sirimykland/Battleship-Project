@@ -5,7 +5,7 @@ import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.state.MainMenuState
 import com.battleship.model.Game
-import com.battleship.model.GameListObject
+import com.battleship.model.PendingGame
 import com.battleship.model.Player
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.DocumentSnapshot
@@ -93,7 +93,7 @@ object DesktopFirebase : FirebaseController {
      * Function getting all games where there is currently only one player
      */
 
-    override fun addPendingGamesListener(callback: (pendingGames: ArrayList<GameListObject>) -> Unit) {
+    override fun addPendingGamesListener(callback: (pendingGames: ArrayList<PendingGame>) -> Unit) {
         val query = db.collection("games")
             .whereEqualTo("player2Name", "")
             .whereEqualTo("player2Id", "")
@@ -107,14 +107,15 @@ object DesktopFirebase : FirebaseController {
                     return
                 }
                 if (snapshot != null) {
-                    val pendingGames = ArrayList<GameListObject>()
+                    val pendingGames = ArrayList<PendingGame>()
                     for (doc in snapshot.documents) {
                         val player1Id: String = doc.getString("player1Id") as String
+                        if (player1Id == GSM.userId) continue
                         val player1Name: String = doc.getString("player1Name") as String
                         val gameId = doc.id
                         if (player1Id != "") {
                             pendingGames.add(
-                                GameListObject(
+                                PendingGame(
                                     gameId,
                                     player1Id,
                                     player1Name
@@ -139,7 +140,6 @@ object DesktopFirebase : FirebaseController {
         // Add the data to the game document
         db.collection("games").document(gameId).update("player2Id", userId)
         db.collection("games").document(gameId).update("player2Name", userName)
-
         val game = Game(gameId)
         val query = db.collection("games").document(gameId).get()
         val doc = query.get()
@@ -149,7 +149,7 @@ object DesktopFirebase : FirebaseController {
             val player1Name: String = doc.getString("player1Name") as String
             val player1 = Player(player1Id, player1Name)
             val player2 = Player(userId, userName)
-
+            Gdx.app.log("joinGame", "$player1, $player2")
             game.setPlayers(player1, player2)
         } else {
             Gdx.app.log("setGame", "Failed to set Game!")
@@ -252,8 +252,9 @@ object DesktopFirebase : FirebaseController {
                     }
                     if (player2Id != "") {
                         val game = GSM.activeGame!!
-                        if (game.opponent.playerId == "") {
+                        if (game.opponent.playerId == "" || game.opponent.playerName == "") {
                             val player2Name = snapshot.data?.get("player2Name") as String
+                            Gdx.app.log("gameListener", "$game, $player2Id, $player2Name")
                             game.opponent = Player(player2Id, player2Name)
                         }
                         // Get the field containing the treasures in the database

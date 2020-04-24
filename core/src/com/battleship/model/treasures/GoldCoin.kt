@@ -25,6 +25,6 @@ class GoldCoin(position: Vector2, rotate: Boolean) : Treasure(position, rotate) 
      * If rotate is true init block triggers rotateTreasure after constructor setup
      */
     init {
-        if (rotate) rotateTreasure()
+        if (rotate) rotateDimensions()
     }
 }

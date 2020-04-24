@@ -24,5 +24,5 @@ class TreasureChest(position: Vector2, rotate: Boolean) : Treasure(position, rot
     /**
      * If rotate is true init block triggers rotateTreasure after constructor setup
      */
-    init { if (rotate) rotateTreasure() }
+    init { if (rotate) rotateDimensions() }
 }

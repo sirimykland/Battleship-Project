@@ -8,7 +8,7 @@ package com.battleship.model
  * @property playerId: String
  * @property playerName: String
  */
-open class GameListObject(
+open class PendingGame(
     var gameId: String,
     var playerId: String,
     var playerName: String
@@ -39,7 +39,7 @@ open class GameListObject(
      */
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is GameListObject) return false
+        if (other !is PendingGame) return false
 
         if (gameId != other.gameId) return false
         if (playerId != other.playerId) return false

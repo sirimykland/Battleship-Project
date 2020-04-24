@@ -100,11 +100,13 @@ abstract class Treasure(var position: Vector2, private val rotate: Boolean = fal
     /**
      * Rotate treasure 90 degrees, by swapping dimention vector's x and y
      */
-    fun rotateTreasure() {
+    fun rotateDimensions() {
         val temp = dimension.x
         dimension.x = dimension.y
         dimension.y = temp
     }
+
+    open fun rotate() { }
 
     /**
      * Override method of [GameObject].
