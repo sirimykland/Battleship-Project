@@ -3,7 +3,10 @@ package com.battleship.desktop
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
 import com.battleship.BattleshipGame
-// TODO Karl
+
+/**
+ * DesktopLauncher contains main method for launching the Game as a desktop application
+ */
 object DesktopLauncher {
 
     @JvmStatic

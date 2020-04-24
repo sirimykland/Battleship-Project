@@ -56,13 +56,12 @@ interface FirebaseController {
      * @param userId the id of the player that won
      */
     fun setWinner(userId: String, gameId: String)
-    fun addPendingGamesListener(callback: (pendingGames: ArrayList<PendingGame>) -> Unit)
 
     /**
      * Method adding listener to all games where player2 is empty.
      * @param callback function invoked once the process has completed.
      */
-    fun addPendingGamesListener(callback: (pendingGames: ArrayList<GameListObject>) -> Unit)
+    fun addPendingGamesListener(callback: (pendingGames: ArrayList<PendingGame>) -> Unit)
 
     /**
      * Function adding listener to a specific game. Listening to when players joins and register treasures.
