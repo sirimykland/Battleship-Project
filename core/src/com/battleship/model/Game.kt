@@ -2,7 +2,6 @@ package com.battleship.model
 
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
-import com.battleship.model.equipment.Equipment
 import java.util.Timer
 import kotlin.concurrent.schedule
 
@@ -68,19 +67,18 @@ class Game(val gameId: String) {
      * @param move: Map<String, Any> - map with weapon, x and y coordinates and playerId
      */
     fun registerMove(move: Map<String, Any>) {
-        if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
-            var equipment: Equipment = opponent.equipmentSet.activeEquipment!!
-            for (eq in GSM.activeGame!!.opponent.equipmentSet.equipments) {
-                if (eq.name == move["weapon"]) {
-                    equipment = eq
-                }
+        for (eq in GSM.activeGame!!.opponent.equipmentSet.equipments) {
+            if (eq.name == move["weapon"]) {
+                opponent.equipmentSet.activeEquipment = eq
             }
+        }
+        if (opponent.equipmentSet.activeEquipment!!.hasMoreUses()) {
             val pos = Vector2(
                 (move["x"] as Number).toFloat(),
                 (move["y"] as Number).toFloat()
             )
 
-            val missed = player.board.shootTiles(pos, equipment)
+            val missed = player.board.shootTiles(pos, opponent.equipmentSet.activeEquipment!!)
             switchTurn(missed)
             player.updateHealth()
         } else {

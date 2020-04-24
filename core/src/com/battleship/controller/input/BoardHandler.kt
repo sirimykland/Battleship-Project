@@ -9,6 +9,7 @@ import com.battleship.controller.firebase.FirebaseController
 import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth
+
 // TODO Henrik
 class BoardHandler(private val controller: FirebaseController, val isGameOver: () -> Boolean) : InputAdapter() {
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {

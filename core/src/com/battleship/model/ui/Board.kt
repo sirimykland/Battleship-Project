@@ -18,10 +18,12 @@ import kotlin.random.Random
 class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
+
     // Change all tiles to unopened state
     fun setTilesUnopened() {
         tiles = Array(size) { Array(size) { Tile.UNOPENED } }
     }
+
     fun clearTreasures() {
         treasures.clear()
     }
@@ -209,6 +211,7 @@ class Board(val size: Int) : GameObject() {
         }
         return health
     }
+
     fun isTreasureListEmpty(): Boolean {
         return treasures.isEmpty()
     }

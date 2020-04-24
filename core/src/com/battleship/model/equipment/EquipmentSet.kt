@@ -21,7 +21,7 @@ class EquipmentSet() : GameObject() {
      */
     init {
         equipments.add(Shovel())
-        equipments.add(BigEquipment())
+        equipments.add(Dynamite())
         activeEquipment = equipments.first()
     }
 }

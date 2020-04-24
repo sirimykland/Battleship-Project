@@ -7,6 +7,7 @@ import com.battleship.model.ui.Image
 import com.battleship.model.ui.Text
 import com.battleship.utility.Font
 import com.battleship.utility.GUI
+import com.battleship.utility.Palette
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
@@ -18,71 +19,84 @@ import com.battleship.view.View
  *
  * @property controller: FirebaseController - interface handling storing and retrieving data from Firebase
  */
-class UsageGuideState(private val controller: FirebaseController) : GuiState(controller) {
+class UsageGuideState(
+    private val controller: FirebaseController,
+    private val firstimeOpen: Boolean = false
+) : GuiState(controller) {
+
     override var view: View = BasicView()
     private var pageIndex: Int = 0
 
-    // TODO: Update this with real description when game is more completed
     private val descriptions: List<String> = listOf(
-        "First page, bla bla bla",
-        "Second page, bla bla bla",
-        "Third page, bla bla bla",
-        "Fourth page, bla bla bla"
+        "Choose a username which other opponents can see.",
+        "Select opponent to play against or create a new game.",
+        "Place your treasures by dragging them to their desired position.",
+        "Wait for your opponent to get ready.",
+        "Play the game!\nChoose equipments and try to locate all of your opponent's treasures."
     )
 
-    // TODO: Update this with real screenshots from the game when it is more completed
     private val imagePaths: List<String> = listOf(
-        "helpGuide/page1.png",
-        "helpGuide/page2.png",
-        "helpGuide/page3.png",
-        "helpGuide/page4.png"
+        "images/usageGuide/firstPage.png",
+        "images/usageGuide/secondPage.png",
+        "images/usageGuide/thirdPage.png",
+        "images/usageGuide/fourthPage.png",
+        "images/usageGuide/fifthPage.png"
     )
 
-    private var currentDescription: GuiObject = GUI.text(
-        3.13f,
-        21.25f,
-        93.75f,
-        11.25f,
-        descriptions[0],
-        Font.MEDIUM_BLACK
+    private var currentImage: GuiObject =
+        GUI.image(
+            15f,
+            21f,
+            70f,
+            65f,
+            texturePath = imagePaths[0]
     )
-    private var currentImage: GuiObject = GUI.image(
-        18.75f,
-        32.5f,
-        62.5f,
-        50f,
-        imagePaths[0]
+
+    private var currentDescription: GuiObject = GUI.textBox(
+        5f,
+        11f,
+        90f,
+        8f,
+        descriptions[0],
+        color = Palette.DARK_GREY
     )
 
     private val nextPageButton = GUI.textButton(
-        64f,
-        3.75f,
-        28.125f,
-        10f,
+        70f,
+        2f,
+        25f,
+        7f,
         "Next"
     ) {
-        pageIndex++
-        updateButtons()
+        if (pageIndex == imagePaths.size - 1) {
+            GameStateManager.set(MainMenuState(controller))
+        } else {
+            pageIndex++
+            updateButtons()
+        }
     }
 
     private val previousPageButton = GUI.textButton(
-        4.6875f,
-        3.75f,
-        28.125f,
-        10f,
+        5f,
+        2f,
+        25f,
+        7f,
         "Previous"
     ) {
         pageIndex--
         updateButtons()
     }.hide()
 
+    private val backButton: GuiObject =
+        GUI.backButton { GameStateManager.set(SettingsState(controller)) }
+
     override val guiObjects: List<GuiObject> = listOf(
-        GUI.header("Usage guide"),
+        if (firstimeOpen) GUI.header("Welcome!") else GUI.header("Usage guide"),
         nextPageButton,
         previousPageButton,
         currentDescription,
         currentImage,
-        GUI.backButton { GameStateManager.set(SettingsState(controller)) }
+        backButton
     )
 
     /**
@@ -90,6 +104,7 @@ class UsageGuideState(private val controller: FirebaseController) : GuiState(con
      */
     override fun create() {
         super.create()
+        if (firstimeOpen) backButton.hide()
         updateButtons()
     }
 
@@ -97,12 +112,10 @@ class UsageGuideState(private val controller: FirebaseController) : GuiState(con
      * Decide which page of the guide to show i.e. image, text and buttons
      */
     private fun updateButtons() {
-        if (pageIndex < imagePaths.size - 1) {
-            nextPageButton.show()
-        } else {
-            nextPageButton.hide()
-        }
-
+        if (pageIndex == imagePaths.size - 1)
+            nextPageButton.set(Text("Finish", Font.MEDIUM_BLACK))
+        else
+            nextPageButton.set(Text("Next", Font.MEDIUM_BLACK))
         if (pageIndex > 0)
             previousPageButton.show()
         else

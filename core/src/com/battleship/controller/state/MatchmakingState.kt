@@ -49,14 +49,6 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         createGame()
     }
 
-    private val refreshButton = GUI.imageButton(
-        87f,
-        90f,
-        8f,
-        8f,
-        "icons/refresh_white.png",
-        onClick = { updateButtons() }
-    )
     private val header = GUI.header("Choose your opponent ${GSM.username}")
 
     override val guiObjects: List<GuiObject> = listOf(
@@ -65,7 +57,6 @@ class MatchmakingState(private val controller: FirebaseController) : GuiState(co
         previousPageButton,
         *playerButtons,
         createGameButton,
-        refreshButton,
         GUI.backButton { GSM.set(NameSelectionState(controller)) }
     )
 
