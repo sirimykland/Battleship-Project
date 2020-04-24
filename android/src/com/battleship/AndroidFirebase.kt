@@ -13,7 +13,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.runBlocking
 
-
 /**
  * Implements behavior from [FirebaseController]
  *
