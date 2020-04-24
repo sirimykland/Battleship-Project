@@ -19,6 +19,16 @@ class GoldKey(position: Vector2, rotate: Boolean) : Treasure(position, rotate) {
     }
 
     init {
-        if (rotate) rotateTreasure()
+        if (rotate) rotateDimensions()
+    }
+
+    override fun rotate() {
+        rotate = !rotate
+        sprite = if (rotate) {
+            Sprite(TextureLibrary.GOLDKEY_ROTATED)
+        } else {
+            Sprite(TextureLibrary.GOLDKEY)
+        }
+        rotateDimensions()
     }
 }

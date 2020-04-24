@@ -14,5 +14,5 @@ class TreasureChest(position: Vector2, rotate: Boolean) : Treasure(position, rot
     override var sprite: Sprite = Sprite(TextureLibrary.TREASURECHEST)
     override var type: TreasureType = TreasureType.TREASURECHEST
 
-    init { if (rotate) rotateTreasure() }
+    init { if (rotate) rotateDimensions() }
 }

@@ -33,6 +33,9 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
 
     override fun touchUp(x: Int, y: Int, pointer: Int, button: Int): Boolean {
         if (activeTreasure != null) {
+            if (activeTreasure!!.position == oldPosition) {
+                activeTreasure!!.rotate()
+            }
 
             // Check if new position is validated. Goes back to old position if not.
             if (!board.validateTreasurePosition(activeTreasure)) {
