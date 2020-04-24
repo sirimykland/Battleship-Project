@@ -131,7 +131,6 @@ class UsageGuideState(
      * @param dt: Float - delta time since last call
      */
     override fun update(dt: Float) {
-
     }
 
     /**
