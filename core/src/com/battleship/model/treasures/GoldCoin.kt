@@ -15,6 +15,6 @@ class GoldCoin(position: Vector2, rotate: Boolean) : Treasure(position, rotate) 
     override var type: TreasureType = TreasureType.GOLDCOIN
 
     init {
-        if (rotate) rotateTreasure()
+        if (rotate) rotateDimensions()
     }
 }

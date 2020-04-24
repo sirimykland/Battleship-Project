@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 import com.battleship.utility.SoundEffects
 
-abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject() {
+abstract class Treasure(var position: Vector2, var rotate: Boolean) : GameObject() {
     abstract var dimension: Vector2
     abstract var name: String
     abstract var health: Int
@@ -39,7 +39,7 @@ abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject
         return false
     }
 
-    fun takeDamage() { 0.8f
+    fun takeDamage() {
         health--
     }
 
@@ -60,11 +60,13 @@ abstract class Treasure(var position: Vector2, val rotate: Boolean) : GameObject
         position = pos
     }
 
-    fun rotateTreasure() {
+    fun rotateDimensions() {
         val temp = dimension.x
         dimension.x = dimension.y
         dimension.y = temp
     }
+
+    open fun rotate() { }
 
     override fun draw(batch: SpriteBatch, position: Vector2, dimension: Vector2) {
         if (found() || revealed) {
