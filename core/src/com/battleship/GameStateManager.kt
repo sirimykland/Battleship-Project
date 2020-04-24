@@ -31,9 +31,9 @@ object GameStateManager {
     }
 
     /**
-     * TODO
+     * Set the replaces the currant state with a new state in the stack
      *
-     * @param state
+     * @param state: State - new active state
      */
     fun set(state: State) {
         states.pop().dispose()
