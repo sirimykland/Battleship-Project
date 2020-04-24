@@ -14,7 +14,7 @@ import com.battleship.utility.SoundEffects
  * @property position: Vector2 - position of treasure on board grid
  * @property rotate: Boolean - describes if treasure is rotated, default: false
  */
-abstract class Treasure(var position: Vector2, private val rotate: Boolean = false) : GameObject() {
+abstract class Treasure(var position: Vector2, var rotate: Boolean = false) : GameObject() {
     abstract var dimension: Vector2
     abstract var name: String
     abstract var health: Int
