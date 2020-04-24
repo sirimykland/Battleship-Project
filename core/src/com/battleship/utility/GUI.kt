@@ -120,6 +120,14 @@ object GUI {
         buttons: List<Pair<String, () -> Unit>>
     ): Array<GuiObject> {
         val dialogComponents = ArrayList<GuiObject>()
+        dialogComponents.add(GuiObject(0f, 0f, 100f, 88f)
+            .with(Background(Palette.GREY_TRANSPARENT))
+            .onClick {
+                println("Stopping propagation")
+            }
+            .hide()
+        )
+
         dialogComponents.add(textBox(10f, 40.5f, 80f, 15f, text,
             color = Palette.DARK_GREY, font = Font.LARGE_WHITE).hide())
 

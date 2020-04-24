@@ -15,8 +15,13 @@ abstract class GuiState(controller: FirebaseController) : State(controller) {
 
     override fun create() {
         Gdx.input.inputProcessor =
-            InputMultiplexer(*guiObjects.filter { it.hasListener }.map { it.listener }
-                .toTypedArray())
+            InputMultiplexer(
+                *guiObjects
+                    .filter { it.hasListener }
+                    .map { it.listener }
+                    .reversed()
+                .toTypedArray()
+            )
     }
 
     override fun pause() {
@@ -26,8 +31,13 @@ abstract class GuiState(controller: FirebaseController) : State(controller) {
 
     override fun resume() {
         Gdx.input.inputProcessor =
-            InputMultiplexer(*guiObjects.filter { it.hasListener }.map { it.listener }
-                .toTypedArray())
+            InputMultiplexer(
+                *guiObjects
+                .filter { it.hasListener }
+                .map { it.listener }
+                .reversed()
+                .toTypedArray()
+            )
         super.resume()
     }
 

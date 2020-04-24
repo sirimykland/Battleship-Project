@@ -91,10 +91,10 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         opponentsBoardText,
         mainMenuButton,
         newGameButton,
-        *gameOverDialog,
         GUI.listener("boardHandler", BoardHandler(controller) {
             gameOver
-        })
+        }),
+        *gameOverDialog
     )
 
     override fun render() {
@@ -111,10 +111,10 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             if (!gameOverRendered) {
                 updateGUIObjectsGameOver()
                 if (GSM.activeGame!!.youWon) {
-                    gameOverDialog[0].set(Text("Congratulations, you won!", font = Font.LARGE_WHITE))
+                    gameOverDialog[1].set(Text("Congratulations, you won!", font = Font.LARGE_WHITE))
                     SoundEffects.playVictory()
                 } else {
-                    gameOverDialog[0].set(Text("Sorry, you lost :(", font = Font.LARGE_WHITE))
+                    gameOverDialog[1].set(Text("Sorry, you lost :(", font = Font.LARGE_WHITE))
                     SoundEffects.playLosing()
                 }
                 controller.setWinner(GSM.userId, GSM.activeGame!!.gameId)
