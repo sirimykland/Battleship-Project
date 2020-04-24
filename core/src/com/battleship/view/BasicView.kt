@@ -7,7 +7,6 @@ import com.battleship.model.GameObject
 import com.battleship.utility.TextureLibrary
 
 class BasicView : View() {
-    var background = Sprite(TextureLibrary.BACKGROUND)
 
     override fun render(vararg gameObjects: GameObject) {
         Gdx.gl.glClearColor(50f, 15f, 55f, 19f)

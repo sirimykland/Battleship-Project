@@ -15,7 +15,6 @@ import com.battleship.utility.GdxGraphicsUtil.equipmentSetSize
 import com.battleship.utility.TextureLibrary
 
 class PlayView : View() {
-    private val background = Sprite(TextureLibrary.BACKGROUND)
 
     override fun render(vararg gameObjects: GameObject) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
