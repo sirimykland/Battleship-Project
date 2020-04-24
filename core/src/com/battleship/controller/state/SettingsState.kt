@@ -11,11 +11,15 @@ import com.battleship.view.BasicView
 import com.battleship.view.View
 
 /**
- * State handling all logic related to the settings menu
+ * Create and handle logic for components in settings menu
+ *
+ * Inherits behavior from [GuiState]
+ *
+ * @property controller: FirebaseController - interface handling storing and retrieving data from Firebase
  */
-// TODO Mats T
 class SettingsState(private val controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
+
     private var musicButton: GuiObject = GUI.menuButton(
         23.44f,
         62.5f,
@@ -27,6 +31,7 @@ class SettingsState(private val controller: FirebaseController) : GuiState(contr
                 BattleshipGame.music?.play()
         }
     )
+
     private var soundButton: GuiObject = GUI.menuButton(
         23.44f,
         43.75f,
@@ -74,7 +79,7 @@ class SettingsState(private val controller: FirebaseController) : GuiState(contr
     }
 
     /**
-     * Update button text based on music status
+     * Update button text based on music and sound status
      */
     private fun updateButtons() {
         if (BattleshipGame.music?.isPlaying == true)

@@ -3,7 +3,7 @@ package com.battleship.model.equipment
 import com.battleship.model.GameObject
 
 /**
- * EquipentSet inherits from [GameObject].
+ * EquipmentSet inherits from [GameObject].
  * Manages a list of equipment
  */
 class EquipmentSet() : GameObject() {
