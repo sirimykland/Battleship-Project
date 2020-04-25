@@ -22,7 +22,6 @@ object Font {
     val SMALL_BLACK = BitmapFont(Gdx.files.internal("font/small_black.fnt")) // 20px
     val TINY_BLACK = BitmapFont(Gdx.files.internal("font/tiny_black.fnt")) // 12px
 
-
     /**
      *  Disposes all fonts when the Application is destroyed.
      */
