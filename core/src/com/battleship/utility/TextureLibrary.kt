@@ -11,10 +11,9 @@ object TextureLibrary {
     val GOLDKEY = TextureRegion(Texture("images/treasures/key.png"))
     val GOLDKEY_ROTATED = TextureRegion(Texture("images/treasures/rotatedKey.png"))
 
-    fun load() {
-        println("Textures Loaded")
-    }
-
+    /**
+     *  Disposes textures when the Application is destroyed.
+     */
     fun dispose() {
         listOf(BACKGROUND, TREASURECHEST, GOLDCOIN, GOLDKEY, GOLDKEY_ROTATED)
             .map {

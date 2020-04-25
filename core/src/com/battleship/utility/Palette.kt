@@ -22,10 +22,9 @@ object Palette {
     val BURGUNDY = TextureRegion(texture, 2, 3, 1, 1)
     val DARK_PURPLE = TextureRegion(texture, 3, 3, 1, 1)
 
-    fun load() {
-        println("Palette Loaded")
-    }
-
+    /**
+     *  Disposes texture when the Application is destroyed.
+     */
     fun dispose() {
         texture.dispose()
     }

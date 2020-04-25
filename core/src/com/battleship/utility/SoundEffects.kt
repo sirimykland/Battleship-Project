@@ -23,13 +23,6 @@ object SoundEffects {
     val TREASURECHEST: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/chest_sound.mp3"))
 
     /**
-     *  Load method
-     */
-    fun load() {
-        println("SFX Loaded")
-    }
-
-    /**
      * Triggers sound to play on Hit
      *
      * @param volume: Float - the volume of the sound played: default is 0.6f
@@ -79,7 +72,7 @@ object SoundEffects {
     }
 
     /**
-     *  Dispose method: for disposing all sound objects
+     *  Disposes all sounds when the Application is destroyed.
      */
     fun dispose() {
         listOf(hit, victory, losing, click,

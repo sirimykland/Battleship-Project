@@ -35,10 +35,6 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
      * Called once when the Application is first created.
      */
     override fun create() {
-        SoundEffects.load()
-        Font.load()
-        Palette.load()
-        TextureLibrary.load()
         if (Gdx.files.internal("audio/music.mp3").exists()) {
             music = Gdx.audio.newMusic(Gdx.files.internal("audio/music.mp3"))
             music?.isLooping = true
