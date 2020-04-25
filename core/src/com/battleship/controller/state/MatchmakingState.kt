@@ -9,7 +9,7 @@ import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
-class MatchmakingState(private val controller: FirebaseController) : GuiState(controller) {
+class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private val itemsPerPage = 7
     private var page: Int = 0

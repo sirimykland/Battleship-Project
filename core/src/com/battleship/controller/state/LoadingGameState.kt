@@ -9,7 +9,7 @@ import com.battleship.utility.GUI
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-class LoadingGameState(private var controller: FirebaseController) : GuiState(controller) {
+class LoadingGameState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     var showDialog: Boolean = false
     var opponentLeftRenders: Int = 0

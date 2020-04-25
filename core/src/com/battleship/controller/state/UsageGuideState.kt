@@ -15,7 +15,7 @@ import com.battleship.view.View
  * State handling all logic related to the help menu
  */
 class UsageGuideState(
-    private val controller: FirebaseController,
+    controller: FirebaseController,
     private val firstimeOpen: Boolean = false
 ) : GuiState(controller) {
 

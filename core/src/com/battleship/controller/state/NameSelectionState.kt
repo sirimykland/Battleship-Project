@@ -10,7 +10,7 @@ import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
 
-class NameSelectionState(val controller: FirebaseController) : GuiState(controller) {
+class NameSelectionState(controller: FirebaseController) : GuiState(controller) {
     private var username = GSM.username
 
     private val legalCharacters =
