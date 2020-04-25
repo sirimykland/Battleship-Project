@@ -1,7 +1,6 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.InputMultiplexer
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
@@ -59,5 +58,4 @@ abstract class GuiState(controller: FirebaseController) : State(controller) {
         super.dispose()
         Gdx.input.inputProcessor = null
     }
-
 }
