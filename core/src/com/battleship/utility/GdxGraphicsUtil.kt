@@ -29,16 +29,6 @@ object GdxGraphicsUtil {
         return this.width.toFloat() * 0.9f
     }
 
-    fun Graphics.boardRectangle(): Rectangle {
-        val pos = this.boardPosition()
-        return Rectangle(
-                pos.x,
-                pos.y,
-                this.boardWidth(),
-                this.boardWidth()
-        )
-    }
-
     fun Graphics.equipmentSetSize(): Vector2 {
         return Vector2(88f, 10f)
     }
@@ -49,12 +39,5 @@ object GdxGraphicsUtil {
 
     fun Graphics.gameInfoSize(): Vector2 {
         return Vector2(this.width.toFloat(), this.boardPosition().y / 2)
-    }
-
-    fun Graphics.gameInfoPosition(): Vector2 {
-        return Vector2(
-                0f,
-                this.height - this.gameInfoSize().y
-        )
     }
 }
