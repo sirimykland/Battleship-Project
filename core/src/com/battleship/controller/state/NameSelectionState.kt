@@ -9,7 +9,13 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
-// TODO Karl
+/**
+ * Create and handle components in the name selection menu
+ *
+ * Inherits behavior from [GuiState]
+ *
+ * @param controller: FirebaseController - interface handling storing and retrieving data from Firebase
+ */
 class NameSelectionState(controller: FirebaseController) : GuiState(controller) {
     private var username = GSM.username
 
@@ -35,6 +41,9 @@ class NameSelectionState(controller: FirebaseController) : GuiState(controller) 
 
     private val submitButton = GUI.menuButton(25f, 50f, "Continue") { complete() }
 
+    /**
+     * Saves the selected username to the [GSM] and changes state to [MatchmakingState]
+     */
     private fun complete() {
         if (username != "") {
             GSM.username = username

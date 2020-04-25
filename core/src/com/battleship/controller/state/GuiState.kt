@@ -2,18 +2,20 @@ package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
+import com.badlogic.gdx.InputProcessor
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 
 /**
  * Abstract state class declaring functions and variables for GUI states
  */
-// TODO Karl
 abstract class GuiState(controller: FirebaseController) : State(controller) {
     abstract val guiObjects: List<GuiObject>
 
     /**
      * Called once when the State is first initialized.
+     * Creates an [InputMultiplexer] which combines all listeners on all objects in [guiObjects] and
+     * sets that as the active [InputProcessor] for the app
      */
     override fun create() {
         Gdx.input.inputProcessor =
@@ -28,7 +30,6 @@ abstract class GuiState(controller: FirebaseController) : State(controller) {
 
     /**
      * Called when the State is paused, usually when it's not active or visible on-screen.
-     * Is also paused before state is destroyed.
      */
     override fun pause() {
         Gdx.input.inputProcessor = InputMultiplexer()

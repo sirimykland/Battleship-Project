@@ -8,7 +8,13 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
-// TODO Karl
+/**
+ * Create and handle components in the matchmaking menu
+ *
+ * Inherits behavior from [GuiState]
+ *
+ * @param controller: FirebaseController - interface handling storing and retrieving data from Firebase
+ */
 class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private val itemsPerPage = 7
@@ -73,6 +79,11 @@ class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
         }
     }
 
+    /**
+     * Updates the buttons on the page based on the data that has been retrieved from Firebase and
+     * stored in the [GSM]
+     */
+
     private fun updateButtons() {
         val index = page * itemsPerPage
         playerButtons.forEachIndexed { i, guiObject ->
@@ -93,6 +104,13 @@ class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
         if (index + itemsPerPage < GSM.pendingGames.size) nextPageButton.show() else nextPageButton.hide()
         if (index > 0) previousPageButton.show() else previousPageButton.hide()
     }
+
+    /**
+     * Generates a button that can be used to show a game that is available for joining
+     *
+     * @param index: Int - Index in list of buttons, decides vertical placement
+     * @return [GuiObject] - The created button
+     */
 
     private fun joinUserButton(index: Int): GuiObject {
         return GUI.textButton(
@@ -118,6 +136,12 @@ class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
             .hide()
     }
 
+    /**
+     * Uses the [controller] to create a new game and save it to Firebase.
+     * When the game has been successfully saved to Firebase, the state is changed to [PreGameState]
+     * If the process is unsuccessfull, the state is changed to [MainMenuState]
+     */
+
     private fun createGame() {
         controller.createGame(GSM.userId, GSM.username) { game ->
             if (game != null) {
@@ -130,6 +154,11 @@ class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
         }
     }
 
+    /**
+     * Updates as often as the game renders itself.
+     *
+     * @param dt: Float - delta time since last call
+     */
     override fun update(dt: Float) {}
 
     /**
