@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
-import com.battleship.model.GameObject
 import com.battleship.model.equipment.Equipment
 import com.battleship.model.treasures.GoldCoin
 import com.battleship.model.treasures.GoldKey
@@ -244,7 +243,6 @@ class Board(val size: Int) : GameObject() {
                 if (treasure.containsKey("rotate")) {
                     treasure["rotate"] as Boolean
                 } else false
-            // TODO this should be the actual enum types
             val type = treasure["type"] as String
             val newTreasure = when (TreasureType.valueOf(type)) {
                 TreasureType.GOLDCOIN -> {
@@ -260,7 +258,6 @@ class Board(val size: Int) : GameObject() {
             newTreasures.add(newTreasure)
         }
         treasures = newTreasures
-        println("new treasures: $treasures")
     }
 
     override fun toString(): String {
