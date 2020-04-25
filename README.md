@@ -27,7 +27,7 @@ the game.
 
 
 ### Our take on the concept
-TODO: Insert description - see implementation document
+The group has chosen to change the theme of the game, but keep all the rules from the original Battleship game. The new theme will be treasure hunt, which will see ships replaced with buried treasure and weapons replaced with equipment used to dig up these treasures. To add something new to the game, there will be different types of equipment available for looking for your opponents treasure. Special features will be added to the different types of equipment. A suggestion for one such feature is equipment that hit more than one square or equipment that will search an area for treasure without digging it up, like a metal detector. In other words, there are a lot of possibilities for what types of equipment that can be added to the game. The pictures above show creenshots of Treasure Hunt, where the treasures are revealed when all squares are hit and missed attempts are market with red. 
 
 ## Development
 

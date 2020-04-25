@@ -20,7 +20,7 @@ import com.battleship.view.View
  * @property controller: FirebaseController - interface handling storing and retrieving data from Firebase
  */
 class UsageGuideState(
-    private val controller: FirebaseController,
+    controller: FirebaseController,
     private val firstimeOpen: Boolean = false
 ) : GuiState(controller) {
 

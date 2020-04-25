@@ -18,7 +18,7 @@ import com.battleship.utility.SoundEffects
 import com.battleship.view.PlayView
 import com.battleship.view.View
 // TODO Henrik
-class PlayState(private val controller: FirebaseController) : GuiState(controller) {
+class PlayState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     private var player: Player = GSM.activeGame!!.player
     private var gameOver: Boolean = false
@@ -68,7 +68,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
     }
         .hide()
 
-    private val opponentsBoardText = GUI.textBox(
+    private val boardText = GUI.textBox(
         5f,
         2f,
         90f,
@@ -88,7 +88,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         header,
         switchBoardButton,
         *equipmentButtons,
-        opponentsBoardText,
+        boardText,
         mainMenuButton,
         newGameButton,
         GUI.listener("boardHandler", BoardHandler(controller) {
@@ -119,7 +119,12 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
             if (!gameOverRendered) {
                 updateGUIObjectsGameOver()
                 if (GSM.activeGame!!.youWon) {
-                    gameOverDialog[1].set(Text("Congratulations, you won!", font = Font.LARGE_WHITE))
+                    gameOverDialog[1].set(
+                        Text(
+                            "Congratulations, you won!",
+                            font = Font.LARGE_WHITE
+                        )
+                    )
                     SoundEffects.playVictory()
                 } else {
                     gameOverDialog[1].set(Text("Sorry, you lost :(", font = Font.LARGE_WHITE))
@@ -129,6 +134,8 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
                 toggleDialog(show = true)
                 gameOverRendered = true
             }
+            if (GSM.activeGame!!.playerBoard) header.set(Text("Your board"))
+            else header.set(Text("${GSM.activeGame!!.opponent.playerName}'s board"))
         } else {
             autoBoardSwitching()
             updateGUIObjectsInGame()
@@ -165,8 +172,16 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
         else header.set(Text("Waiting for ${GSM.activeGame!!.opponent.playerName}'s move..."))
 
         // Show/hide opponents bord text
-        if (GSM.activeGame!!.playerBoard) opponentsBoardText.show()
-        else opponentsBoardText.hide()
+        if (GSM.activeGame!!.playerBoard && !GSM.activeGame!!.isPlayersTurn()) {
+            boardText.show()
+            boardText.set(Text("Your board"))
+        } else if (!GSM.activeGame!!.playerBoard && !GSM.activeGame!!.isPlayersTurn()) {
+            boardText.show()
+            boardText.set(Text("${GSM.activeGame!!.opponent.playerName}'s board"))
+        } else if (GSM.activeGame!!.playerBoard && GSM.activeGame!!.isPlayersTurn()) {
+            boardText.show()
+            boardText.set(Text("Your board"))
+        } else boardText.hide()
     }
 
     private fun toggleDialog(show: Boolean) {
@@ -175,7 +190,7 @@ class PlayState(private val controller: FirebaseController) : GuiState(controlle
 
     private fun updateGUIObjectsGameOver() {
         equipmentButtons.forEach { button -> button.hide() }
-        opponentsBoardText.hide()
+        boardText.hide()
         if (GSM.activeGame!!.playerBoard) {
             header.set(Text("Your board"))
         } else {

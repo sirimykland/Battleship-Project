@@ -17,7 +17,7 @@ import com.battleship.view.View
  *
  * @property controller: FirebaseController - interface handling storing and retrieving data from Firebase
  */
-class SettingsState(private val controller: FirebaseController) : GuiState(controller) {
+class SettingsState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
 
     private var musicButton: GuiObject = GUI.menuButton(

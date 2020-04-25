@@ -6,7 +6,7 @@ import com.battleship.view.View
 /**
  * Abstract State class declaring common functions and variables
  */
-abstract class State(private val controller: FirebaseController) {
+abstract class State(protected val controller: FirebaseController) {
     abstract var view: View
 
     /**

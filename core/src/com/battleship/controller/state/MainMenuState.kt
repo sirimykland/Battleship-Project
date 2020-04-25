@@ -11,7 +11,7 @@ import com.battleship.view.View
  * State handling all logic related to the main menu
  */
 // TODO Siri
-class MainMenuState(private val controller: FirebaseController) : GuiState(controller) {
+class MainMenuState(controller: FirebaseController) : GuiState(controller) {
 
     private val menuList = listOf(
             Pair("Settings") { GSM.set(SettingsState(controller)) },
