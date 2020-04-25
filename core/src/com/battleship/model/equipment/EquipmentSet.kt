@@ -6,7 +6,7 @@ import com.battleship.model.GameObject
  * EquipmentSet inherits from [GameObject].
  * Manages a list of equipment
  */
-class EquipmentSet() : GameObject() {
+class EquipmentSet : GameObject() {
     var equipments: ArrayList<Equipment> = ArrayList()
     var activeEquipment: Equipment? = null
         set(equipment) {

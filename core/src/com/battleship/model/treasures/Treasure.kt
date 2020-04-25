@@ -21,7 +21,7 @@ abstract class Treasure(var position: Vector2, var rotate: Boolean = false) : Ga
     abstract var sprite: Sprite
     abstract var type: TreasureType
     abstract var sound: Sound
-    private var padding = 3
+    private var padding: Int = 3
     var revealed = false
 
     /**
