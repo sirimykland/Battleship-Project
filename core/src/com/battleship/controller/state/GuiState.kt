@@ -60,7 +60,4 @@ abstract class GuiState(controller: FirebaseController) : State(controller) {
         Gdx.input.inputProcessor = null
     }
 
-    fun addInputProcessor(input: InputAdapter) {
-        multiplexer.addProcessor(input)
-    }
 }
