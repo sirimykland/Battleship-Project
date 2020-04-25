@@ -18,7 +18,7 @@ import com.battleship.utility.SoundEffects
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
-class PlayState(private val controller: FirebaseController) : GuiState(controller) {
+class PlayState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     private var player: Player = GSM.activeGame!!.player
     private var gameOver: Boolean = false

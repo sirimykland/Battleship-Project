@@ -13,7 +13,7 @@ import com.battleship.view.View
 /**
  * State handling all logic related to the settings menu
  */
-class SettingsState(private val controller: FirebaseController) : GuiState(controller) {
+class SettingsState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
     private var musicButton: GuiObject = GUI.menuButton(
         25f,
