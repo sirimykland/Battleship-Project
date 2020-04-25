@@ -25,7 +25,6 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
         val treasure = board.getTreasureByPosition(treasurePos)
         if (treasure != null) {
             activeTreasure = treasure
-            activeTreasure!!.playSound()
             oldPosition = activeTreasure!!.position
         }
         return false

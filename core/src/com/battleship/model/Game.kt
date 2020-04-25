@@ -38,7 +38,6 @@ class Game(val gameId: String) {
             val gameVal = gameId.hashCode()
             p1Turn = p1val % gameVal < p2val % gameVal
         }
-        println("p1Turn: $p1Turn")
         return p1Turn
     }
 
