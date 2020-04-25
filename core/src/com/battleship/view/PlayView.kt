@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.math.Vector2
 import com.battleship.model.GameObject
 import com.battleship.model.equipment.EquipmentSet
-import com.battleship.model.ui.Board
+import com.battleship.model.Board
 import com.battleship.model.ui.GuiObject
 import com.battleship.utility.GdxGraphicsUtil.boardPosition
 import com.battleship.utility.GdxGraphicsUtil.boardWidth

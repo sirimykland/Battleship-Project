@@ -1,7 +1,7 @@
 package com.battleship.model
 
 import com.battleship.model.equipment.EquipmentSet
-import com.battleship.model.ui.Board
+import com.battleship.model.Board
 
 /**
  * Player class for storing player entities
