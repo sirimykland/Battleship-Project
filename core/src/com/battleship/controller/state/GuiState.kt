@@ -11,7 +11,6 @@ import com.battleship.model.ui.GuiObject
 // TODO Karl
 abstract class GuiState(controller: FirebaseController) : State(controller) {
     abstract val guiObjects: List<GuiObject>
-    private var multiplexer: InputMultiplexer = InputMultiplexer()
 
     /**
      * Called once when the State is first initialized.
