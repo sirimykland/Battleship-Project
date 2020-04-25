@@ -2,9 +2,9 @@ package com.battleship.utility
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.BitmapFont
-/*
- * Denne klassen vil laste inn alle fonter inn i minnet, så hvis vi vil optimalisere kan det lages
- * en løsning som ikke laster inn før de brukes.
+
+/**
+ * Singleton that loads fonts into memory
  */
 object Font {
 

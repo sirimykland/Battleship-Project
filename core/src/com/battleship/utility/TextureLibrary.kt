@@ -3,9 +3,12 @@ package com.battleship.utility
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 
+/**
+ * Singleton that loads textures into memory
+ */
 object TextureLibrary {
-    val BACKGROUND = TextureRegion(Texture("images/background.png"))
 
+    val BACKGROUND = TextureRegion(Texture("images/background.png"))
     val TREASURECHEST = TextureRegion(Texture("images/treasures/chest.png"))
     val GOLDCOIN = TextureRegion(Texture("images/treasures/coin.png"))
     val GOLDKEY = TextureRegion(Texture("images/treasures/key.png"))

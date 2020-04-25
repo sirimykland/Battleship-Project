@@ -3,6 +3,9 @@ package com.battleship.utility
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 
+/**
+ * Singleton that creates colored textures and loads them into memory
+ */
 object Palette {
     private val texture = Texture("colors/palette.png")
     val WHITE = TextureRegion(texture, 0, 0, 1, 1)
