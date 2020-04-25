@@ -8,13 +8,11 @@ import com.battleship.BattleshipGame
  * Singleton for manging sound effects
  */
 object SoundEffects {
-
     private val hit: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/hit_sound.mp3"))
     private val victory: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/victory_sound.mp3"))
     private val losing: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/losing_sound.mp3"))
     private val click: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/click_sound.mp3"))
 
-    val METALDETECTOR: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/radar_sound.mp3"))
     val DYNAMITE: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/bomb_sound.mp3"))
     val SHOVEL: Sound = Gdx.audio.newSound(Gdx.files.internal("audio/dirt_sound.mp3"))
 
@@ -75,8 +73,7 @@ object SoundEffects {
      *  Disposes all sounds when the Application is destroyed.
      */
     fun dispose() {
-        listOf(hit, victory, losing, click,
-            METALDETECTOR, DYNAMITE, SHOVEL,
+        listOf(hit, victory, losing, click, DYNAMITE, SHOVEL,
             GOLDCOIN, GOLDKEY, TREASURECHEST).forEach {
             it.dispose()
         }
