@@ -12,7 +12,12 @@ import com.battleship.view.BasicView
 import com.battleship.view.View
 
 /**
- * State handling all logic related to the help menu
+ * Create and handle components in the Usage Guide (help guide).
+ * An introduction to the game for new players.
+ *
+ * Inherits behavior from [GuiState]
+ *
+ * @property controller: FirebaseController - interface handling storing and retrieving data from Firebase
  */
 class UsageGuideState(
     controller: FirebaseController,
@@ -94,6 +99,9 @@ class UsageGuideState(
         backButton
     )
 
+    /**
+     * Called once when the State is first initialized.
+     */
     override fun create() {
         super.create()
         if (firstimeOpen) backButton.hide()
@@ -101,7 +109,7 @@ class UsageGuideState(
     }
 
     /**
-     * Decide which buttons to show and update image and text
+     * Decide which page of the guide to show i.e. image, text and buttons
      */
     private fun updateButtons() {
         if (pageIndex == imagePaths.size - 1)
@@ -117,9 +125,17 @@ class UsageGuideState(
         currentImage.set(Image(imagePaths[pageIndex]))
     }
 
+    /**
+     * Updates as often as the game renders itself.
+     *
+     * @param dt: Float - delta time since last call
+     */
     override fun update(dt: Float) {
     }
 
+    /**
+     * Called when the State should render itself.
+     */
     override fun render() {
         view.render(*guiObjects.toTypedArray())
     }

@@ -11,10 +11,15 @@ import com.battleship.view.BasicView
 import com.battleship.view.View
 
 /**
- * State handling all logic related to the settings menu
+ * Create and handle logic for components in settings menu
+ *
+ * Inherits behavior from [GuiState]
+ *
+ * @property controller: FirebaseController - interface handling storing and retrieving data from Firebase
  */
 class SettingsState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()
+
     private var musicButton: GuiObject = GUI.menuButton(
         25f,
         62.5f,
@@ -26,6 +31,7 @@ class SettingsState(controller: FirebaseController) : GuiState(controller) {
                 BattleshipGame.music?.play()
         }
     )
+
     private var soundButton: GuiObject = GUI.menuButton(
         25f,
         43.75f,
@@ -34,6 +40,10 @@ class SettingsState(controller: FirebaseController) : GuiState(controller) {
             BattleshipGame.soundOn = !BattleshipGame.soundOn
         }
     )
+
+    /**
+     * List of drawable gui and game objects
+     */
     override val guiObjects: List<GuiObject> = listOf(
         GUI.header("Settings"),
         musicButton,
@@ -64,13 +74,16 @@ class SettingsState(controller: FirebaseController) : GuiState(controller) {
         GUI.backButton { GameStateManager.set(MainMenuState(controller)) }
     )
 
+    /**
+     * Called once when the State is first initialized.
+     */
     override fun create() {
         super.create()
         updateButtons()
     }
 
     /**
-     * Update button text based on music status
+     * Update button text based on music and sound status
      */
     private fun updateButtons() {
         if (BattleshipGame.music?.isPlaying == true)
@@ -83,10 +96,18 @@ class SettingsState(controller: FirebaseController) : GuiState(controller) {
             soundButton.set(Text("Sound on", Font.MEDIUM_BLACK))
     }
 
+    /**
+     * Updates as often as the game renders itself.
+     *
+     * @param dt: Float - delta time since last call
+     */
     override fun update(dt: Float) {
         updateButtons()
     }
 
+    /**
+     * Called when the State should render itself.
+     */
     override fun render() {
         view.render(*guiObjects.toTypedArray())
     }
