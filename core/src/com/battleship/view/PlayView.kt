@@ -46,8 +46,8 @@ class PlayView : View() {
                 )
                 is EquipmentSet -> obj.draw(
                     batch,
-                    Gdx.graphics.equipmentSetPosition(),
-                    Gdx.graphics.equipmentSetSize()
+                        equipmentSetPosition(),
+                        equipmentSetSize()
                 )
                 is GuiObject -> {
                     batch.begin()

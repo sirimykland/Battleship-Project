@@ -1,6 +1,5 @@
 package com.battleship.controller.state
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
 import com.battleship.controller.firebase.FirebaseController
@@ -37,8 +36,8 @@ class PlayState(controller: FirebaseController) : GuiState(controller) {
         arrayOf(*(0 until player.equipmentSet.equipments.size).map { a: Int ->
             joinEquipmentButton(
                 a,
-                Gdx.graphics.equipmentSetPosition(),
-                Gdx.graphics.equipmentSetSize()
+                    equipmentSetPosition(),
+                    equipmentSetSize()
             )
         }.toTypedArray())
 
