@@ -14,6 +14,11 @@ import com.battleship.model.treasures.TreasureChest
 import com.battleship.utility.SoundEffects
 import kotlin.random.Random
 // TODO Henrik
+/**
+ * Board class inheriting from [GameObject].
+ *
+ * @property size: Int - grid size of the board
+ */
 class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
@@ -77,7 +82,6 @@ class Board(val size: Int) : GameObject() {
         }
         return true
     }
-
 
     /**
      * Override method of [GameObject].
@@ -246,7 +250,7 @@ class Board(val size: Int) : GameObject() {
     }
 
     /**
-     * Checks if treasurelist is empty
+     * Checks if treasure list is empty
      *
      * @return Boolean
      */
