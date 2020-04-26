@@ -17,6 +17,14 @@ import com.battleship.utility.Palette
 import com.battleship.utility.SoundEffects
 import com.battleship.view.PlayView
 import com.battleship.view.View
+
+/**
+ * Create and handle components in the pre-game state placing ships on the board
+ *
+ * Inherits behavior from [GuiState]
+ *
+ * @param controller: FirebaseController - interface handling storing and retrieving data from Firebase
+ */
 // TODO Henrik
 class PlayState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
@@ -84,6 +92,9 @@ class PlayState(controller: FirebaseController) : GuiState(controller) {
         listOf(Pair("Dismiss", { toggleDialog(show = false) }))
     )
 
+    /**
+     * List of drawable gui and game objects
+     */
     override val guiObjects: List<GuiObject> = listOf(
         header,
         switchBoardButton,

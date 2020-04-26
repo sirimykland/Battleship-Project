@@ -8,7 +8,11 @@ import com.battleship.view.BasicView
 import com.battleship.view.View
 
 /**
- * State handling the main menu
+ * Create and handle components in the main menu
+ *
+ * Inherits behavior from [GuiState]
+ *
+ * @param controller: FirebaseController - interface handling storing and retrieving data from Firebase
  */
 class MainMenuState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = BasicView()

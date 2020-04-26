@@ -58,6 +58,9 @@ class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
 
     private val header = GUI.header("Choose your opponent ${GSM.username}")
 
+    /**
+     * List of drawable gui and game objects
+     */
     override val guiObjects: List<GuiObject> = listOf(
         header,
         nextPageButton,
@@ -140,7 +143,6 @@ class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
      * When the game has been successfully saved to Firebase, the state is changed to [PreGameState]
      * If the process is unsuccessfull, the state is changed to [MainMenuState]
      */
-
     private fun createGame() {
         controller.createGame(GSM.userId, GSM.username) { game ->
             if (game != null) {

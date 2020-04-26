@@ -8,12 +8,18 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.view.PlayView
 import com.battleship.view.View
-// TODO Siri
+
+/**
+ * Create and handle components in the loading game state
+ *
+ * Inherits behavior from [GuiState]
+ *
+ * @param controller: FirebaseController - interface handling storing and retrieving data from Firebase
+ */
 class LoadingGameState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
-    var showDialog: Boolean = false
-    var opponentLeftRenders: Int = 0
-
+    private var showDialog: Boolean = false
+    private var opponentLeftRenders: Int = 0
     private val header: GuiObject = GUI.header("Waiting for opponent to join...")
 
     /**
@@ -73,6 +79,9 @@ class LoadingGameState(controller: FirebaseController) : GuiState(controller) {
         updateHeaderText()
     }
 
+    /**
+     * Called on update and updates header text of opponent's ready state
+     */
     private fun updateHeaderText() {
         if (GSM.activeGame!!.opponent.playerId == "")
             header.set(Text("Waiting for opponent to join...", font = Font.MEDIUM_WHITE))

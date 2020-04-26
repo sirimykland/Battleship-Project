@@ -8,8 +8,16 @@ import com.battleship.model.ui.GuiObject
 
 /**
  * Abstract state class declaring functions and variables for GUI states
+ *
+ * Inherits behavior from [State]
+ *
+ * @param controller: FirebaseController - interface handling storing and retrieving data from Firebase
  */
 abstract class GuiState(controller: FirebaseController) : State(controller) {
+
+    /**
+     * List of drawable gui and game objects
+     */
     abstract val guiObjects: List<GuiObject>
 
     /**

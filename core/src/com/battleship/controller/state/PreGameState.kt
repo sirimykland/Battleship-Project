@@ -8,11 +8,18 @@ import com.battleship.model.ui.GuiObject
 import com.battleship.utility.GUI
 import com.battleship.view.PlayView
 import com.battleship.view.View
-// TODO Siri
+
+/**
+ * Create and handle components in the pre-game state placing ships on the board
+ *
+ * Inherits behavior from [GuiState]
+ *
+ * @param controller: FirebaseController - interface handling storing and retrieving data from Firebase
+ */
 class PreGameState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
-    var showDialog: Boolean = false
-    var opponentLeftRenders: Int = 0
+    private var showDialog: Boolean = false
+    private var opponentLeftRenders: Int = 0
 
     /**
      * Called once when the State is first initialized.
@@ -65,6 +72,9 @@ class PreGameState(controller: FirebaseController) : GuiState(controller) {
         }))
     )
 
+    /**
+     * List of drawable gui and game objects
+     */
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
         GUI.header("Place treasures"),
@@ -74,8 +84,8 @@ class PreGameState(controller: FirebaseController) : GuiState(controller) {
     )
 
     /**
-     *
-     *
+     * Called when user presses "leaves game" in dialog
+     * Resets game and removes player from firebase entry
      */
     private fun leaveGame() {
         controller.leaveGame(GSM.activeGame!!.gameId, GSM.userId) {
