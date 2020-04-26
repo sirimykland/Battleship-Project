@@ -73,6 +73,10 @@ class PreGameState(controller: FirebaseController) : GuiState(controller) {
         *opponentLeftDialog
     )
 
+    /**
+     *
+     *
+     */
     private fun leaveGame() {
         controller.leaveGame(GSM.activeGame!!.gameId, GSM.userId) {
             GSM.resetGame()

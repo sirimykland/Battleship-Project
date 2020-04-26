@@ -8,16 +8,30 @@ import com.battleship.view.BasicView
 import com.battleship.view.View
 
 /**
- * State handling all logic related to the main menu
+ * State handling the main menu
  */
-// TODO Siri
 class MainMenuState(controller: FirebaseController) : GuiState(controller) {
+    override var view: View = BasicView()
 
+    /**
+     * List of menu buttons
+     */
     private val menuList = listOf(
             Pair("Settings") { GSM.set(SettingsState(controller)) },
             Pair("Play") { GSM.set(NameSelectionState(controller)) }
     )
 
+    private val title: GuiObject = GUI.image(
+            10f,
+            66f,
+            80f,
+            12.5f,
+            "font/title.png"
+    )
+
+    /**
+     * List of drawable gui and game objects
+     */
     override val guiObjects: List<GuiObject> = menuList
         .mapIndexed { i, (name, func) ->
             GUI.menuButton(
@@ -27,18 +41,6 @@ class MainMenuState(controller: FirebaseController) : GuiState(controller) {
                 onClick = func
             )
         }
-
-    private val title: GuiObject = GUI.image(
-        10f,
-        66f,
-        80f,
-        12.5f,
-        "font/title.png"
-    )
-
-    override var view: View = BasicView()
-
-    override fun update(dt: Float) {}
 
     /**
      * Called when the State should render itself.

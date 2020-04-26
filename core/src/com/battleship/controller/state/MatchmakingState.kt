@@ -8,6 +8,7 @@ import com.battleship.utility.Font
 import com.battleship.utility.GUI
 import com.battleship.view.BasicView
 import com.battleship.view.View
+
 /**
  * Create and handle components in the matchmaking menu
  *
@@ -83,7 +84,6 @@ class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
      * Updates the buttons on the page based on the data that has been retrieved from Firebase and
      * stored in the [GSM]
      */
-
     private fun updateButtons() {
         val index = page * itemsPerPage
         playerButtons.forEachIndexed { i, guiObject ->
@@ -111,7 +111,6 @@ class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
      * @param index: Int - Index in list of buttons, decides vertical placement
      * @return [GuiObject] - The created button
      */
-
     private fun joinUserButton(index: Int): GuiObject {
         return GUI.textButton(
             10f,
@@ -153,13 +152,6 @@ class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
             }
         }
     }
-
-    /**
-     * Updates as often as the game renders itself.
-     *
-     * @param dt: Float - delta time since last call
-     */
-    override fun update(dt: Float) {}
 
     /**
      * Called when the State should render itself.

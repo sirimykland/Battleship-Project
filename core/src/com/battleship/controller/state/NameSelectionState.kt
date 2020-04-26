@@ -17,6 +17,7 @@ import com.battleship.view.View
  * @param controller: FirebaseController - interface handling storing and retrieving data from Firebase
  */
 class NameSelectionState(controller: FirebaseController) : GuiState(controller) {
+    override var view: View = BasicView()
     private var username = GSM.username
 
     private val legalCharacters =
@@ -51,13 +52,15 @@ class NameSelectionState(controller: FirebaseController) : GuiState(controller) 
         }
     }
 
+    /**
+     * List of drawable gui and game objects
+     */
     override val guiObjects: List<GuiObject> = listOf(
         GUI.header("Choose your username"),
         usernameDisplay,
         submitButton,
         GUI.backButton { GSM.set(MainMenuState(controller)) }
     )
-    override var view: View = BasicView()
 
     /**
      * Updates as often as the game renders itself.

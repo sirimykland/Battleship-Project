@@ -40,6 +40,10 @@ class SettingsState(controller: FirebaseController) : GuiState(controller) {
             BattleshipGame.soundOn = !BattleshipGame.soundOn
         }
     )
+
+    /**
+     * List of drawable gui and game objects
+     */
     override val guiObjects: List<GuiObject> = listOf(
         GUI.header("Settings"),
         musicButton,

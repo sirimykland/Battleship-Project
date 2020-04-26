@@ -16,6 +16,10 @@ class LoadingGameState(controller: FirebaseController) : GuiState(controller) {
 
     private val header: GuiObject = GUI.header("Waiting for opponent to join...")
 
+    /**
+     * Called when user presses "leaves game" in dialog
+     * Resets game and removes player from firebase entry
+     */
     private fun leaveGame() {
         controller.leaveGame(GSM.activeGame!!.gameId, GSM.userId) {
             GSM.resetGame()
@@ -34,6 +38,9 @@ class LoadingGameState(controller: FirebaseController) : GuiState(controller) {
         }))
     )
 
+    /**
+     * List of drawable gui and game objects
+     */
     override val guiObjects: List<GuiObject> = listOf(
         header,
         GUI.backButton { leaveGame() },

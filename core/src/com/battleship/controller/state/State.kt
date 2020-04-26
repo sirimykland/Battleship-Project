@@ -19,7 +19,7 @@ abstract class State(protected val controller: FirebaseController) {
      *
      * @param dt: Float - delta time since last call
      */
-    abstract fun update(dt: Float)
+    open fun update(dt: Float) {}
 
     /**
      * Called when the State should render itself.
