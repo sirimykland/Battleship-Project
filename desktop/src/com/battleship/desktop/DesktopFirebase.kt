@@ -21,15 +21,19 @@ import com.google.firebase.database.annotations.Nullable
 import java.io.FileInputStream
 
 /**
+ * Implements behavior from [FirebaseController]
+ *
  * Class used to setup the database connection
  * declared as object to make it a singleton
  */
 object DesktopFirebase : FirebaseController {
-    // The URL of the firebase project
     private const val firebaseUrl = "https://battleshipz.firebaseio.com"
-
-    // Protected variable used by the other controllers to access database
     private val db: Firestore
+    private var activeListener: ListenerRegistration? = null
+        set(value) {
+            field?.remove()
+            field = value
+        }
 
     // Set up database connection
     init {
@@ -54,15 +58,8 @@ object DesktopFirebase : FirebaseController {
         db = FirestoreClient.getFirestore()
     }
 
-    private var activeListener: ListenerRegistration? = null
-        set(value) {
-            field?.remove()
-            field = value
-        }
-
     /**
-     * Start new game
-     * @param userId the id of the user setting up the game
+     * @inheritDoc
      */
     override fun createGame(userId: String, userName: String, callback: (game: Game?) -> Unit) {
         // Set up game data
@@ -89,9 +86,8 @@ object DesktopFirebase : FirebaseController {
     }
 
     /**
-     * Function getting all games where there is currently only one player
+     * @inheritDoc
      */
-
     override fun addPendingGamesListener(callback: (pendingGames: ArrayList<PendingGame>) -> Unit) {
         val query = db.collection("games")
             .whereEqualTo("player2Name", "")
@@ -131,9 +127,7 @@ object DesktopFirebase : FirebaseController {
     }
 
     /**
-     * Add userId to a specific game
-     * @param gameId the id of the game document
-     * @param userId the id of the user that should be added
+     * @inheritDoc
      */
     override fun joinGame(gameId: String, userId: String, userName: String, callback: (game: Game?) -> Unit) {
         // Add the data to the game document
@@ -158,10 +152,7 @@ object DesktopFirebase : FirebaseController {
     }
 
     /**
-     * Registers the treasures on the board for a given user
-     * @param gameId the id of the game document
-     * @param userId the id of the user owning the treasures
-     * @param treasures list containing the treasures that should be added, each described using a map
+     * @inheritDoc
      */
     override fun registerTreasures(
         gameId: String,
@@ -184,11 +175,7 @@ object DesktopFirebase : FirebaseController {
     }
 
     /**
-     * Registers the move
-     * @param gameId the id of the game document
-     * @param x x coordinate of move
-     * @param y y coordinate of
-     * @param playerId player making the move
+     * @inheritDoc
      */
     override fun registerMove(gameId: String, x: Int, y: Int, playerId: String, weapon: String) {
         val query = db.collection("games").document(gameId).get()
@@ -212,9 +199,7 @@ object DesktopFirebase : FirebaseController {
     }
 
     /**
-     * Set the winner of the game
-     * @param userId the id of the winner
-     * @param gameId the id of the game document
+     * @inheritDoc
      */
     override fun setWinner(userId: String, gameId: String) {
         db.collection("games").document(gameId).update("winner", userId)
@@ -226,9 +211,7 @@ object DesktopFirebase : FirebaseController {
     }
 
     /**
-     * Function adding listener to a specific game
-     * @param gameId the id of the game document
-     * @param playerId the id of the player
+     * @inheritDoc
      */
     override fun addGameListener(gameId: String, playerId: String) {
         val docRef = db.collection("games").document(gameId)

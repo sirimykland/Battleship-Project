@@ -12,7 +12,17 @@ import com.battleship.utility.Palette
 import com.battleship.utility.SoundEffects
 import com.battleship.utility.TextureLibrary
 
+/**
+ * Main class for BattleshipGame. Inherits behaviour LibGdx's from [Game].
+ *
+ * @constructor
+ * @property controller: FirebaseController - position of treasure on board grid
+ */
 class BattleshipGame(private val controller: FirebaseController) : Game() {
+    /**
+     * Music and sound settings as a Singleton, properties can be accessed
+     * directly via the name of the containing class.
+     */
 
     lateinit var prefs: Preferences
 
@@ -21,11 +31,10 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
         var soundOn: Boolean = true
     }
 
+    /**
+     * Called once when the Application is first created.
+     */
     override fun create() {
-        SoundEffects.load()
-        Font.load()
-        Palette.load()
-        TextureLibrary.load()
         if (Gdx.files.internal("audio/music.mp3").exists()) {
             music = Gdx.audio.newMusic(Gdx.files.internal("audio/music.mp3"))
             music?.isLooping = true
@@ -46,6 +55,9 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
         music?.play()
     }
 
+    /**
+     * Called once when the Application is destroyed.
+     */
     override fun dispose() {
         Font.dispose()
         SoundEffects.dispose()
@@ -53,6 +65,9 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
         TextureLibrary.dispose()
     }
 
+    /**
+     * Called when the Application should render itself.
+     */
     override fun render() {
         super.render()
         GSM.render()

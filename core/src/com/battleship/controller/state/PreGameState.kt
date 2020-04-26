@@ -9,11 +9,23 @@ import com.battleship.utility.GUI
 import com.battleship.view.PlayView
 import com.battleship.view.View
 
+/**
+ * Create and handle components in the pre-game state placing ships on the board
+ *
+ * Inherits behavior from [GuiState]
+ *
+ * @param controller: FirebaseController - interface handling storing and retrieving data from Firebase
+ */
 class PreGameState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
-    var showDialog: Boolean = false
-    var opponentLeftRenders: Int = 0
+    private var showDialog: Boolean = false
+    private var opponentLeftRenders: Int = 0
 
+    /**
+     * Called once when the State is first initialized.
+     * Initializes the player with some treasures
+     * and starts listening for database changes
+     */
     override fun create() {
         super.create()
         GSM.activeGame!!.player.board.clearTreasures()
@@ -60,6 +72,9 @@ class PreGameState(controller: FirebaseController) : GuiState(controller) {
         }))
     )
 
+    /**
+     * List of drawable gui and game objects
+     */
     override val guiObjects: List<GuiObject> = listOf(
         readyButton,
         GUI.header("Place treasures"),
@@ -68,6 +83,10 @@ class PreGameState(controller: FirebaseController) : GuiState(controller) {
         *opponentLeftDialog
     )
 
+    /**
+     * Called when user presses "leaves game" in dialog
+     * Resets game and removes player from firebase entry
+     */
     private fun leaveGame() {
         controller.leaveGame(GSM.activeGame!!.gameId, GSM.userId) {
             GSM.resetGame()
@@ -78,10 +97,18 @@ class PreGameState(controller: FirebaseController) : GuiState(controller) {
         }
     }
 
+    /**
+     * Called when the State should render itself.
+     */
     override fun render() {
         this.view.render(GSM.activeGame!!.player.board, *guiObjects.toTypedArray())
     }
 
+    /**
+     * Updates as often as the game renders itself.
+     *
+     * @param dt: Float - delta time since last call
+     */
     override fun update(dt: Float) {
         if (GSM.activeGame!!.opponentLeft) {
             if (opponentLeftRenders < 2) opponentLeftRenders++

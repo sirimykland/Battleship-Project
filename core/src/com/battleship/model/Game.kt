@@ -5,6 +5,12 @@ import com.battleship.GSM
 import java.util.Timer
 import kotlin.concurrent.schedule
 
+/**
+ * Game class for managing game logic
+ *
+ * @constructor
+ * @property gameId
+ */
 class Game(val gameId: String) {
     var youWon: Boolean = false
     var winner: String = ""
@@ -16,6 +22,13 @@ class Game(val gameId: String) {
     var newTurn: Boolean = false
     var opponentLeft: Boolean = false
 
+    /**
+     * Set player and opponent objects and
+     * determines whose player1 and player2 based on registered playerId.
+     *
+     * @param player1: Player
+     * @param player2: Player
+     */
     fun setPlayers(player1: Player, player2: Player = Player()) {
         if (player1.playerId == GSM.userId) {
             this.player = player1
@@ -30,7 +43,12 @@ class Game(val gameId: String) {
         }
     }
 
-    // Returns true if player missed. For handling the switching of boards
+    /**
+     * For player to make move on opponent's board
+     * Switches board if successful hit and updates opponents health
+     *
+     * @param pos: Vector2 - coordinates on board to make move on
+     */
     fun makeMove(pos: Vector2) {
         if (player.equipmentSet.activeEquipment!!.hasMoreUses()) {
             val missed = opponent.board.shootTiles(pos, player.equipmentSet.activeEquipment!!)
@@ -41,6 +59,13 @@ class Game(val gameId: String) {
         }
     }
 
+    /**
+     * Register a opponent's move onto players board.
+     * @see DesktopFirebase,
+     * @see AndroidFirebase
+     *
+     * @param move: Map<String, Any> - map with weapon, x and y coordinates and playerId
+     */
     fun registerMove(move: Map<String, Any>) {
         for (eq in GSM.activeGame!!.opponent.equipmentSet.equipments) {
             if (eq.name == move["weapon"]) {
@@ -61,21 +86,17 @@ class Game(val gameId: String) {
         }
     }
 
+    /**
+     * @return Boolean - is players turn and not opponent
+     */
     fun isPlayersTurn(): Boolean {
         return playerTurn
     }
 
-    fun setTreasures(treasures: Map<String, List<Map<String, Any>>>) {
-        if (player.playerId in treasures) treasures[player.playerId]?.let {
-            player.board.setTreasuresList(
-                it
-            )
-        }
-        if (opponent.playerId in treasures) {
-            treasures[opponent.playerId]?.let { opponent.board.setTreasuresList(it) }
-        }
-    }
-
+    /**
+     * Changes the state of the game if both players are registered and
+     * has a non-empty list of treasures
+     */
     fun setGameReadyIfReady() {
         if (isPlayersRegistered() && isTreasuresRegistered()) {
             gameReady = true
@@ -84,14 +105,29 @@ class Game(val gameId: String) {
         }
     }
 
+    /**
+     * Checks if both players are registered with non-empty treasures
+     *
+     * @return Boolean
+     */
     fun isTreasuresRegistered(): Boolean {
         return !player.board.isTreasureListEmpty() && !opponent.board.isTreasureListEmpty()
     }
 
+    /**
+     * Checks if both players are registered with an ID
+     *
+     * @return Boolean
+     */
     fun isPlayersRegistered(): Boolean {
         return player.playerId != "" && opponent.playerId != ""
     }
 
+    /**
+     * Switches whose players turn it is
+     *
+     * @param switch: Boolean - if true playerturn is switched
+     */
     private fun switchTurn(switch: Boolean) {
         if (switch) {
             playerTurn = !playerTurn
@@ -101,6 +137,10 @@ class Game(val gameId: String) {
         }
     }
 
+    /**
+     * Determines if there is a game winner, depending on
+     * whether player or opponents health reaches 0
+     */
     fun updateWinner() {
         if (player.health == 0) { // Opponent won!
             player.board.revealTreasures()
@@ -114,6 +154,10 @@ class Game(val gameId: String) {
         }
     }
 
+    /**
+     * toString specific for Game class
+     * @return String
+     */
     override fun toString(): String {
         return "Game( gameReady=$gameReady, player= $player, opponent=$opponent, playersTurn='$playerTurn')"
     }
