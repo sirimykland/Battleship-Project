@@ -31,15 +31,19 @@ The group has chosen to change the theme of the game, but keep all the rules fro
 
 ## Development
 
-### Logical View
-TODO: Insert new logical view
+### Logical view with focus on MVC pattern
 
-![Logical View ](https://i.imgur.com/XQyIilb.png)
+![ Logical view (1) with focus on MVC pattern](https://i.imgur.com/9lWvgR7h.png)
+![ Logical view (2) with focus on MVC pattern](https://i.imgur.com/Ktv42pOh.png)
+
+### Logical View with focus on GUI ECS system
+
+![Logical view with focus on GUI ECS system](https://i.imgur.com/T3I0YiHh.png)
 
 ### Development View
-TODO: Insert new dev view
 
-![Development View ](https://i.imgur.com/ENkQcNF.png)
+![Development View ](https://i.imgur.com/WHCXbO0h.png)
+
 
 ### Version Control: Git
 We use our own version of the [Git Flow](http://nvie.com/posts/a-successful-git-branching-model/) strategy for handling branches and releases. We follow this strictly to avoid odd bugs and unknown state in our production code.
