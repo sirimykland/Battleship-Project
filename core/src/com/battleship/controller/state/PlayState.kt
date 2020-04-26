@@ -25,7 +25,6 @@ import com.battleship.view.View
  *
  * @param controller: FirebaseController - interface handling storing and retrieving data from Firebase
  */
-// TODO Henrik
 class PlayState(controller: FirebaseController) : GuiState(controller) {
     override var view: View = PlayView()
     private var player: Player = GSM.activeGame!!.player
@@ -155,6 +154,9 @@ class PlayState(controller: FirebaseController) : GuiState(controller) {
         }
     }
 
+    /**
+     * Handles the switching of boards based on who's turn it is
+     */
     private fun autoBoardSwitching() {
         if (GSM.activeGame!!.isPlayersTurn() && GSM.activeGame!!.playerBoard && GSM.activeGame!!.newTurn) {
             GSM.activeGame!!.playerBoard = !GSM.activeGame!!.playerBoard
@@ -165,6 +167,9 @@ class PlayState(controller: FirebaseController) : GuiState(controller) {
         }
     }
 
+    /**
+     * Updates the GUI objects relative to who's turn it is and which board is showing.
+     */
     private fun updateGUIObjectsInGame() {
         equipmentButtons.forEachIndexed { i, eqButton ->
             val equipment = player.equipmentSet.equipments[i]
@@ -195,10 +200,17 @@ class PlayState(controller: FirebaseController) : GuiState(controller) {
         } else boardText.hide()
     }
 
+    /**
+     * Method for showing and hiding the Dialog.
+     * @param show: Boolean - If it should show or hide the dialog
+     */
     private fun toggleDialog(show: Boolean) {
         gameOverDialog.forEach { guiObject -> if (show) guiObject.show() else guiObject.hide() }
     }
 
+    /**
+     * Updates the GUI objects when the game is over.
+     */
     private fun updateGUIObjectsGameOver() {
         equipmentButtons.forEach { button -> button.hide() }
         boardText.hide()
@@ -212,6 +224,14 @@ class PlayState(controller: FirebaseController) : GuiState(controller) {
         newGameButton.show()
     }
 
+    /**
+     * Generates a button for each equipment in the equipmentSet.
+     *
+     * @param index: Int - Index in list of equipments, decides equipment and horizontal placement
+     * @param position: Vector2 - The position of first equipment button
+     * @param dimension: Vector2 - The dimension of equipment buttons area
+     * @return [GuiObject] - The created button
+     */
     private fun joinEquipmentButton(
         index: Int,
         position: Vector2,
