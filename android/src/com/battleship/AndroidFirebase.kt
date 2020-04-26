@@ -351,8 +351,7 @@ object AndroidFirebase : FirebaseController {
                 if (winner != "") {
                     Log.d("addPlayListener", "The winner is $winner")
                     GSM.activeGame!!.winner = winner as String
-                }
-                else {
+                } else {
                     if (moves.size == 0) {
                         Log.d("addPlayListener", "No moves made yet")
                         GSM.activeGame!!.setGameReadyIfReady()

@@ -312,8 +312,7 @@ object DesktopFirebase : FirebaseController {
                     if (winner != "") {
                         Gdx.app.log("addPlayListener", "The winner is $winner")
                         GSM.activeGame!!.winner = winner as String
-                    }
-                    else {
+                    } else {
                         if (moves.size == 0) {
                             Gdx.app.log("addPlayListener", "No moves made yet")
                             GSM.activeGame!!.setGameReadyIfReady()
