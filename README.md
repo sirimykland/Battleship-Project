@@ -124,7 +124,7 @@ This collection will contain one document for each game with a randomly generate
 
 ### GUI Entity Component System logical view
 
-![GUI Entity Component System logical view](https://i.imgur.com/6Arv4Dk.png)
+![GUI Entity Component System logical view](https://i.imgur.com/P056rXg.png)
 
 ### Development View
 

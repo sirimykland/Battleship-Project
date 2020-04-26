@@ -25,7 +25,7 @@ class NameSelectionState(controller: FirebaseController) : GuiState(controller) 
 
     private val usernameDisplay = GUI.textBox(
         15f,
-        75f,
+        70f,
         70f,
         10f,
         username
