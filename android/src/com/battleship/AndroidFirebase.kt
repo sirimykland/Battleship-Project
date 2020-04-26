@@ -240,7 +240,7 @@ object AndroidFirebase : FirebaseController {
     /**
      * @inheritDoc
      */
-    override fun setWinner(gameId: String, userId: String) {
+    override fun setWinner(userId: String, gameId: String) {
         db.collection("games").document(gameId).update("winner", userId)
             .addOnSuccessListener {
                 Log.d("setWinner", "success")
@@ -250,7 +250,7 @@ object AndroidFirebase : FirebaseController {
                 val errorMessage = e.message
                 Log.w("setWinner", "Failed to set Winner! $errorCode - $errorMessage: ", e)
                 GSM.resetGame()
-                GSM.set(MainMenuState(this))
+                Gdx.app.postRunnable { GSM.set(MainMenuState(this)) }
             }
     }
 
@@ -281,10 +281,11 @@ object AndroidFirebase : FirebaseController {
                 else {
                     val player2Id = snapshot.data?.get("player2Id") as String
                     val player2Name = snapshot.data?.get("player2Name") as String
-                    if (GSM.activeGame!!.opponent.playerId == "" && player2Id != "") {
+                    val activeGameOpponent = GSM.activeGame!!.opponent
+                    if ((activeGameOpponent.playerId == "" || activeGameOpponent.playerName == "") && player2Id != "") {
                         Log.d("addGameListener", "Opponent joined and registered")
 
-                        GSM.activeGame!!.opponent = Player(player2Id, player2Name)
+                        GSM.activeGame!!.setPlayers(GSM.activeGame!!.player, Player(player2Id, player2Name))
                         GSM.activeGame!!.setGameReadyIfReady()
                     } else {
                         // Get the field containing the treasures in the database
