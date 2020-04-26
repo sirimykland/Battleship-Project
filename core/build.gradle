@@ -10,15 +10,7 @@ dependencies{
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.4'
 }
 
-task dokkaZip(type: Zip) {
-    from "$buildDir/dokka"
+dokka {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/dokka"
 }
-
-dokkaZip.dependsOn('dokka')
-
-task javadocJar(type: Jar) {
-    destinationDirectory = "javadoc"
-    from "$buildDir/dokka"
-}
-
-javadocJar.dependsOn('dokka')

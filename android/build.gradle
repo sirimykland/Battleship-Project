@@ -33,6 +33,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dokka {
+        outputFormat = 'javadoc'
+        outputDirectory = "$buildDir/dokka"
+    }
 }
 
 // called every time gradle gets executed, takes the native dependencies of
@@ -89,7 +93,7 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.battleship/com.battleship.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.battleship/com.battleship.android.AndroidLauncher'
 }
 
 dependencies {
