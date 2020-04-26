@@ -95,7 +95,7 @@ class UsageGuideState(
 
     override val guiObjects: List<GuiObject> = listOf(
         background,
-        if (firstimeOpen) GUI.header("Welcome to the Treasure Hunt game!") else GUI.header("Welcome to the Treasure Hunt game!"),
+        if (firstimeOpen) GUI.header("Welcome to the Treasure Hunt game!") else GUI.header("Usage guide"),
         nextPageButton,
         previousPageButton,
         currentDescription,
