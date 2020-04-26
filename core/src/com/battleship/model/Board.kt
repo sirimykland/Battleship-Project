@@ -18,10 +18,21 @@ class Board(val size: Int) : GameObject() {
     private var treasures: ArrayList<Treasure> = ArrayList()
     private var tiles = Array(size) { Array(size) { Tile.PREGAME } }
 
+    /**
+     * Removes all the elements in the treasure list
+     */
     fun clearTreasures() {
         treasures.clear()
     }
 
+    /**
+     * Creates treasures a number of treasures of a certain type, that can be revealed or not.
+     * Treasures are placed onto the board at a random position.
+     *
+     * @param quantity: Int - number of treasures to instantiate
+     * @param type: TreasureType - enum type of treasure to instantiate
+     * @param revealed: Boolean - true or false value of whether treasures should be revealed or not.
+     */
     fun createAndPlaceTreasures(quantity: Int, type: TreasureType, revealed: Boolean) {
         var treasure: Treasure
         for (i in 0 until quantity) {
@@ -41,6 +52,12 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
+    /**
+     * Validates if treasure has a valid board position
+     *
+     * @param treasure: Treasure - treasure whose position are to be validated
+     * @return Boolean of whether position is valid or not
+     */
     fun validateTreasurePosition(treasure: Treasure?): Boolean {
         if (treasure == null) {
             return false
@@ -52,7 +69,6 @@ class Board(val size: Int) : GameObject() {
                 return false
             }
 
-            // Another tile already in this place
             for (placedShip in treasures) {
                 if (placedShip.getTreasureTiles().contains(tile) && placedShip != treasure) {
                     return false
@@ -62,6 +78,17 @@ class Board(val size: Int) : GameObject() {
         return true
     }
 
+
+    /**
+     * Override method of [GameObject].
+     * draws the board grid, and calls for treasures to be drawn
+     * onto the board.
+     *
+     * @param batch SpriteBatch - to draw text and images with
+     * @param shapeRenderer: ShapeRenderer - to draw shapes with
+     * @param position Vector2 - the position to start drawing
+     * @param dimension Vector2 - the size of the object to draw
+     */
     override fun draw(
         batch: SpriteBatch,
         shapeRenderer: ShapeRenderer,
@@ -72,7 +99,6 @@ class Board(val size: Int) : GameObject() {
         var y = position.y
         val tileSize = dimension.x / size
 
-        // Draw board
         for (row in tiles) {
             for (value in row) {
                 if (value == Tile.PREGAME) {
@@ -107,12 +133,14 @@ class Board(val size: Int) : GameObject() {
             x = position.x
         }
 
-        // Draw treasures
         for (treasure in treasures) {
             treasure.draw(batch, position, Vector2(tileSize, tileSize))
         }
     }
 
+    /**
+     * Flips all treasures' revealed flag to true.
+     */
     fun revealTreasures() {
         treasures.forEach { treasure -> treasure.revealed = true }
     }
@@ -189,6 +217,12 @@ class Board(val size: Int) : GameObject() {
         tiles[pos.x.toInt()][pos.y.toInt()] = tile
     }
 
+    /**
+     * Gets treasure at a position on the board
+     *
+     * @param pos: Vector2 - board coordinate
+     * @return Treasure - treasure at that position
+     */
     fun getTreasureByPosition(pos: Vector2): Treasure? {
         for (treasure in treasures) {
             if (treasure.hit(pos)) {
@@ -198,6 +232,11 @@ class Board(val size: Int) : GameObject() {
         return null
     }
 
+    /**
+     * Adds all treasures' health
+     *
+     * @return Int - total health of all treasures
+     */
     fun getCombinedTreasureHealth(): Int {
         var health = 0
         for (treasure in treasures) {
@@ -206,12 +245,18 @@ class Board(val size: Int) : GameObject() {
         return health
     }
 
+    /**
+     * Checks if treasurelist is empty
+     *
+     * @return Boolean
+     */
     fun isTreasureListEmpty(): Boolean {
         return treasures.isEmpty()
     }
 
     /**
-     * converts arraylist of treasures to list of map
+     * Converts ArrayList of treasures to list of map
+     *
      * @return treasuresList List<Map<String, Any>>
      */
     fun getTreasuresList(): List<Map<String, Any>> {
@@ -223,7 +268,8 @@ class Board(val size: Int) : GameObject() {
     }
 
     /**
-     * sets treasures arraylist from list with map
+     * Sets treasures list from list with map
+     *
      * @param treasuresList List<Map<String, Any>>
      */
     fun setTreasuresList(treasuresList: List<Map<String, Any>>) {
@@ -255,14 +301,24 @@ class Board(val size: Int) : GameObject() {
         treasures = newTreasures
     }
 
+    /**
+     * toString specific for Board
+     * @return String
+     */
     override fun toString(): String {
         return "Board(treasure=$treasures)"
     }
 
+    /**
+     * Types of Tile states
+     */
     enum class Tile {
         HIT, MISS, NEAR, UNOPENED, PREGAME
     }
 
+    /**
+     * Types of Result
+     */
     enum class Result {
         HIT, FOUND, MISS, NOT_VALID
     }
