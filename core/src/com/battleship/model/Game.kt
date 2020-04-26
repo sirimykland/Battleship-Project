@@ -26,11 +26,24 @@ class Game(val gameId: String) {
     var newTurn: Boolean = false
     var opponentLeft: Boolean = false
 
+    /**
+     * Converts a UUID on hex form to a Long
+     *
+     * @param hexString: String
+     */
+
     private fun hexSum(hexString: String): Long {
         return hexString.split("-").map { hex ->
             parseLong(hex.toUpperCase(Locale.getDefault()), 16)
         }.sum()
     }
+
+    /**
+     * Selects which player should start pseud-randomly
+     *
+     * @param player1Id: Int
+     * @param player2Id: Int
+     */
 
     private fun findDeterminsticRandomStartPlayer(
         player1Id: String,
