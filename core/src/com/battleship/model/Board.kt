@@ -143,12 +143,20 @@ class Board(val size: Int) : GameObject() {
     }
 
     /**
-     * Flips all treasures' revealed flag to true.
+     * Sets all treasures' revealed flag to true.
      */
     fun revealTreasures() {
         treasures.forEach { treasure -> treasure.revealed = true }
     }
 
+
+    /**
+     * Searches the position + the equipments radius on the board for treasures
+     *
+     * @param boardTouchPos Vector2 - The position relative to the board of the move
+     * @param equipment: ShapeRenderer - the equipment used
+     * @return Boolean. For if it should switch turn to the other player
+     */
     fun shootTiles(boardTouchPos: Vector2, equipment: Equipment): Boolean {
         val xSearchMin = boardTouchPos.x.toInt() - equipment.searchRadius
         val xSearchMax = boardTouchPos.x.toInt() + equipment.searchRadius + 1
@@ -190,6 +198,12 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
+    /**
+     * Explores the tile of the given position on the board.
+     *
+     * @param pos Vector2 - The position relative to the board of the move
+     * @return Result
+     */
     private fun exploreTile(pos: Vector2): Result {
         val treasurePos = Vector2(pos.y, pos.x) // Flip position
         val treasure = getTreasureByPosition(treasurePos)
@@ -213,10 +227,22 @@ class Board(val size: Int) : GameObject() {
         }
     }
 
+    /**
+     * Gets the Tile of a given position
+     *
+     * @param pos Vector2 - The position relative to the board
+     * @return Tile of the given position
+     */
     private fun getTile(pos: Vector2): Tile {
         return tiles[pos.x.toInt()][pos.y.toInt()]
     }
 
+    /**
+     * Updates the Tile of a given position
+     *
+     * @param pos Vector2 - The position relative to the board
+     * @param tile Vector2 - The tile to be updated to
+     */
     private fun setTile(pos: Vector2, tile: Tile) {
         tiles[pos.x.toInt()][pos.y.toInt()] = tile
     }
