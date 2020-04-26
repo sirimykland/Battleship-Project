@@ -1,0 +1,13 @@
+com.battleship
+com.battleship.android
+com.battleship.core
+com.battleship.core.controller.firebase
+com.battleship.core.controller.input
+com.battleship.core.controller.state
+com.battleship.core.model
+com.battleship.core.model.equipment
+com.battleship.core.model.treasures
+com.battleship.core.model.ui
+com.battleship.core.utility
+com.battleship.core.view
+com.battleship.desktop
