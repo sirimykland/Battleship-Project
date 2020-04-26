@@ -43,7 +43,10 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * @inheritDoc
+     * Creates a new game document in firebase
+     * @param userId the id of the user setting up the game
+     * @param userName the name of the user setting up the game
+     * @param callback function invoked once the process has completed.
      */
     override fun createGame(userId: String, userName: String, callback: (game: Game?) -> Unit) {
         // Set up game data
@@ -77,7 +80,11 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * @inheritDoc
+     * Method for joining an existing game.
+     * @param gameId the id of the game document
+     * @param userId the id of the player that should be added
+     * @param userName the name of the player that should be added
+     * @param callback function invoked once the process has completed.
      */
     override fun joinGame(
         gameId: String,
@@ -115,7 +122,10 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * @inheritDoc
+     * Method for leaving an existing game.
+     * @param gameId the id of the game document.
+     * @param playerId the id of the player that leaves.
+     * @param callback function invoked once the process has completed.
      */
     override fun leaveGame(gameId: String, playerId: String, callback: () -> Unit) {
         val docRef = db.collection("games").document(gameId)
@@ -137,42 +147,10 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * @inheritDoc
-     */
-    override fun addPendingGamesListener(callback: (pendingGames: ArrayList<PendingGame>) -> Unit) {
-        activeListener =
-            db.collection("games").whereEqualTo("player2Name", "").whereEqualTo("player2Id", "")
-                .addSnapshotListener { documents, e ->
-                    val pendingGames = ArrayList<PendingGame>()
-                    if (e != null) {
-                        Log.w("addPendingGamesListener", "Listen failed.", e)
-                        return@addSnapshotListener
-                    }
-                    Log.d("addPendingGamesListener", "Found documents containing pending games")
-                    for (doc in documents!!) {
-                        val player1Id: String = doc.getString("player1Id") as String
-                        if (player1Id == GSM.userId) continue
-                        val player1Name: String = doc.getString("player1Name") as String
-                        val gameId = doc.id
-                        if (player1Id != "") {
-                            pendingGames.add(
-                                PendingGame(
-                                    gameId,
-                                    player1Id,
-                                    player1Name
-                                )
-                            )
-                        }
-                    }
-                    Log.d("addPendingGamesListener", "Pending games: $pendingGames")
-                    Gdx.app.postRunnable {
-                        callback(pendingGames)
-                    }
-                }
-    }
-
-    /**
-     * @inheritDoc
+     * Method for registering a player's treasures
+     * @param gameId the id of the game document
+     * @param userId the id of the player
+     * @param treasures list containing the treasures that should be added
      */
     override fun registerTreasures(gameId: String, userId: String, treasures: List<Map<String, Any>>) {
         val docRef = db.collection("games").document(gameId)
@@ -201,7 +179,12 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * @inheritDoc
+     * Method for registering a move in the game
+     * @param gameId the id of the game document
+     * @param x x coordinate of move
+     * @param y y coordinate of move
+     * @param playerId the id of the player making the move
+     * @param equipment The name of the equipment used by the player
      */
     override fun registerMove(gameId: String, x: Int, y: Int, playerId: String, equipment: String) {
         val docRef = db.collection("games").document(gameId)
@@ -238,7 +221,9 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * @inheritDoc
+     * Method for setting the winner of the game
+     * @param gameId the id of the game document
+     * @param userId the id of the player that won
      */
     override fun setWinner(gameId: String, userId: String) {
         db.collection("games").document(gameId).update("winner", userId)
@@ -252,6 +237,42 @@ object AndroidFirebase : FirebaseController {
                 GSM.resetGame()
                 GSM.set(MainMenuState(this))
             }
+    }
+
+    /**
+     * Method adding listener to all games where player2 is empty.
+     * @param callback function invoked once the process has completed.
+     */
+    override fun addPendingGamesListener(callback: (pendingGames: ArrayList<PendingGame>) -> Unit) {
+        activeListener =
+                db.collection("games").whereEqualTo("player2Name", "").whereEqualTo("player2Id", "")
+                        .addSnapshotListener { documents, e ->
+                            val pendingGames = ArrayList<PendingGame>()
+                            if (e != null) {
+                                Log.w("addPendingGamesListener", "Listen failed.", e)
+                                return@addSnapshotListener
+                            }
+                            Log.d("addPendingGamesListener", "Found documents containing pending games")
+                            for (doc in documents!!) {
+                                val player1Id: String = doc.getString("player1Id") as String
+                                if (player1Id == GSM.userId) continue
+                                val player1Name: String = doc.getString("player1Name") as String
+                                val gameId = doc.id
+                                if (player1Id != "") {
+                                    pendingGames.add(
+                                            PendingGame(
+                                                    gameId,
+                                                    player1Id,
+                                                    player1Name
+                                            )
+                                    )
+                                }
+                            }
+                            Log.d("addPendingGamesListener", "Pending games: $pendingGames")
+                            Gdx.app.postRunnable {
+                                callback(pendingGames)
+                            }
+                        }
     }
 
     /**
@@ -325,7 +346,8 @@ object AndroidFirebase : FirebaseController {
     }
 
     /**
-     * @inheritDoc
+     * Function adding listener to a specific game. Listening to when players make moves.
+     * @param gameId the id of the game document
      */
     override fun addPlayListener(gameId: String) {
         val docRef = db.collection("games").document(gameId)
