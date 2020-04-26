@@ -30,12 +30,12 @@ class UsageGuideState(
     private var pageIndex: Int = 0
 
     private val descriptions: List<String> = listOf(
-        "First, let's show you some basics of how to play a game.\nThe game follows standard battleships rules.",
-        "Choose a username which other opponents can see.",
-        "Select opponent to play against or create a new game.",
-        "Place your treasures by dragging them to their desired position.",
+        "First, let's show you some basics of how to play a game.\n\nThe game follows standard battleships rules.",
+        "Choose a funny username. \n\n This is the name other users can find you by.",
+        "Select an opponent to play against, or create a new game.",
+        "Place your treasures by dragging them to their desired position.\n\nProtip: You can click a treasure to rotate it.",
         "Wait for your opponent to get ready.",
-        "Play the game!\nChoose equipments and try to locate all of your opponent's treasures."
+        "Play the game! Try to locate all of your opponent's treasures.\n\nChoose equipment using the bottom menu.\nShovel destroys 1 square while Dynamite explodes a 3x3 big area."
     )
 
     private val imagePaths: List<String> = listOf(
@@ -49,16 +49,14 @@ class UsageGuideState(
     private var endIndex: Int = descriptions.size - 1
 
     private var currentImage: GuiObject =
-        GuiObject( 15f, 21f, 70f, 65f)
+        GuiObject( 18f, 27f, 64f, 59f)
             .with(Image(imagePaths[0]))
-            .with(Border(Palette.ORANGE)
-    )
 
     private var currentDescription: GuiObject = GUI.textBox(
         5f,
         11f,
         90f,
-        8f,
+        14f,
         descriptions[0],
         color = Palette.DARK_GREY
     )
@@ -97,7 +95,7 @@ class UsageGuideState(
 
     override val guiObjects: List<GuiObject> = listOf(
         background,
-        if (firstimeOpen) GUI.header("Welcome to the Treasure Hunt game!") else GUI.header("Usage guide"),
+        if (firstimeOpen) GUI.header("Welcome to the Treasure Hunt game!") else GUI.header("Welcome to the Treasure Hunt game!"),
         nextPageButton,
         previousPageButton,
         currentDescription,

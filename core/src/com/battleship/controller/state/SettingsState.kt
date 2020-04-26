@@ -22,7 +22,7 @@ class SettingsState(controller: FirebaseController) : GuiState(controller) {
 
     private var musicButton: GuiObject = GUI.menuButton(
         25f,
-        62.5f,
+        66f,
         "Music off",
         onClick = {
             if (BattleshipGame.music?.isPlaying == true)
@@ -34,7 +34,7 @@ class SettingsState(controller: FirebaseController) : GuiState(controller) {
 
     private var soundButton: GuiObject = GUI.menuButton(
         25f,
-        43.75f,
+        44f,
         "Sound Effects off",
         onClick = {
             BattleshipGame.soundOn = !BattleshipGame.soundOn
@@ -50,7 +50,7 @@ class SettingsState(controller: FirebaseController) : GuiState(controller) {
         soundButton,
         GUI.menuButton(
             25f,
-            25f,
+            22f,
             "Usage guide",
             onClick = { GameStateManager.set(UsageGuideState(controller, false)) }
         ),
