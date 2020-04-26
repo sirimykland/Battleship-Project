@@ -35,18 +35,12 @@ object DesktopFirebase : FirebaseController {
             field = value
         }
 
-    // Set up database connection
     init {
-        // Get the firebase apps running
         val firebaseApps = FirebaseApp.getApps()
 
-        // If no firebase apps is running, set it up
         if (firebaseApps.size == 0) {
-            // Read the account details from file
             val serviceAccount = FileInputStream("./adminsdk.json")
-            // Get the credentials from the account details
             val credentials = GoogleCredentials.fromStream(serviceAccount)
-            // Set options for connection
             val options = FirebaseOptions.Builder()
                 .setCredentials(credentials)
                 .setDatabaseUrl(firebaseUrl)
@@ -54,7 +48,6 @@ object DesktopFirebase : FirebaseController {
             FirebaseApp.initializeApp(options)
         }
 
-        // Initialize database connection using the firebase app
         db = FirestoreClient.getFirestore()
     }
 
@@ -65,7 +58,6 @@ object DesktopFirebase : FirebaseController {
      * @param callback function invoked once the process has completed.
      */
     override fun createGame(userId: String, userName: String, callback: (game: Game?) -> Unit) {
-        // Set up game data
         val data = mutableMapOf<String, Any>()
         data["player1Id"] = userId
         data["player1Name"] = userName
@@ -95,7 +87,6 @@ object DesktopFirebase : FirebaseController {
      * @param callback function invoked once the process has completed.
      */
     override fun joinGame(gameId: String, userId: String, userName: String, callback: (game: Game?) -> Unit) {
-        // Add the data to the game document
         db.collection("games").document(gameId).update("player2Id", userId)
         db.collection("games").document(gameId).update("player2Name", userName)
         val game = Game(gameId)
@@ -252,7 +243,6 @@ object DesktopFirebase : FirebaseController {
 
                 if (snapshot != null && snapshot.exists()) {
                     val player2Id = snapshot.data?.get("player2Id") as String
-                    // If no opponent has joined yet
                     if (snapshot.data?.get("playerLeft") != "") {
                         Gdx.app.log("addGameListener", "Opponent left firebase")
                         GSM.activeGame!!.opponentLeft = true
@@ -264,7 +254,6 @@ object DesktopFirebase : FirebaseController {
                             Gdx.app.log("gameListener", "$game, $player2Id, $player2Name")
                             game.setPlayers(game.player, Player(player2Id, player2Name))
                         }
-                        // Get the field containing the treasures in the database
                         val treasures =
                             snapshot.data?.get("treasures") as MutableMap<String, List<Map<String, Any>>>?
                         if (treasures != null) {
@@ -320,19 +309,15 @@ object DesktopFirebase : FirebaseController {
                     }
 
                     val winner = snapshot.data?.get("winner")
-                    // If a winner has been set
                     if (winner != "") {
                         Gdx.app.log("addPlayListener", "The winner is $winner")
-                        GSM.activeGame!!.winner = winner as String // or something
+                        GSM.activeGame!!.winner = winner as String
                     }
-                    // If there is no winner, continue game
                     else {
-                        // If no moves has been made yet
                         if (moves.size == 0) {
                             Gdx.app.log("addPlayListener", "No moves made yet")
                             GSM.activeGame!!.setGameReadyIfReady()
                         } else {
-                            // Get the last move
                             val lastMove = moves.get(moves.size - 1)
                             val game = GSM.activeGame!!
                             if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
