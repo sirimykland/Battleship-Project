@@ -2,6 +2,8 @@ package com.battleship.model
 
 import com.badlogic.gdx.math.Vector2
 import com.battleship.GSM
+import java.lang.Long.parseLong
+import java.util.Locale
 import java.util.Timer
 import kotlin.concurrent.schedule
 
@@ -15,12 +17,48 @@ class Game(val gameId: String) {
     var youWon: Boolean = false
     var winner: String = ""
     var player: Player = Player()
+        private set
     var opponent: Player = Player()
+        private set
     var playerTurn: Boolean = false
     var gameReady = false
     var playerBoard: Boolean = false
     var newTurn: Boolean = false
     var opponentLeft: Boolean = false
+
+    /**
+     * Converts a UUID on hex form to a Long
+     *
+     * @param hexString: String
+     */
+
+    private fun hexSum(hexString: String): Long {
+        return hexString.split("-").map { hex ->
+            parseLong(hex.toUpperCase(Locale.getDefault()), 16)
+        }.sum()
+    }
+
+    /**
+     * Selects which player should start pseud-randomly
+     *
+     * @param player1Id: Int
+     * @param player2Id: Int
+     */
+
+    private fun findDeterminsticRandomStartPlayer(
+        player1Id: String,
+        player2Id: String,
+        gameId: String
+    ): Boolean {
+        var p1Turn = true
+        if (player1Id != "" && player2Id != "") {
+            val p1val = hexSum(player1Id)
+            val p2val = hexSum(player2Id)
+            val gameVal = gameId.hashCode()
+            p1Turn = p1val % gameVal < p2val % gameVal
+        }
+        return p1Turn
+    }
 
     /**
      * Set player and opponent objects and
@@ -30,16 +68,17 @@ class Game(val gameId: String) {
      * @param player2: Player
      */
     fun setPlayers(player1: Player, player2: Player = Player()) {
+        val p1Turn = findDeterminsticRandomStartPlayer(player1.playerId, player2.playerId, gameId)
         if (player1.playerId == GSM.userId) {
             this.player = player1
             this.opponent = player2
-            this.playerTurn = false
-            this.playerBoard = true
+            this.playerTurn = p1Turn
+            this.playerBoard = !p1Turn
         } else {
             this.player = player2
             this.opponent = player1
-            this.playerTurn = true
-            this.playerBoard = false
+            this.playerTurn = !p1Turn
+            this.playerBoard = p1Turn
         }
     }
 

@@ -27,19 +27,9 @@ the game.
 
 
 ### Our take on the concept
-The group has chosen to change the theme of the game, but keep all the rules from the original Battleship game. The new theme will be treasure hunt, which will see ships replaced with buried treasure and weapons replaced with equipment used to dig up these treasures. To add something new to the game, there will be different types of equipment available for looking for your opponents treasure. Special features will be added to the different types of equipment. A suggestion for one such feature is equipment that hit more than one square or equipment that will search an area for treasure without digging it up, like a metal detector. In other words, there are a lot of possibilities for what types of equipment that can be added to the game. The pictures above show creenshots of Treasure Hunt, where the treasures are revealed when all squares are hit and missed attempts are market with red. 
+The group has chosen to change the theme of the game, but keep all the rules from the original Battleship game. The new theme will be treasure hunt, which will see ships replaced with buried treasure and weapons replaced with equipment used to dig up these treasures. To add something new to the game, there will be different types of equipment available for looking for your opponents treasure. Special features will be added to the different types of equipment. A suggestion for one such feature is equipment that hit more than one square or equipment that will search an area for treasure without digging it up, like a metal detector. In other words, there are a lot of possibilities for what types of equipment that can be added to the game. The pictures above show screenshots of Treasure Hunt, where the treasures are revealed when all squares are hit and missed attempts are market with red. 
 
 ## Development
-
-### Logical View
-TODO: Insert new logical view
-
-![Logical View ](https://i.imgur.com/XQyIilb.png)
-
-### Development View
-TODO: Insert new dev view
-
-![Development View ](https://i.imgur.com/ENkQcNF.png)
 
 ### Version Control: Git
 We use our own version of the [Git Flow](http://nvie.com/posts/a-successful-git-branching-model/) strategy for handling branches and releases. We follow this strictly to avoid odd bugs and unknown state in our production code.
@@ -127,3 +117,15 @@ This collection will contain one document for each game with a randomly generate
 *Moves*:
 
 ![Firebase example data moves](https://i.imgur.com/mPaTFkr.png)
+
+### Overall logical view
+
+![Overall logical view](https://i.imgur.com/4Lrrxsw.png)
+
+### GUI Entity Component System logical view
+
+![GUI Entity Component System logical view](https://i.imgur.com/6Arv4Dk.png)
+
+### Development View
+
+![Development View ](https://i.imgur.com/WHCXbO0h.png)

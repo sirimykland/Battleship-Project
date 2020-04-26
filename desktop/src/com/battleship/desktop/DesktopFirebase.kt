@@ -262,7 +262,7 @@ object DesktopFirebase : FirebaseController {
                         if (game.opponent.playerId == "" || game.opponent.playerName == "") {
                             val player2Name = snapshot.data?.get("player2Name") as String
                             Gdx.app.log("gameListener", "$game, $player2Id, $player2Name")
-                            game.opponent = Player(player2Id, player2Name)
+                            game.setPlayers(game.player, Player(player2Id, player2Name))
                         }
                         // Get the field containing the treasures in the database
                         val treasures =
