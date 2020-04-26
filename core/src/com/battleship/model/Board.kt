@@ -13,7 +13,7 @@ import com.battleship.model.treasures.Treasure.TreasureType
 import com.battleship.model.treasures.TreasureChest
 import com.battleship.utility.SoundEffects
 import kotlin.random.Random
-// TODO Henrik
+
 /**
  * Board class inheriting from [GameObject].
  *
@@ -148,7 +148,6 @@ class Board(val size: Int) : GameObject() {
     fun revealTreasures() {
         treasures.forEach { treasure -> treasure.revealed = true }
     }
-
 
     /**
      * Searches the position + the equipments radius on the board for treasures

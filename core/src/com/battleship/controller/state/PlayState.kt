@@ -36,8 +36,8 @@ class PlayState(controller: FirebaseController) : GuiState(controller) {
         arrayOf(*(0 until player.equipmentSet.equipments.size).map { a: Int ->
             joinEquipmentButton(
                 a,
-                    equipmentSetPosition(),
-                    equipmentSetSize()
+                equipmentSetPosition(),
+                equipmentSetSize()
             )
         }.toTypedArray())
 
