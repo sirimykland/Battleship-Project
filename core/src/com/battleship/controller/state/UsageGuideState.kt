@@ -3,7 +3,6 @@ package com.battleship.controller.state
 import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.Background
-import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Image
 import com.battleship.model.ui.Text
@@ -49,7 +48,7 @@ class UsageGuideState(
     private var endIndex: Int = descriptions.size - 1
 
     private var currentImage: GuiObject =
-        GuiObject( 18f, 27f, 64f, 59f)
+        GuiObject(18f, 27f, 64f, 59f)
             .with(Image(imagePaths[0]))
 
     private var currentDescription: GuiObject = GUI.textBox(
@@ -126,7 +125,7 @@ class UsageGuideState(
             previousPageButton.hide()
 
         currentDescription.set(Text(descriptions[pageIndex]))
-        if(pageIndex == 0) currentImage.hide()
+        if (pageIndex == 0) currentImage.hide()
         else {
             currentImage.set(Image(imagePaths[pageIndex - 1]))
             currentImage.show()
