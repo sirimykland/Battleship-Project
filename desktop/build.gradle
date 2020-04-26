@@ -40,5 +40,10 @@ dependencies{
     implementation 'com.google.firebase:firebase-core:17.3.0'
 }
 
+dokka {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/dokka"
+}
+
 
 dist.dependsOn classes
