@@ -35,7 +35,7 @@ class Border(
      * @param color: TextureRegion - Image that should be used as background, most likely a constant from [Palette],
      * @param width: Float - The width of the border around the [GuiObject] this is a part of.
      */
-    constructor(color: TextureRegion = Palette.WHITE, width: Float = 0.7f) : this(color, width, width, width, width)
+    constructor(color: TextureRegion = Palette.WHITE, width: Float = 0.5f) : this(color, width, width, width, width)
 
     /**
      * Draws the border

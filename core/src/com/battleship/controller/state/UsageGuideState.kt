@@ -2,6 +2,8 @@ package com.battleship.controller.state
 
 import com.battleship.GameStateManager
 import com.battleship.controller.firebase.FirebaseController
+import com.battleship.model.ui.Background
+import com.battleship.model.ui.Border
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Image
 import com.battleship.model.ui.Text
@@ -28,6 +30,7 @@ class UsageGuideState(
     private var pageIndex: Int = 0
 
     private val descriptions: List<String> = listOf(
+        "First, let's show you some basics of how to play a game.\nThe game follows standard battleships rules.",
         "Choose a username which other opponents can see.",
         "Select opponent to play against or create a new game.",
         "Place your treasures by dragging them to their desired position.",
@@ -43,13 +46,12 @@ class UsageGuideState(
         "images/usageGuide/fifthPage.png"
     )
 
+    private var endIndex: Int = descriptions.size - 1
+
     private var currentImage: GuiObject =
-        GUI.image(
-            15f,
-            21f,
-            70f,
-            65f,
-            texturePath = imagePaths[0]
+        GuiObject( 15f, 21f, 70f, 65f)
+            .with(Image(imagePaths[0]))
+            .with(Border(Palette.ORANGE)
     )
 
     private var currentDescription: GuiObject = GUI.textBox(
@@ -68,7 +70,7 @@ class UsageGuideState(
         7f,
         "Next"
     ) {
-        if (pageIndex == imagePaths.size - 1) {
+        if (pageIndex == endIndex) {
             GameStateManager.set(MainMenuState(controller))
         } else {
             pageIndex++
@@ -87,11 +89,15 @@ class UsageGuideState(
         updateButtons()
     }.hide()
 
+    private val background: GuiObject = GuiObject(0f, 0f, 100f, 88f)
+        .with(Background(Palette.GREY_TRANSPARENT))
+
     private val backButton: GuiObject =
         GUI.backButton { GameStateManager.set(SettingsState(controller)) }
 
     override val guiObjects: List<GuiObject> = listOf(
-        if (firstimeOpen) GUI.header("Welcome!") else GUI.header("Usage guide"),
+        background,
+        if (firstimeOpen) GUI.header("Welcome to the Treasure Hunt game!") else GUI.header("Usage guide"),
         nextPageButton,
         previousPageButton,
         currentDescription,
@@ -112,7 +118,7 @@ class UsageGuideState(
      * Decide which page of the guide to show i.e. image, text and buttons
      */
     private fun updateButtons() {
-        if (pageIndex == imagePaths.size - 1)
+        if (pageIndex == endIndex)
             nextPageButton.set(Text("Finish", Font.MEDIUM_BLACK))
         else
             nextPageButton.set(Text("Next", Font.MEDIUM_BLACK))
@@ -122,7 +128,11 @@ class UsageGuideState(
             previousPageButton.hide()
 
         currentDescription.set(Text(descriptions[pageIndex]))
-        currentImage.set(Image(imagePaths[pageIndex]))
+        if(pageIndex == 0) currentImage.hide()
+        else {
+            currentImage.set(Image(imagePaths[pageIndex - 1]))
+            currentImage.show()
+        }
     }
 
     /**

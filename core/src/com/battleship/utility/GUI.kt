@@ -131,7 +131,7 @@ object GUI {
     ): GuiObject {
         return GuiObject(0f, 88f, 100f, 12f)
             .with(Background(Palette.DARK_GREY))
-            .with(Border(Palette.BLACK, widthBottom = 1f))
+            .with(Border(Palette.BLACK, widthBottom = 0.3f))
             .with(Text(text, Font.MEDIUM_WHITE))
     }
 

@@ -284,7 +284,7 @@ object AndroidFirebase : FirebaseController {
                     if (GSM.activeGame!!.opponent.playerId == "" && player2Id != "") {
                         Log.d("addGameListener", "Opponent joined and registered")
 
-                        GSM.activeGame!!.opponent = Player(player2Id, player2Name)
+                        //GSM.activeGame!!.opponent = Player(player2Id, player2Name)
                         GSM.activeGame!!.setGameReadyIfReady()
                     } else {
                         // Get the field containing the treasures in the database
