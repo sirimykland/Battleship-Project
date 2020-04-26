@@ -32,8 +32,13 @@ class PlayView : View() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         batch.begin()
-        background.setCenter(Gdx.graphics.width / 1.85f, Gdx.graphics.height.toFloat() / 2)
-        background.draw(batch)
+        batch.draw(
+            background,
+            Gdx.graphics.width - background.width * backgroundScale,
+            Gdx.graphics.height - background.height * backgroundScale,
+            background.width * backgroundScale,
+            background.height * backgroundScale
+            )
         batch.end()
 
         for (obj in gameObjects) {
