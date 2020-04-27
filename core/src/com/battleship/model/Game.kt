@@ -1,7 +1,7 @@
 package com.battleship.model
 
 import com.badlogic.gdx.math.Vector2
-import com.battleship.GSM
+import com.battleship.controller.GSM
 import java.lang.Long.parseLong
 import java.util.Locale
 import java.util.Timer

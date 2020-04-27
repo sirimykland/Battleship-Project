@@ -34,9 +34,7 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
         val boardPos = Gdx.graphics.boardPosition()
 
         val boardTouchPos = touchPos.toCoordinate(boardPos, boardWidth, board.size)
-        val treasurePos = Vector2(boardTouchPos.y, boardTouchPos.x) // Flip position
-
-        // Checks if touching a treasure. Sets it as the active treasure to be moved.
+        val treasurePos = Vector2(boardTouchPos.y, boardTouchPos.x)
         val treasure = board.getTreasureByPosition(treasurePos)
         if (treasure != null) {
             activeTreasure = treasure
@@ -60,7 +58,6 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
                 activeTreasure!!.rotate()
             }
 
-            // Check if new position is validated. Goes back to old position if not.
             if (!board.validateTreasurePosition(activeTreasure)) {
                 activeTreasure!!.updatePosition(oldPosition!!)
             }
@@ -90,7 +87,6 @@ class TreasureHandler(private val board: Board) : InputAdapter() {
                 )
             val newTreasurePos = Vector2(newBoardTouchPos.y, newBoardTouchPos.x)
 
-            // Check if newTreasurePos is inside of the board
             if (newTreasurePos.x + activeTreasure!!.dimension.x <= board.size && newTreasurePos.x >= 0) {
                 if (newTreasurePos.y + activeTreasure!!.dimension.y <= board.size && newTreasurePos.y >= 0) {
                     activeTreasure!!.updatePosition(newTreasurePos)

@@ -1,4 +1,4 @@
-package com.battleship
+package com.battleship.controller
 
 import com.battleship.controller.state.State
 import com.battleship.model.Game

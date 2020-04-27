@@ -2,7 +2,7 @@ package com.battleship.desktop
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
-import com.battleship.BattleshipGame
+import com.battleship.controller.BattleshipGame
 
 /**
  * DesktopLauncher contains main method for launching the Game as a desktop application

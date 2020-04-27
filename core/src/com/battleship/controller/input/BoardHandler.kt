@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
-import com.battleship.GSM
+import com.battleship.controller.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.utility.CoordinateUtil.toCoordinate
 import com.battleship.utility.GdxGraphicsUtil.boardPosition

@@ -1,7 +1,7 @@
 package com.battleship.desktop
 
 import com.badlogic.gdx.Gdx
-import com.battleship.GSM
+import com.battleship.controller.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.state.MainMenuState
 import com.battleship.model.Game
@@ -79,6 +79,7 @@ object DesktopFirebase : FirebaseController {
             else callback(game)
         }
     }
+
     /**
      * Method for joining an existing game.
      * @param gameId the id of the game document
@@ -86,7 +87,12 @@ object DesktopFirebase : FirebaseController {
      * @param userName the name of the player that should be added
      * @param callback function invoked once the process has completed.
      */
-    override fun joinGame(gameId: String, userId: String, userName: String, callback: (game: Game?) -> Unit) {
+    override fun joinGame(
+        gameId: String,
+        userId: String,
+        userName: String,
+        callback: (game: Game?) -> Unit
+    ) {
         db.collection("games").document(gameId).update("player2Id", userId)
         db.collection("games").document(gameId).update("player2Name", userName)
         val game = Game(gameId)
@@ -188,8 +194,8 @@ object DesktopFirebase : FirebaseController {
      */
     override fun addPendingGamesListener(callback: (pendingGames: ArrayList<PendingGame>) -> Unit) {
         val query = db.collection("games")
-                .whereEqualTo("player2Name", "")
-                .whereEqualTo("player2Id", "")
+            .whereEqualTo("player2Name", "")
+            .whereEqualTo("player2Id", "")
         activeListener = query.addSnapshotListener(object : EventListener<QuerySnapshot?> {
             override fun onEvent(
                 @Nullable snapshot: QuerySnapshot?,
@@ -208,11 +214,11 @@ object DesktopFirebase : FirebaseController {
                         val gameId = doc.id
                         if (player1Id != "") {
                             pendingGames.add(
-                                    PendingGame(
-                                            gameId,
-                                            player1Id,
-                                            player1Name
-                                    )
+                                PendingGame(
+                                    gameId,
+                                    player1Id,
+                                    player1Name
+                                )
                             )
                         }
                         Gdx.app.postRunnable {
@@ -320,10 +326,16 @@ object DesktopFirebase : FirebaseController {
                             val lastMove = moves.get(moves.size - 1)
                             val game = GSM.activeGame!!
                             if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                                Gdx.app.log("addPlayListener", "----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
+                                Gdx.app.log(
+                                    "addPlayListener",
+                                    "----------------------OPPONENT LAST MOVE----------------------- $lastMove"
+                                )
                                 GSM.activeGame!!.registerMove(lastMove)
                             } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
-                                Gdx.app.log("addPlayListener", "----------------------PLAYER LAST MOVE----------------------- " + lastMove)
+                                Gdx.app.log(
+                                    "addPlayListener",
+                                    "----------------------PLAYER LAST MOVE----------------------- $lastMove"
+                                )
                             }
                         }
                     }

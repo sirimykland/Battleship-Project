@@ -1,6 +1,6 @@
 package com.battleship.controller.state
 
-import com.battleship.GSM
+import com.battleship.controller.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -73,7 +73,6 @@ class LoadingGameState(controller: FirebaseController) : GuiState(controller) {
         if (showDialog) opponentLeftDialog.forEach { guiObject -> guiObject.show() }
         else opponentLeftDialog.forEach { guiObject -> guiObject.hide() }
 
-        // Game is ready!
         if (GSM.activeGame!!.gameReady) GSM.set(PlayState(controller))
 
         updateHeaderText()

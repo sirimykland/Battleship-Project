@@ -1,6 +1,6 @@
 package com.battleship.controller.state
 
-import com.battleship.GSM
+import com.battleship.controller.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.input.TreasureHandler
 import com.battleship.model.treasures.Treasure

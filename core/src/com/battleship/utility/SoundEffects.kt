@@ -2,7 +2,7 @@ package com.battleship.utility
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
-import com.battleship.BattleshipGame
+import com.battleship.controller.BattleshipGame
 
 /**
  * Singleton for manging sound effects

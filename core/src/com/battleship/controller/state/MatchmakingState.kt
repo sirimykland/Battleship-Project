@@ -1,6 +1,6 @@
 package com.battleship.controller.state
 
-import com.battleship.GSM
+import com.battleship.controller.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -25,10 +25,10 @@ class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
         arrayOf(*(0 until itemsPerPage).map { a: Int -> joinUserButton(a) }.toTypedArray())
 
     private val nextPageButton = GUI.textButton(
-        70f,
+        65f,
         19f,
-        20f,
-        5f,
+        30f,
+        7f,
         "Next"
     ) {
         page++
@@ -36,10 +36,10 @@ class MatchmakingState(controller: FirebaseController) : GuiState(controller) {
     }.hide()
 
     private val previousPageButton = GUI.textButton(
-        10f,
-        19f,
-        20f,
         5f,
+        19f,
+        30f,
+        7f,
         "Previous"
     ) {
         page--

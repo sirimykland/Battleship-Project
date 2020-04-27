@@ -1,4 +1,4 @@
-package com.battleship
+package com.battleship.controller
 
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
@@ -35,6 +35,11 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
      * Called once when the Application is first created.
      */
     override fun create() {
+        Font
+        SoundEffects
+        Palette
+        TextureLibrary
+
         if (Gdx.files.internal("audio/music.mp3").exists()) {
             music = Gdx.audio.newMusic(Gdx.files.internal("audio/music.mp3"))
             music?.isLooping = true
@@ -45,7 +50,12 @@ class BattleshipGame(private val controller: FirebaseController) : Game() {
         if (prefs.getBoolean("lock", true)) {
             prefs.putBoolean("lock", false)
             prefs.flush()
-            GSM.push(UsageGuideState(controller, true))
+            GSM.push(
+                UsageGuideState(
+                    controller,
+                    true
+                )
+            )
         } else {
             GSM.push(MainMenuState(controller))
         }

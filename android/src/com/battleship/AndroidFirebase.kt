@@ -2,6 +2,7 @@ package com.battleship
 
 import android.util.Log
 import com.badlogic.gdx.Gdx
+import com.battleship.controller.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.state.MainMenuState
 import com.battleship.model.Game
@@ -125,7 +126,6 @@ object AndroidFirebase : FirebaseController {
     override fun leaveGame(gameId: String, playerId: String, callback: () -> Unit) {
         val docRef = db.collection("games").document(gameId)
         db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
             transaction.update(docRef, "playerLeft", playerId)
         }.addOnSuccessListener {
             Log.d("leaveGame", "Player left game successfully")
@@ -359,10 +359,14 @@ object AndroidFirebase : FirebaseController {
                         val lastMove = moves.get(moves.size - 1)
                         val game = GSM.activeGame!!
                         if (lastMove["playerId"]!!.equals(game.opponent.playerId)) {
-                            Log.d("addPlayListener", "----------------------OPPONENT LAST MOVE----------------------- " + lastMove)
+                            Log.d("addPlayListener",
+                                "----------------------OPPONENT LAST MOVE----------------------- $lastMove"
+                            )
                             GSM.activeGame!!.registerMove(lastMove)
                         } else if (lastMove["playerId"]!!.equals(game.player.playerId)) {
-                            Log.d("addPlayListener", "----------------------PLAYER LAST MOVE----------------------- " + lastMove)
+                            Log.d("addPlayListener",
+                                "----------------------PLAYER LAST MOVE----------------------- $lastMove"
+                            )
                         }
                     }
                 }
