@@ -1,6 +1,6 @@
 package com.battleship.controller.state
 
-import com.battleship.GameStateManager
+import com.battleship.controller.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.Background
 import com.battleship.model.ui.GuiObject
@@ -61,14 +61,14 @@ class UsageGuideState(
     )
 
     private val nextPageButton = GUI.textButton(
-        70f,
+        65f,
         2f,
-        25f,
+        30f,
         7f,
         "Next"
     ) {
         if (pageIndex == endIndex) {
-            GameStateManager.set(MainMenuState(controller))
+            GSM.set(MainMenuState(controller))
         } else {
             pageIndex++
             updateButtons()
@@ -78,7 +78,7 @@ class UsageGuideState(
     private val previousPageButton = GUI.textButton(
         5f,
         2f,
-        25f,
+        30f,
         7f,
         "Previous"
     ) {
@@ -90,7 +90,7 @@ class UsageGuideState(
         .with(Background(Palette.GREY_TRANSPARENT))
 
     private val backButton: GuiObject =
-        GUI.backButton { GameStateManager.set(SettingsState(controller)) }
+        GUI.backButton { GSM.set(SettingsState(controller)) }
 
     override val guiObjects: List<GuiObject> = listOf(
         background,

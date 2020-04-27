@@ -69,7 +69,6 @@ class Board(val size: Int) : GameObject() {
         }
 
         for (tile in treasure.getTreasureTiles()) {
-            // Tile outside board
             if (tile.x >= size || tile.y >= size || tile.x < 0 || tile.y < 0) {
                 return false
             }
@@ -115,13 +114,13 @@ class Board(val size: Int) : GameObject() {
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
                     when (value) {
                         Tile.HIT -> shapeRenderer.color =
-                            Color(0.302f, 0.816f, 0.546f, 1f) // Success green
+                            Color(0.302f, 0.816f, 0.546f, 1f)
                         Tile.MISS -> shapeRenderer.color =
-                            Color(0.961f, 0.298f, 0.298f, 1f) // Failure red
+                            Color(0.961f, 0.298f, 0.298f, 1f)
                         Tile.NEAR -> shapeRenderer.color =
-                            Color(0.950f, 0.961f, 0.298f, 1f) // Near yellow
+                            Color(0.950f, 0.961f, 0.298f, 1f)
                         Tile.UNOPENED -> shapeRenderer.color =
-                            Color(0.905f, 0.882f, 0.612f, 1f) // Sand/brown
+                            Color(0.905f, 0.882f, 0.612f, 1f)
                     }
                     shapeRenderer.rect(x, y, tileSize, tileSize)
                     shapeRenderer.end()
@@ -162,11 +161,9 @@ class Board(val size: Int) : GameObject() {
         val ySearchMin = boardTouchPos.y.toInt() - equipment.searchRadius
         val ySearchMax = boardTouchPos.y.toInt() + equipment.searchRadius + 1
 
-        // Loops through the equipments search radius
         val resultList = ArrayList<Result>()
         for (x in xSearchMin until xSearchMax) {
             for (y in ySearchMin until ySearchMax) {
-                // Check if inside board
                 if (x in 0 until size && y in 0 until size) {
                     resultList.add(exploreTile(Vector2(x.toFloat(), y.toFloat())))
                 }
@@ -204,11 +201,10 @@ class Board(val size: Int) : GameObject() {
      * @return Result
      */
     private fun exploreTile(pos: Vector2): Result {
-        val treasurePos = Vector2(pos.y, pos.x) // Flip position
+        val treasurePos = Vector2(pos.y, pos.x)
         val treasure = getTreasureByPosition(treasurePos)
         val boardTile = getTile(pos)
 
-        // Checks first if tile is previously explored. Checks so if tile contains a treasure and returns result
         return if (boardTile == Tile.MISS || boardTile == Tile.HIT) {
             Result.NOT_VALID
         } else if (treasure != null) {

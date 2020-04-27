@@ -1,7 +1,7 @@
 package com.battleship.controller.state
 
-import com.battleship.BattleshipGame
-import com.battleship.GameStateManager
+import com.battleship.controller.BattleshipGame
+import com.battleship.controller.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text
@@ -52,7 +52,7 @@ class SettingsState(controller: FirebaseController) : GuiState(controller) {
             25f,
             22f,
             "Usage guide",
-            onClick = { GameStateManager.set(UsageGuideState(controller, false)) }
+            onClick = { GSM.set(UsageGuideState(controller, false)) }
         ),
 
         GUI.text(
@@ -71,7 +71,7 @@ class SettingsState(controller: FirebaseController) : GuiState(controller) {
             "v1.0.0",
             Font.MEDIUM_BLACK
         ),
-        GUI.backButton { GameStateManager.set(MainMenuState(controller)) }
+        GUI.backButton { GSM.set(MainMenuState(controller)) }
     )
 
     /**

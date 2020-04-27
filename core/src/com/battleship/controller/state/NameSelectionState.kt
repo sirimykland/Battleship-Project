@@ -1,7 +1,7 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.Gdx
-import com.battleship.GSM
+import com.battleship.controller.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.model.ui.GuiObject
 import com.battleship.model.ui.Text

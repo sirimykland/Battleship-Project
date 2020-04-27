@@ -3,6 +3,7 @@ package com.battleship
 import android.os.Bundle
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
+import com.battleship.controller.BattleshipGame
 
 /**
  * AndroidLauncher contains main method for launching the Game on Android OS

@@ -213,9 +213,7 @@ object GUI {
 
         dialogComponents.add(GuiObject(0f, 0f, 100f, 88f)
             .with(Background(Palette.GREY_TRANSPARENT))
-            .onClick {
-                // Stopping propagation
-            }
+            .onClick { }
             .hide()
         )
 

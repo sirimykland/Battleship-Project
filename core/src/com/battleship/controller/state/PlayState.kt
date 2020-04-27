@@ -1,7 +1,7 @@
 package com.battleship.controller.state
 
 import com.badlogic.gdx.math.Vector2
-import com.battleship.GSM
+import com.battleship.controller.GSM
 import com.battleship.controller.firebase.FirebaseController
 import com.battleship.controller.input.BoardHandler
 import com.battleship.model.Player
@@ -124,7 +124,6 @@ class PlayState(controller: FirebaseController) : GuiState(controller) {
     override fun update(dt: Float) {
         gameOver = GSM.activeGame!!.winner != ""
         if (gameOver) {
-            // only run once when game is over
             if (!gameOverRendered) {
                 updateGUIObjectsGameOver()
                 if (GSM.activeGame!!.youWon) {
@@ -148,7 +147,6 @@ class PlayState(controller: FirebaseController) : GuiState(controller) {
         } else {
             autoBoardSwitching()
             updateGUIObjectsInGame()
-            // Update game status in GameStateManager
             GSM.activeGame!!.updateWinner()
         }
     }
@@ -173,20 +171,16 @@ class PlayState(controller: FirebaseController) : GuiState(controller) {
         equipmentButtons.forEachIndexed { i, eqButton ->
             val equipment = player.equipmentSet.equipments[i]
 
-            // Updates text and border of equipment buttons
             eqButton.set(Text(equipment.name + " x " + equipment.uses, Font.SMALL_BLACK))
             if (equipment.active) eqButton.set(Border(Palette.GREEN))
             else eqButton.set(Border(Palette.BLACK))
 
-            // Show equipment buttons only if you are viewing your own board and it's your turn
             if (!GSM.activeGame!!.playerBoard && GSM.activeGame!!.isPlayersTurn()) eqButton.show()
             else eqButton.hide()
         }
-        // Updates header text
         if (GSM.activeGame!!.isPlayersTurn()) header.set(Text("Your turn"))
         else header.set(Text("Waiting for ${GSM.activeGame!!.opponent.playerName}'s move..."))
 
-        // Show/hide opponents bord text
         if (GSM.activeGame!!.playerBoard && !GSM.activeGame!!.isPlayersTurn()) {
             boardText.show()
             boardText.set(Text("Your board"))
